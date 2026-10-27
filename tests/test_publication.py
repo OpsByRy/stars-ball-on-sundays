@@ -35,6 +35,17 @@ class PublicationBoundary(unittest.TestCase):
         body=self.edition();body['props'][0]['result']={'eventStatus':'live','statisticalOutcome':'win','actual':20}
         with self.assertRaisesRegex(ValueError,'Final'): schema.validate_edition(body)
 
+    def test_later_quote_checks_do_not_replace_saved_contract_prices(self):
+        body=self.edition();row=body['props'][0];saved=row.get('americanOdds')
+        row['priceCheck']={'status':'returned','americanOdds':-225,'sourceAsOf':'2026-10-27T18:17:00Z','checkedAt':'2026-10-27T18:18:43Z'}
+        schema.validate_edition(body);self.assertEqual(row.get('americanOdds'),saved)
+        row['priceCheck']['private_canary']='NEVER_PUBLISH'
+        with self.assertRaisesRegex(ValueError,'unknown'):schema.validate_edition(body)
+        row['priceCheck']={'status':'not_returned','americanOdds':None,'checkedAt':'2026-10-27T18:18:43Z'}
+        schema.validate_edition(body)
+        row['priceCheck']['americanOdds']=-200
+        with self.assertRaisesRegex(ValueError,'empty'):schema.validate_edition(body)
+
     def test_published_estimates_allow_final_outputs_and_reject_invalid_probabilities(self):
         body=self.edition();row=body['props'][0]
         row['estimate']={'projection':23.5,'winProbability':0.7,'pushProbability':0.1,'lossProbability':0.2,'asOf':'2026-10-25T18:00:00Z','status':'provisional'}

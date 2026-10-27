@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "public-1",
+  "editions": [
+    {
+      "channel": "sunday",
+      "date": "2026-10-25",
+      "version": "1adbfe1ae5da8d91",
+      "path": "sunday/2026-10-25/1adbfe1ae5da8d91.json",
+      "count": 5,
+      "researchCount": 12,
+      "updatedAt": "2026-10-26T23:12:01.517912+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-10-26",
+      "version": "3dff97edb2f45e82",
+      "path": "daily/2026-10-26/3dff97edb2f45e82.json",
+      "count": 14,
+      "researchCount": 127,
+      "updatedAt": "2026-10-27T05:17:30.381758+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-10-27",
+      "version": "4c88296fa625d7da",
+      "path": "daily/2026-10-27/4c88296fa625d7da.json",
+      "count": 0,
+      "researchCount": 41,
+      "updatedAt": "2026-10-27T04:55:56.561536+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-10-26",
+      "version": "b28bcf6a6c9c21e8",
+      "path": "daily/2026-10-26/b28bcf6a6c9c21e8.json",
+      "count": 14,
+      "researchCount": 127,
+      "updatedAt": "2026-10-27T06:58:03.488Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-10-26",
+      "version": "075da39034a5e01a",
+      "path": "daily/2026-10-26/075da39034a5e01a.json",
+      "count": 14,
+      "researchCount": 127,
+      "updatedAt": "2026-10-27T06:58:03.488Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-10-26",
+      "version": "5a47fbd8f268ce66",
+      "path": "daily/2026-10-26/5a47fbd8f268ce66.json",
+      "count": 14,
+      "researchCount": 127,
+      "updatedAt": "2026-10-27T06:58:03.488Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-10-27",
+      "version": "9060520214801bcf",
+      "path": "daily/2026-10-27/9060520214801bcf.json",
+      "count": 0,
+      "researchCount": 41,
+      "updatedAt": "2026-10-27T04:55:56.561536+00:00"
+    }
+  ]
+}

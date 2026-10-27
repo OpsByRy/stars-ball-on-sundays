@@ -57,3 +57,16 @@ test('result refresh appends corrections without rewriting picks or old versions
     assert.equal(JSON.parse(fs.readFileSync(path.join(directory,'data/editions/manifest.json'))).editions.length,3);
   }finally{fs.rmSync(directory,{recursive:true,force:true});}
 });
+
+test('daily sections use published categories and retain rejected research lines',()=>{
+  const body={props:[{...row,id:'ry',group:'ry'},{...row,id:'safe',group:'research',category:'value_safe'},{...row,id:'aggressive',group:'research',category:'high_probability_aggressive'},{...row,id:'pass',group:'research',category:'not_a_pick'}]};
+  const groups=publication.editionGroups(body);
+  assert.deepEqual(groups.ry.map(r=>r.id),['ry']);assert.deepEqual(groups.value_safe.map(r=>r.id),['safe']);assert.deepEqual(groups.high_probability_aggressive.map(r=>r.id),['aggressive']);assert.equal(groups.research.length,3);
+  const archived={...row,id:'historical',group:'research',americanOdds:-250};const before=JSON.stringify(archived);
+  assert.equal(publication.publishedCategory(archived),'value_safe');assert.equal(JSON.stringify(archived),before);
+});
+test('research pagination and combined filters retain every reviewed line',()=>{
+  const rows=Array.from({length:85},(_,i)=>({...row,id:String(i),group:'research',player:'Player '+i,category:i%2?'not_a_pick':'value_safe',market:i<50?'PTS':'AST'}));
+  const first=publication.researchPage(rows),second=publication.researchPage(rows,{page:1});assert.equal(first.total,85);assert.equal(first.pages,3);assert.equal(second.rows[0].id,'40');assert.equal(publication.researchPage(rows,{page:99}).rows.length,5);
+  const filtered=publication.researchPage(rows,{query:'player',market:'AST',status:'not_a_pick',page:8});assert.equal(filtered.total,17);assert.equal(filtered.page,0);assert.ok(filtered.rows.every(r=>r.market==='AST'&&r.category==='not_a_pick'));
+});

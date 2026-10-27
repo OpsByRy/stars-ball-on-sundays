@@ -4,7 +4,7 @@ import math
 import re
 
 EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl'}
-PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate'}
+PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
 RESULT_FIELDS={'actual','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
 SOURCE_FIELDS={'eventId','athleteId','expectedTeam','provider'}
@@ -49,12 +49,22 @@ def validate_edition(body):
         if row['id'] in seen: raise ValueError('Duplicate pick')
         seen.add(row['id']);day(row['date'])
         if row['date']!=body['date'] or row['group'] not in {'ry','research'}: raise ValueError('Pick edition mismatch')
+        if 'category' in row and (row['group']!='research' or row['category'] not in {'value_safe','high_probability_aggressive','not_a_pick'}): raise ValueError('Invalid published category')
         if row['market'] not in MARKETS or row['operator'] not in {'>','<','>=','<=','gt','lt','gte','lte'} or not number(row['line']) or row['line']<0: raise ValueError('Invalid exact contract')
         if row.get('americanOdds') is not None and (not number(row['americanOdds']) or abs(row['americanOdds'])<100): raise ValueError('Invalid price')
         if row.get('overtime') not in {None,True,False}: raise ValueError('Invalid overtime terms')
         for key in ('capturedAt','startTime'): stamp(row.get(key))
         for key,value in row.items():
-            if key not in {'line','americanOdds','overtime','result','resultSource','estimate'} and value is not None: text(value)
+            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck'} and value is not None: text(value)
+        if 'priceCheck' in row:
+            check=row['priceCheck'];keys(check,{'status','americanOdds','sourceAsOf','checkedAt','reviewedAmericanOdds','qualification'},{'status','checkedAt'})
+            if check['status'] not in {'returned','not_returned'}: raise ValueError('Invalid quote check status')
+            price=check.get('americanOdds')
+            if check['status']=='returned' and (not number(price) or abs(price)<100): raise ValueError('Invalid checked price')
+            if check['status']=='not_returned' and price is not None: raise ValueError('Unavailable checked price must be empty')
+            if 'reviewedAmericanOdds' in check and (not number(check['reviewedAmericanOdds']) or abs(check['reviewedAmericanOdds'])<100): raise ValueError('Invalid reviewed price')
+            if check.get('qualification') not in {None,'qualifies','does_not_qualify','unavailable'}: raise ValueError('Invalid price qualification')
+            stamp(check.get('checkedAt'));stamp(check.get('sourceAsOf'))
         if 'estimate' in row:
             estimate=row['estimate'];keys(estimate,ESTIMATE_FIELDS,{'status'})
             if estimate['status'] not in {'provisional','validated'}: raise ValueError('Invalid estimate status')

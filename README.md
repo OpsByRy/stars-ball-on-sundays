@@ -1,6 +1,6 @@
 # Stars Ball On Sundays · public research website
 
-This is the public presentation of SBOS's selected basketball research and recorded outcomes. It contains the website, brand assets, dated publication records with saved probabilities and projections, and standard odds/result utilities. The proprietary research engine, raw candidate library, training data, calculation rules, and internal evaluations are maintained separately.
+This is the public presentation of SBOS's reviewed basketball research and recorded outcomes. It contains the website, brand assets, dated publication records with saved probabilities and projections, and standard odds/result utilities. Value Safe Picks and High-Probability Aggressive show the approved selections beside Ry’s favorites. SBOS Research also includes reviewed Not a Pick lines. Same-day price updates append a new edition, retain earlier snapshots and label unavailable prices or changed value checks. The proprietary research engine, raw source candidate data, training data, calculation rules, and internal evaluations are maintained separately.
 
 Run `python3 scripts/build.py` to validate every publication and build `dist/`. Preview only that directory with `python3 -m http.server 8001 --directory dist --bind 127.0.0.1`. Run `python3 -m unittest discover -s tests` and `node --test tests/*.test.cjs` before publishing. No API key or paid data connection is needed to build this website.
 

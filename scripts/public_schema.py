@@ -4,7 +4,7 @@ import math
 import re
 
 EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds'}
-PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite'}
+PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
 RESULT_FIELDS={'actual','minutesPlayed','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
 SOURCE_FIELDS={'eventId','athleteId','expectedTeam','provider'}
@@ -34,6 +34,22 @@ def text(value, maximum=500):
     if not isinstance(value,str) or len(value)>maximum or any(ord(c)<32 for c in value):
         raise ValueError('Invalid public text')
 
+
+def validate_honorable_mentions(rows):
+    def family(row):
+        return (row.get('date'),row.get('canonicalEventId') or row.get('eventId'),row.get('playerId'),row.get('market'),row.get('period','full_game'),row.get('product','sportsbook'))
+    selected={family(r) for r in rows if r.get('group')=='research' and r.get('category') in {'value_safe','high_probability_aggressive'}}
+    seen=set()
+    for row in rows:
+        if row.get('category')!='honorable_mention':continue
+        if row.get('selected') is not False:raise ValueError('Honorable mention must remain non-selected')
+        key=family(row)
+        if key in selected or key in seen:raise ValueError('Duplicate honorable mention family')
+        if not row.get('playerId') or not (row.get('canonicalEventId') or row.get('eventId')):raise ValueError('Honorable mention identity unavailable')
+        seen.add(key)
+        price=row.get('americanOdds');prob=row.get('estimate',{}).get('winProbability')
+        if not number(price) or price < -500 or abs(price)<100 or not number(prob) or prob<.7:raise ValueError('Honorable mention price or probability outside published bounds')
+
 def validate_edition(body):
     keys(body,EDITION_FIELDS,{'schemaVersion','channel','date','props'})
     if body['schemaVersion']!='public-1' or body['channel'] not in {'daily','sunday'}: raise ValueError('Invalid edition')
@@ -50,14 +66,15 @@ def validate_edition(body):
         if row['id'] in seen: raise ValueError('Duplicate pick')
         seen.add(row['id']);day(row['date'])
         if row['date']!=body['date'] or row['group'] not in {'ry','research'}: raise ValueError('Pick edition mismatch')
-        if 'category' in row and (row['group']!='research' or row['category'] not in {'value_safe','high_probability_aggressive','not_a_pick'}): raise ValueError('Invalid published category')
+        if 'category' in row and (row['group']!='research' or row['category'] not in {'value_safe','high_probability_aggressive','not_a_pick','honorable_mention'}): raise ValueError('Invalid published category')
         if row['market'] not in MARKETS or row['operator'] not in {'>','<','>=','<=','gt','lt','gte','lte'} or not number(row['line']) or row['line']<0: raise ValueError('Invalid exact contract')
         if row.get('americanOdds') is not None and (not number(row['americanOdds']) or abs(row['americanOdds'])<100): raise ValueError('Invalid price')
         if row.get('overtime') not in {None,True,False}: raise ValueError('Invalid overtime terms')
         if 'ryFavorite' in row and type(row['ryFavorite']) is not bool: raise ValueError('Invalid Ry favorite flag')
+        if 'selected' in row and type(row['selected']) is not bool: raise ValueError('Invalid selected status')
         for key in ('capturedAt','startTime','postedAt'): stamp(row.get(key))
         for key,value in row.items():
-            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite'} and value is not None: text(value)
+            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite','selected'} and value is not None: text(value)
         if 'priceCheck' in row:
             check=row['priceCheck'];keys(check,{'status','americanOdds','sourceAsOf','checkedAt','reviewedAmericanOdds','qualification'},{'status','checkedAt'})
             if check['status'] not in {'returned','not_returned'}: raise ValueError('Invalid quote check status')
@@ -91,6 +108,7 @@ def validate_edition(body):
             if result.get('sportsbookSettlement') not in {None,'unverified'}: raise ValueError('Statistical results cannot verify settlement')
             stamp(result.get('checkedAt'))
             if result.get('source') and not re.fullmatch(r'https://www\.espn\.com/nba/boxscore/_/gameId/\d+',result['source']): raise ValueError('Unsupported result URL')
+    validate_honorable_mentions(body['props'])
     return body
 
 def validate_manifest(body):

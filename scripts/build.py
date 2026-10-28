@@ -7,6 +7,7 @@ import re
 import shutil
 from urllib.parse import unquote, urlsplit
 from public_schema import validate_edition, validate_manifest, validate_targets
+from plus_money_schema import publication_files as plus_money_files
 
 class Links(HTMLParser):
     def __init__(self): super().__init__();self.links=[]
@@ -58,7 +59,7 @@ def build(root):
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
     manifest=json.loads(safe_file(root,'site-manifest.json').read_text())
     if set(manifest)!={'files'} or not isinstance(manifest['files'],list): raise ValueError('Invalid site file list')
-    files=manifest['files']+publication_files(root)
+    files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)
     if len(set(files))!=len(files): raise ValueError('Duplicate public file')
     for name in manifest['files']:
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')

@@ -66,6 +66,8 @@
     "assets/math.js",
     "assets/pick-board.css",
     "assets/pick-board.js",
+    "assets/plus-money.css",
+    "assets/plus-money.js",
     "assets/publication.css",
     "assets/publication.js",
     "assets/result-utils.js",
@@ -77,6 +79,7 @@
     "guide/index.html",
     "index.html",
     "philosophy/index.html",
+    "plus-money/index.html",
     "research/index.html",
     "sundays/index.html",
     "sundays/week.html"

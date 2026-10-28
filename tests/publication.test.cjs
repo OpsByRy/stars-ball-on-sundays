@@ -168,9 +168,9 @@ test('default order groups full games then team, player and stat without truncat
 });
 test('daily tab and favorite counts exclude passed research and standalone personal legs',()=>{
   const selected={...row,id:'safe',group:'research',category:'value_safe'},body={props:[selected,{...selected,id:'agg',category:'high_probability_aggressive',playerId:'other',ryFavorite:true},{...selected,id:'passed',category:'not_a_pick',ryFavorite:true},{...selected,id:'personal',group:'ry',operator:'>',line:7.5},{...selected,id:'outside',group:'ry',line:20}]};
-  const before=JSON.stringify(body);assert.deepEqual(publication.tabCounts(body),{all:2,value_safe:1,high_probability_aggressive:1,favorites:2});assert.equal(JSON.stringify(body),before);
+  const before=JSON.stringify(body);assert.deepEqual(publication.tabCounts(body),{all:2,value_safe:1,high_probability_aggressive:1,favorites:2,honorable_mention:0});assert.equal(JSON.stringify(body),before);
   const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json'))),e=publication.latestEntries(index.editions).find(e=>e.date==='2026-10-28'),today=JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path)));
-  assert.deepEqual(publication.tabCounts(today),{all:42,value_safe:28,high_probability_aggressive:14,favorites:0});
+  const counts=publication.tabCounts(today);assert.equal(counts.all,42);assert.equal(counts.value_safe,28);assert.equal(counts.high_probability_aggressive,14);assert.equal(counts.favorites,0);assert.equal(counts.honorable_mention,today.props.filter(p=>p.category==='honorable_mention').length);
 });
 test('shareable board state survives research round trips and rejects invalid categories and sorts',()=>{
   const state={query:'Brown & Jr.',minimum:80,type:'value_safe',favoritesOnly:true,game:publication.gameKey(row),team:'Team A',market:'PTS',sort:'price_desc'},search=publication.pickSearch('2026-10-28',state);

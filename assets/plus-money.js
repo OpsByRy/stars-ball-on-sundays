@@ -1,0 +1,27 @@
+/* Consumer presentation of frozen parlay publications. No research or selection. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else{root.SBOS_PLUS_MONEY=api;document.addEventListener('DOMContentLoaded',()=>api.init());}})(typeof window!=='undefined'?window:this,function(){
+  'use strict';
+  const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const odds=value=>(value>0?'+':'')+value;
+  const bookName=value=>({fanduel:'FanDuel',draftkings:'DraftKings'}[value]||value);
+  const label=r=>`${r.operator==='>='?r.line+'+':r.operator==='<='?r.line+' or fewer':(r.operator==='>'?'Over ':'Under ')+r.line} ${{PTS:'points',AST:'assists',REB:'rebounds','3PM':'threes'}[r.market]||r.market}`;
+  const stamp=value=>new Date(value).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'});
+  function safePath(entry){if(!/^\d{4}-\d{2}-\d{2}$/.test(entry.date)||!Number.isFinite(Date.parse(entry.date))||!/^[a-f0-9]{16}$/.test(entry.version)||entry.path!==`${entry.date}/${entry.version}.json`)throw Error('Invalid parlay publication path');return entry.path;}
+  function visibleTickets(body,book='all'){return body.tickets.filter(t=>book==='all'||t.book===book);}
+  function card(ticket,index){
+    return `<article class="pm-card"><div class="pm-card-top"><span>${escape(bookName(ticket.book))} · ${ticket.legs.length} legs</span><span class="pm-tag">Algorithm picks</span></div><div class="pm-price"><div><span>Estimated combined price</span><strong>${escape(odds(ticket.indicativeAmericanOdds))}</strong></div><small>Option ${index+1}</small></div><ol class="pm-legs">${ticket.legs.map(r=>`<li><div><h3>${escape(r.player)}</h3><p>${escape(r.team)} vs ${escape(r.opponent)}</p></div><div><strong>${escape(label(r))}</strong><span>${escape(odds(r.americanOdds))}</span></div><small>Leg price captured ${escape(stamp(r.capturedAt))}</small></li>`).join('')}</ol><div class="pm-fit"><h4>Why these legs fit</h4><ul>${ticket.fitReasons.map(s=>`<li>${escape(s)}</li>`).join('')}</ul></div><details><summary>Saved estimates & exact terms</summary><p>Provisional single-leg estimates:</p>${ticket.legs.map(r=>`<p><strong>${escape(r.player)}</strong>: ${(r.estimate.winProbability*100).toFixed(1)}% · estimated ${escape(stamp(r.estimate.asOf))}. Full game; sportsbook overtime and settlement terms must be confirmed.</p>`).join('')}<p>These percentages apply to individual legs. No verified combined win probability has been assigned.</p></details></article>`;
+  }
+  async function init(){
+    const script=document.querySelector('script[data-plus-money]');if(!script)return;
+    const base=new URL('../',script.src),dataRoot=new URL('data/plus-money/',base);
+    const target=document.getElementById('plus-money-cards'),dateSelect=document.getElementById('parlay-date'),book=document.getElementById('parlay-book'),context=document.getElementById('parlay-context');
+    let editions=[],body=null,serial=0;
+    async function json(url,immutable=false){const r=await fetch(url,{cache:immutable?'force-cache':'no-store',credentials:'omit'});if(!r.ok)throw Error('Publication unavailable');return r.json();}
+    function render(){const cards=visibleTickets(body,book.value);target.innerHTML=cards.length?cards.map(card).join(''):'<p class="pm-empty">No published combinations for that sportsbook on this date.</p>';document.getElementById('parlay-count').textContent=`${cards.length} published combination${cards.length===1?'':'s'}`;}
+    async function loadDate(){const n=++serial,entry=editions.find(e=>e.date===dateSelect.value);const saved=await json(new URL(safePath(entry),dataRoot),true);if(n!==serial)return;if(saved.schemaVersion!=='public-plus-money-1'||saved.version!==entry.version||saved.date!==entry.date||!Array.isArray(saved.tickets))throw Error('Publication mismatch');body=saved;context.textContent=`Saved leg prices: ${stamp(body.quoteObservedAt)}. ${Date.now()-Date.parse(body.quoteObservedAt)>900000?'Prices need checking again. ':''}${body.priceNote}`;render();const url=new URL(location.href);url.searchParams.set('date',body.date);history.replaceState(null,'',url);}
+    try{const index=await json(new URL('manifest.json',dataRoot));if(index.schemaVersion!=='public-plus-money-manifest-1')throw Error('Invalid publication');const latest=new Map();for(const e of index.editions){safePath(e);latest.set(e.date,e);}editions=[...latest.values()].sort((a,b)=>b.date.localeCompare(a.date));if(!editions.length){target.textContent='No Plus Money combinations have been published yet.';return;}dateSelect.innerHTML=editions.map(e=>`<option value="${escape(e.date)}">${escape(e.date)}</option>`).join('');const requested=new URL(location.href).searchParams.get('date');if(editions.some(e=>e.date===requested))dateSelect.value=requested;dateSelect.disabled=false;await loadDate();dateSelect.addEventListener('change',()=>loadDate().catch(showError));book.addEventListener('change',render);document.getElementById('refresh-parlays').addEventListener('click',()=>location.reload());}
+    catch{showError();}
+    function showError(){target.innerHTML='<p role="alert" class="site-error">The saved parlay board is unavailable. Refresh to try again.</p>';}
+  }
+  return {escape,label,safePath,visibleTickets,card,init};
+});

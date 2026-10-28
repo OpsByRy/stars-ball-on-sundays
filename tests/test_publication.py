@@ -35,7 +35,8 @@ class PublicationBoundary(unittest.TestCase):
             schema.validate_edition(view['edition'])
             self.assertEqual(source.read_bytes(),before)
             if entry['date']=='2026-10-28':
-                self.assertEqual(len(expected),42)
+                self.assertEqual(sum(p.get('category') in {'value_safe','high_probability_aggressive'} for p in expected),42)
+                self.assertEqual(sum(p.get('category')=='honorable_mention' for p in expected),13)
                 self.assertLess(len(build.canonical(view)),len(before)/10)
 
     def test_unknown_fields_fail_at_every_level(self):

@@ -162,6 +162,15 @@
       "count": 0,
       "researchCount": 2052,
       "updatedAt": "2026-10-28T12:55:18.167339+00:00"
+    },
+    {
+      "channel": "daily",
+      "count": 0,
+      "date": "2026-10-28",
+      "path": "daily/2026-10-28/6f24918bbfece48e.json",
+      "researchCount": 2065,
+      "updatedAt": "2026-10-28T17:46:01.310707+00:00",
+      "version": "6f24918bbfece48e"
     }
   ]
 }

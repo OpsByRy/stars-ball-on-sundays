@@ -27,6 +27,11 @@ h1{font-size:clamp(44px,5.5vw,72px)}h2{font-size:36px}h3{font-size:26px}
 .appearance-panel label{display:block;font-size:14px;margin:16px 0 6px;color:var(--text)}
 .appearance-panel select{width:100%;font-size:14px;min-height:44px}
 .appearance-panel p:last-child{font-size:12px;color:var(--text-muted);margin:16px 0 0}
+.home-screen-setting{display:flex;gap:12px;align-items:center;margin-top:20px;padding-top:18px;border-top:1px solid var(--border-subtle)}
+.home-screen-setting img{width:64px;height:64px;flex-shrink:0;border-radius:14px}
+.home-screen-setting span{display:block;font-size:12px;color:var(--text-muted);margin-bottom:5px}
+.home-screen-setting a{display:inline-flex;align-items:center;min-height:44px;font-size:13px;line-height:1.5}
+.appearance-panel{max-height:calc(100dvh - 140px);overflow-y:auto}
 .sbos-kicker,.eyebrow{font-family:var(--font-body);font-size:12px;font-weight:700;letter-spacing:.13em;color:var(--text-muted);line-height:1.65}
 .primary-link{background:var(--action);border:1px solid var(--action);color:var(--action-text);border-radius:6px;font-size:14px;min-height:48px;font-weight:650}
 .primary-link:hover{background:var(--action-hover);color:var(--action-text);text-decoration:none}

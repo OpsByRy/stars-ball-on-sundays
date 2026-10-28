@@ -1,0 +1,32 @@
+{
+  "id": "../../",
+  "name": "Stars Ball On Sundays",
+  "short_name": "SBOS",
+  "description": "Ry’s favorites. Our research. Your daily NBA board.",
+  "lang": "en-US",
+  "start_url": "../../?app-theme=volt",
+  "scope": "../../",
+  "display": "standalone",
+  "background_color": "#0D130F",
+  "theme_color": "#0D130F",
+  "icons": [
+    {
+      "src": "calendar-volt-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "calendar-volt-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "calendar-volt-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

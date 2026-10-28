@@ -1,0 +1,15 @@
+.app-setup{max-width:1120px}
+.app-setup-hero{display:grid;grid-template-columns:1fr 240px;gap:64px;align-items:center;padding:24px 0 44px}
+.app-setup-hero h1{margin:14px 0 22px}.app-setup-hero .sbos-lead{max-width:560px;font-size:18px;color:var(--text-muted)}
+.app-icon-preview{margin:0;text-align:center}.app-icon-preview img{display:block;width:192px;height:192px;margin:0 auto 16px;border-radius:42px;box-shadow:0 16px 36px #0002}
+.app-icon-preview figcaption{font-weight:650}.app-icon-preview figcaption span{display:block;font-size:13px;font-weight:400;color:var(--text-muted)}
+.app-theme-picker{padding:32px 0;border-top:1px solid var(--border-subtle)}.app-theme-picker h2{margin:0 0 24px;font-size:30px}
+.app-theme-options{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.app-theme-choice{display:flex;align-items:center;gap:14px;min-width:0;padding:14px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--surface);color:var(--text);font-size:14px}
+.app-theme-choice img{width:64px;height:64px;border-radius:15px;flex-shrink:0}.app-theme-choice[aria-current=page]{border:2px solid var(--focus-ring);padding:13px;background:var(--surface-raised)}
+.app-theme-choice:hover{text-decoration:none;border-color:var(--focus-ring)}
+.app-install-steps{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:18px 0 32px}.app-install-steps article{padding:28px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--surface)}
+.app-install-steps h2{font-size:30px;margin:12px 0 20px}.app-install-steps ol{padding-left:22px;color:var(--text-muted);font-size:15px}.app-install-steps li{padding-left:4px;margin:12px 0}.app-install-steps strong{color:var(--text)}
+.app-icon-note{max-width:900px;font-size:13px;color:var(--text-muted);line-height:1.8;border-left:3px solid var(--brand-accent);padding:12px 18px}
+@media(max-width:950px){.app-theme-choice{flex-direction:column;text-align:center}.app-setup-hero{gap:30px}}
+@media(max-width:620px){.app-setup-hero{grid-template-columns:1fr;gap:28px;padding:12px 0 32px}.app-setup-hero h1{font-size:54px}.app-setup-hero .sbos-lead{font-size:16px}.app-icon-preview{justify-self:start;display:flex;gap:20px;align-items:center;text-align:left}.app-icon-preview img{width:112px;height:112px;border-radius:26px;margin:0}.app-theme-options{grid-template-columns:1fr 1fr;gap:12px}.app-theme-choice{flex-direction:row;text-align:left;font-size:13px;gap:10px}.app-theme-choice img{width:52px;height:52px;border-radius:12px}.app-install-steps{grid-template-columns:1fr;gap:16px}.app-install-steps article{padding:22px}.app-icon-note{font-size:12px}}

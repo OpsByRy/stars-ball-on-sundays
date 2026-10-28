@@ -1,0 +1,32 @@
+{
+  "id": "../../",
+  "name": "Stars Ball On Sundays",
+  "short_name": "SBOS",
+  "description": "Ry’s favorites. Our research. Your daily NBA board.",
+  "lang": "en-US",
+  "start_url": "../../?app-theme=classic",
+  "scope": "../../",
+  "display": "standalone",
+  "background_color": "#02274E",
+  "theme_color": "#02274E",
+  "icons": [
+    {
+      "src": "calendar-classic-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "calendar-classic-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "calendar-classic-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

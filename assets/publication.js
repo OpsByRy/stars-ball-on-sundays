@@ -32,7 +32,9 @@
     const slip=validURL?`<a class="sbos-text-link" target="_blank" rel="noopener noreferrer" href="${escape(url)}">Open Ry’s shared FanDuel slip ↗</a>${priced?` · Full-slip screenshot price: <strong>${odds>0?'+':''}${escape(odds)}</strong>`:''}`:'';
     if(!posted&&!slip)return '';
     const favorites=(body.props||[]).filter(p=>p.group==='ry'),allPriced=favorites.length>0&&favorites.every(p=>typeof pricedPick(p).americanOdds==='number');
-    return `<div class="publication-note favorites-posted">${posted}${posted&&slip?'<br>':''}${slip}${priced?allPriced?'<br>Straight prices appear below. FanDuel’s SGP quote can differ from our calculator’s multiplied straight prices. Check current odds and availability.':'<br>Individual leg prices were not supplied. Check FanDuel for current odds and availability.':''}</div>`;
+    const checks=favorites.map(p=>p.priceCheck?.checkedAt).filter(v=>v&&Number.isFinite(Date.parse(v))).sort((a,b)=>Date.parse(a)-Date.parse(b));
+    const updated=checks.length?`<br>Prices updated ${escape(stamp(checks.at(-1)))}`:'';
+    return `<div class="publication-note favorites-posted">${posted}${posted&&slip?'<br>':''}${slip}${updated}${priced?allPriced?'<br>Straight prices appear below. FanDuel’s SGP quote can differ from our calculator’s multiplied straight prices. Check current odds and availability.':'<br>Individual leg prices were not supplied. Check FanDuel for current odds and availability.':''}</div>`;
   }
   function researchPage(rows,{query='',market='all',status='all',page=0,size=40}={}){
     const filtered=rows.filter(p=>(market==='all'||p.market===market)&&(status==='all'||publishedCategory(p)===status)&&`${p.player} ${p.team||''} ${p.opponent||''}`.toLowerCase().includes(query.toLowerCase()));

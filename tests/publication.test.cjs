@@ -77,6 +77,21 @@ test('supplied favorite prices enable the calculator without rewriting original 
   assert.equal(publication.pricedPick({...row,priceCheck:{status:'returned',americanOdds:-200}}).americanOdds,-150);
   assert.equal(publication.pricedPick({americanOdds:null,priceCheck:{status:'not_returned',americanOdds:null}}).americanOdds,null);
 });
+test('latest supplied SGP has five priced, researched favorites and separate posting and price times',()=>{
+  const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json')));
+  const snapshots=index.editions.filter(e=>e.date==='2026-10-27').map(e=>JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path))));
+  const body=snapshots.find(b=>b.sharedBetslipOdds===547),prior=snapshots.find(b=>b.sharedBetslipOdds===510),favorites=body.props.filter(p=>p.group==='ry');
+  assert.equal(favorites.length,5);assert.equal(body.favoritesPostedAt,prior.favoritesPostedAt);
+  const prices={'Jrue Holiday':-300,'Sandro Mamukelashvili':-260,'Ziaire Williams':-280,'Ja Morant':-162,'Quentin Grimes':-250};
+  for(const pick of favorites){assert.equal(publication.pricedPick(pick).americanOdds,prices[pick.player]);assert.ok(board.estimateDisplay(pick.estimate).available);assert.ok(Date.parse(pick.estimate.asOf)<Date.parse(pick.startTime));}
+  for(const [player,win,projection] of [['Ziaire Williams','81.1%','13.4'],['Quentin Grimes','69.9%','12.2']]){
+    const pick=favorites.find(p=>p.player===player),display=board.estimateDisplay(pick.estimate);
+    assert.equal(pick.operator,'>');assert.equal(pick.line,6.5);assert.equal(display.win,win);assert.equal(display.projection,projection);assert.equal(display.status,'Provisional');
+  }
+  assert.match(publication.favoritesNotice(body),/Full-slip screenshot price: <strong>\+547/);
+  assert.match(publication.favoritesNotice(body),/Posted <time/);assert.match(publication.favoritesNotice(body),/Prices updated/);
+  assert.deepEqual(body.props.filter(p=>p.group==='research'),prior.props.filter(p=>p.group==='research'));
+});
 test('result refresh appends corrections without rewriting picks or old versions',async()=>{
   const os=require('node:os'),directory=fs.mkdtempSync(path.join(os.tmpdir(),'sbos-public-results-'));
   const write=(name,value)=>{const file=path.join(directory,name);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(value));};

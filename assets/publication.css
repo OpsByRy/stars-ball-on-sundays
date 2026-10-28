@@ -49,6 +49,78 @@
 .pick-filter-panel>summary{display:flex;align-items:center;gap:10px;min-height:40px;padding:8px 0;font-size:12px;cursor:pointer;color:var(--text-primary,var(--text))}
 .pick-filter-panel>summary>span{font-size:10px;font-weight:400;color:var(--text-muted);margin-left:auto;margin-right:10px}
 .pick-filter-panel[open]{padding-bottom:10px}.pick-filter-panel[open]>.pick-controls{margin-top:8px}
+/* Daily categories share one list. Research and posted parlays have their own routes. */
+.daily-destinations{display:flex;flex-wrap:wrap;gap:8px 20px;margin:12px 0 18px;font-size:11px}
+.daily-destinations a,.back-to-board{color:var(--link);text-decoration:none}
+.edition-asof{font-size:11px!important;color:var(--text-muted);margin:6px 0 0!important}
+.daily-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--border-control);gap:4px;margin:0}
+.daily-tabs [role=tab]{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-bottom:3px solid transparent;border-radius:7px 7px 0 0;background:transparent;color:var(--text-muted);padding:14px 8px;min-height:52px;font:inherit;font-size:13px;cursor:pointer}
+.daily-tabs [role=tab] strong{font-size:11px;border-radius:4px;padding:2px 6px;background:var(--surface-raised);color:var(--text-primary,var(--text))}
+.daily-tabs [aria-selected=true]{color:var(--text-primary,var(--text));border-bottom-color:var(--accent);background:var(--surface-raised);font-weight:700}
+.daily-tabs [role=tab]:hover{color:var(--text-primary,var(--text))}
+.daily-tabs [role=tab]:focus-visible,.favorite-toggle:focus-visible,.daily-picks-panel:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.daily-filter-bar{padding:16px 0 12px;border-bottom:1px solid var(--border-subtle)}
+.daily-essential-filters{grid-template-columns:1.6fr .8fr 1.4fr;align-items:end}
+.daily-filter-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px 22px;margin-top:12px}
+.favorite-toggle{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border-control);border-radius:6px;color:var(--text-primary,var(--text));font:inherit;font-size:11px;min-height:36px;padding:6px 11px;cursor:pointer}
+.favorite-toggle>span{color:var(--warning)}.favorite-toggle strong{font-size:10px;margin-left:4px}
+.favorite-toggle[aria-pressed=true]{border-color:var(--warning);background:var(--surface-raised);box-shadow:inset 0 0 0 1px var(--warning)}
+.daily-filter-actions .more-pick-filters{flex:1;min-width:120px}.daily-filter-actions .more-pick-filters[open]{flex-basis:100%;order:3}
+.daily-filter-actions .more-pick-filters{border:0;margin:0}
+.text-button{border:0;padding:6px;background:none;color:var(--text-muted);font:inherit;font-size:11px;cursor:pointer;min-height:36px}
+.daily-list-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:18px 0 0}
+.daily-list-heading h3{font-size:22px;margin:0}.daily-list-heading>span{font-size:11px;color:var(--text-muted);white-space:nowrap}
+.daily-picks-panel>.board-intro{margin-top:6px}.daily-picks-panel .record-summary{margin:8px 0}
+body[data-page=daily] .compact-head{padding:16px 0;align-items:center}
+body[data-page=daily] .compact-head .sbos-kicker,body[data-page=daily] #slate-context,body[data-page=daily] .mode-label{display:none}
+body[data-page=daily] .compact-head h1{font-size:34px;line-height:1.15;margin:0}
+body[data-page=daily] .compact-head p{font-size:11px;margin:5px 0 0}
+body[data-page=daily] .compact-status{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;margin-bottom:12px}
+body[data-page=daily] .compact-status-top{order:2}.compact-status [data-live-note]{font-size:11px;margin:0}
+body[data-page=daily] #reload-data{min-height:32px;padding:6px 10px;font-size:10px}
+.daily-edition{padding:18px 22px}.daily-edition .edition-heading .sbos-kicker{display:none}
+.daily-edition .edition-heading h2{font-size:28px;margin:0;line-height:1.2}
+.daily-edition .edition-heading>div{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px}
+.daily-edition .edition-heading{margin-bottom:8px}
+.daily-edition .edition-heading h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.daily-edition .edition-asof{margin:0!important}
+.daily-destinations{margin:6px 0 12px}
+.daily-tabs{position:sticky;top:0;z-index:25;background:var(--surface)}
+.standalone-research .pick-group-body{padding:0}.supporting-edition .back-to-board{font-size:12px}
+@media(max-width:620px){
+ body[data-page=daily] .compact-head h1,body[data-page=research] .compact-head h1,body[data-page=parlays] .compact-head h1{font-size:32px}
+ .daily-tabs [role=tab]{font-size:11px;gap:5px;padding:11px 3px;min-height:48px;flex-wrap:wrap;line-height:1.4}
+ .daily-tabs [role=tab] strong{font-size:10px;padding:1px 4px}
+ .daily-destinations{gap:7px 15px;margin:12px 0 14px;font-size:10px}
+ .daily-essential-filters{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:10px}
+ .daily-essential-filters>.pick-search{grid-column:1/-1}.daily-essential-filters>label:last-child{grid-column:auto}
+ .daily-filter-actions{gap:9px 12px}.favorite-toggle{min-height:40px;font-size:10px;padding:7px 9px}
+ .daily-list-heading h3{font-size:19px;line-height:1.3}.daily-list-heading>span{font-size:10px}
+ .daily-edition .edition-heading{padding-inline:0}.edition-asof{font-size:10px!important}
+ body[data-page=daily] .compact-head{display:grid;grid-template-columns:1fr minmax(0,165px);gap:10px}
+ body[data-page=daily] .compact-head{padding-block:12px}
+ body[data-page=daily] .compact-head p{display:none}
+ body[data-page=daily] .compact-head>div:last-child{margin:0}
+ body[data-page=daily] .compact-head h1{font-size:28px}
+ body[data-page=daily] .sbos-topbar{padding-block:6px;gap:2px 12px}
+ body[data-page=daily] .site-header .sbos-brand img{width:110px}
+ body[data-page=daily] .site-header .sbos-brand{padding:2px 0}
+ body[data-page=daily] .sbos-topbar nav{flex-wrap:nowrap;gap:18px;overflow-x:auto;scrollbar-width:none;padding-bottom:0;font-size:11px}
+ body[data-page=daily] .sbos-topbar nav a{flex-shrink:0}
+ body[data-page=daily] .compact-status-top{flex-shrink:0}
+ body[data-page=daily] #reload-data{width:auto;white-space:nowrap}
+ body[data-page=daily] .compact-status [data-live-note]{font-size:10px;line-height:1.5}
+ body[data-page=daily] .compact-head select{font-size:11px;min-height:38px;padding:7px}
+ body[data-page=daily] .compact-head label{font-size:10px}
+ .daily-edition{padding:14px 10px}.daily-edition .edition-heading h2{font-size:25px}
+ .daily-edition .edition-heading{flex-wrap:nowrap;align-items:center;gap:8px}
+ .daily-edition .edition-heading>div{min-width:0}
+ .daily-edition .edition-status{font-size:9px;padding:5px 7px}
+ .daily-filter-bar{padding:10px 0}.daily-filter-bar .pick-controls label{line-height:1.2;gap:4px}
+ .daily-filter-actions{margin-top:8px}.daily-filter-actions .more-pick-filters>summary{padding-block:4px;min-height:40px}
+ .daily-list-heading{margin-top:12px}.daily-picks-panel>.board-intro{font-size:10px;line-height:1.5;margin-bottom:8px}
+ .supporting-edition .edition-heading{display:block}.supporting-edition .back-to-board{display:inline-block;margin:8px 0}
+}
 @media(max-width:620px){
  .pick-row-main{grid-template-columns:repeat(3,minmax(0,1fr)) 44px;min-height:90px}.pick-expand{padding-block:0;padding-right:48px}
  .row-mobile-minutes{display:inline;font-size:9px!important;line-height:1.2}.row-status{gap:1px}.row-status>small{font-size:9px;line-height:1.3}

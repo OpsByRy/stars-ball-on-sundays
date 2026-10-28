@@ -35,6 +35,24 @@ def publication_files(root):
     if any((t['date'],t['eventId'],t['playerId']) not in published for t in targets['targets']): raise ValueError('Unpublished candidate identity in public targets')
     return files
 
+def board_views(root):
+    """Small, derived views; the complete hash-verified editions stay unchanged.
+
+    Keep personal rows as attribution evidence for equivalent favorite contracts.
+    Passed research is fetched only on the separate Research page.
+    """
+    index=json.loads((root/'data/editions/manifest.json').read_text())
+    latest={}
+    for entry in index['editions']: latest[(entry['channel'],entry['date'])]=entry
+    views={}
+    for entry in latest.values():
+        if entry['channel']!='daily': continue
+        body=json.loads((root/'data/editions'/entry['path']).read_text())
+        edition={key:value for key,value in body.items() if key!='version'}
+        edition['props']=[p for p in body['props'] if p['group']=='ry' or p.get('category')!='not_a_pick']
+        views['data/boards/'+entry['path']]={'schemaVersion':'public-board-1','sourceVersion':entry['version'],'edition':edition}
+    return views
+
 def build(root):
     root=Path(root).resolve();destination=root/'dist'
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
@@ -46,10 +64,13 @@ def build(root):
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')
     # Validate everything before replacing the previous build.
     paths=[safe_file(root,name) for name in files]
+    views=board_views(root)
     if destination.exists(): shutil.rmtree(destination)
     destination.mkdir()
     for source in paths:
         target=destination/source.relative_to(root);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
+    for name,view in views.items():
+        target=destination/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(canonical(view))
     (destination/'.nojekyll').touch();errors=[]
     for page in destination.rglob('*.html'):
         def version_asset(match):
@@ -65,6 +86,6 @@ def build(root):
             if url.path.startswith('/') or (destination not in target.parents and target!=destination): errors.append(f'{page.relative_to(destination)}: escaping project link {value}')
             elif not target.exists(): errors.append(f'{page.relative_to(destination)}: missing link {value}')
     if errors: raise ValueError('\n'.join(errors))
-    return len(files)+1
+    return len(files)+len(views)+1
 
 if __name__=='__main__': print(f'Built {build(Path(__file__).resolve().parents[1])} reviewed public files.')

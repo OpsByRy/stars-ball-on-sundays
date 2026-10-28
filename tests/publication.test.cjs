@@ -166,6 +166,20 @@ test('default order groups full games then team, player and stat without truncat
   const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json'))),e=publication.latestEntries(index.editions).find(e=>e.date==='2026-10-27'),body=JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path)));
   assert.equal(publication.filterPicks(publication.allPicks(body)).length,67);
 });
+test('daily tab and favorite counts exclude passed research and standalone personal legs',()=>{
+  const selected={...row,id:'safe',group:'research',category:'value_safe'},body={props:[selected,{...selected,id:'agg',category:'high_probability_aggressive',playerId:'other',ryFavorite:true},{...selected,id:'passed',category:'not_a_pick',ryFavorite:true},{...selected,id:'personal',group:'ry',operator:'>',line:7.5},{...selected,id:'outside',group:'ry',line:20}]};
+  const before=JSON.stringify(body);assert.deepEqual(publication.tabCounts(body),{all:2,value_safe:1,high_probability_aggressive:1,favorites:2});assert.equal(JSON.stringify(body),before);
+  const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json'))),e=publication.latestEntries(index.editions).find(e=>e.date==='2026-10-28'),today=JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path)));
+  assert.deepEqual(publication.tabCounts(today),{all:42,value_safe:28,high_probability_aggressive:14,favorites:0});
+});
+test('shareable board state survives research round trips and rejects invalid categories and sorts',()=>{
+  const state={query:'Brown & Jr.',minimum:80,type:'value_safe',favoritesOnly:true,game:publication.gameKey(row),team:'Team A',market:'PTS',sort:'price_desc'},search=publication.pickSearch('2026-10-28',state);
+  assert.deepEqual(publication.readPickState(search),state);
+  assert.equal(publication.pickSearch('2026-10-28',publication.readPickState()),'date=2026-10-28');
+  const invalid=publication.readPickState('?min=999&type=not_a_pick&sort=bogus&stat=SECRET&favorites=true');
+  assert.equal(invalid.minimum,100);assert.equal(invalid.type,'all');assert.equal(invalid.sort,'game');assert.equal(invalid.market,'all');assert.equal(invalid.favoritesOnly,false);
+  assert.equal(publication.readPickState('?min=NaN').minimum,0);
+});
 test('box-score minutes support minute totals, clock strings, live updates and explicit DNPs',()=>{
   for(const [raw,expected,label]of [['32',32,'32'],['32:04',32+4/60,'32:04'],['0',0,'0'],['24.5',24.5,'24:30']]){assert.equal(board.parseMinutes(raw),expected);assert.equal(board.minutesLabel(expected),label);}
   for(const raw of [undefined,null,'DNP','--','2:60','-1','2000:00',true])assert.equal(board.parseMinutes(raw),null);

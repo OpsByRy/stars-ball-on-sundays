@@ -20,6 +20,24 @@ class PublicationBoundary(unittest.TestCase):
     def test_real_publications_and_digests_validate(self):
         self.assertGreater(len(build.publication_files(ROOT)),3)
 
+    def test_small_board_views_preserve_saved_picks_without_loading_passed_research(self):
+        index=json.loads((ROOT/'data/editions/manifest.json').read_text())
+        latest={}
+        for entry in index['editions']: latest[(entry['channel'],entry['date'])]=entry
+        views=build.board_views(ROOT)
+        for entry in latest.values():
+            if entry['channel']!='daily': continue
+            source=ROOT/'data/editions'/entry['path'];before=source.read_bytes();body=json.loads(before)
+            view=views['data/boards/'+entry['path']]
+            self.assertEqual(view['sourceVersion'],body['version'])
+            expected=[p for p in body['props'] if p['group']=='ry' or p.get('category')!='not_a_pick']
+            self.assertEqual(view['edition']['props'],expected)
+            schema.validate_edition(view['edition'])
+            self.assertEqual(source.read_bytes(),before)
+            if entry['date']=='2026-10-28':
+                self.assertEqual(len(expected),42)
+                self.assertLess(len(build.canonical(view)),len(before)/10)
+
     def test_unknown_fields_fail_at_every_level(self):
         original=self.edition()
         for place in ('root','pick','result','source','estimate'):

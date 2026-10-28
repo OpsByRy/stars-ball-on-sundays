@@ -73,9 +73,11 @@
     "assets/site.css",
     "assets/styles.css",
     "daily/index.html",
+    "daily/parlays/index.html",
     "guide/index.html",
     "index.html",
     "philosophy/index.html",
+    "research/index.html",
     "sundays/index.html",
     "sundays/week.html"
   ]

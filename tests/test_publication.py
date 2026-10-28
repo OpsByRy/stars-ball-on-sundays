@@ -35,6 +35,16 @@ class PublicationBoundary(unittest.TestCase):
         body=self.edition();body['props'][0]['result']={'eventStatus':'live','statisticalOutcome':'win','actual':20}
         with self.assertRaisesRegex(ValueError,'Final'): schema.validate_edition(body)
 
+    def test_minutes_and_favorite_flag_are_optional_typed_public_fields(self):
+        body=self.edition();row=body['props'][0]
+        row['ryFavorite']=True;row['result']={'eventStatus':'final','statisticalOutcome':'win','actual':20,'minutesPlayed':32+4/60}
+        schema.validate_edition(body)
+        for value in (-1,True,'32',float('nan')):
+            row['result']['minutesPlayed']=value
+            with self.subTest(value=value),self.assertRaisesRegex(ValueError,'minutes'):schema.validate_edition(body)
+        row['result']['minutesPlayed']=0;row['ryFavorite']='yes'
+        with self.assertRaisesRegex(ValueError,'favorite'):schema.validate_edition(body)
+
     def test_favorite_posting_times_and_shared_prices_are_validated_separately(self):
         body=self.edition();row=body['props'][0]
         body['favoritesPostedAt']='2026-10-28T02:20:48+00:00'

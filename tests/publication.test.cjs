@@ -100,14 +100,15 @@ test('result refresh appends corrections without rewriting picks or old versions
     body.version=refresher.version(body);const firstPath=`daily/${row.date}/${body.version}.json`;
     write('data/editions/'+firstPath,body);write('data/editions/manifest.json',{schemaVersion:'public-1',editions:[{channel:'daily',date:row.date,version:body.version,path:firstPath,count:0,researchCount:1,updatedAt:body.updatedAt}]});write('data/stat-targets.json',{schemaVersion:'public-1',targets:[]});
     const original=fs.readFileSync(path.join(directory,'data/editions',firstPath),'utf8');
-    let actual=8;const fetchJSON=async id=>{assert.equal(id,'123');return {header:{id:'123',competitions:[{status:{type:{completed:true,state:'post',name:'STATUS_FINAL'}}}]},boxscore:{players:[{statistics:[{labels:['AST'],athletes:[{athlete:{id:'456'},stats:[String(actual)]}]}]}]}};};
+    let actual=8;const fetchJSON=async id=>{assert.equal(id,'123');return {header:{id:'123',competitions:[{status:{type:{completed:true,state:'post',name:'STATUS_FINAL'}}}]},boxscore:{players:[{statistics:[{labels:['AST','MIN'],athletes:[{athlete:{id:'456'},stats:[String(actual),'32:04']}]}]}]}};};
     assert.deepEqual(await refresher.refresh({directory,fetchJSON,now:new Date('2026-10-26T01:00:00Z')}),{editions:1,sourceFailures:0});
     assert.equal(fs.readFileSync(path.join(directory,'data/editions',firstPath),'utf8'),original);
     assert.deepEqual(await refresher.refresh({directory,fetchJSON,now:new Date('2026-10-26T02:00:00Z')}),{editions:0,sourceFailures:0});
     actual=7;assert.deepEqual(await refresher.refresh({directory,fetchJSON,now:new Date('2026-10-26T03:00:00Z')}),{editions:1,sourceFailures:0});
     const index=JSON.parse(fs.readFileSync(path.join(directory,'data/editions/manifest.json')));assert.equal(index.editions.length,3);
     const last=JSON.parse(fs.readFileSync(path.join(directory,'data/editions',index.editions.at(-1).path)));assert.equal(last.props[0].result.statisticalOutcome,'loss');assert.equal(last.props[0].line,8);assert.equal(last.props[0].americanOdds,-150);assert.equal(refresher.version(last),last.version);
-    assert.deepEqual(Object.keys(last.props[0].result).sort(),['actual','checkedAt','eventStatus','source','sportsbookSettlement','statisticalOutcome']);
+    assert.deepEqual(Object.keys(last.props[0].result).sort(),['actual','checkedAt','eventStatus','minutesPlayed','source','sportsbookSettlement','statisticalOutcome']);
+    assert.equal(last.props[0].result.minutesPlayed,32+4/60);
     assert.equal(last.favoritesPostedAt,body.favoritesPostedAt);assert.equal(last.props[0].postedAt,body.props[0].postedAt);assert.equal(last.sharedBetslipOdds,527);assert.equal(last.sharedBetslipUrl,body.sharedBetslipUrl);
     assert.deepEqual(await refresher.refresh({directory,fetchJSON:async()=>{throw Error('source down');},now:new Date('2026-10-26T04:00:00Z')}),{editions:0,sourceFailures:1});
     assert.equal(JSON.parse(fs.readFileSync(path.join(directory,'data/editions/manifest.json'))).editions.length,3);
@@ -125,4 +126,48 @@ test('research pagination and combined filters retain every reviewed line',()=>{
   const rows=Array.from({length:85},(_,i)=>({...row,id:String(i),group:'research',player:'Player '+i,category:i%2?'not_a_pick':'value_safe',market:i<50?'PTS':'AST'}));
   const first=publication.researchPage(rows),second=publication.researchPage(rows,{page:1});assert.equal(first.total,85);assert.equal(first.pages,3);assert.equal(second.rows[0].id,'40');assert.equal(publication.researchPage(rows,{page:99}).rows.length,5);
   const filtered=publication.researchPage(rows,{query:'player',market:'AST',status:'not_a_pick',page:8});assert.equal(filtered.total,17);assert.equal(filtered.page,0);assert.ok(filtered.rows.every(r=>r.market==='AST'&&r.category==='not_a_pick'));
+});
+
+test('All Picks contains selected props only and filters probability, type, favorites, game, team and stat together',()=>{
+  const safe={...row,id:'safe',group:'research',category:'value_safe',team:'Team A',opponent:'Team B',estimate:{winProbability:.75}},aggressive={...safe,id:'aggressive',playerId:'other',category:'high_probability_aggressive',estimate:{winProbability:.60}},unknown={...safe,id:'unknown',playerId:'unknown',estimate:undefined};
+  const favorite={...safe,id:'personal',group:'ry',operator:'>',line:7.5};
+  const body={props:[safe,aggressive,unknown,{...safe,id:'passed',category:'not_a_pick'},favorite]},keys=publication.favoriteKeys(body),picks=publication.allPicks(body);
+  assert.equal(picks.length,3);assert.equal(publication.filterPicks(picks,{minimum:60}).length,2);
+  assert.deepEqual(publication.filterPicks(picks,{minimum:75,type:'value_safe',favoritesOnly:true,game:publication.gameKey(safe),team:'Team A',market:'AST',query:'example'},keys).map(p=>p.id),['safe']);
+  assert.equal(publication.filterPicks(picks,{minimum:76}).length,0);assert.equal(publication.filterPicks(picks,{minimum:100}).length,0);assert.equal(publication.filterPicks(picks,{minimum:0}).length,3);
+  assert.equal(publication.filterPicks(picks,{team:'Team B'}).length,0);assert.equal(publication.filterPicks(picks,{type:'high_probability_aggressive'}).length,1);
+  assert.equal(publication.filterPicks(picks,{favoritesOnly:true},keys).length,1);
+});
+test('favorite badges match exact equivalent counting-stat contracts across books without marking other lines or games',()=>{
+  const ry={...row,id:'ry',group:'ry',operator:'>',line:7.5,book:'fanduel'},keys=publication.favoriteKeys({props:[ry]});
+  assert.ok(publication.isFavorite({...row,book:'draftkings'},keys));
+  for(const change of [{line:9},{operator:'>',line:8},{eventId:'different'},{playerId:'other'},{market:'REB'},{period:'first_half'},{overtime:true}])assert.equal(publication.isFavorite({...row,...change},keys),false);
+  assert.ok(publication.isFavorite({...row,ryFavorite:true},new Set()));
+  const before=JSON.stringify(ry);publication.favoriteKeys({props:[ry]});assert.equal(JSON.stringify(ry),before);
+});
+test('probability and payout sorts handle plus/minus odds and always place unavailable values last',()=>{
+  const rows=[{...row,id:'unknown',estimate:{} ,americanOdds:null},{...row,id:'minus',estimate:{winProbability:.8},americanOdds:-300},{...row,id:'plus',estimate:{winProbability:.6},americanOdds:150}];
+  assert.deepEqual(publication.sortPicks(rows,'probability_desc').map(p=>p.id),['minus','plus','unknown']);
+  assert.deepEqual(publication.sortPicks(rows,'probability_asc').map(p=>p.id),['plus','minus','unknown']);
+  assert.deepEqual(publication.sortPicks(rows,'price_desc').map(p=>p.id),['plus','minus','unknown']);
+  assert.deepEqual(publication.sortPicks(rows,'price_asc').map(p=>p.id),['minus','plus','unknown']);
+  assert.equal(rows[0].id,'unknown');
+});
+test('default order groups full games then team, player and stat without truncating selected picks',()=>{
+  const rows=[{...row,id:'late',startTime:'2026-10-25T23:00:00Z',eventId:'late',team:'A',player:'A'},...['PTS','AST','REB'].map(m=>({...row,id:m,market:m,startTime:'2026-10-25T20:00:00Z',team:'A',player:'A'})),{...row,id:'team',startTime:'2026-10-25T20:00:00Z',team:'B',player:'B'}];
+  assert.deepEqual(publication.sortPicks(rows).map(p=>p.id),['PTS','REB','AST','team','late']);
+  const groups=publication.gameGroups(rows);assert.equal(groups.length,2);assert.equal(groups[0].rows.length,4);
+  const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json'))),e=publication.latestEntries(index.editions).find(e=>e.date==='2026-10-27'),body=JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path)));
+  assert.equal(publication.filterPicks(publication.allPicks(body)).length,67);
+});
+test('box-score minutes support minute totals, clock strings, live updates and explicit DNPs',()=>{
+  for(const [raw,expected,label]of [['32',32,'32'],['32:04',32+4/60,'32:04'],['0',0,'0'],['24.5',24.5,'24:30']]){assert.equal(board.parseMinutes(raw),expected);assert.equal(board.minutesLabel(expected),label);}
+  for(const raw of [undefined,null,'DNP','--','2:60','-1','2000:00',true])assert.equal(board.parseMinutes(raw),null);
+  const summary=(min,completed=true,dnp=false)=>({header:{id:'123',competitions:[{status:{type:{completed,state:completed?'post':'in',name:completed?'STATUS_FINAL':'STATUS_IN_PROGRESS'}}}]},boxscore:{players:[{team:{displayName:'A'},statistics:[{labels:['AST','MIN'],athletes:[{athlete:{id:'456'},stats:['8',min],didNotPlay:dnp}]}]}]}});
+  const source={eventId:'123',athleteId:'456',expectedTeam:'A'};
+  const final=board.parseSummary(summary('32:04'),source,row,'2026-10-26T01:00:00Z');assert.equal(final.minutesPlayed,32+4/60);assert.equal(final.statisticalOutcome,'win');
+  assert.equal(board.mergeResult(final,{...final,minutesPlayed:undefined}).minutesPlayed,32+4/60);
+  assert.equal(board.parseSummary(summary('12',false),source,row,'2026-10-26T01:00:00Z').minutesPlayed,12);
+  assert.equal(board.parseSummary(summary('DNP',true,true),source,row,'2026-10-26T01:00:00Z').minutesPlayed,0);
+  assert.equal(board.parseSummary(summary('--'),source,row,'2026-10-26T01:00:00Z').minutesPlayed,undefined);
 });

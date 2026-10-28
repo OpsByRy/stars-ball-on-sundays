@@ -4,9 +4,9 @@ import math
 import re
 
 EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds'}
-PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt'}
+PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
-RESULT_FIELDS={'actual','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
+RESULT_FIELDS={'actual','minutesPlayed','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
 SOURCE_FIELDS={'eventId','athleteId','expectedTeam','provider'}
 TARGET_FIELDS={'date','eventId','playerId','espnEventId','espnAthleteId','expectedTeam'}
 ENTRY_FIELDS={'channel','date','version','path','count','researchCount','updatedAt'}
@@ -54,9 +54,10 @@ def validate_edition(body):
         if row['market'] not in MARKETS or row['operator'] not in {'>','<','>=','<=','gt','lt','gte','lte'} or not number(row['line']) or row['line']<0: raise ValueError('Invalid exact contract')
         if row.get('americanOdds') is not None and (not number(row['americanOdds']) or abs(row['americanOdds'])<100): raise ValueError('Invalid price')
         if row.get('overtime') not in {None,True,False}: raise ValueError('Invalid overtime terms')
+        if 'ryFavorite' in row and type(row['ryFavorite']) is not bool: raise ValueError('Invalid Ry favorite flag')
         for key in ('capturedAt','startTime','postedAt'): stamp(row.get(key))
         for key,value in row.items():
-            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck'} and value is not None: text(value)
+            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite'} and value is not None: text(value)
         if 'priceCheck' in row:
             check=row['priceCheck'];keys(check,{'status','americanOdds','sourceAsOf','checkedAt','reviewedAmericanOdds','qualification'},{'status','checkedAt'})
             if check['status'] not in {'returned','not_returned'}: raise ValueError('Invalid quote check status')
@@ -83,6 +84,7 @@ def validate_edition(body):
         if 'result' in row:
             result=row['result'];keys(result,RESULT_FIELDS,{'eventStatus','statisticalOutcome'})
             if result.get('actual') is not None and (not number(result['actual']) or result['actual']<0): raise ValueError('Invalid actual')
+            if result.get('minutesPlayed') is not None and (not number(result['minutesPlayed']) or not 0<=result['minutesPlayed']<=1440): raise ValueError('Invalid minutes played')
             if result['eventStatus'] not in {'scheduled','live','final','postponed','canceled','unknown'}: raise ValueError('Invalid game status')
             if result['statisticalOutcome'] not in {'win','loss','push','dnp','canceled','postponed','pending','unavailable','reached','not_reached'}: raise ValueError('Invalid outcome')
             if result['statisticalOutcome'] in {'win','loss','push'} and (result['eventStatus']!='final' or result.get('actual') is None): raise ValueError('Final outcome requires final stats')

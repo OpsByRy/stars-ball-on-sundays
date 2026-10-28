@@ -1,10 +1,56 @@
-.pick-columns,.pick-row-main{grid-template-columns:minmax(210px,1fr) 80px 130px 120px 42px}
+.pick-columns,.pick-row-main{grid-template-columns:minmax(250px,1fr) 74px 94px 48px 100px 40px}
 .row-estimate .estimate-provisional{display:block;font-size:10px;color:var(--warning)}
 .row-estimate .row-projection{display:block;font-size:12px;color:var(--text-muted)}
 .publication-note{border-left:3px solid var(--accent,#ff1748);padding:12px 18px;margin:20px 0;color:var(--text-muted);font-size:13px;line-height:1.8}
 .record-summary{display:flex;flex-wrap:wrap;gap:10px 24px;margin:18px 0;font-size:13px;color:var(--text-muted)}
 .record-summary strong{color:var(--text);font-size:18px}.public-evidence{max-width:820px;line-height:1.8}
-@media(max-width:850px){.pick-columns,.pick-row-main{grid-template-columns:minmax(180px,1fr) 70px 105px 95px 36px}}
+@media(max-width:850px){.pick-columns,.pick-row-main{grid-template-columns:minmax(185px,1fr) 64px 78px 40px 86px 36px;gap:8px}}
 @media(max-width:620px){.pick-row-main{grid-template-columns:repeat(3,minmax(0,1fr)) 40px}.row-estimate{grid-column:2;grid-row:2}.row-estimate .row-projection{font-size:11px}.row-result{grid-column:3;grid-row:2}.pick-add{grid-column:4;grid-row:1/3}.compact-head{flex-wrap:wrap}.compact-head select{max-width:100%}.record-summary{gap:8px 16px}.publication-note{padding:10px 14px;font-size:12px}}
 
 .reviewed-row{min-width:0}.review-label{display:inline-block;margin:12px 0 3px;font-size:10px;letter-spacing:.06em;font-weight:700;color:var(--text-muted);text-transform:uppercase}.review-pass{opacity:.8}.research-controls{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin:20px 0}.research-controls label{display:grid;gap:7px;font-size:12px;color:var(--text-muted)}.research-controls input,.research-controls select{width:100%;min-width:0;padding:11px 12px;border:1px solid var(--border-control);border-radius:6px;background:var(--surface-raised);color:var(--text-primary);font:inherit}.research-pagination{display:flex;justify-content:space-between;gap:15px;margin:18px 0}.research-page-status{font-size:12px;color:var(--text-muted);margin:15px 0}.research-pagination button:disabled{opacity:.35;cursor:default}@media(max-width:650px){.research-controls{grid-template-columns:1fr 1fr}.research-controls label:first-child{grid-column:1/-1}}
+
+/* A compact, shared board for daily, Sunday, and archived editions. */
+.row-player{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;line-height:1.3}
+.row-player>strong{font-size:13px;color:var(--text-primary,var(--text))}
+.row-pick .pick-type-badge,.row-pick .ry-favorite-badge{font-size:9px;line-height:1.4;padding:1px 5px;border-radius:4px;white-space:nowrap}
+.pick-type-badge{color:var(--text-muted);background:var(--surface-raised);border:1px solid var(--border-subtle)}
+.row-pick .ry-favorite-badge{color:var(--warning,#dfbf70);border:1px solid var(--border-control);background:var(--surface-raised)}
+.row-game-context{font-size:10px!important;white-space:normal!important;line-height:1.4}
+.row-minutes{text-align:center;font:12px ui-monospace,SFMono-Regular,monospace;color:var(--text-muted)}
+.row-mobile-minutes{display:none}.pick-row-main{min-height:62px}.row-estimate>strong{font-size:14px}
+.pick-columns{font-size:10px;min-height:32px}.pick-expand{padding-block:9px}
+.game-board{margin:14px 0}.game-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 2px 8px;font-size:13px}
+.game-heading>strong{color:var(--text-primary,var(--text));line-height:1.4}.game-heading>span{font-size:10px;color:var(--text-muted);text-align:right;flex-shrink:0}
+.pick-team-heading{padding:7px 16px;font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--text-muted);background:var(--surface-raised);border-top:1px solid var(--border-subtle)}
+.board-intro,.pick-sort-note{font-size:11px;line-height:1.6;color:var(--text-muted);margin:7px 0 12px}.board-intro>span{display:inline-block;margin-left:5px}.pick-sort-note{font-size:10px;margin:8px 0 0}
+.pick-controls{display:grid;grid-template-columns:1.5fr .7fr 1fr 1.4fr;gap:10px}
+.pick-controls label{display:grid;gap:5px;color:var(--text-muted);font-size:10px;min-width:0}
+.pick-controls input,.pick-controls select{width:100%;min-width:0;min-height:39px;padding:8px 10px;border:1px solid var(--border-control);border-radius:6px;background:var(--surface-raised);color:var(--text-primary,var(--text));font:inherit;font-size:12px}
+.pick-controls input{font-size:13px}.pick-filter-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;margin-top:10px}
+.favorite-filter{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-primary,var(--text));cursor:pointer}.favorite-filter input{width:16px;height:16px;accent-color:var(--accent)}
+.pick-filter-actions>.outline-button{font-size:10px;min-height:30px;padding:5px 9px;margin:0 0 0 auto;width:auto}
+.more-pick-filters{flex:1;min-width:180px}.more-pick-filters>summary{font-size:11px;min-height:28px;padding:4px 0;cursor:pointer}.more-pick-filters[open]{flex-basis:100%;order:3}.secondary-filters{grid-template-columns:2fr 1fr 1fr;margin-top:9px}
+.pick-empty{padding:22px 12px;color:var(--text-muted);font-size:12px}.all-picks .pick-group-body{padding-top:4px}
+.record-summary{gap:6px 18px;margin:12px 0;font-size:11px}.record-summary strong{font-size:13px}.record-hits strong{color:var(--success)}.record-misses strong{color:var(--danger)}
+.edition-record{margin:8px 0 2px}.edition-record .publication-note{margin:6px 0}.edition-panel .pick-group{margin-top:14px}.pick-jumps{margin-block:12px}.pick-jumps strong{font-size:10px;color:var(--text-primary,var(--text))}
+.price-warning{color:var(--warning)}
+.row-pick .pick-warning-badge{font-size:9px;color:var(--warning);white-space:nowrap}
+@media(max-width:850px){.pick-controls{grid-template-columns:1fr 1fr}.secondary-filters{grid-template-columns:1fr 1fr}.secondary-filters>label:first-child{grid-column:1/-1}}
+@media(max-width:620px){
+ .pick-row-main{grid-template-columns:repeat(3,minmax(0,1fr)) 34px;min-height:86px;padding:9px 10px;gap:4px 7px}
+ .row-minutes{display:none}.row-mobile-minutes{display:block;font-size:9px!important}.row-pick{display:grid;gap:3px}.row-pick .row-player{display:flex}.row-player>strong{font-size:12px}
+ .row-pick .pick-type-badge,.row-pick .ry-favorite-badge{font-size:8px}.row-pick>span{font-size:11px}.pick-expand{padding-right:28px}
+ .game-heading{display:block;padding:10px 2px 7px}.game-heading>strong{display:block;font-size:12px}.game-heading>span{display:block;text-align:left;font-size:9px;margin-top:3px}
+ .pick-team-heading{padding:6px 10px;font-size:9px}.row-game-context{font-size:9px!important}.pick-controls{gap:9px}.pick-controls input,.pick-controls select{font-size:12px;min-height:40px}
+ .pick-search{grid-column:1/-1}.pick-controls>label:last-child{grid-column:1/-1}.secondary-filters>label:last-child{grid-column:auto}.pick-filter-actions{gap:7px 12px}.more-pick-filters{min-width:130px}
+ .board-intro>span{display:block;margin-left:0}.pick-filter-actions>.outline-button{margin-left:0}.row-price{padding-left:20px}.row-estimate .mobile-cell-label{font-size:8px}.row-result{text-align:left}
+}
+.pick-filter-panel{margin:10px 0 12px;border:1px solid var(--border-subtle);border-radius:7px;padding:0 12px;background:var(--surface)}
+.pick-filter-panel>summary{display:flex;align-items:center;gap:10px;min-height:40px;padding:8px 0;font-size:12px;cursor:pointer;color:var(--text-primary,var(--text))}
+.pick-filter-panel>summary>span{font-size:10px;font-weight:400;color:var(--text-muted);margin-left:auto;margin-right:10px}
+.pick-filter-panel[open]{padding-bottom:10px}.pick-filter-panel[open]>.pick-controls{margin-top:8px}
+@media(max-width:620px){
+ .pick-row-main{grid-template-columns:repeat(3,minmax(0,1fr)) 44px;min-height:90px}.pick-expand{padding-block:0;padding-right:48px}
+ .row-mobile-minutes{display:inline;font-size:9px!important;line-height:1.2}.row-status{gap:1px}.row-status>small{font-size:9px;line-height:1.3}
+ .row-price,.row-estimate{gap:1px}.row-price>strong,.row-estimate>strong,.mobile-cell-label{line-height:1.2}.pick-add{width:44px;height:44px}
+}

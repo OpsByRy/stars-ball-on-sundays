@@ -3,7 +3,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const board=require('../assets/pick-board.js');
 const root=path.resolve(__dirname,'..');
-const resultFields=['actual','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'];
+const resultFields=['actual','minutesPlayed','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'];
 function publicResult(result){return Object.fromEntries(resultFields.filter(k=>result[k]!==undefined).map(k=>[k,result[k]]));}
 function sorted(value){return Array.isArray(value)?value.map(sorted):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(k=>[k,sorted(value[k])])):value;}
 function version(body){const {version:ignored,...content}=body;return crypto.createHash('sha256').update(JSON.stringify(sorted(content))).digest('hex').slice(0,16);}

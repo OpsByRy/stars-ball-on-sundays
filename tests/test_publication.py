@@ -35,6 +35,18 @@ class PublicationBoundary(unittest.TestCase):
         body=self.edition();body['props'][0]['result']={'eventStatus':'live','statisticalOutcome':'win','actual':20}
         with self.assertRaisesRegex(ValueError,'Final'): schema.validate_edition(body)
 
+    def test_favorite_posting_times_and_shared_prices_are_validated_separately(self):
+        body=self.edition();row=body['props'][0]
+        body['favoritesPostedAt']='2026-10-28T02:20:48+00:00'
+        body['sharedBetslipUrl']='https://sportsbook.fanduel.com/addToBetslip?shareCode=yr6GfmU'
+        body['sharedBetslipOdds']=527;row['postedAt']=body['favoritesPostedAt'];row['americanOdds']=None
+        schema.validate_edition(body)
+        self.assertIsNone(row['americanOdds'])
+        row['postedAt']='2026-10-27T22:20:48'
+        with self.assertRaisesRegex(ValueError,'timezone'): schema.validate_edition(body)
+        row['postedAt']=body['favoritesPostedAt'];body['sharedBetslipOdds']=True
+        with self.assertRaisesRegex(ValueError,'slip price'): schema.validate_edition(body)
+
     def test_later_quote_checks_do_not_replace_saved_contract_prices(self):
         body=self.edition();row=body['props'][0];saved=row.get('americanOdds')
         row['priceCheck']={'status':'returned','americanOdds':-225,'sourceAsOf':'2026-10-27T18:17:00Z','checkedAt':'2026-10-27T18:18:43Z'}

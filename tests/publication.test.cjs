@@ -37,11 +37,31 @@ test('published estimates format saved outputs and preserve unavailable values',
   assert.equal(board.estimateDisplay({projection:0,winProbability:0,status:'validated'}).win,'0.0%');
   assert.equal(board.estimateDisplay({projection:19,status:'provisional'}).win,'—');
 });
+test('favorite notice shows the Eastern posting day and distinguishes the full-slip price',()=>{
+  const notice=publication.favoritesNotice({favoritesPostedAt:'2026-10-28T02:20:48+00:00',sharedBetslipUrl:'https://sportsbook.fanduel.com/addToBetslip?shareCode=yr6GfmU',sharedBetslipOdds:527});
+  assert.match(notice,/Posted <time datetime="2026-10-28T02:20:48\+00:00">Oct 27, 2026, 10:20 PM ET/);
+  assert.match(notice,/Full-slip screenshot price: <strong>\+527/);
+  assert.match(notice,/Individual leg prices were not supplied/);
+  assert.equal(publication.favoritesNotice({}),'');
+  assert.doesNotMatch(publication.favoritesNotice({sharedBetslipUrl:'javascript:alert(1)',sharedBetslipOdds:527}),/href=/);
+});
+test('late-game favorites preserve the five supplied contracts and existing research',()=>{
+  const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json')));
+  const editions=index.editions.filter(e=>e.date==='2026-10-27').map(e=>JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path))));
+  const body=editions.find(e=>e.sharedBetslipUrl?.endsWith('shareCode=yr6GfmU'));
+  const favorites=body.props.filter(p=>p.group==='ry');assert.equal(favorites.length,5);
+  assert.deepEqual(favorites.map(p=>[p.player,p.market,p.operator,p.line]).sort(),[
+    ['Jrue Holiday','AST','>',2.5],['Sandro Mamukelashvili','PTS','>',5.5],['Ziaire Williams','PTS','>',6.5],['Ja Morant','AST','>=',6],['Quentin Grimes','PTS','>',6.5]
+  ].sort());
+  assert.ok(favorites.every(p=>p.book==='fanduel'&&p.americanOdds===null&&p.postedAt===body.favoritesPostedAt&&p.resultSource.eventId==='401909880'));
+  assert.equal(publication.lineLabel(favorites.find(p=>p.player==='Ja Morant')),'6+ assists');
+  assert.deepEqual(body.props.filter(p=>p.group==='research'),editions.find(e=>e.version==='cc92106688ce1637').props.filter(p=>p.group==='research'));
+});
 test('result refresh appends corrections without rewriting picks or old versions',async()=>{
   const os=require('node:os'),directory=fs.mkdtempSync(path.join(os.tmpdir(),'sbos-public-results-'));
   const write=(name,value)=>{const file=path.join(directory,name);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(value));};
   try{
-    const body={schemaVersion:'public-1',channel:'daily',date:row.date,timezone:'America/New_York',firstPublishedAt:null,recordedAt:'2026-10-25T18:00:00Z',updatedAt:'2026-10-25T18:00:00Z',priceNote:'Saved observation.',props:[{...row,id:'published-pick',group:'research',resultSource:{provider:'espn',eventId:'123',athleteId:'456'}}]};
+    const body={schemaVersion:'public-1',channel:'daily',date:row.date,timezone:'America/New_York',firstPublishedAt:null,recordedAt:'2026-10-25T18:00:00Z',updatedAt:'2026-10-25T18:00:00Z',favoritesPostedAt:'2026-10-25T22:00:00Z',sharedBetslipOdds:527,sharedBetslipUrl:'https://sportsbook.fanduel.com/addToBetslip?shareCode=yr6GfmU',priceNote:'Saved observation.',props:[{...row,id:'published-pick',group:'research',postedAt:'2026-10-25T22:00:00Z',resultSource:{provider:'espn',eventId:'123',athleteId:'456'}}]};
     body.version=refresher.version(body);const firstPath=`daily/${row.date}/${body.version}.json`;
     write('data/editions/'+firstPath,body);write('data/editions/manifest.json',{schemaVersion:'public-1',editions:[{channel:'daily',date:row.date,version:body.version,path:firstPath,count:0,researchCount:1,updatedAt:body.updatedAt}]});write('data/stat-targets.json',{schemaVersion:'public-1',targets:[]});
     const original=fs.readFileSync(path.join(directory,'data/editions',firstPath),'utf8');
@@ -53,6 +73,7 @@ test('result refresh appends corrections without rewriting picks or old versions
     const index=JSON.parse(fs.readFileSync(path.join(directory,'data/editions/manifest.json')));assert.equal(index.editions.length,3);
     const last=JSON.parse(fs.readFileSync(path.join(directory,'data/editions',index.editions.at(-1).path)));assert.equal(last.props[0].result.statisticalOutcome,'loss');assert.equal(last.props[0].line,8);assert.equal(last.props[0].americanOdds,-150);assert.equal(refresher.version(last),last.version);
     assert.deepEqual(Object.keys(last.props[0].result).sort(),['actual','checkedAt','eventStatus','source','sportsbookSettlement','statisticalOutcome']);
+    assert.equal(last.favoritesPostedAt,body.favoritesPostedAt);assert.equal(last.props[0].postedAt,body.props[0].postedAt);assert.equal(last.sharedBetslipOdds,527);assert.equal(last.sharedBetslipUrl,body.sharedBetslipUrl);
     assert.deepEqual(await refresher.refresh({directory,fetchJSON:async()=>{throw Error('source down');},now:new Date('2026-10-26T04:00:00Z')}),{editions:0,sourceFailures:1});
     assert.equal(JSON.parse(fs.readFileSync(path.join(directory,'data/editions/manifest.json'))).editions.length,3);
   }finally{fs.rmSync(directory,{recursive:true,force:true});}

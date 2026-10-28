@@ -3,8 +3,8 @@ from datetime import date, datetime
 import math
 import re
 
-EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl'}
-PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck'}
+EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds'}
+PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
 RESULT_FIELDS={'actual','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
 SOURCE_FIELDS={'eventId','athleteId','expectedTeam','provider'}
@@ -38,10 +38,11 @@ def validate_edition(body):
     keys(body,EDITION_FIELDS,{'schemaVersion','channel','date','props'})
     if body['schemaVersion']!='public-1' or body['channel'] not in {'daily','sunday'}: raise ValueError('Invalid edition')
     day(body['date'])
-    for key in ('firstPublishedAt','recordedAt','updatedAt'): stamp(body.get(key))
+    for key in ('firstPublishedAt','recordedAt','updatedAt','favoritesPostedAt'): stamp(body.get(key))
     if body.get('timezone')!='America/New_York': raise ValueError('Invalid timezone')
     text(body.get('priceNote',''))
     if body.get('sharedBetslipUrl') is not None and not re.fullmatch(r'https://sportsbook\.fanduel\.com/addToBetslip\?shareCode=[a-zA-Z0-9]{1,64}',body['sharedBetslipUrl']): raise ValueError('Invalid shared slip URL')
+    if body.get('sharedBetslipOdds') is not None and (not body.get('sharedBetslipUrl') or not number(body['sharedBetslipOdds']) or abs(body['sharedBetslipOdds'])<100): raise ValueError('Invalid shared slip price')
     if not isinstance(body['props'],list): raise ValueError('Invalid picks')
     seen=set()
     for row in body['props']:
@@ -53,7 +54,7 @@ def validate_edition(body):
         if row['market'] not in MARKETS or row['operator'] not in {'>','<','>=','<=','gt','lt','gte','lte'} or not number(row['line']) or row['line']<0: raise ValueError('Invalid exact contract')
         if row.get('americanOdds') is not None and (not number(row['americanOdds']) or abs(row['americanOdds'])<100): raise ValueError('Invalid price')
         if row.get('overtime') not in {None,True,False}: raise ValueError('Invalid overtime terms')
-        for key in ('capturedAt','startTime'): stamp(row.get(key))
+        for key in ('capturedAt','startTime','postedAt'): stamp(row.get(key))
         for key,value in row.items():
             if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck'} and value is not None: text(value)
         if 'priceCheck' in row:

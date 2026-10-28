@@ -5,8 +5,8 @@
   else root.STARS_RESULT_UTILS = api;
 })(typeof window !== 'undefined' ? window : this, function () {
   'use strict';
-  const fields = { PTS: ['points'], AST: ['assists'], REB: ['rebounds'], '3PM': ['threes'], PRA: ['points', 'rebounds', 'assists'], PR: ['points', 'rebounds'], PA: ['points', 'assists'], RA: ['rebounds', 'assists'] };
-  const aliases = { points: 'PTS', assists: 'AST', rebounds: 'REB', threes: '3PM', '3pt': '3PM', '3pm': '3PM', pra: 'PRA', pr: 'PR', pa: 'PA', ra: 'RA' };
+  const fields = { BLK: ['blocks'], STL: ['steals'], PTS: ['points'], AST: ['assists'], REB: ['rebounds'], '3PM': ['threes'], PRA: ['points', 'rebounds', 'assists'], PR: ['points', 'rebounds'], PA: ['points', 'assists'], RA: ['rebounds', 'assists'] };
+  const aliases = { blocks: 'BLK', steals: 'STL', points: 'PTS', assists: 'AST', rebounds: 'REB', threes: '3PM', '3pt': '3PM', '3pm': '3PM', pra: 'PRA', pr: 'PR', pa: 'PA', ra: 'RA' };
   const owns = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
   function normalizeContract(prop) {
     if (!prop || typeof prop !== 'object') return null;
@@ -28,7 +28,7 @@
     return { market, line, operator };
   }
   function statValue(stats, name) {
-    const alias = { points: 'PTS', assists: 'AST', rebounds: 'REB', threes: '3PM' }[name];
+    const alias = { blocks: 'BLK', steals: 'STL', points: 'PTS', assists: 'AST', rebounds: 'REB', threes: '3PM' }[name];
     const raw = stats[name] ?? stats[alias] ?? (name === 'threes' ? stats['3PT'] : null);
     const value = name === 'threes' && typeof raw === 'string' && /^\d+-\d+$/.test(raw) ? Number(raw.split('-')[0]) : raw;
     return typeof value === 'number' && Number.isFinite(value) && value >= 0 && Number.isInteger(value) ? value : null;

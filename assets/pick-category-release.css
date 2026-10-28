@@ -1,0 +1,73 @@
+.pick-category-tab {
+  display: flex;
+  position: relative;
+  min-width: 0;
+  align-items: stretch;
+  justify-content: center;
+  border-radius: 7px 7px 0 0;
+}
+.pick-category-tab:has([aria-selected=true]) {
+  background: var(--surface-raised);
+}
+.pick-category-tab::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  pointer-events: none;
+  background: transparent;
+}
+.pick-category-tab:has([aria-selected=true])::after { background: var(--accent); }
+.daily-tabs .pick-category-tab [role=tab] {
+  flex: 0 1 auto;
+  position: static;
+  min-width: 0;
+  padding-inline: 4px;
+  background: transparent;
+  border-bottom-color: transparent;
+}
+.daily-tabs .pick-category-tab [role=tab]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.pick-category-info {
+  display: inline-flex;
+  position: relative;
+  z-index: 1;
+  flex: 0 0 32px;
+  width: 32px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.pick-category-info svg { pointer-events: none; }
+.pick-category-info:hover,
+.pick-category-info[aria-expanded=true] { color: var(--text-primary, var(--text)); }
+.pick-category-info:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.pick-category-tooltip {
+  position: fixed;
+  z-index: 90;
+  width: max-content;
+  max-width: min(340px, calc(100vw - 24px));
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid var(--border-control);
+  border-radius: 8px;
+  background: var(--tooltip-surface, var(--surface-raised));
+  color: var(--text-primary, var(--text));
+  box-shadow: 0 6px 20px #0003;
+  font: 400 13px/1.5 var(--font-body, sans-serif);
+  text-align: left;
+  white-space: normal;
+}
+.pick-category-tooltip[hidden] { display: none; }
+
+@media(max-width:620px){.daily-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.pick-category-tab{min-height:52px}.daily-tabs .pick-category-tab [role=tab]{padding-inline:3px}.pick-category-info{flex-basis:32px}.daily-tabs [role=tab]{flex-wrap:nowrap}}

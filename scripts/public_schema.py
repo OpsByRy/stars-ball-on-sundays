@@ -4,13 +4,67 @@ import math
 import re
 
 EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds'}
-PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected'}
+PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected','confidenceUpdate'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
 RESULT_FIELDS={'actual','minutesPlayed','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
 SOURCE_FIELDS={'eventId','athleteId','expectedTeam','provider'}
 TARGET_FIELDS={'date','eventId','playerId','espnEventId','espnAthleteId','expectedTeam'}
 ENTRY_FIELDS={'channel','date','version','path','count','researchCount','updatedAt'}
 MARKETS={'PTS','AST','REB','3PM','PRA','PR','PA','RA'}
+
+def season_name(value):
+    if not isinstance(value,str) or not re.fullmatch(r'\d{4}-\d{2}',value) or int(value[-2:])!=(int(value[:4])+1)%100: raise ValueError('Invalid season')
+
+def validate_game_log_catalog(body):
+    keys(body,{'schemaVersion','seasons'},{'schemaVersion','seasons'})
+    if body['schemaVersion']!='public-game-log-catalog-1' or not isinstance(body['seasons'],list) or not 1<=len(body['seasons'])<=20:raise ValueError('Invalid game-log seasons')
+    seen=set()
+    for entry in body['seasons']:
+        keys(entry,{'season','path','dataThrough','capturedAt','players','games','appearances'},{'season','path','dataThrough','capturedAt','players','games','appearances'})
+        season_name(entry['season']);day(entry['dataThrough']);stamp(entry['capturedAt'])
+        if entry['season'] in seen or entry['path']!=entry['season']+'/index.json':raise ValueError('Invalid season index path')
+        seen.add(entry['season'])
+        if any(type(entry[k]) is not int or entry[k]<0 for k in ('players','games','appearances')):raise ValueError('Invalid season coverage')
+
+def validate_game_log_index(body):
+    keys(body,{'schemaVersion','season','source','capturedAt','dataThrough','appearances','games','players'},{'schemaVersion','season','source','capturedAt','dataThrough','appearances','games','players'})
+    if body['schemaVersion']!='public-game-logs-1' or body['source']!='nba':raise ValueError('Invalid game-log index')
+    season_name(body['season']);stamp(body['capturedAt']);day(body['dataThrough'])
+    if body['capturedAt'] is None:raise ValueError('Missing log capture time')
+    if any(type(body[k]) is not int or body[k]<0 for k in ('appearances','games')):raise ValueError('Invalid log coverage')
+    if not isinstance(body['players'],list) or len(body['players'])>2000:raise ValueError('Invalid player directory')
+    ids=set();espn=set();total=0
+    for player in body['players']:
+        keys(player,{'id','nbaId','espnId','name','teams','latestTeam','games','lastGameDate','version','path'},{'id','nbaId','name','teams','latestTeam','games','lastGameDate','version','path'})
+        if not isinstance(player['nbaId'],str) or not re.fullmatch(r'\d{1,12}',player['nbaId']) or player['id']!='nba:'+player['nbaId'] or player['id'] in ids:raise ValueError('Invalid player identity')
+        ids.add(player['id']);text(player['name'],120)
+        if 'espnId' in player:
+            if not re.fullmatch(r'\d{1,12}',player['espnId']) or player['espnId'] in espn:raise ValueError('Ambiguous ESPN identity')
+            espn.add(player['espnId'])
+        if not isinstance(player['teams'],list) or not player['teams'] or any(not isinstance(t,str) or not re.fullmatch(r'[A-Z]{2,4}',t) for t in player['teams']) or player['latestTeam'] not in player['teams']:raise ValueError('Invalid player teams')
+        if type(player['games']) is not int or not 1<=player['games']<=150:raise ValueError('Invalid appearance count')
+        total+=player['games'];day(player['lastGameDate'])
+        if player['lastGameDate']>body['dataThrough']:raise ValueError('Game outside log coverage')
+        if not re.fullmatch(r'[0-9a-f]{16}',player['version']) or player['path']!=f"{body['season']}/{player['nbaId']}/{player['version']}.json":raise ValueError('Invalid game-log path')
+    if total!=body['appearances']:raise ValueError('Appearance count mismatch')
+
+def validate_game_log(body):
+    keys(body,{'schemaVersion','season','playerId','player','games','version'},{'schemaVersion','season','playerId','player','games','version'})
+    if body['schemaVersion']!='public-game-log-1' or not re.fullmatch(r'nba:\d{1,12}',body['playerId']):raise ValueError('Invalid game log')
+    season_name(body['season']);text(body['player'],120)
+    if not re.fullmatch(r'[0-9a-f]{16}',body['version']) or not isinstance(body['games'],list) or not 1<=len(body['games'])<=150:raise ValueError('Invalid log body')
+    seen=set()
+    for game in body['games']:
+        keys(game,{'eventId','date','team','opponent','home','stats'},{'eventId','date','team','opponent','home','stats'})
+        if not re.fullmatch(r'002'+body['season'][2:4]+r'\d{5}',game['eventId']) or game['eventId'] in seen:raise ValueError('Invalid or duplicate regular-season log event')
+        seen.add(game['eventId']);day(game['date'])
+        if any(not isinstance(game[k],str) or not re.fullmatch(r'[A-Z]{2,4}',game[k]) for k in ('team','opponent')) or type(game['home']) is not bool:raise ValueError('Invalid log matchup')
+        keys(game['stats'],{'MIN','PTS','REB','AST','3PM','FGA','3PA','FTA','FGM','FG%','3P%','FTM','FT%','BLK','STL','TO'},{'MIN','PTS','REB','AST','3PM','FGA','3PA','FTA','FGM','FG%','3P%','FTM','FT%','BLK','STL','TO'})
+        if any(value is not None and (not number(value) or not 0<=value<=1440) for value in game['stats'].values()):raise ValueError('Invalid box-score statistic')
+        if any(value is not None and not float(value).is_integer() for key,value in game['stats'].items() if key not in {'MIN','FG%','3P%','FT%'}):raise ValueError('Invalid counting statistic')
+        if any(game['stats'][k] is not None and not 0<=game['stats'][k]<=1 for k in ('FG%','3P%','FT%')):raise ValueError('Invalid shooting percentage')
+        for made,attempted in [('FGM','FGA'),('3PM','3PA'),('FTM','FTA')]:
+            if game['stats'][made] is not None and game['stats'][attempted] is not None and game['stats'][made]>game['stats'][attempted]:raise ValueError('Made shots exceed attempts')
 
 def keys(obj, allowed, required=()):
     if not isinstance(obj,dict) or set(obj)-allowed or set(required)-set(obj):
@@ -33,6 +87,31 @@ def number(value):
 def text(value, maximum=500):
     if not isinstance(value,str) or len(value)>maximum or any(ord(c)<32 for c in value):
         raise ValueError('Invalid public text')
+
+
+def validate_estimate(estimate):
+    keys(estimate,ESTIMATE_FIELDS,{'status'})
+    if estimate['status'] not in {'provisional','validated'}:raise ValueError('Invalid estimate status')
+    if 'projection' not in estimate and 'winProbability' not in estimate:raise ValueError('Empty estimate')
+    if 'projection' in estimate and (not number(estimate['projection']) or estimate['projection']<0):raise ValueError('Invalid projection')
+    probabilities={'winProbability','pushProbability','lossProbability'}
+    if probabilities&set(estimate):
+        if not probabilities<=set(estimate) or any(not number(estimate[k]) or not 0<=estimate[k]<=1 for k in probabilities) or abs(sum(estimate[k] for k in probabilities)-1)>1e-7:raise ValueError('Invalid outcome probabilities')
+    stamp(estimate.get('asOf'))
+
+
+def validate_confidence_update(update,row):
+    keys(update,{'status','checkedAt','estimate','americanOdds','capturedAt','summary','qualification'},
+         {'status','checkedAt','summary','qualification'})
+    if update['status'] not in {'supported','reduced','improved','review','unavailable'}:raise ValueError('Invalid confidence update status')
+    if update['qualification'] not in {'qualifies','does_not_qualify','unavailable'}:raise ValueError('Invalid confidence update qualification')
+    stamp(update['checkedAt']);stamp(update.get('capturedAt'));text(update['summary'])
+    if update['checkedAt'] is None or row.get('startTime') and datetime.fromisoformat(update['checkedAt'].replace('Z','+00:00'))>=datetime.fromisoformat(row['startTime'].replace('Z','+00:00')):raise ValueError('Confidence update must be pregame')
+    if update.get('americanOdds') is not None and (not number(update['americanOdds']) or abs(update['americanOdds'])<100 or update.get('capturedAt') is None):raise ValueError('Invalid confidence update price')
+    if update['qualification']=='qualifies' and (update.get('americanOdds') is None or 'estimate' not in update):raise ValueError('Qualifying update needs a price and estimate')
+    if 'estimate' in update:
+        validate_estimate(update['estimate'])
+        if update['estimate'].get('asOf')!=update['checkedAt']:raise ValueError('Confidence estimate timestamp mismatch')
 
 
 def validate_honorable_mentions(rows):
@@ -74,7 +153,8 @@ def validate_edition(body):
         if 'selected' in row and type(row['selected']) is not bool: raise ValueError('Invalid selected status')
         for key in ('capturedAt','startTime','postedAt'): stamp(row.get(key))
         for key,value in row.items():
-            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite','selected'} and value is not None: text(value)
+            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite','selected','confidenceUpdate'} and value is not None: text(value)
+        if 'confidenceUpdate' in row:validate_confidence_update(row['confidenceUpdate'],row)
         if 'priceCheck' in row:
             check=row['priceCheck'];keys(check,{'status','americanOdds','sourceAsOf','checkedAt','reviewedAmericanOdds','qualification'},{'status','checkedAt'})
             if check['status'] not in {'returned','not_returned'}: raise ValueError('Invalid quote check status')
@@ -85,14 +165,7 @@ def validate_edition(body):
             if check.get('qualification') not in {None,'qualifies','does_not_qualify','unavailable'}: raise ValueError('Invalid price qualification')
             stamp(check.get('checkedAt'));stamp(check.get('sourceAsOf'))
         if 'estimate' in row:
-            estimate=row['estimate'];keys(estimate,ESTIMATE_FIELDS,{'status'})
-            if estimate['status'] not in {'provisional','validated'}: raise ValueError('Invalid estimate status')
-            if 'projection' not in estimate and 'winProbability' not in estimate: raise ValueError('Empty estimate')
-            if 'projection' in estimate and (not number(estimate['projection']) or estimate['projection']<0): raise ValueError('Invalid projection')
-            probabilities={'winProbability','pushProbability','lossProbability'}
-            if probabilities&set(estimate):
-                if not probabilities<=set(estimate) or any(not number(estimate[k]) or not 0<=estimate[k]<=1 for k in probabilities) or abs(sum(estimate[k] for k in probabilities)-1)>1e-7: raise ValueError('Invalid outcome probabilities')
-            stamp(estimate.get('asOf'))
+            validate_estimate(row['estimate'])
         if 'resultSource' in row:
             source=row['resultSource'];keys(source,SOURCE_FIELDS,{'eventId','athleteId'})
             for key,value in source.items(): text(value)

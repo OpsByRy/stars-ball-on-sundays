@@ -11,6 +11,8 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 import build
 import public_schema as schema
+import profile_schema
+import career_schema
 
 class PublicationBoundary(unittest.TestCase):
     def edition(self):
@@ -19,6 +21,56 @@ class PublicationBoundary(unittest.TestCase):
 
     def test_real_publications_and_digests_validate(self):
         self.assertGreater(len(build.publication_files(ROOT)),3)
+
+    def test_game_logs_have_verified_hashes_and_only_public_box_scores(self):
+        files=build.game_log_files(ROOT)
+        self.assertGreater(len(files),400)
+        index=json.loads((ROOT/'data/player-logs/index.json').read_text())
+        body=json.loads((ROOT/'data/player-logs'/index['players'][0]['path']).read_text())
+        schema.validate_game_log_index(index);schema.validate_game_log(body)
+        for target in (body,body['games'][0],body['games'][0]['stats']):
+            target['private_feature']='never publish'
+            with self.assertRaisesRegex(ValueError,'unknown'):schema.validate_game_log(body)
+            target.pop('private_feature')
+        altered=copy.deepcopy(index);altered['players'][0]['path']='../../engine.sqlite3'
+        with self.assertRaisesRegex(ValueError,'path'):schema.validate_game_log_index(altered)
+
+    def test_profile_facts_and_forecasts_match_immutable_public_selections(self):
+        files=build.profile_files(ROOT);self.assertGreater(len(files),600)
+        index=json.loads((ROOT/'data/player-profiles/index.json').read_text())
+        chosen=next(p for p in index['players'] if p['id']=='nba:1627759')
+        body=json.loads((ROOT/'data/player-profiles'/chosen['path']).read_text())
+        self.assertTrue(body['bio']['source'].startswith('https://www.espn.com/'))
+        for target in (body,body['bio'],body['upcoming'],body['upcoming']['markets'][0],body['upcoming']['markets'][0]['recent'][0]):
+            target['private_feature_vector']=[1,2,3]
+            with self.assertRaisesRegex(ValueError,'unknown'):profile_schema.validate_profile(body)
+            target.pop('private_feature_vector')
+        bad=copy.deepcopy(index);bad['players'][0]['path']='../../engine.sqlite3'
+        with self.assertRaisesRegex(ValueError,'path'):profile_schema.validate_profile_index(bad)
+        m=body['upcoming']['markets'][0];m['opponentDefense']['through']=body['asOfDate']
+        with self.assertRaisesRegex(ValueError,'cutoff'):profile_schema.validate_profile(body)
+
+    def test_career_opponent_history_has_full_coverage_and_rejects_private_fields(self):
+        files=build.career_files(ROOT);self.assertGreater(len(files),300)
+        index=json.loads((ROOT/'data/career-matchups/index.json').read_text());entry=next(p for p in index['matchups'] if p['playerId']=='nba:1627759');body=json.loads((ROOT/'data/career-matchups'/entry['path']).read_text())
+        self.assertEqual(body['requestedFromSeason'],'2016-17');self.assertGreaterEqual(len(body['games']),30);self.assertEqual(min(g['date'] for g in body['games'])[:4],'2016');self.assertEqual(body['missingSeasons'],[])
+        for target in (body,body['games'][0],body['games'][0]['stats']):
+            target['private_vector']=[1,2,3]
+            with self.assertRaisesRegex(ValueError,'unknown'):career_schema.validate_career_history(body)
+            target.pop('private_vector')
+        broken=copy.deepcopy(body);broken['seasonsCovered'].remove('2020-21')
+        with self.assertRaisesRegex(ValueError,'coverage gap'):career_schema.validate_career_history(broken)
+        broken=copy.deepcopy(body);broken['games'][0]['opponent']='GSW'
+        with self.assertRaisesRegex(ValueError,'franchise'):career_schema.validate_career_history(broken)
+        index['matchups'][0]['path']='../../engine.sqlite3'
+        with self.assertRaisesRegex(ValueError,'path'):career_schema.validate_career_index(index)
+
+    def test_profile_views_reuse_exact_frozen_rows_and_keep_career_logs_separate(self):
+        views=build.profile_views(ROOT);self.assertGreater(len(views),300)
+        view=next(v for v in views.values() if v['playerId']=='nba:1627759');source=json.loads((ROOT/'data/editions/daily/2026-10-28'/f"{view['version']}.json").read_text());original={p['id']:p for p in source['props']}
+        for p in view['props']:self.assertEqual(p,original[p['id']])
+        self.assertLess(len(build.canonical(view)),len(build.canonical(source))/100)
+        self.assertEqual(set(view),{'schemaVersion','version','playerId','date','props'})
 
     def test_small_board_views_preserve_saved_picks_without_loading_passed_research(self):
         index=json.loads((ROOT/'data/editions/manifest.json').read_text())
@@ -35,8 +87,8 @@ class PublicationBoundary(unittest.TestCase):
             schema.validate_edition(view['edition'])
             self.assertEqual(source.read_bytes(),before)
             if entry['date']=='2026-10-28':
-                self.assertEqual(sum(p.get('category') in {'value_safe','high_probability_aggressive'} for p in expected),42)
-                self.assertEqual(sum(p.get('category')=='honorable_mention' for p in expected),13)
+                self.assertEqual(sum(p.get('category') in {'value_safe','high_probability_aggressive'} for p in expected),48)
+                self.assertEqual(sum(p.get('category')=='honorable_mention' for p in expected),10)
                 self.assertLess(len(build.canonical(view)),len(before)/10)
 
     def test_unknown_fields_fail_at_every_level(self):

@@ -6,8 +6,11 @@ from pathlib import Path
 import re
 import shutil
 from urllib.parse import unquote, urlsplit
-from public_schema import validate_edition, validate_manifest, validate_targets
+from public_schema import validate_edition, validate_manifest, validate_targets, validate_game_log_index, validate_game_log, validate_game_log_catalog
 from plus_money_schema import publication_files as plus_money_files
+
+from profile_schema import validate_profile,validate_profile_index
+from career_schema import validate_career_history,validate_career_index
 
 class Links(HTMLParser):
     def __init__(self): super().__init__();self.links=[]
@@ -54,18 +57,90 @@ def board_views(root):
         views['data/boards/'+entry['path']]={'schemaVersion':'public-board-1','sourceVersion':entry['version'],'edition':edition}
     return views
 
+def profile_views(root):
+    # Reuse only exact, already-reviewed proposition records; no research execution.
+    if not (root/'data/player-profiles/index.json').exists():return {}
+    directory=json.loads((root/'data/player-profiles/index.json').read_text());editions={};views={}
+    for entry in directory['players']:
+        body=json.loads((root/'data/player-profiles'/entry['path']).read_text());u=body.get('upcoming')
+        if not u:continue
+        if u['editionPath'] not in editions:editions[u['editionPath']]=json.loads((root/'data/editions'/u['editionPath']).read_text())
+        edition=editions[u['editionPath']];ids=set(u['pickIds']+u['researchIds']+[m['referenceId'] for m in u['markets']])
+        props=[p for p in edition['props'] if p['playerId']==body['playerId'] and (p['id'] in ids or p['group']=='ry')]
+        views['data/profile-views/'+u['editionVersion']+'/'+body['playerId'].split(':')[1]+'.json']={'schemaVersion':'public-profile-view-1','version':u['editionVersion'],'playerId':body['playerId'],'date':u['date'],'props':props}
+    return views
+
+def game_log_files(root):
+    if not (root/'data/player-logs/catalog.json').exists():return []
+    catalog=json.loads(safe_file(root,'data/player-logs/catalog.json').read_text());validate_game_log_catalog(catalog)
+    files=['data/player-logs/catalog.json','data/player-logs/index.json']
+    for season in catalog['seasons']:
+        index_name='data/player-logs/'+season['path'];index=json.loads(safe_file(root,index_name).read_text());validate_game_log_index(index)
+        if any(index[k]!=season[k] for k in ('season','capturedAt','dataThrough','games','appearances')) or len(index['players'])!=season['players']:raise ValueError('Season coverage mismatch')
+        files.append(index_name);events=set()
+        for entry in index['players']:
+            name='data/player-logs/'+entry['path'];body=json.loads(safe_file(root,name).read_text());validate_game_log(body)
+            if body['playerId']!=entry['id'] or body['player']!=entry['name'] or body['season']!=index['season'] or body['version']!=entry['version'] or len(body['games'])!=entry['games']:raise ValueError('Game-log identity mismatch')
+            if hashlib.sha256(canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16]!=entry['version']:raise ValueError('Game-log digest mismatch')
+            if max(g['date'] for g in body['games'])!=entry['lastGameDate'] or sorted({g['team'] for g in body['games']})!=entry['teams']:raise ValueError('Game-log coverage mismatch')
+            events.update(g['eventId'] for g in body['games']);files.append(name)
+        if len(events)!=index['games']:raise ValueError('League game count mismatch')
+    newest=max(catalog['seasons'],key=lambda e:e['season'])
+    if safe_file(root,'data/player-logs/index.json').read_bytes()!=safe_file(root,'data/player-logs/'+newest['path']).read_bytes():raise ValueError('Latest season alias mismatch')
+    return files
+
+def career_files(root):
+    if not (root/'data/career-matchups/index.json').exists():return []
+    index=json.loads(safe_file(root,'data/career-matchups/index.json').read_text());validate_career_index(index);files=['data/career-matchups/index.json']
+    for entry in index['matchups']:
+        name='data/career-matchups/'+entry['path'];body=json.loads(safe_file(root,name).read_text());validate_career_history(body)
+        if body['playerId']!=entry['playerId'] or body['opponent']!=entry['opponent'] or body['version']!=entry['version'] or hashlib.sha256(canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16]!=entry['version']:raise ValueError('Career history identity/digest mismatch')
+        files.append(name)
+    return files
+
+def profile_files(root):
+    if not (root/'data/player-profiles/index.json').exists():return []
+    index=json.loads(safe_file(root,'data/player-profiles/index.json').read_text());validate_profile_index(index)
+    files=['data/player-profiles/index.json'];editions={}
+    for p in index['players']:
+        name='data/player-profiles/'+p['path'];body=json.loads(safe_file(root,name).read_text());validate_profile(body)
+        if body['playerId']!=p['id'] or body['player']!=p['name'] or body['asOfDate']!=index['asOfDate'] or body['version']!=p['version'] or hashlib.sha256(canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16]!=p['version']:raise ValueError('Profile identity/digest mismatch')
+        u=body.get('upcoming')
+        if u:
+            path=u['editionPath']
+            if path not in editions:editions[path]=json.loads(safe_file(root,'data/editions/'+path).read_text())
+            edition=editions[path];props={r['id']:r for r in edition['props']}
+            if edition['version']!=u['editionVersion']:raise ValueError('Profile edition mismatch')
+            for key in ('pickIds','researchIds'):
+                for identifier in u[key]:
+                    row=props.get(identifier,{})
+                    if row.get('playerId')!=body['playerId'] or row.get('date')!=u['date'] or row.get('team')!=u['team'] or row.get('opponent')!=u['opponent'] or key=='pickIds' and row.get('category') not in {'value_safe','high_probability_aggressive'}:raise ValueError('Profile pick identity mismatch')
+            h=u.get('opponentHistory')
+            if h:
+                history=json.loads(safe_file(root,'data/career-matchups/'+h['path']).read_text());validate_career_history(history)
+                if history['playerId']!=body['playerId'] or history['opponent']!=u['opponentAbbreviation'] or history['version']!=h['version'] or len(history['games'])!=h['games'] or history['through']!=h['through'] or history['requestedFromSeason']!=h['fromSeason'] or history['missingSeasons']!=h['missingSeasons']:raise ValueError('Profile career-history reference mismatch')
+                components={'PTS':['PTS'],'REB':['REB'],'AST':['AST'],'3PM':['3PM'],'BLK':['BLK'],'STL':['STL'],'PRA':['PTS','REB','AST'],'PR':['PTS','REB'],'PA':['PTS','AST'],'RA':['REB','AST'],'MIN':['MIN']}
+                for stat,fields in components.items():
+                    vals=[sum(g['stats'][k] for k in fields) for g in history['games'] if all(type(g['stats'].get(k)) in (int,float) for k in fields)];average=sum(vals)/len(vals) if vals else None
+                    if h['averages'][stat]!=average:raise ValueError('Profile career average mismatch')
+            for m in u['markets']:
+                row=props.get(m['referenceId'],{})
+                if row.get('playerId')!=body['playerId'] or row.get('market')!=m['market'] or row.get('estimate',{}).get('projection')!=m['projection']:raise ValueError('Profile projection mismatch')
+        files.append(name)
+    return files
+
 def build(root):
     root=Path(root).resolve();destination=root/'dist'
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
     manifest=json.loads(safe_file(root,'site-manifest.json').read_text())
     if set(manifest)!={'files'} or not isinstance(manifest['files'],list): raise ValueError('Invalid site file list')
-    files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)
+    files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)+game_log_files(root)+profile_files(root)+career_files(root)
     if len(set(files))!=len(files): raise ValueError('Duplicate public file')
     for name in manifest['files']:
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')
     # Validate everything before replacing the previous build.
     paths=[safe_file(root,name) for name in files]
-    views=board_views(root)
+    views={**board_views(root),**profile_views(root)}
     if destination.exists(): shutil.rmtree(destination)
     destination.mkdir()
     for source in paths:

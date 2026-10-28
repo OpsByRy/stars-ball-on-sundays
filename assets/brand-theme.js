@@ -25,9 +25,9 @@
   }
   function iconURLs(brand, base) {
     const name=Object.hasOwn(BRANDS,brand)?brand:'classic';
-    return {manifest:new URL(`assets/icons/manifest-${name}.webmanifest`,base).href,
-      touch:new URL(`assets/icons/calendar-${name}-180.png`,base).href,
-      preview:new URL(`assets/icons/calendar-${name}-192.png`,base).href,
+    return {manifest:new URL(`assets/icons/manifest-${name}.webmanifest?v=2`,base).href,
+      touch:new URL(`assets/icons/calendar-${name}-180.png?v=2`,base).href,
+      preview:new URL(`assets/icons/calendar-${name}-192.png?v=2`,base).href,
       install:new URL(`app/${name}/`,base).href};
   }
   function init(win, doc) {

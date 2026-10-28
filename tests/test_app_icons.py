@@ -3,7 +3,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 import struct
 import unittest
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 ROOT=Path(__file__).resolve().parents[1]
 BRANDS=('classic','violet','forest','volt')
@@ -29,7 +29,7 @@ class AppIcons(unittest.TestCase):
             self.assertIn('calendar-'+brand+'-180.png',touch['href']);self.assertIn('manifest-'+brand+'.webmanifest',manifest['href'])
             self.assertLess(html.index('data-app-manifest'),html.index('assets/brand-theme.js'),name)
             self.assertIn('data-install-link',html,name)
-            for link in [*icons,touch,manifest]:self.assertTrue((page.parent/link['href']).resolve().is_file(),name)
+            for link in [*icons,touch,manifest]:self.assertTrue((page.parent/urlsplit(link['href']).path).resolve().is_file(),name)
 
     def test_manifests_preserve_one_app_identity_and_project_relative_paths(self):
         prefix='https://example.com/stars-ball-on-sundays/'
@@ -42,7 +42,7 @@ class AppIcons(unittest.TestCase):
             self.assertEqual({i['sizes'] for i in manifest['icons']},{'192x192','512x512'})
             self.assertTrue(any(i['purpose']=='maskable' for i in manifest['icons']))
             for icon in manifest['icons']:
-                path=Path(name).parent/icon['src'];self.assertIn(str(path),self.files)
+                path=Path(name).parent/urlsplit(icon['src']).path;self.assertIn(str(path),self.files)
                 data=(ROOT/path).read_bytes();self.assertEqual(data[:8],b'\x89PNG\r\n\x1a\n')
                 size=struct.unpack('>II',data[16:24]);self.assertEqual(icon['sizes'],f'{size[0]}x{size[1]}')
                 self.assertEqual(data[25],2,'Home-screen icons must be opaque RGB PNGs')

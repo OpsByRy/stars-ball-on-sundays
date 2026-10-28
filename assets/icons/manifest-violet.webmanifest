@@ -11,19 +11,19 @@
   "theme_color": "#0B0A0B",
   "icons": [
     {
-      "src": "calendar-violet-192.png",
+      "src": "calendar-violet-192.png?v=2",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "calendar-violet-512.png",
+      "src": "calendar-violet-512.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "calendar-violet-maskable-512.png",
+      "src": "calendar-violet-maskable-512.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

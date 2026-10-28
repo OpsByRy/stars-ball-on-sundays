@@ -13,10 +13,10 @@ test('icon URLs stay inside the project prefix for every theme and reject unknow
   for(const brand of Object.keys(theme.BRANDS)){
     const urls=theme.iconURLs(brand,base);
     assert.equal(urls.install,base.href+'app/'+brand+'/');
-    assert.equal(urls.manifest,base.href+'assets/icons/manifest-'+brand+'.webmanifest');
-    assert.equal(urls.touch,base.href+'assets/icons/calendar-'+brand+'-180.png');
+    assert.equal(urls.manifest,base.href+'assets/icons/manifest-'+brand+'.webmanifest?v=2');
+    assert.equal(urls.touch,base.href+'assets/icons/calendar-'+brand+'-180.png?v=2');
   }
-  assert.match(theme.iconURLs('https://evil.test/',base).touch,/calendar-classic-180\.png$/);
+  assert.match(theme.iconURLs('https://evil.test/',base).touch,/calendar-classic-180\.png\?v=2$/);
 });
 
 function browser({stored=null,search='',installBrand}={}){
@@ -33,10 +33,10 @@ function browser({stored=null,search='',installBrand}={}){
 test('stored appearance updates iOS icons, Android manifests, and setup links together',()=>{
   const b=browser({stored:JSON.stringify({brand:'volt',appearance:'light'})});
   assert.deepEqual(b.reads,[theme.KEY]);assert.equal(b.document.documentElement.dataset.mode,'light');
-  assert.match(b.manifest.href,/manifest-volt\.webmanifest$/);assert.match(b.touch.href,/calendar-volt-180\.png$/);assert.match(b.install.href,/app\/volt\/$/);
+  assert.match(b.manifest.href,/manifest-volt\.webmanifest\?v=2$/);assert.match(b.touch.href,/calendar-volt-180\.png\?v=2$/);assert.match(b.install.href,/app\/volt\/$/);
   for(const brand of Object.keys(theme.BRANDS)){
     b.events.storage({key:theme.KEY,newValue:JSON.stringify({brand,appearance:'dark'})});
-    assert.match(b.preview.src,new RegExp('calendar-'+brand+'-192\\.png$'));
+    assert.match(b.preview.src,new RegExp('calendar-'+brand+'-192\\.png\\?v=2$'));
     assert.equal(b.preview.alt,theme.BRANDS[brand]+' Calendar home-screen icon');
     assert.equal(b.document.documentElement.dataset.brand,brand);
   }
@@ -47,7 +47,7 @@ test('new app storage gets its install color and static setup pages retain the d
   const launch=browser({search:'?app-theme=forest'});
   assert.equal(launch.document.documentElement.dataset.brand,'forest');assert.equal(launch.writes[0][0],theme.KEY);
   const setup=browser({stored:JSON.stringify({brand:'volt',appearance:'light'}),installBrand:'violet'});
-  assert.match(setup.touch.href,/calendar-violet-180\.png$/);
+  assert.match(setup.touch.href,/calendar-violet-180\.png\?v=2$/);
   setup.events.storage({key:theme.KEY,newValue:JSON.stringify({brand:'forest',appearance:'dark'})});
-  assert.match(setup.touch.href,/calendar-violet-180\.png$/);
+  assert.match(setup.touch.href,/calendar-violet-180\.png\?v=2$/);
 });

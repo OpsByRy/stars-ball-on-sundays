@@ -21,13 +21,18 @@
     return typeof row.americanOdds==='number'&&row.americanOdds<=-200?'value_safe':'high_probability_aggressive';
   }
   function editionGroups(body){const research=body.props.filter(p=>p.group==='research');return {ry:body.props.filter(p=>p.group==='ry'),value_safe:research.filter(p=>publishedCategory(p)==='value_safe'),high_probability_aggressive:research.filter(p=>publishedCategory(p)==='high_probability_aggressive'),research};}
+  function pricedPick(pick){
+    const quote=pick.priceCheck;
+    return pick.americanOdds==null&&quote?.status==='returned'&&typeof quote.americanOdds==='number'&&Number.isFinite(quote.americanOdds)&&Math.abs(quote.americanOdds)>=100?{...pick,americanOdds:quote.americanOdds}:pick;
+  }
   function favoritesNotice(body){
     const posted=body.favoritesPostedAt?`<strong>Posted <time datetime="${escape(body.favoritesPostedAt)}">${escape(stamp(body.favoritesPostedAt))}</time></strong>`:'';
     const url=body.sharedBetslipUrl,validURL=typeof url==='string'&&/^https:\/\/sportsbook\.fanduel\.com\/addToBetslip\?shareCode=[a-zA-Z0-9]{1,64}$/.test(url);
     const odds=body.sharedBetslipOdds,priced=typeof odds==='number'&&Number.isFinite(odds)&&Math.abs(odds)>=100;
     const slip=validURL?`<a class="sbos-text-link" target="_blank" rel="noopener noreferrer" href="${escape(url)}">Open Ry’s shared FanDuel slip ↗</a>${priced?` · Full-slip screenshot price: <strong>${odds>0?'+':''}${escape(odds)}</strong>`:''}`:'';
     if(!posted&&!slip)return '';
-    return `<div class="publication-note favorites-posted">${posted}${posted&&slip?'<br>':''}${slip}${priced?'<br>Individual leg prices were not supplied. Check FanDuel for current odds and availability.':''}</div>`;
+    const favorites=(body.props||[]).filter(p=>p.group==='ry'),allPriced=favorites.length>0&&favorites.every(p=>typeof pricedPick(p).americanOdds==='number');
+    return `<div class="publication-note favorites-posted">${posted}${posted&&slip?'<br>':''}${slip}${priced?allPriced?'<br>Straight prices appear below. FanDuel’s SGP quote can differ from our calculator’s multiplied straight prices. Check current odds and availability.':'<br>Individual leg prices were not supplied. Check FanDuel for current odds and availability.':''}</div>`;
   }
   function researchPage(rows,{query='',market='all',status='all',page=0,size=40}={}){
     const filtered=rows.filter(p=>(market==='all'||p.market===market)&&(status==='all'||publishedCategory(p)===status)&&`${p.player} ${p.team||''} ${p.opponent||''}`.toLowerCase().includes(query.toLowerCase()));
@@ -51,11 +56,12 @@
       const estimateDetails=formatted.available?`<p><strong>SBOS estimate:</strong> win ${formatted.win} · projected total ${formatted.projection} ${escape(pick.market)}. ${formatted.status}; estimate as of ${escape(stamp(estimate.asOf))}. ${pick.group==='ry'?'Matched to this exact proposition; this does not change Ry’s personal attribution.':''}</p>`:'<p><strong>SBOS estimate:</strong> unavailable for this exact proposition.</p>';
       const check=pick.priceCheck;
       const checkedPrice=check?.status==='returned'?`${check.americanOdds>0?'+':''}${check.americanOdds}`:'Not returned by the provider';
-      const priceCheck=check?`<p><strong>Price update:</strong> ${escape(checkedPrice)}. Checked ${escape(stamp(check.checkedAt))}.${check.sourceAsOf?' Source price as of '+escape(stamp(check.sourceAsOf))+'.':''}${check.reviewedAmericanOdds!==undefined?' Workbook price: '+escape(check.reviewedAmericanOdds>0?'+'+check.reviewedAmericanOdds:check.reviewedAmericanOdds)+'. The row and calculator use the refreshed price.':' The row and calculator retain the approved snapshot price.'}</p>`:'';
+      const suppliedPrice=pick.americanOdds==null&&pricedPick(pick)!==pick;
+      const priceCheck=check?`<p><strong>${suppliedPrice?'Supplied straight price':'Price update'}:</strong> ${escape(checkedPrice)}. Checked ${escape(stamp(check.checkedAt))}.${check.sourceAsOf?' Source price as of '+escape(stamp(check.sourceAsOf))+'.':''}${suppliedPrice?' Verified against Ry’s FanDuel screenshot. The row and calculator use this supplied price; screenshot capture time is unavailable.':check.reviewedAmericanOdds!==undefined?' Workbook price: '+escape(check.reviewedAmericanOdds>0?'+'+check.reviewedAmericanOdds:check.reviewedAmericanOdds)+'. The row and calculator use the refreshed price.':' The row and calculator retain the approved snapshot price.'}</p>`:'';
       const detail=`<div class="public-evidence">${pick.postedAt?`<p><strong>Posted:</strong> ${escape(stamp(pick.postedAt))}.</p>`:''}${priceCheck}${pick.assessment?`<p><strong>${escape(categoryTitles[publishedCategory(pick)]||"Review")}:</strong> ${escape(pick.assessment)}</p>`:""}${estimateDetails}<p><strong>Selection:</strong> ${escape(pick.evidence)}</p><p><strong>Game:</strong> ${escape(pick.matchup||[pick.team,pick.opponent].filter(Boolean).join(' vs ')||'Matchup unavailable')}. ${pick.startTime?'Starts '+escape(stamp(pick.startTime))+'.':''}</p><p><strong>Exact terms:</strong> ${escape(pick.market)} ${escape(op)} ${escape(pick.line)} · ${escape(pick.period||'full_game')}. Overtime: ${pick.overtime===true?'included':pick.overtime===false?'excluded':'unconfirmed'}.${push}</p><p><strong>Price source:</strong> ${escape(pick.sourceType||'saved observation')} · capture time ${escape(stamp(pick.capturedAt))}. Check current sportsbook terms and availability.</p></div>`;
       const priceWarning=check?.qualification==='does_not_qualify'?' · Price/value checks no longer pass':check?.qualification==='unavailable'?' · Price unavailable':'';
       const badge=pick.group==='research'?`<span class="review-label ${publishedCategory(pick)==='not_a_pick'||priceWarning?'review-pass':''}">${escape(categoryTitles[publishedCategory(pick)])}${escape(priceWarning)}</span>`:'';
-      return `<div class="reviewed-row">${badge}${board.renderRow(pick,{scope,personal:pick.group==='ry',detail})}</div>`;
+      return `<div class="reviewed-row">${badge}${board.renderRow(pricedPick(pick),{scope,personal:pick.group==='ry',detail})}</div>`;
     }
     function recordSummary(rows,group){const s=summary(rows);return `<div class="record-summary" data-record-summary="${group}"><span><strong>${s.total}</strong> ${group==='research'?'reviewed':'posted'}</span><span><strong>${s.hits}</strong> hit</span><span><strong>${s.misses}</strong> missed</span><span><strong>${s.pushes}</strong> pushed</span><span><strong>${s.other}</strong> DNP / canceled / postponed</span><span><strong>${s.pending}</strong> pending / unavailable</span></div>`;}
     function group(title,rows,scope,open=false,intro=''){return `<details class="pick-group" ${open?'open':''}><summary><h3>${title} <span class="count">${rows.length}</span></h3></summary><div class="pick-group-body">${intro}${recordSummary(rows,scope)}${rows.length?`<div class="pick-list">${window.SBOS_PICK_BOARD.columns()}${rows.map(p=>row(p,scope)).join('')}</div>`:'<p class="pick-empty">No selections published in this section for this date.</p>'}</div></details>`;}
@@ -80,5 +86,5 @@
     }catch{showError();}
     function showError(){const id={daily:'daily-content',home:'home-current',sundays:'sunday-current',week:'week-content',archives:'sunday-archive'}[kind];if(id&&$(id))$(id).innerHTML='<p class="site-error" role="alert">The publication record is unavailable. Refresh to try again.</p>';}
   }
-  return {init,validDate,dateLabel,etDay,nextSunday,lineLabel,latestEntries,summary,safeEditionURL,publishedCategory,editionGroups,researchPage,favoritesNotice};
+  return {init,validDate,dateLabel,etDay,nextSunday,lineLabel,latestEntries,summary,safeEditionURL,publishedCategory,editionGroups,researchPage,favoritesNotice,pricedPick};
 });

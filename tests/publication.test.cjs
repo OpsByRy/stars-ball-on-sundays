@@ -57,6 +57,26 @@ test('late-game favorites preserve the five supplied contracts and existing rese
   assert.equal(publication.lineLabel(favorites.find(p=>p.player==='Ja Morant')),'6+ assists');
   assert.deepEqual(body.props.filter(p=>p.group==='research'),editions.find(e=>e.version==='cc92106688ce1637').props.filter(p=>p.group==='research'));
 });
+test('supplied favorite prices enable the calculator without rewriting original snapshots',()=>{
+  const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json')));
+  const snapshots=index.editions.filter(e=>e.date==='2026-10-27').map(e=>JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path))));
+  const body=snapshots.find(b=>b.sharedBetslipOdds===510),original=snapshots.find(b=>b.version==='1029b2eca7b20356');
+  const favorites=body.props.filter(p=>p.group==='ry');
+  const expected={'Jrue Holiday':-310,'Sandro Mamukelashvili':-280,'Ziaire Williams':-270,'Ja Morant':-162,'Quentin Grimes':-250};
+  let legs=[];
+  for(const pick of favorites){
+    const display=publication.pricedPick(pick);assert.equal(display.americanOdds,expected[pick.player]);assert.equal(pick.americanOdds,null);
+    assert.equal(pick.id,original.props.find(p=>p.player===pick.player&&p.group==='ry').id);
+    assert.equal(pick.postedAt,original.favoritesPostedAt);legs=board.addLeg(legs,display).legs;
+  }
+  assert.equal(legs.length,5);assert.ok(Number.isFinite(board.calculate(legs,10).returnAmount));
+  assert.equal(body.favoritesPostedAt,original.favoritesPostedAt);
+  assert.match(publication.favoritesNotice(body),/Full-slip screenshot price: <strong>\+510/);
+  assert.doesNotMatch(publication.favoritesNotice(body),/prices were not supplied/);
+  assert.match(publication.favoritesNotice(body),/calculator’s multiplied straight prices/);
+  assert.equal(publication.pricedPick({...row,priceCheck:{status:'returned',americanOdds:-200}}).americanOdds,-150);
+  assert.equal(publication.pricedPick({americanOdds:null,priceCheck:{status:'not_returned',americanOdds:null}}).americanOdds,null);
+});
 test('result refresh appends corrections without rewriting picks or old versions',async()=>{
   const os=require('node:os'),directory=fs.mkdtempSync(path.join(os.tmpdir(),'sbos-public-results-'));
   const write=(name,value)=>{const file=path.join(directory,name);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(value));};

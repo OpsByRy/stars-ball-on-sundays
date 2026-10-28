@@ -8,7 +8,15 @@
   const stamp=value=>value&&Number.isFinite(Date.parse(value))?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',dateStyle:'medium',timeStyle:'short'}).format(new Date(value))+' ET':'Unavailable';
   function etDay(now=new Date()){const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now).map(p=>[p.type,p.value]));return `${p.year}-${p.month}-${p.day}`;}
   function nextSunday(now=new Date()){const d=new Date(etDay(now)+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+((7-d.getUTCDay())%7||7));return d.toISOString().slice(0,10);}
-  function lineLabel(row){const c=(typeof window==='undefined'?require('./result-utils.js'):window.STARS_RESULT_UTILS).normalizeContract(row);if(!c)return 'Contract unavailable';const name=markets[c.market]||c.market;return c.operator==='>='?`${c.line}+ ${name}`:c.operator==='<='?`${c.line} or fewer ${name}`:`${c.operator==='>'?'Over':'Under'} ${c.line} ${name}`;}
+  function lineLabel(row){
+    const c=(typeof window==='undefined'?require('./result-utils.js'):window.STARS_RESULT_UTILS).normalizeContract(row);if(!c)return 'Contract unavailable';
+    const name=markets[c.market]||c.market,native=c.operator==='>='&&Number.isInteger(c.line)&&c.line>0&&(c.market==='3PM'||c.market==='PTS'&&[5,10,15,20,25,30,35].includes(c.line)||['REB','AST'].includes(c.market)&&[4,6,8,10].includes(c.line)||['PRA','PR','PA','RA'].includes(c.market)&&c.line>=10&&c.line%5===0);
+    if(native)return `${c.line}+ ${name}`;
+    const alternate=['>=','<='].includes(c.operator)||['milestone','alternate','alt'].includes(row.lineType);
+    if(c.operator==='>=')return `Alt O${Math.ceil(c.line)-.5} ${name}`;
+    if(c.operator==='<=')return `Alt U${Math.floor(c.line)+.5} ${name}`;
+    return alternate?`Alt ${c.operator==='>'?'O':'U'}${c.line} ${name}`:`${c.operator==='>'?'Over':'Under'} ${c.line} ${name}`;
+  }
   function latestEntries(entries){const map=new Map();for(const e of entries||[])if(['daily','sunday'].includes(e.channel)&&validDate(e.date))map.set(e.channel+':'+e.date,e);return [...map.values()].sort((a,b)=>b.date.localeCompare(a.date));}
   function summary(rows){const count=outcome=>rows.filter(p=>p.result?.eventStatus==='final'&&p.result?.statisticalOutcome===outcome).length;return {total:rows.length,hits:count('win'),misses:count('loss'),pushes:count('push'),other:rows.filter(p=>['dnp','canceled','postponed'].includes(p.result?.statisticalOutcome)).length,pending:rows.filter(p=>!['win','loss','push','dnp','canceled','postponed'].includes(p.result?.statisticalOutcome)||['win','loss','push'].includes(p.result?.statisticalOutcome)&&p.result?.eventStatus!=='final').length};}
   function safeEditionURL(entry,root){if(!/^[0-9a-f]{16}$/.test(entry.version)||!validDate(entry.date)||!['daily','sunday'].includes(entry.channel)||entry.path!==`${entry.channel}/${entry.date}/${entry.version}.json`)throw Error('Invalid publication path');return new URL(entry.path,root);}

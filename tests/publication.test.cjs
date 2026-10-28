@@ -9,6 +9,12 @@ test('exact posted operators retain their boundary behavior',()=>{
   assert.equal(contracts.evaluateStructured(row,{eventStatus:'final',stats:{AST:8}}).statisticalOutcome,'win');
   assert.equal(contracts.evaluateStructured(over,{eventStatus:'final',stats:{AST:8}}).statisticalOutcome,'push');
 });
+test('public labels keep native milestones and use alt names for other thresholds without changing settlement',()=>{
+  for(const [market,line,label]of [['PTS',20,'20+ points'],['3PM',4,'4+ made threes'],['REB',8,'8+ rebounds'],['AST',6,'6+ assists'],['PRA',20,'20+ points + rebounds + assists'],['PTS',6,'Alt O5.5 points'],['AST',2,'Alt O1.5 assists']]){
+    const pick={...row,market,line},before=JSON.stringify(pick);assert.equal(publication.lineLabel(pick),label);assert.equal(JSON.stringify(pick),before);
+  }
+  assert.equal(publication.lineLabel({...row,operator:'>',line:8,lineType:'main'}),'Over 8 assists');
+});
 test('record counts separate final outcomes, DNPs, and incomplete results',()=>{
   const result=(eventStatus,statisticalOutcome)=>({result:{eventStatus,statisticalOutcome}});
   assert.deepEqual(publication.summary([result('final','win'),result('final','loss'),result('final','push'),result('final','dnp'),result('live','reached'),{}]),{total:6,hits:1,misses:1,pushes:1,other:1,pending:2});

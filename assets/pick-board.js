@@ -40,7 +40,7 @@
     const r=row.result||{},final=r.eventStatus==='final';
     const unit={PTS:'pts',AST:'ast',REB:'reb','3PM':r.actual===1?'three':'threes',PRA:'total',PR:'total',PA:'total',RA:'total'}[row.market]||row.market||'';
     const actual=finite(r.actual)?`${r.actual} ${unit}`:'—';
-    if(final&&r.statisticalOutcome==='win')return {tone:'hit',icon:'✓',label:'Hit',actual};
+    if(contracts.isStatisticalHit(row))return {tone:'hit',icon:'✓',label:'Hit',actual,live:contracts.isLiveHit(row)};
     if(final&&r.statisticalOutcome==='loss')return {tone:'miss',icon:'✕',label:'Miss',actual};
     if(final&&r.statisticalOutcome==='push')return {tone:'neutral',icon:'↔',label:'Push',actual};
     if(['dnp','canceled','postponed'].includes(r.statisticalOutcome))return {tone:'neutral',icon:'—',label:{dnp:'DNP',canceled:'Canceled',postponed:'Postponed'}[r.statisticalOutcome],actual:'—'};
@@ -78,7 +78,7 @@
   function create({base,lineLabel,onResults=()=>{}}){
     let records=new Map(),legs=[],serial=0,currentDate=null,busy=false,pendingRefresh=false,targets=new Map(),cache=new Map(),lastCheck=null;
     const opened=new Set(),byId=id=>document.getElementById(id);
-    const statusHTML=row=>{const s=rowStatus(row);return `<span class="row-status ${s.tone}"><strong><span aria-hidden="true">${s.icon}</span> ${escape(s.label)}</strong><small>${escape(s.actual)}<span class="row-mobile-minutes"> · MP ${escape(minutesLabel(row.result?.minutesPlayed))}</span></small></span>`;};
+    const statusHTML=row=>{const s=rowStatus(row);return `<span class="row-status ${s.tone}"><strong><span aria-hidden="true">${s.icon}</span> ${escape(s.label)}${s.live?'<span class="row-live-flag">● Live</span>':''}</strong><small>${escape(s.actual)}<span class="row-mobile-minutes"> · MP ${escape(minutesLabel(row.result?.minutesPlayed))}</span></small></span>`;};
     const dialog=document.createElement('dialog');dialog.className='parlay-dialog';dialog.id='your-parlay';dialog.setAttribute('aria-labelledby','parlay-title');
     dialog.innerHTML='<div class="parlay-top"><div><span class="sbos-kicker">YOUR PICKS / YOUR COMBINATION</span><h2 id="parlay-title">Your parlay calculator</h2></div><button type="button" data-close-parlay aria-label="Close calculator">✕</button></div><p class="parlay-caption">Saved prices · illustrative combined odds. Check current sportsbook terms.</p><div id="parlay-empty">Add a pick from any row to start your combination.</div><ul id="parlay-legs"></ul><div class="parlay-math"><div><span>Illustrative odds</span><strong id="parlay-odds">—</strong></div><label>Stake ($)<input id="parlay-stake" type="number" min="0.01" max="1000000" step="0.01" placeholder="10.00" inputmode="decimal"></label><div><span>Potential return</span><strong id="parlay-return">—</strong></div><div><span>Potential net profit</span><strong id="parlay-profit">—</strong></div></div><p id="parlay-correlation" class="parlay-caption" hidden>Same-game or same-player legs are correlated. The sportsbook’s combined price may differ from this calculation.</p><p class="parlay-caption">One line per player and stat in each game. Adding a different line replaces your earlier choice. Statistical results do not verify sportsbook settlement.</p><button type="button" id="parlay-clear" class="outline-button">Clear your picks</button>';
     document.body.append(dialog);
@@ -118,7 +118,7 @@
       const selected=legs.some(p=>slot(p)===slot(row)&&sameOutcome(p,row)),priced=math.decimalOdds(row.americanOdds)!==null;
       const canAdd=priced&&!!contracts.normalizeContract(row);
       const update=row.confidenceUpdate,estimate=estimateDisplay(update?update.estimate:row.estimate),original=estimateDisplay(row.estimate);
-      const estimateHTML=`<span class="row-estimate" title="${estimate.status} win estimate. Expand the pick for projection and research."><small class="mobile-cell-label">Win est.</small><strong>${estimate.win}</strong>${update&&original.win!==estimate.win?`<small class="row-original-estimate">Was ${original.win}</small>`:''}</span>`;
+      const estimateHTML=`<span class="row-estimate" title="${estimate.status} win estimate. Expand the pick for projection and research."><small class="mobile-cell-label">Win est.</small><strong>${estimate.win}</strong>${update&&original.win!==estimate.win?`<small class="row-original-estimate">Was ${original.win}</small>`:''}${row.group==='ry'&&estimate.projection!=='—'?`<small class="row-projection">Proj. ${estimate.projection}</small>`:''}</span>`;
       const book={fanduel:'FanDuel',draftkings:'DraftKings'}[String(row.book).toLowerCase()]||row.book||'Book unavailable';
       const updateLabels={supported:'Updated',reduced:'Confidence lower',improved:'Confidence higher',review:'Review update',unavailable:'Update unavailable'};
       const updateBadge=update?`<span class="pick-update-badge update-${escape(update.status)}" title="${escape(update.summary+' Checked '+stamp(update.checkedAt))}">${update.qualification==='does_not_qualify'?'No longer qualifies':update.qualification==='unavailable'?'Original book unavailable':update.status==='review'?'Line review':updateLabels[update.status]||'Updated'}</span>`:'';

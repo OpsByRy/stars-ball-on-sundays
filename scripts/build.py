@@ -1,5 +1,7 @@
 """Build the public website from an explicit file list and validated result records."""
 import hashlib
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from html.parser import HTMLParser
 import json
 from pathlib import Path
@@ -129,12 +131,34 @@ def profile_files(root):
         files.append(name)
     return files
 
-def build(root):
+def assert_publication_time(entries, now=None):
+    now=now or datetime.now(timezone.utc)
+    if now.tzinfo is None:raise ValueError('Publication clock must have a timezone')
+    eastern=now.astimezone(ZoneInfo('America/New_York'))
+    for entry in entries:
+        if entry['channel']!='daily':continue
+        day=entry['date']
+        if day>eastern.date().isoformat() or day==eastern.date().isoformat() and eastern.hour<10:
+            raise ValueError(f'Daily picks for {day} cannot publish before 10:00 AM America/New_York on that date')
+
+def assert_personal_estimates(body):
+    for row in body['props']:
+        if row['group']!='ry':continue
+        estimate=row.get('estimate') or {}
+        if not {'winProbability','pushProbability','lossProbability','projection','asOf','status'}<=set(estimate):
+            raise ValueError('Personal picks require reviewed probabilities and projections before publication: '+row['player'])
+
+def build(root, publish=False, now=None):
     root=Path(root).resolve();destination=root/'dist'
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
     manifest=json.loads(safe_file(root,'site-manifest.json').read_text())
     if set(manifest)!={'files'} or not isinstance(manifest['files'],list): raise ValueError('Invalid site file list')
     files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)+game_log_files(root)+profile_files(root)+career_files(root)
+    if publish:
+        entries=json.loads((root/'data/editions/manifest.json').read_text())['editions'];assert_publication_time(entries,now)
+        today=(now or datetime.now(timezone.utc)).astimezone(ZoneInfo('America/New_York')).date().isoformat()
+        current=[e for e in entries if e['channel']=='daily' and e['date']==today]
+        if current:assert_personal_estimates(json.loads((root/'data/editions'/current[-1]['path']).read_text()))
     if len(set(files))!=len(files): raise ValueError('Duplicate public file')
     for name in manifest['files']:
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')
@@ -164,4 +188,8 @@ def build(root):
     if errors: raise ValueError('\n'.join(errors))
     return len(files)+len(views)+1
 
-if __name__=='__main__': print(f'Built {build(Path(__file__).resolve().parents[1])} reviewed public files.')
+if __name__=='__main__':
+    import argparse
+    parser=argparse.ArgumentParser();parser.add_argument('--publish',action='store_true',help='Enforce the 10 AM Eastern daily release window')
+    args=parser.parse_args()
+    print(f'Built {build(Path(__file__).resolve().parents[1],publish=args.publish)} reviewed public files.')

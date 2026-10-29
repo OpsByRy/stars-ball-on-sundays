@@ -56,6 +56,16 @@
     const labels = { unavailable: 'Unavailable', dnp: 'DNP', canceled: 'Canceled', postponed: 'Postponed', win: 'Hit', loss: 'Miss', push: 'Push', reached: 'Reached', pending: 'Pending' };
     return { ...result, label: labels[result.statisticalOutcome], tone: result.statisticalOutcome === 'win' ? 'hit' : result.statisticalOutcome === 'loss' ? 'miss' : ['reached', 'pending'].includes(result.statisticalOutcome) ? 'live' : 'pending' };
   }
+  // A reached live over can count now, while remaining open to source corrections.
+  function isLiveHit(prop) {
+    const r=prop?.result,c=normalizeContract(prop);
+    return r?.eventStatus==='live'&&['reached','win'].includes(r.statisticalOutcome)&&
+      !!c&&c.operator.startsWith('>')&&Number.isInteger(r.actual)&&r.actual>=0&&
+      (c.operator==='>'?r.actual>c.line:r.actual>=c.line);
+  }
+  function isStatisticalHit(prop) {
+    return prop?.result?.eventStatus==='final'&&prop.result.statisticalOutcome==='win'||isLiveHit(prop);
+  }
   function applyRevisions(snapshot, revisions) {
     const players = Object.fromEntries(Object.entries(snapshot.players || {}).map(([name, player]) => [name, { ...player }]));
     const games = (snapshot.games || []).map(game => ({ ...game }));
@@ -83,5 +93,5 @@
     }
     return { ...snapshot, players, games, checkedAt, checkedAtLabel, appliedRevisions };
   }
-  return { evaluate, evaluateStructured, normalizeContract, applyRevisions };
+  return { evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit };
 });

@@ -15,3 +15,5 @@
 .research-subnav a:hover,.research-subnav a[aria-current=page]{color:var(--text-primary,var(--text));border-color:var(--accent)}
 .research-nav-trigger:focus-visible,.research-subnav a:focus-visible{outline:2px solid var(--focus-ring,var(--link));outline-offset:3px}
 @media(max-width:700px){.research-subnav>.shell{gap:20px}.research-subnav a{font-size:10px;min-height:38px}.research-nav-trigger{font-size:inherit}.site-header .sbos-topbar>nav[aria-label="Main navigation"]{padding-bottom:36px}}
+
+@media(min-width:1001px){.site-header .sbos-topbar>nav[aria-label="Main navigation"]{gap:18px;font-size:13px}}

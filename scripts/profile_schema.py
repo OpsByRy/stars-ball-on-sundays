@@ -40,7 +40,7 @@ def validate_profile(body):
     if u['teamAbbreviation'] not in NBA_TEAMS or u['opponentAbbreviation'] not in NBA_TEAMS or u['teamAbbreviation']==u['opponentAbbreviation']:raise ValueError('Invalid canonical NBA team abbreviation')
     for k in ('pickIds','researchIds'):
         if not isinstance(u[k],list) or len(u[k])>100 or len(set(u[k]))!=len(u[k]) or any(not isinstance(v,str) or not re.fullmatch(r'[a-f0-9]{64}',v) for v in u[k]):raise ValueError('Invalid published prop reference')
-    if not isinstance(u['markets'],list) or len(u['markets'])>8:raise ValueError('Invalid profile markets')
+    if not isinstance(u['markets'],list) or len(u['markets'])>10:raise ValueError('Invalid profile markets')
     if 'opponentHistory' in u:
         h=u['opponentHistory'];allowed={'path','version','games','fromSeason','through','missingSeasons','averages'};keys(h,allowed,allowed);version(h['version']);day(h['through'])
         from public_schema import season_name

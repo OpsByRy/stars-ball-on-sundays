@@ -191,3 +191,24 @@ test('box-score minutes support minute totals, clock strings, live updates and e
   assert.equal(board.parseSummary(summary('DNP',true,true),source,row,'2026-10-26T01:00:00Z').minutesPlayed,0);
   assert.equal(board.parseSummary(summary('--'),source,row,'2026-10-26T01:00:00Z').minutesPlayed,undefined);
 });
+
+test('screenshot-only four-leg ticket shows its quote without creating a share link or changing research',()=>{
+  const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json')));
+  const entries=index.editions.filter(e=>e.date==='2026-10-28');
+  const snapshots=entries.map(e=>JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path))));
+  const body=snapshots.find(b=>b.sharedBetslipOdds===522),prior=snapshots.find(b=>b.version==='b8b22d963f239e3a');
+  const favorites=body.props.filter(p=>p.group==='ry');
+  assert.equal(favorites.length,4);assert.equal(body.sharedBetslipUrl,null);
+  assert.deepEqual(favorites.map(p=>[p.player,p.market,p.operator,p.line,p.americanOdds]),[
+    ['Shai Gilgeous-Alexander','PTS','>=',30,-225],['Isaiah Hartenstein','AST','>=',4,-118],
+    ['Austin Reaves','AST','>=',8,-115],['Walker Kessler','PTS','>',11.5,-245]
+  ]);
+  assert.deepEqual(body.props.filter(p=>p.group==='research'),prior.props);
+  const notice=publication.favoritesNotice(body);
+  assert.match(notice,/Full-slip screenshot price: <strong>\+522/);assert.doesNotMatch(notice,/href=/);
+  assert.match(notice,/Straight prices appear below/);
+  assert.ok(favorites.every(p=>p.postedAt===body.favoritesPostedAt&&p.resultSource&&p.book==='fanduel'));
+  const kessler=favorites.find(p=>p.player==='Walker Kessler');
+  assert.equal(contracts.evaluateStructured(kessler,{eventStatus:'final',stats:{PTS:11}}).statisticalOutcome,'loss');
+  assert.equal(contracts.evaluateStructured(kessler,{eventStatus:'final',stats:{PTS:12}}).statisticalOutcome,'win');
+});

@@ -155,7 +155,7 @@ def validate_edition(body):
     if body.get('timezone')!='America/New_York': raise ValueError('Invalid timezone')
     text(body.get('priceNote',''))
     if body.get('sharedBetslipUrl') is not None and not re.fullmatch(r'https://sportsbook\.fanduel\.com/addToBetslip\?shareCode=[a-zA-Z0-9]{1,64}',body['sharedBetslipUrl']): raise ValueError('Invalid shared slip URL')
-    if body.get('sharedBetslipOdds') is not None and (not body.get('sharedBetslipUrl') or not number(body['sharedBetslipOdds']) or abs(body['sharedBetslipOdds'])<100): raise ValueError('Invalid shared slip price')
+    if body.get('sharedBetslipOdds') is not None and (not number(body['sharedBetslipOdds']) or abs(body['sharedBetslipOdds'])<100): raise ValueError('Invalid shared slip price')
     if not isinstance(body['props'],list): raise ValueError('Invalid picks')
     seen=set()
     for row in body['props']:

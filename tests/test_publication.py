@@ -123,6 +123,8 @@ class PublicationBoundary(unittest.TestCase):
         body['sharedBetslipOdds']=527;row['postedAt']=body['favoritesPostedAt'];row['americanOdds']=None
         schema.validate_edition(body)
         self.assertIsNone(row['americanOdds'])
+        body['sharedBetslipUrl']=None
+        schema.validate_edition(body)
         row['postedAt']='2026-10-27T22:20:48'
         with self.assertRaisesRegex(ValueError,'timezone'): schema.validate_edition(body)
         row['postedAt']=body['favoritesPostedAt'];body['sharedBetslipOdds']=True

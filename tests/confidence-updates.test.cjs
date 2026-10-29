@@ -1,4 +1,13 @@
 const test=require('node:test'),assert=require('node:assert/strict'),pub=require('../assets/publication.js');
+test('lower-confidence flag survives review and qualification warnings',()=>{
+ const board=require('../assets/pick-board.js');
+ for(const status of ['review','reduced','supported']){
+  const row={estimate:{winProbability:.85},confidenceUpdate:{status,qualification:'does_not_qualify',estimate:{winProbability:.72}}};
+  assert.equal(board.confidenceDecreased(row),true);
+  assert.equal(board.confidenceDecreased({...row,confidenceUpdate:{...row.confidenceUpdate,estimate:{winProbability:.85}}}),false);
+  assert.equal(board.confidenceDecreased({...row,confidenceUpdate:{...row.confidenceUpdate,estimate:undefined}}),false);
+ }
+});
 test('new estimates drive current filters while the original forecast and price remain saved',()=>{
  const original={id:'old',player:'One',group:'research',category:'value_safe',americanOdds:-250,estimate:{winProbability:.85},confidenceUpdate:{status:'review',checkedAt:'2026-10-28T18:00:00Z',summary:'New role needs review.',americanOdds:-280,estimate:{winProbability:.72,projection:20}}};
  const before=JSON.stringify(original);

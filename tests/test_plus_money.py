@@ -11,7 +11,7 @@ import plus_money_schema as schema
 class PlusMoneyBoundary(unittest.TestCase):
     def record(self):
         index=json.loads((ROOT/'data/plus-money/manifest.json').read_text())
-        return json.loads((ROOT/'data/plus-money'/index['editions'][-1]['path']).read_text())
+        return json.loads((ROOT/'data/plus-money'/index['editions'][0]['path']).read_text())
 
     def test_real_public_record_and_every_nested_boundary(self):
         body=self.record();schema.validate(body)
@@ -38,3 +38,12 @@ class PlusMoneyBoundary(unittest.TestCase):
             root=Path(folder);p=root/'data/plus-money/manifest.json';p.parent.mkdir(parents=True)
             p.write_text(json.dumps({'schemaVersion':'public-plus-money-manifest-1','editions':[{'date':'2026-10-28','version':'a'*16,'path':'../../engine.sqlite3','updatedAt':'2026-10-28T17:00:00Z','count':1}]}))
             with self.assertRaisesRegex(ValueError,'path'):schema.publication_files(root,lambda r,n:r/n)
+
+    def test_v2_accepts_reviewed_mixed_sources_and_longshots_without_rewriting_v1(self):
+        index=json.loads((ROOT/'data/plus-money/manifest.json').read_text())
+        body=json.loads((ROOT/'data/plus-money'/index['editions'][-1]['path']).read_text())
+        self.assertEqual(body['schemaVersion'],'public-plus-money-2');schema.validate(body)
+        self.assertTrue(any(t['section']=='longshots' for t in body['tickets']))
+        self.assertTrue(any(t['book']=='mixed' for t in body['tickets']))
+        q=body['tickets'][0]['legs'][0]['bookPrices']['quotes'][0];q['private_coefficients']=[1]
+        with self.assertRaisesRegex(ValueError,'unknown'):schema.validate(body)

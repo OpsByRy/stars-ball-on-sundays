@@ -1,7 +1,20 @@
 /* Consumer category descriptions; pick identities and recorded categories stay stable. */
 (() => {
   'use strict';
-  const categories = {"value_safe": {"label": "Layups", "heading": "Layups", "description": "More conservative lines with higher estimated hit probability."}, "high_probability_aggressive": {"label": "Lobs", "heading": "Lobs", "description": "More aggressive lines with greater payout potential, still screened for value."}, "honorable_mention": {"label": "Honorable Mentions", "heading": "Honorable Mentions", "description": "Additional props our model flags for potential value. For review only; excluded from our official picks and hit/miss record."}};
+  const categories = {
+    value_safe: {
+      label: 'Layups', heading: 'Layups',
+      description: 'The Core Lineup. Higher-probability, value-screened props priced from −500 to −200.'
+    },
+    high_probability_aggressive: {
+      label: 'Lobs', heading: 'Lobs',
+      description: 'The Highlight Reel. Aggressive, high-flying value targets at −200 or better.'
+    },
+    honorable_mention: {
+      label: 'Bench', heading: 'Bench',
+      description: 'The Depth Chart. Honorable mentions, sharp leans, and alt lines to watch. For review only; excluded from our official picks and hit/miss record.'
+    }
+  };
   const descriptions = new Map();
   let activeInfo = null;
   let pinned = false;

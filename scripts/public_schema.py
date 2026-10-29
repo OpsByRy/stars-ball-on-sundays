@@ -4,13 +4,13 @@ import math
 import re
 
 EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds'}
-PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected','confidenceUpdate'}
+PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected','confidenceUpdate','bookPrices'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
 RESULT_FIELDS={'actual','minutesPlayed','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
 SOURCE_FIELDS={'eventId','athleteId','expectedTeam','provider'}
 TARGET_FIELDS={'date','eventId','playerId','espnEventId','espnAthleteId','expectedTeam'}
 ENTRY_FIELDS={'channel','date','version','path','count','researchCount','updatedAt'}
-MARKETS={'PTS','AST','REB','3PM','PRA','PR','PA','RA'}
+MARKETS={'PTS','AST','REB','3PM','PRA','PR','PA','RA','BLK','STL'}
 
 def season_name(value):
     if not isinstance(value,str) or not re.fullmatch(r'\d{4}-\d{2}',value) or int(value[-2:])!=(int(value[:4])+1)%100: raise ValueError('Invalid season')
@@ -113,6 +113,24 @@ def validate_confidence_update(update,row):
         validate_estimate(update['estimate'])
         if update['estimate'].get('asOf')!=update['checkedAt']:raise ValueError('Confidence estimate timestamp mismatch')
 
+def price_outcome(row):
+    op={'gte':'>=','lte':'<=','gt':'>','lt':'<'}.get(row['operator'],row['operator']);line=row['line']
+    if op=='>=':return '>',math.ceil(line)-.5
+    if op=='<=':return '<',math.floor(line)+.5
+    if not float(line).is_integer():line=math.floor(line)+.5 if op=='>' else math.ceil(line)-.5
+    return op,line
+
+def validate_book_prices(prices,row):
+    keys(prices,{'checkedAt','quotes'},{'checkedAt','quotes'});stamp(prices['checkedAt'])
+    if prices['checkedAt'] is None or not isinstance(prices['quotes'],list) or len(prices['quotes'])>2:raise ValueError('Invalid book price coverage')
+    seen=set()
+    for quote in prices['quotes']:
+        keys(quote,{'book','americanOdds','capturedAt','operator','line'},{'book','americanOdds','capturedAt','operator','line'})
+        if quote['book'] not in {'fanduel','draftkings'} or quote['book'] in seen:raise ValueError('Duplicate or unsupported book price')
+        seen.add(quote['book']);stamp(quote['capturedAt'])
+        if quote['capturedAt'] is None or not number(quote['americanOdds']) or abs(quote['americanOdds'])<100:raise ValueError('Invalid saved book price')
+        if quote['operator'] not in {'>','<','>=','<=','gt','lt','gte','lte'} or not number(quote['line']) or quote['line']<0 or price_outcome(quote)!=price_outcome(row):raise ValueError('Book price changes pick outcome or push')
+
 
 def validate_honorable_mentions(rows):
     def family(row):
@@ -153,8 +171,9 @@ def validate_edition(body):
         if 'selected' in row and type(row['selected']) is not bool: raise ValueError('Invalid selected status')
         for key in ('capturedAt','startTime','postedAt'): stamp(row.get(key))
         for key,value in row.items():
-            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite','selected','confidenceUpdate'} and value is not None: text(value)
+            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite','selected','confidenceUpdate','bookPrices'} and value is not None: text(value)
         if 'confidenceUpdate' in row:validate_confidence_update(row['confidenceUpdate'],row)
+        if 'bookPrices' in row:validate_book_prices(row['bookPrices'],row)
         if 'priceCheck' in row:
             check=row['priceCheck'];keys(check,{'status','americanOdds','sourceAsOf','checkedAt','reviewedAmericanOdds','qualification'},{'status','checkedAt'})
             if check['status'] not in {'returned','not_returned'}: raise ValueError('Invalid quote check status')

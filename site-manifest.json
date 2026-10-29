@@ -97,6 +97,7 @@
     "sundays/index.html",
     "sundays/week.html",
     "assets/pick-category-release.js",
-    "assets/pick-category-release.css"
+    "assets/pick-category-release.css",
+    "assets/book-prices.js"
   ]
 }

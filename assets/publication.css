@@ -138,3 +138,11 @@ body[data-page=daily] #reload-data{min-height:32px;padding:6px 10px;font-size:10
 @media(max-width:620px){.ry-spotlight>summary{padding:12px;gap:10px;min-height:76px}.ry-spotlight>summary strong{font-size:14px}.ry-spotlight>summary small{font-size:10px}.ry-spotlight-action{font-size:10px}.ry-spotlight-body{padding:0 10px 12px}.ry-spotlight-body .pick-row-main{min-height:92px}}
 /* Results remain ticket-based on personal and parlay boards. */
 .parlay-record-note{font-size:11px;line-height:1.7;color:var(--text-muted);margin:6px 0 12px}
+
+/* Player navigation is independent of the pick's research disclosure. */
+.player-profile-link{color:inherit;text-decoration:underline;text-decoration-color:var(--border-control);text-underline-offset:3px}
+.player-profile-link:hover{color:var(--link);text-decoration-color:currentColor}.player-profile-link:focus-visible{outline:2px solid var(--focus-ring,var(--link));outline-offset:3px;border-radius:2px}
+.pick-label{min-width:0;padding:9px 0}.pick-label>.row-player{padding-left:22px}.pick-label>.pick-expand{padding:2px 0 0;min-height:22px;grid-column:auto;grid-row:auto;align-items:center}
+.pick-label .row-chevron{font-size:22px}.pick-label .row-pick{display:grid}.pick-label .pick-type-badge,.pick-label .ry-favorite-badge{font-size:9px;line-height:1.4;padding:1px 5px;border-radius:4px;white-space:nowrap}.pick-label .ry-favorite-badge{color:var(--warning,#dfbf70);border:1px solid var(--border-control);background:var(--surface-raised)}
+.pick-label .pick-warning-badge{font-size:9px;color:var(--warning);white-space:nowrap}
+@media(max-width:620px){.pick-label{grid-column:1/-1;grid-row:1;padding:0 48px 0 0}.pick-label .pick-type-badge,.pick-label .ry-favorite-badge{font-size:8px}.pick-label>.pick-expand{min-height:22px;padding-right:0}.pick-label .row-pick{display:grid}}

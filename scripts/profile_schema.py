@@ -13,7 +13,8 @@ def validate_profile_index(body):
     if body['schemaVersion']!='public-player-profiles-1' or not isinstance(body['players'],list) or len(body['players'])>2000:raise ValueError('Invalid profiles')
     day(body['asOfDate']);seen=set()
     for p in body['players']:
-        keys(p,{'id','name','path','version'},{'id','name','path','version'});identity(p['id']);version(p['version']);text(p['name'],120)
+        keys(p,{'id','name','path','version','team'},{'id','name','path','version'});identity(p['id']);version(p['version']);text(p['name'],120)
+        if 'team' in p and p['team'] not in NBA_TEAMS:raise ValueError('Invalid directory team')
         if p['id'] in seen or p['path']!=p['id'].split(':')[1]+'/'+p['version']+'.json':raise ValueError('Invalid profile path')
         seen.add(p['id'])
 def positive(v,limit=1000):

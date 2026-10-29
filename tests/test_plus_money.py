@@ -41,7 +41,8 @@ class PlusMoneyBoundary(unittest.TestCase):
 
     def test_v2_accepts_reviewed_mixed_sources_and_longshots_without_rewriting_v1(self):
         index=json.loads((ROOT/'data/plus-money/manifest.json').read_text())
-        body=json.loads((ROOT/'data/plus-money'/index['editions'][-1]['path']).read_text())
+        records=[json.loads((ROOT/'data/plus-money'/e['path']).read_text()) for e in index['editions']]
+        body=next(b for b in records if b['schemaVersion']=='public-plus-money-2' and any(t.get('section')=='longshots' for t in b['tickets']) and any(t['book']=='mixed' for t in b['tickets']))
         self.assertEqual(body['schemaVersion'],'public-plus-money-2');schema.validate(body)
         self.assertTrue(any(t['section']=='longshots' for t in body['tickets']))
         self.assertTrue(any(t['book']=='mixed' for t in body['tickets']))

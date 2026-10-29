@@ -60,7 +60,7 @@
     }
     const stats={};
     if(matches.length===1){
-      for(const key of ['PTS','REB','AST'])if(/^\d+$/.test(String(matches[0].raw[key]??'')))stats[key]=Number(matches[0].raw[key]);
+      for(const key of ['PTS','REB','AST','BLK','STL'])if(/^\d+$/.test(String(matches[0].raw[key]??'')))stats[key]=Number(matches[0].raw[key]);
       if(/^\d+-\d+$/.test(String(matches[0].raw['3PT']??'')))stats['3PM']=Number(matches[0].raw['3PT'].split('-')[0]);
     }
     const dnp=eventStatus==='final'&&matches.length===1&&matches[0].athlete.didNotPlay===true;
@@ -153,5 +153,25 @@
     return {renderRow,beginDate,showCalculator:show,refresh:async(force=false)=>{await ready;renderCalculator();return poll(force);}};
   }
   const columns=()=>'<div class="pick-columns" aria-hidden="true"><span>Player / pick</span><span>Price</span><span>Our win est.</span><span title="Minutes played">MP</span><span>Live / result</span><span>Add</span></div>';
-  return {create,columns,rowStatus,parseSummary,mergeResult,addLeg,calculate,identity,slot,estimateDisplay,parseMinutes,minutesLabel};
+  // Ticket boards use the same exact-identity box-score grader without registering hidden pick rows.
+  function watchResults({base,onResults=()=>{}}){
+    let rows=[],targets=new Map(),cache=new Map(),busy=false,generation=0,stopped=false;
+    const ready=fetch(new URL('data/stat-targets.json',base),{cache:'no-store',credentials:'omit'}).then(r=>r.ok?r.json():null).then(body=>{if(body?.schemaVersion==='public-1')for(const t of body.targets||[])if(/^\d+$/.test(t.espnEventId)&&/^\d+$/.test(t.espnAthleteId))targets.set(identity(t),{eventId:t.espnEventId,athleteId:t.espnAthleteId,expectedTeam:t.expectedTeam});}).catch(()=>{});
+    async function poll(){
+      if(busy||stopped||document.hidden)return;busy=true;const current=rows,n=generation;await ready;
+      const sourceFor=row=>row.resultSource||targets.get(identity(row)),events=new Set();
+      for(const row of current){const source=sourceFor(row);if(source&&/^\d+$/.test(source.eventId)&&/^\d+$/.test(source.athleteId)&&!(Date.parse(row.startTime)>Date.now()+300000))events.add(source.eventId);}
+      for(const id of events){
+        const previous=cache.get(id);if(previous&&(previous.final||Date.now()-previous.at<55000))continue;
+        try{const response=await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${id}`,{credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(12000)});if(!response.ok)continue;const body=await response.json();if(String(body.header?.id)!==id)continue;cache.set(id,{body,at:Date.now(),checkedAt:new Date().toISOString(),final:body.header?.competitions?.[0]?.status?.type?.completed===true});}catch{}
+      }
+      if(n===generation&&!stopped){for(const row of current){const source=sourceFor(row),saved=source&&cache.get(source.eventId);if(saved)try{row.result=mergeResult(row.result,parseSummary(saved.body,source,row,saved.checkedAt));}catch{}}onResults(current);}
+      busy=false;if(n!==generation&&!stopped)poll();
+    }
+    const interval=setInterval(poll,60000),visibility=()=>{if(!document.hidden)poll();};document.addEventListener('visibilitychange',visibility);
+    function stop(){stopped=true;clearInterval(interval);document.removeEventListener('visibilitychange',visibility);}
+    window.addEventListener('pagehide',stop,{once:true});
+    return {setRows(next){rows=next;generation++;poll();},stop};
+  }
+  return {create,watchResults,columns,rowStatus,parseSummary,mergeResult,addLeg,calculate,identity,slot,estimateDisplay,parseMinutes,minutesLabel};
 });

@@ -38,8 +38,8 @@ class PublicationBoundary(unittest.TestCase):
     def test_profile_facts_and_forecasts_match_immutable_public_selections(self):
         files=build.profile_files(ROOT);self.assertGreater(len(files),600)
         index=json.loads((ROOT/'data/player-profiles/index.json').read_text())
-        chosen=next(p for p in index['players'] if p['id']=='nba:1627759')
-        body=json.loads((ROOT/'data/player-profiles'/chosen['path']).read_text())
+        profiles=[json.loads((ROOT/'data/player-profiles'/p['path']).read_text()) for p in index['players']]
+        body=next(p for p in profiles if p.get('bio') and p.get('upcoming',{}).get('markets') and p['upcoming']['markets'][0]['recent'])
         self.assertTrue(body['bio']['source'].startswith('https://www.espn.com/'))
         for target in (body,body['bio'],body['upcoming'],body['upcoming']['markets'][0],body['upcoming']['markets'][0]['recent'][0]):
             target['private_feature_vector']=[1,2,3]
@@ -66,8 +66,14 @@ class PublicationBoundary(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'path'):career_schema.validate_career_index(index)
 
     def test_profile_views_reuse_exact_frozen_rows_and_keep_career_logs_separate(self):
-        views=build.profile_views(ROOT);self.assertGreater(len(views),300)
-        view=next(v for v in views.values() if v['playerId']=='nba:1627759');source=json.loads((ROOT/'data/editions/daily/2026-10-28'/f"{view['version']}.json").read_text());original={p['id']:p for p in source['props']}
+        views=build.profile_views(ROOT)
+        index=json.loads((ROOT/'data/player-profiles/index.json').read_text())
+        expected=sum('upcoming' in json.loads((ROOT/'data/player-profiles'/p['path']).read_text()) for p in index['players'])
+        self.assertEqual(len(views),expected);self.assertGreater(len(views),0)
+        view=next(v for v in views.values() if v['props'])
+        editions=json.loads((ROOT/'data/editions/manifest.json').read_text())['editions']
+        entry=next(e for e in editions if e['version']==view['version'] and e['date']==view['date'] and e['channel']=='daily')
+        source=json.loads((ROOT/'data/editions'/entry['path']).read_text());original={p['id']:p for p in source['props']}
         for p in view['props']:self.assertEqual(p,original[p['id']])
         self.assertLess(len(build.canonical(view)),len(build.canonical(source))/100)
         self.assertEqual(set(view),{'schemaVersion','version','playerId','date','props'})

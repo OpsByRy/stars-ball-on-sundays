@@ -66,6 +66,31 @@
   function isStatisticalHit(prop) {
     return prop?.result?.eventStatus==='final'&&prop.result.statisticalOutcome==='win'||isLiveHit(prop);
   }
+  // Ticket records count each published parlay once, regardless of leg count or price view.
+  function parlayOutcome(ticket) {
+    const legs=ticket?.legs||[],live=legs.some(p=>p.result?.eventStatus==='live');
+    if(!legs.length)return {outcome:'pending',live:false};
+    if(legs.some(p=>p.result?.eventStatus==='final'&&p.result.statisticalOutcome==='loss'))return {outcome:'loss',live};
+    if(legs.every(isStatisticalHit))return {outcome:'win',live};
+    // A void/push can change a book's SGP settlement. Never silently call it a full-ticket win.
+    if(legs.every(p=>isStatisticalHit(p)||['push','dnp','canceled','postponed'].includes(p.result?.statisticalOutcome)))return {outcome:'review',live};
+    return {outcome:'pending',live};
+  }
+  function parlaySummary(tickets) {
+    const unique=[...new Map(tickets.map(t=>[t.id||JSON.stringify(t.legs.map(p=>[p.date,p.canonicalEventId||p.eventId,p.playerId,normalizeContract(p)]).sort()),t])).values()];
+    const s={total:unique.length,hits:0,misses:0,pending:0,review:0,live:0};
+    for(const ticket of unique){const r=parlayOutcome(ticket);s[{win:'hits',loss:'misses',pending:'pending',review:'review'}[r.outcome]]++;if(r.live)s.live++;}
+    s.hitRate=s.hits+s.misses?s.hits/(s.hits+s.misses):null;return s;
+  }
+  function personalParlays(body) {
+    const legs=(body?.props||[]).filter(p=>p.group==='ry');
+    // Legacy editions explicitly identify one posted slip. Favorite flags alone are not tickets.
+    return legs.length&&(body.sharedBetslipUrl||Number.isFinite(body.sharedBetslipOdds))?[{id:'ry:'+body.date+':'+(body.sharedBetslipUrl||body.favoritesPostedAt||'posted-slip'),legs}]:[];
+  }
+  function parlayRecordHTML(tickets,{scope='parlays',label='Slate parlay record'}={}) {
+    const s=parlaySummary(tickets),escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    return `<div class="record-summary" data-record-summary="${escape(scope)}" aria-label="${escape(label)}"><span><strong>${s.total}</strong> ${s.total===1?'parlay':'parlays'}</span><span class="record-hits"><strong>${s.hits}</strong> hit</span><span class="record-misses"><strong>${s.misses}</strong> missed</span><span><strong>${s.hitRate===null?'—':(s.hitRate*100).toFixed(1)+'%'}</strong> parlay hit rate</span>${s.pending?`<span>${s.pending} pending</span>`:''}${s.review?`<span>${s.review} push / DNP / settlement review</span>`:''}${s.live?`<span class="row-live-flag">● ${s.live} live</span>`:''}</div><p class="parlay-record-note">${escape(label)} · one result per posted parlay. Hit rate = winning parlays ÷ winning and losing parlays. Pending and settlement-review tickets are excluded; statistical results do not confirm sportsbook settlement.</p>`;
+  }
   function applyRevisions(snapshot, revisions) {
     const players = Object.fromEntries(Object.entries(snapshot.players || {}).map(([name, player]) => [name, { ...player }]));
     const games = (snapshot.games || []).map(game => ({ ...game }));
@@ -93,5 +118,5 @@
     }
     return { ...snapshot, players, games, checkedAt, checkedAtLabel, appliedRevisions };
   }
-  return { evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit };
+  return { evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit, parlayOutcome, parlaySummary, personalParlays, parlayRecordHTML };
 });

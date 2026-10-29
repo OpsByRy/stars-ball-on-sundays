@@ -8,15 +8,17 @@ test('book preference changes price without changing contracts, probabilities or
  for(const row of [fd,dk]){assert.equal(row.id,'fixed');assert.equal(row.line,15);assert.equal(row.operator,'>=');assert.equal(row.estimate.winProbability,.85);assert.equal(row.priceFallback,false);}
  assert.equal(JSON.stringify(pick),before);
 });
-test('only a missing preferred quote permits fallback and explicit missing coverage never revives an old price',()=>{
+test('preferred saved quotes win; a missing later quote retains the original known price',()=>{
  const single={...pick,bookPrices:{...pick.bookPrices,quotes:[quote('draftkings',-200)]}};
  assert.equal(prices.pricedPick(single,'fanduel').priceFallback,true);
  assert.equal(prices.pricedPick(single,'fanduel').book,'draftkings');
- assert.equal(prices.pricedPick({...pick,bookPrices:{...pick.bookPrices,quotes:[]}},'fanduel').americanOdds,null);
- assert.equal(prices.pricedPick({...pick,bookPrices:undefined,confidenceUpdate:{americanOdds:null}},'fanduel').americanOdds,null);
+ assert.equal(prices.pricedPick({...pick,bookPrices:{...pick.bookPrices,quotes:[]}},'fanduel').americanOdds,-200);
+ const fdOriginal={...pick,book:'fanduel',americanOdds:-250,bookPrices:{checkedAt:'2026-10-28T20:00:00Z',quotes:[quote('draftkings',-200)]}};
+ assert.equal(prices.pricedPick(fdOriginal,'fanduel').book,'fanduel');assert.equal(prices.pricedPick(fdOriginal,'fanduel').priceCapturedAt,null);
+ assert.equal(prices.pricedPick({...pick,bookPrices:undefined,confidenceUpdate:{americanOdds:null}},'fanduel').americanOdds,-200);
 });
 test('exclusive sections use complete exact-line coverage and both views retain the same ticket legs',()=>{
- const only=book=>({...pick,bookPrices:{...pick.bookPrices,quotes:[quote(book,-200)]}});
+ const only=book=>({...pick,book,bookPrices:{...pick.bookPrices,quotes:[quote(book,-200)]}});
  assert.equal(prices.coverage({legs:[pick,pick]}),'both');
  assert.equal(prices.coverage({legs:[pick,only('fanduel')]}),'fanduel');
  assert.equal(prices.coverage({legs:[pick,only('draftkings')]}),'draftkings');

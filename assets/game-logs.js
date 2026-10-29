@@ -12,6 +12,9 @@
   const dayLabel=day=>validDate(day)?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'short',day:'numeric'}).format(new Date(day+'T12:00:00Z')):'—';
   function lastName(name){const parts=String(name).trim().split(/\s+/);while(parts.length>1&&/^(jr\.?|sr\.?|ii|iii|iv|v)$/i.test(parts.at(-1)))parts.pop();let start=parts.length-1;while(start>1&&/^(da|de|del|della|di|van|von)$/i.test(parts[start-1]))start--;return parts.slice(start).join(' ');}
   function sortPlayers(players){return [...players].sort((a,b)=>lastName(a.name).localeCompare(lastName(b.name),undefined,{sensitivity:'base'})||a.name.localeCompare(b.name,undefined,{sensitivity:'base'})||a.id.localeCompare(b.id));}
+  const playerTeam=p=>p.profileTeam||p.latestTeam||'Team unavailable';
+  function teamGroups(players){const teams=new Map();for(const p of players){const team=playerTeam(p);if(!teams.has(team))teams.set(team,[]);teams.get(team).push(p);}return [...teams].sort(([a],[b])=>a.localeCompare(b)).map(([team,rows])=>({team,players:sortPlayers(rows)}));}
+  function playerOptions(players){return teamGroups(players).map(g=>`<optgroup label="${escape(g.team)}">${g.players.map(p=>`<option value="${escape(p.id)}">${escape(p.name)}</option>`).join('')}</optgroup>`).join('');}
   const stamp=value=>Number.isFinite(Date.parse(value))?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(new Date(value)):'Unavailable';
   function statValue(game,market){const keys=components[market];return keys&&keys.every(k=>finite(game.stats?.[k]))?keys.reduce((a,k)=>a+game.stats[k],0):null;}
   function comparisonState(search){const p=new URLSearchParams(search),stat=Object.hasOwn(markets,p.get('stat'))?p.get('stat'):'PTS',raw=p.get('line'),line=raw!==null&&raw.trim()!==''?Number(raw):null,operator=p.get('op');return {stat,operator:['>','>=','<','<='].includes(operator)?operator:'>',comparison:finite(line)?contracts.normalizeContract({market:stat,line,operator}):null,pickDate:validDate(p.get('date'))?p.get('date'):null};}
@@ -32,11 +35,12 @@
     const script=document.querySelector('script[data-game-logs]'),base=new URL('../',script.src),dataRoot=new URL('data/player-logs/',base),$=id=>document.getElementById(id),params=new URL(location.href).searchParams;
     let catalog=null,initialized=false,index=null,entry=null,body=null,state=comparisonState(location.search),scope='last10',locationFilter='all',beforePick=!!state.pickDate,request=0;
     const load=async(url,immutable=false)=>{const r=await fetch(url,{credentials:'omit',cache:immutable?'force-cache':'no-store'});if(!r.ok)throw Error('Game logs unavailable');return r.json();};
+    const currentTeams=load(new URL('data/player-profiles/index.json',base)).then(body=>new Map(body.schemaVersion==='public-player-profiles-1'?body.players.filter(p=>p.team).map(p=>[p.id,p.team]):[])).catch(()=>new Map());
     const label=c=>!c?'No line selected':`${c.operator==='>='?c.line+'+':c.operator==='>'?'Over '+c.line:c.operator==='<'?'Under '+c.line:'At most '+c.line} ${markets[c.market].toLowerCase()}`;
     const average=(rows,market)=>{const values=rows.map(g=>market==='MIN'?g.stats?.MIN:statValue(g,market)).filter(finite);return values.length?(values.reduce((a,b)=>a+b,0)/values.length).toFixed(1):'—';};
     function profileURL(player){const p=new URLSearchParams(location.search);p.set('player',player.id);if(kind==='players'){p.delete('q');p.delete('team');}return new URL('players/profile.html?'+p,base).href;}
     function sourceLinks(player){return `<a href="https://www.nba.com/stats/player/${player.id.split(':')[1]}/boxscores-traditional?Season=${index.season}" target="_blank" rel="noopener noreferrer">NBA game log ↗</a>${/^\d{1,12}$/.test(player.espnId||'')?`<a href="https://www.espn.com/nba/player/gamelog/_/id/${player.espnId}/type/nba/year/${Number(index.season.slice(0,4))+1}" target="_blank" rel="noopener noreferrer">ESPN game log ↗</a>`:''}`;}
-    function renderDirectory(){const q=$('player-search').value.trim().toLowerCase(),team=$('player-team').value,players=index.players.filter(p=>`${p.name} ${p.teams.join(' ')}`.toLowerCase().includes(q)&&(team==='all'||p.teams.includes(team)));$('player-directory-count').textContent=`${players.length} of ${index.players.length} players`;$('player-directory').innerHTML=players.map(p=>`<a class="player-directory-row" href="${escape(profileURL(p))}"><strong>${escape(p.name)}</strong><span>${escape(p.latestTeam)} · ${p.games} ${p.games===1?'game':'games'}</span><span aria-hidden="true">↗</span></a>`).join('')||'<p class="log-empty">No players match your search.</p>';}
+    function renderDirectory(){const q=$('player-search').value.trim().toLowerCase(),team=$('player-team').value,players=index.players.filter(p=>`${p.name} ${playerTeam(p)} ${p.teams.join(' ')}`.toLowerCase().includes(q)&&(team==='all'||playerTeam(p)===team));$('player-directory-count').textContent=`${players.length} of ${index.players.length} players`;$('player-directory').innerHTML=teamGroups(players).map(g=>`<h2 class="player-team-title">${escape(g.team)}</h2>${g.players.map(p=>`<a class="player-directory-row" href="${escape(profileURL(p))}"><strong>${escape(p.name)}</strong><span>${escape(g.team)} · ${p.games} ${p.games===1?'game':'games'}</span><span aria-hidden="true">↗</span></a>`).join('')}`).join('')||'<p class="log-empty">No players match your search.</p>';}
     function boardLink(){const search=new URLSearchParams(params.get('board')||'');if(state.pickDate)search.set('date',state.pickDate);const channel=params.get('channel');return new URL((channel==='sunday'?'sundays/week.html':'daily/')+(search.size?'?'+search:''),base).href;}
     async function showPlayer(player){
       window.SBOS_PROFILES?.cancel();const serial=++request;entry=player;const data=await load(safeLogURL(player,dataRoot,index.season),true);if(serial!==request)return;
@@ -66,17 +70,17 @@
       const record=catalog.seasons.find(e=>e.season===season);if(!record||record.path!==season+'/index.json'||!/^\d{4}-\d{2}$/.test(season))throw Error('Unknown season');
       const serial=++request;const nextIndex=await load(new URL(record.path,dataRoot));if(serial!==request)return;
       if(nextIndex.schemaVersion!=='public-game-logs-1'||nextIndex.season!==season||!Array.isArray(nextIndex.players))throw Error('Unsupported game logs');
-      index=nextIndex;index.players=sortPlayers(index.players);$('log-season').value=season;
+      const teams=await currentTeams;if(serial!==request)return;index=nextIndex;index.players=sortPlayers(index.players.map(p=>({...p,profileTeam:teams.get(p.id)||p.latestTeam})));$('log-season').value=season;
       const next=new URL(location.href);next.searchParams.set('season',season);history.replaceState(null,'',next);
       $('log-coverage').textContent=`${index.players.length} players · ${index.games} games · through ${dayLabel(index.dataThrough)}, ${index.dataThrough.slice(0,4)}. Stats refreshed ${stamp(index.capturedAt)}.`;
       if(kind==='players'){
-        const previousTeam=$('player-team').value;$('player-team').innerHTML='<option value="all">All teams</option>'+[...new Set(index.players.flatMap(p=>p.teams))].sort().map(t=>`<option>${escape(t)}</option>`).join('');
+        const previousTeam=$('player-team').value;$('player-team').innerHTML='<option value="all">All teams</option>'+teamGroups(index.players).map(g=>`<option>${escape(g.team)}</option>`).join('');
         if([...$('player-team').options].some(o=>o.value===previousTeam))$('player-team').value=previousTeam;
         if(!initialized){$('player-search').addEventListener('input',renderDirectory);$('player-team').addEventListener('change',renderDirectory);initialized=true;}
         renderDirectory();return;
       }
       body=null;$('game-log-workspace').hidden=true;$('back-to-picks').href=boardLink();$('before-pick-wrap').hidden=!state.pickDate;$('before-pick').checked=beforePick;if(state.pickDate)$('before-pick-label').textContent='Only games before '+dayLabel(state.pickDate);
-      $('player-select').innerHTML=index.players.map(p=>`<option value="${escape(p.id)}">${escape(p.name)} · ${escape(p.latestTeam)}</option>`).join('');
+      $('player-select').innerHTML=playerOptions(index.players);
       if(!initialized){
         $('player-select').addEventListener('change',()=>{state.comparison=null;$('comparison-line').value='';const next=new URL(location.href);next.searchParams.delete('line');next.searchParams.delete('op');history.replaceState(null,'',next);params.set('player',$('player-select').value);showPlayer(index.players.find(p=>p.id===$('player-select').value)).catch(showError);});
         for(const id of ['comparison-stat','comparison-operator','comparison-line'])$(id).addEventListener('change',readControls);
@@ -102,5 +106,5 @@
     function showError(){$('log-error').hidden=false;$('log-error').textContent='The saved game log is unavailable. Your pick and its saved estimate have not changed. Please refresh to try again.';}
     start().catch(showError);
   }
-  return {init,statValue,comparisonState,historicalGames,compare,record,safeLogURL,propURL,lastName,sortPlayers,shootingPair,shootingPercent};
+  return {init,statValue,comparisonState,historicalGames,compare,record,safeLogURL,propURL,lastName,sortPlayers,playerTeam,teamGroups,playerOptions,shootingPair,shootingPercent};
 });

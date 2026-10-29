@@ -19,6 +19,7 @@
 .pm-row-title>strong{font-size:13px}.pm-row-title>small{font-size:10px;color:var(--text-muted)}
 .pm-row-title .pick-type-badge,.pm-row-title .ry-favorite-badge{padding:1px 5px;border:1px solid var(--border-control);border-radius:4px;font-size:9px;color:var(--text-muted)}
 .pm-row-title .ry-favorite-badge{color:var(--warning)}
+.pm-ticket-result{font-size:10px;color:var(--text-muted)}.pm-ticket-result.win,.pm-leg-result.hit{color:var(--success,var(--accent))}.pm-ticket-result.loss,.pm-leg-result.miss{color:var(--danger,#dc6363)}
 .pm-row-preview{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.6;font-size:11px;color:var(--text-muted);margin-top:5px}
 .pm-row-price,.pm-row-probability{display:grid;gap:4px;text-align:center}.pm-row-price>strong{font-size:18px;line-height:1.25}.pm-row-probability>strong{font-size:14px}
 .pm-row-price>small,.pm-row-probability>small{display:none;font-size:9px;color:var(--text-muted)}

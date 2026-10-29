@@ -1,6 +1,12 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const logs=require('../assets/game-logs.js');
+test('profile teams group players before surname sorting and dropdowns retain exact identities',()=>{
+ const rows=[{id:'a',name:'Zach Adams',latestTeam:'BOS',profileTeam:'ATL'},{id:'b',name:'Gary Payton II',latestTeam:'ATL'},{id:'c',name:'Bruce Brown',latestTeam:'BOS'},{id:'d',name:'Jaylen Brown',latestTeam:'ATL'}];
+ const before=JSON.stringify(rows),groups=logs.teamGroups(rows);assert.deepEqual(groups.map(g=>[g.team,g.players.map(p=>p.id)]),[['ATL',['a','d','b']],['BOS',['c']]]);
+ assert.equal(JSON.stringify(rows),before);const html=logs.playerOptions(rows);assert.match(html,/<optgroup label="ATL">/);assert.match(html,/<option value="b">Gary Payton II<\/option>/);assert.ok(html.indexOf('Jaylen Brown')<html.indexOf('Gary Payton II'));
+ assert.equal(logs.playerTeam(rows[0]),'ATL');
+});
 const game=(date,points=20)=>({eventId:date,date,home:true,team:'PHI',opponent:'BOS',stats:{MIN:32,PTS:points,REB:5,AST:4,'3PM':2}});
 test('player names sort by surname, then full name, without sorting suffixes as last names',()=>{
   const names=['Jaylen Brown','Tristan da Silva','Gary Payton II','Bobby Portis Jr.','Aaron Gordon','Bruce Brown','Tim Hardaway Jr.'];

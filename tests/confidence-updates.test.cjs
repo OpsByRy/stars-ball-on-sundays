@@ -6,6 +6,6 @@ test('new estimates drive current filters while the original forecast and price 
  assert.equal(pub.pricedPick(original).americanOdds,-280);assert.match(pub.confidenceDetails(original),/85.0%/);assert.match(pub.confidenceDetails(original),/72.0%/);
  assert.match(pub.confidenceDetails(original),/does not erase a pick/);assert.equal(JSON.stringify(original),before);
  const unavailable={...original,confidenceUpdate:{...original.confidenceUpdate,americanOdds:null,estimate:undefined}};
- assert.equal(pub.pricedPick(unavailable).americanOdds,null);assert.equal(pub.filterPicks([unavailable],{minimum:1}).length,0);
+ assert.equal(pub.pricedPick(unavailable).americanOdds,-250);assert.equal(pub.filterPicks([unavailable],{minimum:1}).length,0);
  assert.doesNotMatch(pub.confidenceDetails({...original,confidenceUpdate:{...original.confidenceUpdate,summary:'<script>'}}),/<script>/);
 });

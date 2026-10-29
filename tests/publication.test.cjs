@@ -135,6 +135,29 @@ test('research pagination and combined filters retain every reviewed line',()=>{
   const first=publication.researchPage(rows),second=publication.researchPage(rows,{page:1});assert.equal(first.total,85);assert.equal(first.pages,3);assert.equal(second.rows[0].id,'40');assert.equal(publication.researchPage(rows,{page:99}).rows.length,5);
   const filtered=publication.researchPage(rows,{query:'player',market:'AST',status:'not_a_pick',page:8});assert.equal(filtered.total,17);assert.equal(filtered.page,0);assert.ok(filtered.rows.every(r=>r.market==='AST'&&r.category==='not_a_pick'));
 });
+test('research exposes all ten markets with honest saved review and model-estimate coverage',()=>{
+ const rows=[{...row,market:'PTS',estimate:{winProbability:.8}}, {...row,market:'PTS',evidence:'Hit 3 of 4 prior games.'}, {...row,market:'REB',estimate:{projection:7.2}}, {...row,market:'AST',estimate:{winProbability:.9},confidenceUpdate:{status:'unavailable'}}],before=JSON.stringify(rows);
+ const coverage=publication.researchCoverage(rows);assert.deepEqual(coverage.map(c=>c.market),['PTS','REB','AST','3PM','PRA','PR','PA','RA','BLK','STL']);
+ assert.deepEqual(coverage.find(c=>c.market==='PTS'),{market:'PTS',label:'points',reviewed:2,estimates:1,evidenceOnly:1,status:'mixed'});
+ assert.equal(coverage.find(c=>c.market==='REB').status,'evidence_only');assert.equal(coverage.find(c=>c.market==='AST').estimates,0);
+ assert.deepEqual(coverage.find(c=>c.market==='BLK'),{market:'BLK',label:'blocks',reviewed:0,estimates:0,evidenceOnly:0,status:'no_saved_reviews'});
+ const options=publication.researchMarketOptions(rows),html=publication.researchCoverageHTML(rows);assert.equal((options.match(/<option/g)||[]).length,10);assert.match(options,/value="BLK">Blocks \(BLK\) · 0 · no saved review/);assert.doesNotMatch(options,/disabled/);
+ assert.match(html,/<strong>4<\/strong> saved reviewed lines/);assert.match(html,/<strong>1<\/strong> with a model win estimate/);assert.match(html,/Historical sample hit rates are separate from model win estimates/);assert.equal(JSON.stringify(rows),before);
+ for(const market of ['REB','BLK','STL','PRA','PA','PR','RA','3PM'])assert.ok(options.includes('value="'+market+'"'));
+});
+test('empty research markets distinguish no saved review from filters that exclude existing reviews',()=>{
+ const rows=[{...row,market:'PTS',group:'research',category:'not_a_pick'}];
+ assert.match(publication.researchEmptyMessage(rows,{market:'BLK'}),/No reviewed lines in this saved edition for blocks \(BLK\)/);
+ assert.equal(publication.researchEmptyMessage(rows,{market:'PTS',query:'missing'}),'No reviewed lines match these filters.');assert.equal(publication.researchPage(rows,{market:'BLK'}).total,0);
+});
+test('saved research evidence stays separate from model probability and substantive review survives alongside the core panel',()=>{
+ const empirical={...row,group:'research',category:'not_a_pick',evidence:'3 of 4 prior games hit (75%); <script>bad</script>',assessment:'Line is available; no supported model estimate.'};
+ assert.equal(board.researchAnalysis(empirical).modeled,false);assert.equal(board.researchAnalysis(empirical).label,'No model estimate');assert.equal(board.estimateDisplay(empirical.estimate).win,'—');
+ const html=board.savedResearchHTML(empirical);assert.match(html,/Our assessment/);assert.match(html,/Supporting evidence/);assert.match(html,/75%/);assert.match(html,/No model win estimate was saved/);assert.match(html,/&lt;script&gt;/);assert.doesNotMatch(html,/<script>/);
+ assert.equal(board.researchAnalysis({...empirical,estimate:{projection:1.8}}).label,'Projection only');assert.equal(board.researchAnalysis({...empirical,estimate:{winProbability:.76,status:'provisional'}}).label,'Provisional model');
+ assert.equal(board.savedResearchHTML({...empirical,evidence:'Reviewed research; this is not a selected pick.',assessment:'Did not qualify for the selected board in this pregame refresh.'}),'');
+ const source=fs.readFileSync(path.join(root,'assets/pick-board.js'),'utf8');assert.match(source,/if\(research\)detail=research\.panel/);assert.match(source,/if\(scope==='research'\)detail=savedResearchHTML\(row\)\+detail/);assert.match(source,/row-research-analysis/);assert.match(source,/pickPayoutHTML/);assert.match(source,/const lowerBadge=confidenceDecreased/);
+});
 
 test('All Picks contains selected props only and filters probability, type, favorites, game, team and stat together',()=>{
   const safe={...row,id:'safe',group:'research',category:'value_safe',team:'Team A',opponent:'Team B',estimate:{winProbability:.75}},aggressive={...safe,id:'aggressive',playerId:'other',category:'high_probability_aggressive',estimate:{winProbability:.60}},unknown={...safe,id:'unknown',playerId:'unknown',estimate:undefined};

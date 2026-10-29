@@ -33,6 +33,16 @@
     const hasWin=finite(win)&&win>=0&&win<=1,hasProjection=finite(projection)&&projection>=0;
     return {available:hasWin||hasProjection,win:hasWin?`${(win*100).toFixed(1)}%`:'—',projection:hasProjection?projection.toFixed(1):'—',status:estimate?.status==='validated'?'Validated':'Provisional'};
   }
+  function researchAnalysis(row){
+    const display=estimateDisplay(row.confidenceUpdate?row.confidenceUpdate.estimate:row.estimate),modeled=display.win!=='—';
+    return {modeled,label:modeled?display.status+' model':display.projection!=='—'?'Projection only':'No model estimate',description:modeled?display.status+' saved model win estimate':'No saved model win estimate; historical sample rates are not a forecast'};
+  }
+  const reviewBoilerplate=new Set(['Reviewed research; this is not a selected pick.','Reviewed by SBOS. Estimates remain provisional; a reviewed line is a pick only when assigned to a featured pick category.','Provisional pick at the saved price. Availability, role and sportsbook terms may remain unconfirmed. Recheck before placing a wager.','Did not qualify for the selected board in this pregame refresh.']);
+  function savedResearchHTML(row){
+    const text=field=>typeof row[field]==='string'&&!reviewBoilerplate.has(row[field].trim())?row[field].trim():'';
+    const assessment=text('assessment'),evidence=text('evidence');if(!assessment&&!evidence)return '';
+    return '<section class="public-evidence research-saved-read" aria-label="Saved line review"><h4>Saved line review</h4>'+(assessment?'<p><strong>Our assessment:</strong> '+escape(assessment)+'</p>':'')+(evidence&&evidence!==assessment?'<p><strong>Supporting evidence:</strong> '+escape(evidence)+'</p>':'')+(!researchAnalysis(row).modeled?'<p><small>No model win estimate was saved for this line. Sample hit rates are historical observations.</small></p>':'')+'</section>';
+  }
   function addLeg(legs,row){
     if(contracts.isVoidedLeg(row))return {legs,action:'void'};
     if(!contracts.normalizeContract(row)||math.decimalOdds(row.americanOdds)===null)return {legs,action:'unpriced'};
@@ -134,6 +144,7 @@
       records.set(token,row);
       const research=window.SBOS_PICK_RESEARCH;
       if(research)detail=research.panel(row,{base,label:lineLabel(row)});
+      if(scope==='research')detail=savedResearchHTML(row)+detail;
       const quoteDetails=window.SBOS_BOOK_PRICES?.quoteDetails(row)||'';
       const estimateTime=(row.confidenceUpdate?.estimate||row.estimate)?.asOf;
       const audit=(row.postedAt?'<p>Posted '+escape(stamp(row.postedAt))+'.</p>':'')+quoteDetails+(window.SBOS_PUBLICATION?.confidenceDetails(row)||'')+'<p>Forecast saved '+escape(stamp(estimateTime))+'. '+escape(row.market)+' '+escape(row.operator)+' '+escape(row.line)+' · '+escape((row.period||'full_game').replaceAll('_',' '))+'. Overtime: '+(row.overtime===true?'included':row.overtime===false?'excluded':'unconfirmed')+'.</p>';
@@ -142,7 +153,8 @@
       const canAdd=priced&&!!contracts.normalizeContract(row)&&!contracts.isVoidedLeg(row);
       const update=row.confidenceUpdate,estimate=estimateDisplay(update?update.estimate:row.estimate),original=estimateDisplay(row.estimate);
       const payoutCategory=row.category||(typeLabel==='Layups'?'value_safe':typeLabel==='Lobs'?'high_probability_aggressive':null);
-      const estimateHTML=`<span class="row-estimate" title="${estimate.status} win estimate. Expand the pick for projection and research."><small class="mobile-cell-label">Win est.</small><strong>${estimate.win}</strong>${update&&original.win!==estimate.win?`<small class="row-original-estimate">Was ${original.win}</small>`:''}${row.group==='ry'&&estimate.projection!=='—'?`<small class="row-projection">Proj. ${estimate.projection}</small>`:''}</span>`;
+      const analysis=scope==='research'?researchAnalysis(row):null;
+      const estimateHTML=`<span class="row-estimate" title="${escape(analysis?.description||estimate.status+' win estimate. Expand the pick for projection and research.')}"><small class="mobile-cell-label">Win est.</small><strong>${estimate.win}</strong>${analysis?`<small class="row-original-estimate row-research-analysis">${escape(analysis.label)}</small>`:''}${update&&original.win!==estimate.win?`<small class="row-original-estimate">Was ${original.win}</small>`:''}${(row.group==='ry'||scope==='research')&&estimate.projection!=='—'?`<small class="row-projection">Proj. ${estimate.projection}</small>`:''}</span>`;
       const book={fanduel:'FanDuel',draftkings:'DraftKings'}[String(row.book).toLowerCase()]||row.book||'Book unavailable';
       const updateLabels={supported:'Updated',reduced:'Updated',improved:'Confidence higher',review:'Review update',unavailable:'Update unavailable'};
       const updateBadge=update?`<span class="pick-update-badge update-${escape(update.status)}" title="${escape(update.summary+' Checked '+stamp(update.checkedAt))}">${update.qualification==='does_not_qualify'?'No longer qualifies':update.qualification==='unavailable'?'Original book unavailable':update.status==='review'?'Line review':updateLabels[update.status]||'Updated'}</span>`:'';
@@ -209,5 +221,5 @@
     window.addEventListener('pagehide',stop,{once:true});
     return {setRows(next){rows=next;generation++;poll();},stop};
   }
-  return {create,watchResults,playerProfileURL,playerNameHTML,columns,rowStatus,parseSummary,mergeResult,addLeg,calculate,identity,slot,estimateDisplay,parseMinutes,minutesLabel,confidenceDecreased};
+  return {researchAnalysis,savedResearchHTML,create,watchResults,playerProfileURL,playerNameHTML,columns,rowStatus,parseSummary,mergeResult,addLeg,calculate,identity,slot,estimateDisplay,parseMinutes,minutesLabel,confidenceDecreased};
 });

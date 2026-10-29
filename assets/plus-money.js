@@ -11,7 +11,7 @@
   const odds=value=>finite(value)?(value>0?'+':'')+value:'—';
   const bookName=value=>({fanduel:'FanDuel',draftkings:'DraftKings',mixed:'Mixed price sources'}[value]||value);
   const markets={PTS:'points',AST:'assists',REB:'rebounds','3PM':'threes',PRA:'points + rebounds + assists',PA:'points + assists',PR:'points + rebounds',RA:'rebounds + assists',BLK:'blocks',STL:'steals'};
-  const titles={all:'All Parlays',plus_money:'Plus Money',longshots:'Longshots'};
+  const titles={all:'All Parlays',plus_money:'Plus Money',same_game:'Same Game Parlays',longshots:'Longshots'};
   const coverageNames={both:'Both sportsbooks',fanduel:'FanDuel Exclusive Lines',draftkings:'DraftKings Exclusive Lines',mixed:'Mixed-Source Ideas'};
   const sorts=['reviewed','probability_desc','probability_asc','price_desc','price_asc','legs_asc','legs_desc','game'];
   const defaults={type:'all',query:'',minimum:0,minPrice:0,favorite:false,coverage:'all',legs:'all',market:'all',game:'all',team:'all',sort:'reviewed'};
@@ -21,6 +21,10 @@
   const effectiveOdds=t=>results.parlayLegs(t).voided.length?asAmerican(results.parlayDecimal(t)):t.indicativeAmericanOdds;
   const isFavorite=t=>t.ryFavorite===true;
   const eventId=r=>r.canonicalEventId||r.eventId;
+  const gameIdentity=row=>typeof row.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(row.date)&&typeof eventId(row)==='string'&&eventId(row).trim()?JSON.stringify([row.date,eventId(row)]):null;
+  // This is an overlapping view of original tickets, not a new payout tier.
+  function isSameGame(ticket){const identities=(ticket.legs||[]).map(gameIdentity);return identities.length>1&&identities.every(Boolean)&&new Set(identities).size<identities.length;}
+  function categoryTickets(tickets,type='all'){const seen=new Set();return tickets.filter(t=>{if(t.id&&seen.has(t.id))return false;if(t.id)seen.add(t.id);return type==='all'||(type==='same_game'?isSameGame(t):section(t)===type);});}
   const estimate=r=>r.confidenceUpdate?r.confidenceUpdate.estimate:r.estimate;
   const probability=r=>{const p=estimate(r)?.winProbability;return finite(p)&&p>=0&&p<=1?p:null;};
   function lowestProbability(ticket){const values=results.parlayLegs(ticket).active.map(probability);return values.length&&values.every(finite)?Math.min(...values):null;}
@@ -40,7 +44,7 @@
       game:(p.get('game')||'all').slice(0,100),team:(p.get('team')||'all').slice(0,100),sort:sorts.includes(p.get('sort'))?p.get('sort'):'reviewed'};
   }
   function stateQuery(state,date){const p=new URLSearchParams();if(date)p.set('date',date);for(const [key,value] of Object.entries(defaults))if(state[key]!==value)p.set(key,key==='favorite'?'1':String(state[key]));return p.toString();}
-  function tabCounts(tickets){return {all:tickets.length,plus_money:tickets.filter(t=>section(t)==='plus_money').length,longshots:tickets.filter(t=>section(t)==='longshots').length,favorites:tickets.filter(isFavorite).length};}
+  function tabCounts(tickets){const unique=categoryTickets(tickets);return {all:unique.length,plus_money:categoryTickets(unique,'plus_money').length,same_game:categoryTickets(unique,'same_game').length,longshots:categoryTickets(unique,'longshots').length,favorites:unique.filter(isFavorite).length};}
   function pricedTicket(ticket,preferred=prices.getPreferredBook()){
     const legs=ticket.legs.map(r=>prices.pricedPick(r,preferred));
     const decimal=legs.length&&legs.every(r=>finite(r.americanOdds)&&Math.abs(r.americanOdds)>=100)?legs.reduce((d,r)=>d*(1+(r.americanOdds>0?r.americanOdds/100:100/Math.abs(r.americanOdds))),1):null;
@@ -49,9 +53,9 @@
   }
   function filterTickets(tickets,state){
     const query=state.query.trim().toLocaleLowerCase();
-    const rows=tickets.filter(t=>{
+    const rows=categoryTickets(tickets,state.type).filter(t=>{
       const low=lowestProbability(t);
-      return (state.type==='all'||section(t)===state.type)&&(!state.favorite||isFavorite(t))&&
+      return (!state.favorite||isFavorite(t))&&
         (!query||t.legs.some(r=>[r.player,r.team,r.opponent,label(r)].join(' ').toLocaleLowerCase().includes(query)))&&
         (!state.minimum||low!==null&&low*100>=state.minimum)&&(!state.minPrice||finite(effectiveOdds(t))&&effectiveOdds(t)>=state.minPrice)&&
         (state.coverage==='all'||(t.sourceCoverage||prices.coverage(t))===state.coverage)&&
@@ -74,13 +78,58 @@
     return ticketGames(ticket).map(row=>research.compactMatchup(row)).join('');
   }
   function coverageNote(key){return key==='both'?'Every leg has a saved exact-line price at both books.':key==='mixed'?'No complete price set is saved at either book. Confirm every exact line and the full ticket at your sportsbook.':`A complete price set is saved only at ${bookName(key)}. The other book is missing at least one matching line; choose ${bookName(key)} for its complete saved price set.`;}
+  const genericFitReasons=new Set(['All saved leg prices are from the same sportsbook.','Each player appears once, with one exact stat line.','Saved leg prices come from different sportsbooks; confirm the full ticket at your book.','Algorithm-selected value legs.','Different games limit shared rotation exposure.','Recent role, minutes and opportunity reviewed.','Reviewed.']);
+  const joinText=values=>values.length<3?values.join(' and '):values.slice(0,-1).join(', ')+', and '+values.at(-1);
+  const number=value=>Number(value.toFixed(1)).toString();
+  function projectionFact(row){
+    const contract=results.normalizeContract(row),projection=estimate(row)?.projection;if(!contract||!finite(projection)||projection<0)return null;
+    const difference=projection-contract.line,position=difference===0?'at its line':number(Math.abs(difference))+' '+(difference>0?'above':'below')+' its line';
+    return row.player+' '+label(row)+' has a saved projection of '+number(projection)+' '+(markets[row.market]||row.market)+' ('+position+')';
+  }
+  function reviewWarnings(legs){return legs.flatMap(row=>{
+    const update=row.confidenceUpdate;
+    if(update?.qualification==='does_not_qualify')return [row.player+' no longer qualifies under the latest review'];
+    if(update?.status==='review')return [row.player+' has an unresolved line review'];
+    if(update?.status==='unavailable'||update?.qualification==='unavailable')return [row.player+' has an unavailable latest review'];
+    if(row.result?.statisticalOutcome==='postponed')return [row.player+'’s game is postponed'];
+    return [];
+  });}
+  function compatibilityExplanation(ticket){
+    const split=results.parlayLegs(ticket),active=split.active,contracts=joinText(active.map(row=>row.player+' '+label(row)));
+    const saved=Array.isArray(ticket.fitReasons)?[...new Set(ticket.fitReasons.filter(reason=>typeof reason==='string'&&reason.trim()&&!genericFitReasons.has(reason.trim())).map(reason=>reason.trim()))]:[];
+    let summary,basis='saved-contracts';
+    if(!active.length)summary='No active legs remain in this ticket. The original selections stay visible below; the ticket has no remaining hit requirements.';
+    else {
+      const projections=active.map(projectionFact).filter(Boolean),low=lowestProbability(ticket),warnings=reviewWarnings(active),games=active.every(gameIdentity)?ticketGames({...ticket,legs:active}):null;
+      let evidence,context;
+      if(projections.length){evidence=joinText(projections.slice(0,2));if(projections.length<active.length&&low!==null)evidence+='; the lowest saved individual leg win estimate is '+percent(low);basis='saved-projections';}
+      else if(low!==null){evidence=contracts+(active.length===1?' has a saved individual win estimate of '+percent(low):active.length<=3?' have saved individual win estimates of '+joinText(active.map(row=>percent(probability(row))))+', respectively':' have a lowest saved individual leg win estimate of '+percent(low));basis='saved-individual-estimates';}
+      else evidence=contracts+' remain the exact recorded targets; at least one active leg has no current saved win estimate';
+      if(active.length===1)context=split.voided.length?'Only this selection remains active after voids; the other original selections remain recorded below':'Only one selection is recorded, so multi-leg compatibility cannot be assessed';
+      else if(!games)context='The saved record does not establish how their game exposure overlaps; no combined win probability is inferred';
+      else if(games.length===active.length)context='These are separate matchups, limiting shared game-script exposure; every active leg still must hit';
+      else if(games.length===1)context=saved.length?'They share one game, so pace, rotation changes and a lopsided score can affect them together; the saved compatibility review below does not establish a validated combined win probability':'They share one game with no specific same-game compatibility finding saved; shared pace and rotation exposure is not evidence that the legs help each other hit';
+      else context='Some legs share a game and can rise or fail together; every active leg still must hit';
+      if(split.voided.length&&active.length>1)context=split.voided.length+' original leg'+(split.voided.length===1?' is':'s are')+' voided; '+context.charAt(0).toLowerCase()+context.slice(1);
+      if(warnings.length)context=joinText(warnings)+'; '+context.charAt(0).toLowerCase()+context.slice(1);
+      const outcome=results.parlayOutcome(ticket).outcome;
+      if(outcome==='loss')context='This ticket has already missed; '+context.charAt(0).toLowerCase()+context.slice(1);
+      else if(outcome==='win')context='Every active leg has hit'+(split.voided.length?' after voids':'')+'; '+(warnings.length?joinText(warnings)+'; ':'')+'the saved estimates describe individual legs, not a combined win probability';
+      summary=evidence+'. '+context+'.';
+    }
+    return {summary,saved,basis};
+  }
+  function compatibilityHTML(ticket){const fit=compatibilityExplanation(ticket);return `<section class="pm-fit-intro" aria-label="Why these legs fit"><h3>Why these legs fit</h3><p>${escape(fit.summary)}</p><small>${{'saved-projections':'From saved projections and exact lines','saved-individual-estimates':'From saved individual estimates and exact lines','saved-contracts':'From the saved lines'}[fit.basis]}</small>${fit.saved.length?`<div class="pm-saved-fit"><strong>Saved compatibility review</strong><ul>${fit.saved.map(reason=>`<li>${escape(reason)}</li>`).join('')}</ul></div>`:''}</section>`;}
+  function emptyStateHTML(counts,state){
+    if(state.type==='same_game'&&!counts.same_game)return '<p class="pick-empty">No reviewed Same Game Parlay tickets have been published for this slate yet. <a href="../calculator/#sgp-analyzer">Explore your own combination in the same-game analyzer ↗</a></p>';
+    return `<p class="pick-empty">${state.favorite&&!counts.favorites?'Ry hasn’t flagged any parlays for this slate yet.':!counts[state.type]?`No qualifying ${state.type==='longshots'?'Longshots':state.type==='plus_money'?'Plus Money parlays':'parlays'} in this edition. Browse Daily Board for our individual selections.`:'No published parlays match your filters. Try lowering the minimum or reset your filters.'}</p>`;
+  }
   function ticketRow(ticket,index,{open=false}={}){
     const kind=section(ticket),coverage=ticket.sourceCoverage||prices.coverage(ticket),title=`${kind==='longshots'?'Longshot Parlay':'Plus Money Parlay'} ${index+1}`,favorite=isFavorite(ticket);
     const split=results.parlayLegs(ticket),voids=split.voided.length,result=results.parlayOutcome(ticket),resultLabel=voids&&result.outcome==='win'?`✓ Won with ${voids} void${voids===1?'':'s'}`:({win:'✓ Hit',loss:'✕ Miss',pending:'Pending',review:'Settlement review',void:'All legs void'})[result.outcome];
     const preview=ticket.legs.map(r=>`${board.playerNameHTML(r)} <span class="${results.isVoidedLeg(r)?'pm-voided-label':''}">${escape(label(r))}${results.isVoidedLeg(r)?' · Void':''}</span>`).join(' + ');
     const displayed=effectiveOdds(ticket),priceHeading=voids?'After voids (est.)':'Estimated combined price',voidNote=voids?`<p class="pm-void-note"><strong>${voids} void${voids===1?'':'s'}:</strong> ${split.voided.map(r=>escape(r.player)).join(', ')}. ${split.active.length} active ${split.active.length===1?'leg remains':'legs remain'}. ${split.active.length?'Estimated odds remove the voided legs.':'The ticket is fully voided; net P/L is zero.'} Original selections and full-ticket price stay saved.</p>`:'';
-    const fit=ticket.fitReasons.filter(s=>!['All saved leg prices are from the same sportsbook.','Each player appears once, with one exact stat line.','Saved leg prices come from different sportsbooks; confirm the full ticket at your book.'].includes(s));
-    return `<details class="pm-row" data-parlay-id="${escape(ticket.id)}" ${open?'open':''}><summary><span class="pm-row-chevron" aria-hidden="true">›</span><span class="pm-row-label"><span class="pm-row-title"><strong>${title}</strong><small>${ticket.legs.length} legs${voids?' · '+voids+' void'+(voids===1?'':'s'):''}</small><span class="pm-ticket-result ${result.outcome}">${resultLabel}${result.live?' · ● Live':''}</span>${favorite?'<span class="ry-favorite-badge">★ Ry’s Favorite</span>':''}</span><span class="pm-row-preview">${preview}</span></span><span class="pm-row-games">${ticketGamesHTML(ticket)}</span><span class="pm-row-price"><span class="sr-only">${priceHeading}: </span><small class="pm-price-caption${voids?' adjusted':''}" aria-hidden="true">${priceHeading}</small><strong>${result.outcome==='void'?'Refund':escape(odds(displayed))}</strong>${voids?`<small class="pm-before-void">Full ticket ${escape(odds(ticket.indicativeAmericanOdds))}</small>`:''}${units.payoutHTML(displayed,{type:kind==='longshots'?'longshot':'plus_money',voided:result.outcome==='void'})}</span><span class="pm-row-probability"><span class="sr-only">Lowest individual leg win estimate: </span><small aria-hidden="true">Lowest leg est.</small><strong>${percent(lowestProbability(ticket))}</strong></span><span class="pm-row-coverage">${coverageNames[coverage]}</span></summary><div class="pm-row-detail">${voidNote}<p class="pm-coverage-note">${coverageNote(coverage)}${ticket.book==='mixed'?' Displayed prices use mixed sources.':''}</p><div class="pm-leg-columns" aria-hidden="true"><span>Player / pick</span><span>Saved price</span><span>Leg win est.</span></div><ol class="pm-leg-list">${ticket.legs.map(r=>`<li><div class="pm-leg-row${results.isVoidedLeg(r)?' pm-leg-voided':''}"><span><span class="pm-leg-person">${typeof window!=='undefined'&&window.SBOS_PICK_RESEARCH?window.SBOS_PICK_RESEARCH.portrait(r,{href:board.playerProfileURL(r)}):''}<span><strong>${board.playerNameHTML(r)}</strong><span>${escape(label(r))}</span></span></span><small>${typeof window!=='undefined'&&window.SBOS_PICK_RESEARCH?window.SBOS_PICK_RESEARCH.matchupHeading(r.team+' vs '+r.opponent,[r.team,r.opponent],r):escape(r.team)+' vs '+escape(r.opponent)} · ${escape(stamp(r.startTime))}</small>${legResultHTML(r)}</span><span><strong>${escape(odds(r.americanOdds))}</strong><small>${escape(bookName(r.book||ticket.book))}</small></span><span><strong>${percent(probability(r))}</strong><small>Provisional</small></span></div><details class="pm-leg-research"><summary>${escape(r.player)} · pick research</summary>${typeof window!=='undefined'&&window.SBOS_PICK_RESEARCH?window.SBOS_PICK_RESEARCH.panel(r,{label:label(r)}):''}<details class="pick-audit"><summary>Saved prices & sources</summary>${prices.quoteDetails(r)}<p>Forecast saved ${escape(stamp(estimate(r)?.asOf))}.</p><a href="${escape(board.playerProfileURL(r)||'../players/')}" target="_blank" rel="noopener noreferrer">View player profile ↗</a></details></details></li>`).join('')}</ol><details class="pm-fit"><summary>Why these legs fit</summary><ul>${fit.map(s=>`<li>${escape(s)}</li>`).join('')}</ul></details><p class="pm-joint-note">The lowest leg estimate describes one leg, not the whole parlay. No verified combined win probability has been assigned. Full game; confirm overtime and settlement terms with your sportsbook.</p></div></details>`;
+    return `<details class="pm-row" data-parlay-id="${escape(ticket.id)}" ${open?'open':''}><summary><span class="pm-row-chevron" aria-hidden="true">›</span><span class="pm-row-label"><span class="pm-row-title"><strong>${title}</strong><small>${ticket.legs.length} legs${voids?' · '+voids+' void'+(voids===1?'':'s'):''}</small><span class="pm-ticket-result ${result.outcome}">${resultLabel}${result.live?' · ● Live':''}</span>${favorite?'<span class="ry-favorite-badge">★ Ry’s Favorite</span>':''}</span><span class="pm-row-preview">${preview}</span></span><span class="pm-row-games">${ticketGamesHTML(ticket)}</span><span class="pm-row-price"><span class="sr-only">${priceHeading}: </span><small class="pm-price-caption${voids?' adjusted':''}" aria-hidden="true">${priceHeading}</small><strong>${result.outcome==='void'?'Refund':escape(odds(displayed))}</strong>${voids?`<small class="pm-before-void">Full ticket ${escape(odds(ticket.indicativeAmericanOdds))}</small>`:''}${units.payoutHTML(displayed,{type:kind==='longshots'?'longshot':'plus_money',voided:result.outcome==='void'})}</span><span class="pm-row-probability"><span class="sr-only">Lowest individual leg win estimate: </span><small aria-hidden="true">Lowest leg est.</small><strong>${percent(lowestProbability(ticket))}</strong></span><span class="pm-row-coverage">${coverageNames[coverage]}</span></summary><div class="pm-row-detail">${compatibilityHTML(ticket)}${voidNote}<div class="pm-leg-columns" aria-hidden="true"><span>Player / pick</span><span>Saved price</span><span>Leg win est.</span></div><ol class="pm-leg-list">${ticket.legs.map(r=>`<li><div class="pm-leg-row${results.isVoidedLeg(r)?' pm-leg-voided':''}"><span><span class="pm-leg-person">${typeof window!=='undefined'&&window.SBOS_PICK_RESEARCH?window.SBOS_PICK_RESEARCH.portrait(r,{href:board.playerProfileURL(r)}):''}<span><strong>${board.playerNameHTML(r)}</strong><span>${escape(label(r))}</span></span></span><small>${typeof window!=='undefined'&&window.SBOS_PICK_RESEARCH?window.SBOS_PICK_RESEARCH.matchupHeading(r.team+' vs '+r.opponent,[r.team,r.opponent],r):escape(r.team)+' vs '+escape(r.opponent)} · ${escape(stamp(r.startTime))}</small>${legResultHTML(r)}</span><span><strong>${escape(odds(r.americanOdds))}</strong><small>${escape(bookName(r.book||ticket.book))}</small></span><span><strong>${percent(probability(r))}</strong><small>Provisional</small></span></div><details class="pm-leg-research"><summary>${escape(r.player)} · pick research</summary>${typeof window!=='undefined'&&window.SBOS_PICK_RESEARCH?window.SBOS_PICK_RESEARCH.panel(r,{label:label(r)}):''}<details class="pick-audit"><summary>Saved prices & sources</summary>${prices.quoteDetails(r)}<p>Forecast saved ${escape(stamp(estimate(r)?.asOf))}.</p><a href="${escape(board.playerProfileURL(r)||'../players/')}" target="_blank" rel="noopener noreferrer">View player profile ↗</a></details></details></li>`).join('')}</ol><details class="pm-price-coverage"><summary>Saved pricing & exact-line coverage</summary><p class="pm-coverage-note">${coverageNote(coverage)}${ticket.book==='mixed'?' Displayed prices use mixed sources.':''}</p></details><p class="pm-joint-note">The lowest leg estimate describes one leg, not the whole parlay. No verified combined win probability has been assigned. Full game; confirm overtime and settlement terms with your sportsbook.</p></div></details>`;
   }
   function legResultHTML(row){const board=typeof window==='undefined'?require('./pick-board.js'):window.SBOS_PICK_BOARD,s=board.rowStatus(row);return `<small class="pm-leg-result ${s.tone}">${escape(s.icon+' '+s.label)}${s.live?' · ● Live':''} · ${escape(s.actual)} · MP ${escape(board.minutesLabel(row.result?.minutesPlayed))}</small>`;}
   async function init(){
@@ -96,14 +145,14 @@
       if(!body)return;
       const tickets=body.tickets.map(t=>pricedTicket(t)),counts=tabCounts(tickets),rows=filterTickets(tickets,state);
       // Search, price and probability filters never hide losses from the category record.
-      const tracked=body.tickets.filter(t=>state.type==='all'||section(t)===state.type);
+      const tracked=categoryTickets(body.tickets,state.type);
       $('parlay-record').innerHTML=results.parlayRecordHTML(tracked,{label:titles[state.type]+' · slate record'})+(window.SBOS_UNITS?.recordHTML(tracked,{kind:'parlays'})||'');
       $('parlay-tabs').innerHTML=Object.entries(titles).map(([key,title])=>`<button type="button" role="tab" id="parlay-tab-${key}" aria-controls="parlay-panel" aria-selected="${state.type===key}" tabindex="${state.type===key?0:-1}" data-parlay-tab="${key}"><span>${title}</span><strong>${counts[key]}</strong></button>`).join('');
       $('parlay-panel').setAttribute('aria-labelledby','parlay-tab-'+state.type);
       $('combinations-heading').textContent=titles[state.type];$('parlay-count').textContent=`${rows.length} of ${counts[state.type]} parlays`;
       $('parlay-favorites').setAttribute('aria-pressed',String(state.favorite));$('parlay-favorite-count').textContent=counts.favorites;
       for(const el of document.querySelectorAll('[data-parlay-filter]'))el.value=state[el.dataset.parlayFilter]||'';
-      target.innerHTML=rows.length?rows.map(t=>ticketRow(t,ticketOrdinal(body.tickets,t)-1,{open:opened.has(t.id)})).join(''):`<p class="pick-empty">${state.favorite&&!counts.favorites?'Ry hasn’t flagged any parlays for this slate yet.':!counts[state.type]?`No qualifying ${state.type==='longshots'?'Longshots':state.type==='plus_money'?'Plus Money parlays':'parlays'} in this edition. Browse Daily Board for our individual selections.`:'No published parlays match your filters. Try lowering the minimum or reset your filters.'}</p>`;
+      target.innerHTML=rows.length?rows.map(t=>ticketRow(t,ticketOrdinal(body.tickets,t)-1,{open:opened.has(t.id)})).join(''):emptyStateHTML(counts,state);
       syncURL(push);window.SBOS_PICK_RESEARCH?.hydrate(target);
     }
     function options(){
@@ -142,5 +191,5 @@
     }catch{showError();}
     function showError(){target.innerHTML='<p role="alert" class="site-error">The saved parlay board is unavailable. Refresh to try again.</p>';}
   }
-  return {ticketOrdinal,effectiveOdds,ticketGames,ticketGamesHTML,escape,label,safePath,readState,stateQuery,tabCounts,isFavorite,lowestProbability,pricedTicket,filterTickets,ticketRow,init};
+  return {titles,isSameGame,categoryTickets,emptyStateHTML,compatibilityExplanation,compatibilityHTML,ticketOrdinal,effectiveOdds,ticketGames,ticketGamesHTML,escape,label,safePath,readState,stateQuery,tabCounts,isFavorite,lowestProbability,pricedTicket,filterTickets,ticketRow,init};
 });

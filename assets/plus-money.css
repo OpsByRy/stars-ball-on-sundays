@@ -4,7 +4,7 @@
 .pm-head label{font-size:11px;color:var(--text-muted);display:grid;gap:6px}.pm-head select{min-width:165px;min-height:40px}
 .pm-status{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 12px;font-size:11px;color:var(--text-muted)}
 .pm-status p{margin:0}.pm-status button{width:auto;min-height:32px;font-size:10px;padding:6px 10px;white-space:nowrap}
-.pm-board{margin-bottom:28px}.pm-board .daily-list-heading h2{font-size:22px;margin:0;line-height:1.3}.pm-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pm-board{margin-bottom:28px}.pm-board .daily-list-heading h2{font-size:22px;margin:0;line-height:1.3}.pm-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}.pm-tabs [role=tab]{min-width:0;white-space:normal}
 .pm-board .book-preference{padding:13px 0 0}.pm-board .daily-filter-bar{padding-top:12px}
 .pm-secondary-filters{grid-template-columns:repeat(3,minmax(0,1fr))}.pm-secondary-filters>label:first-child{grid-column:auto}
 .pm-filter-note{font-size:10px;line-height:1.6;margin:9px 0 0;color:var(--text-muted)}
@@ -43,7 +43,7 @@
 @media(max-width:900px){.pm-columns,.pm-row>summary{grid-template-columns:minmax(0,1fr) 94px 95px 18px;gap:10px}.pm-row-coverage,.pm-columns>span:nth-child(4){display:none}.pm-leg-columns,.pm-leg-row{grid-template-columns:minmax(0,1fr) 110px 100px}}
 @media(max-width:620px){
  .pm-head{display:grid;grid-template-columns:1fr minmax(0,145px);gap:12px;padding:12px 0}.pm-head h1{font-size:28px}.pm-head p{display:none}.pm-head select{width:100%;min-width:0;font-size:11px}.pm-head label{font-size:10px}
- .pm-status{font-size:10px;line-height:1.6}.pm-tabs [role=tab]{font-size:11px}.pm-board .book-preference{gap:8px}.pm-board .book-preference>span{font-size:11px}.pm-board .book-preference small{font-size:10px}
+ .pm-status{font-size:10px;line-height:1.6}.pm-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.pm-tabs [role=tab]{font-size:11px;min-height:44px}.pm-board .book-preference{gap:8px}.pm-board .book-preference>span{font-size:11px}.pm-board .book-preference small{font-size:10px}
  .pm-secondary-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.pm-secondary-filters>label:first-child{grid-column:auto}.pm-filter-note{font-size:9px}
  .pm-columns{display:none}.pm-row>summary{grid-template-columns:minmax(0,1fr) 20px;gap:10px 14px;padding:12px;min-height:112px}
  .pm-row-label{grid-column:1;grid-row:1}.pm-row-chevron{grid-column:2;grid-row:1/3}.pm-row-title>strong{font-size:12px}.pm-row-preview{font-size:10px}
@@ -65,3 +65,4 @@
 @media(max-width:700px){.pm-columns,.pm-row>summary{grid-template-columns:18px minmax(150px,1fr) 135px 100px 66px;gap:8px}.pm-row-price>strong{font-size:16px}.pm-game-teams{font-size:9px}.pm-game .team-icon{width:16px;height:16px;flex-basis:16px}}
 @media(max-width:620px){.pm-columns{display:none}.pm-row>summary{grid-template-columns:22px minmax(0,1fr) minmax(78px,.5fr);gap:10px;padding:12px}.pm-row-chevron{grid-column:1;grid-row:1/4;align-self:center}.pm-row-label{grid-column:2/4;grid-row:1}.pm-row-games{grid-column:2/4;grid-row:2;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 7px;padding-block:2px}.pm-row-price{grid-column:2;grid-row:3;width:auto;display:grid;text-align:left;justify-self:start;gap:3px}.pm-row-probability{grid-column:3;grid-row:3;display:grid;width:auto;text-align:right;justify-self:end;align-self:start;gap:3px}.pm-row-price>.pm-price-caption{font-size:8px}.pm-row-probability>small{font-size:8px}.pm-game{text-align:left}.pm-game-teams{justify-content:flex-start;font-size:9px}.pm-game time{font-size:8px}.pm-payout small{font-size:9px!important}.pm-row-coverage{display:none}}
 @media(min-width:621px) and (max-width:1050px){.pm-columns>span:nth-child(4){display:block}}
+.pm-fit-intro{padding:14px 0 12px;border-bottom:1px solid var(--border-subtle);margin:0 0 8px}.pm-fit-intro h3{font-size:13px;line-height:1.5;margin:0 0 6px}.pm-fit-intro p{font-size:12px;line-height:1.8;color:var(--text-muted);margin:0}.pm-fit-intro>small{display:block;margin-top:5px;font-size:9px;color:var(--text-muted)}.pm-saved-fit{margin-top:10px;font-size:11px;line-height:1.7;color:var(--text-muted)}.pm-saved-fit strong{color:var(--text)}.pm-saved-fit ul{margin:4px 0 0;padding-left:17px}.pm-price-coverage{margin:10px 0 0;border:0}.pm-price-coverage>summary{padding:7px 0;font-size:11px;color:var(--text-muted);cursor:pointer}.pm-price-coverage .pm-coverage-note{margin:4px 0 8px}@media(max-width:620px){.pm-fit-intro p{font-size:11px}.pm-fit-intro{padding-top:12px}}

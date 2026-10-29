@@ -18,6 +18,12 @@ test('legacy destinations preserve dates, filters, project prefixes and matching
  const external='https://another.example/archive/?date=2026-10-26';assert.equal(routes.canonicalURL(external,base).href,external);
  const nested=routes.canonicalURL(base+'players/profile.html?player=nba%3A1&board=date%3D2026-10-28%26type%3Dvalue_safe',base);assert.equal(nested.searchParams.get('board'),'date=2026-10-28&type=layups');
 });
+test('same-game links and preferred-name aliases resolve to one shareable tab without dropping filters',()=>{
+ for(const location of ['parlays/?date=2026-10-29&minimum=80&type=same_game','parlays/?date=2026-10-29&minimum=80#same-game','parlays/?date=2026-10-29&minimum=80#sgp-plus','plus-money/?date=2026-10-29&minimum=80#sgpx']){
+  const url=routes.canonicalURL(base+location,base);assert.equal(url.pathname,'/stars-ball-on-sundays/parlays/');assert.equal(url.hash,'#same-game');assert.equal(url.searchParams.get('date'),'2026-10-29');assert.equal(url.searchParams.get('minimum'),'80');assert.equal(url.searchParams.has('type'),false);
+ }
+ assert.deepEqual(routes.parlayLocation('?date=2026-10-29&type=same_game&favorite=1','same_game'),{search:'?date=2026-10-29&favorite=1',hash:'#same-game'});
+});
 test('every full public page has the same ordered main menu and Private Lab stays last in Research',()=>{
  const files=JSON.parse(fs.readFileSync(path.join(root,'site-manifest.json'))).files.filter(f=>f.endsWith('.html'));
  for(const file of files){const html=fs.readFileSync(path.join(root,file),'utf8');if(html.includes('data-redirect-route'))continue;

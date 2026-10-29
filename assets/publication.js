@@ -88,6 +88,10 @@
     const decimal=results.parlayDecimal({legs:legs.map(pricedPick)}),american=decimal>1?Math.round(decimal>=2?(decimal-1)*100:-100/(decimal-1)):null;
     return '<strong>'+split.voided.length+' void'+(split.voided.length===1?'':'s')+':</strong> '+split.voided.map(p=>escape(p.player)).join(', ')+'. '+(split.active.length?split.active.length+' active legs · '+(american!==null?'Remaining-leg estimate <strong>'+(american>0?'+':'')+american+'</strong> (saved straight prices). Your sportsbook’s revised SGP quote may differ.':'Repriced SGP quote unavailable; check your sportsbook.'):'All legs void · net P/L 0u.');
   }
+  function personalFitHTML(body){
+    const favorites=(body.props||[]).filter(p=>p.group==='ry');
+    return favorites.length&&typeof window!=='undefined'&&window.SBOS_PLUS_MONEY?window.SBOS_PLUS_MONEY.compatibilityHTML({legs:favorites,fitReasons:[]}):'';
+  }
   function favoritesNotice(body){
     const posted=body.favoritesPostedAt?`<strong>Posted <time datetime="${escape(body.favoritesPostedAt)}">${escape(stamp(body.favoritesPostedAt))}</time></strong>`:'';
     const url=body.sharedBetslipUrl,validURL=typeof url==='string'&&/^https:\/\/sportsbook\.fanduel\.com\/addToBetslip\?shareCode=[a-zA-Z0-9]{1,64}$/.test(url);
@@ -97,7 +101,8 @@
     const favorites=(body.props||[]).filter(p=>p.group==='ry'),allPriced=favorites.length>0&&favorites.every(p=>typeof pricedPick(p).americanOdds==='number');
     const checks=favorites.map(p=>p.priceCheck?.checkedAt).filter(v=>v&&Number.isFinite(Date.parse(v))).sort((a,b)=>Date.parse(a)-Date.parse(b));
     const updated=checks.length?`<br>Prices updated ${escape(stamp(checks.at(-1)))}`:'';
-    return `<div class="publication-note favorites-posted">${posted}${posted&&slip?'<br>':''}${slip}${updated}${priced?allPriced?'<br>Straight prices appear below. FanDuel’s SGP quote can differ from our calculator’s multiplied straight prices. Check current odds and availability.':'<br>Individual leg prices were not supplied. Check FanDuel for current odds and availability.':''}<div data-personal-void-note>${personalVoidNote(body)}</div></div>`;
+    const fit=personalFitHTML(body);
+    return `${fit?'<div data-personal-fit>'+fit+'</div>':''}<div class="publication-note favorites-posted">${posted}${posted&&slip?'<br>':''}${slip}${updated}${priced?allPriced?'<br>Straight prices appear below. FanDuel’s SGP quote can differ from our calculator’s multiplied straight prices. Check current odds and availability.':'<br>Individual leg prices were not supplied. Check FanDuel for current odds and availability.':''}<div data-personal-void-note>${personalVoidNote(body)}</div></div>`;
   }
   function researchPage(rows,{query='',market='all',status='all',page=0,size=40}={}){
     const filtered=rows.filter(p=>(market==='all'||p.market===market)&&(status==='all'||publishedCategory(p)===status)&&`${p.player} ${p.team||''} ${p.opponent||''}`.toLowerCase().includes(query.toLowerCase()));
@@ -128,6 +133,7 @@
         element.outerHTML=recordSummary(sectionRows(activeBody.props,element.dataset.recordScope),element.dataset.recordScope);
       }
       for(const element of document.querySelectorAll('[data-personal-void-note]'))element.innerHTML=personalVoidNote(activeBody);
+      for(const element of document.querySelectorAll('[data-personal-fit]'))element.innerHTML=personalFitHTML(activeBody);
     }}):null;
     function personalSundayContent(body){const rows=editionGroups(body).ry;return `<div class="edition-panel"><div class="edition-heading"><h2>${dateLabel(body.date)}</h2><a class="back-to-board" href="${escape(weeklyURL(body.date))}">← Sunday Edition board</a></div><p class="board-intro">Ry’s personal selections, separately attributed and preserved as posted. Favorite flags do not change algorithm selection or tracking.</p>${favoritesNotice(body)}${recordSummary(rows,'ry')}${pickList(rows,'ry')}</div>`;}
     let entries=[],allVersions=[],request=0,researchState={rows:[],query:"",market:"all",status:"all",page:0};

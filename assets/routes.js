@@ -8,11 +8,11 @@
   function boardSearch(search){const p=new URLSearchParams(search);if(p.has('type'))p.set('type',categoryName(p.get('type')));return p.toString();}
   function parlayType(search='',hash=''){
     const fragment=String(hash).replace(/^#/,'');
-    if(fragment==='plus-money')return 'plus_money';if(fragment==='longshots')return 'longshots';
-    const type=new URLSearchParams(search).get('type');return ['plus_money','longshots'].includes(type)?type:'all';
+    if(fragment==='plus-money')return 'plus_money';if(['same-game','sgp-plus','sgpx'].includes(fragment))return 'same_game';if(fragment==='longshots')return 'longshots';
+    const type=new URLSearchParams(search).get('type');return ['plus_money','same_game','longshots'].includes(type)?type:'all';
   }
   function parlayLocation(search='',type='all'){
-    const p=new URLSearchParams(search);p.delete('type');return {search:p.size?'?'+p.toString():'',hash:type==='plus_money'?'#plus-money':type==='longshots'?'#longshots':''};
+    const p=new URLSearchParams(search);p.delete('type');return {search:p.size?'?'+p.toString():'',hash:type==='plus_money'?'#plus-money':type==='same_game'?'#same-game':type==='longshots'?'#longshots':''};
   }
   function canonicalURL(input,base){
     const root=new URL(base),url=new URL(input,root);if(url.origin!==root.origin||!url.pathname.startsWith(root.pathname))return url;
@@ -25,7 +25,7 @@
     if(/^daily\/?(?:index\.html)?$/.test(relative)&&url.searchParams.has('type'))url.searchParams.set('type',categoryName(url.searchParams.get('type')));
     if(url.searchParams.has('board'))url.searchParams.set('board',boardSearch(url.searchParams.get('board')));
     if(/^parlays\/?(?:index\.html)?$/.test(relative)){
-      const type=parlayType(url.search,url.hash);if(type!=='all'||['#plus-money','#longshots'].includes(url.hash)){const state=parlayLocation(url.search,type);url.search=state.search;url.hash=state.hash;}
+      const type=parlayType(url.search,url.hash);if(type!=='all'){const state=parlayLocation(url.search,type);url.search=state.search;url.hash=state.hash;}
     }
     return url;
   }

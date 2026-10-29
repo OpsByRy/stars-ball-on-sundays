@@ -24,5 +24,5 @@ test('exclusive sections use complete exact-line coverage and both views retain 
  const ticket={legs:[pick,pick],indicativeAmericanOdds:125,fitReasons:[],section:'plus_money'};
  const fd=pm.pricedTicket(ticket,'fanduel'),dk=pm.pricedTicket(ticket,'draftkings');
  assert.deepEqual(fd.legs.map(r=>r.id),dk.legs.map(r=>r.id));assert.notEqual(fd.indicativeAmericanOdds,dk.indicativeAmericanOdds);
- assert.match(pm.sections([pm.pricedTicket({...ticket,legs:[pick,only('draftkings')]},'fanduel')]),/DraftKings Exclusive Lines/);
+ assert.match(pm.ticketRow(pm.pricedTicket({...ticket,fitReasons:[],legs:[pick,only('draftkings')]},'fanduel'),0),/DraftKings Exclusive Lines/);
 });

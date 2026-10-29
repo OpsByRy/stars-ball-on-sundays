@@ -28,7 +28,8 @@ def validate(body):
     for ticket in body['tickets']:
         fields={'id','book','legs','indicativeAmericanOdds','priceKind','fitReasons','status'}
         if not legacy:fields.add('section')
-        keys(ticket,fields,fields);text(ticket['id'],100)
+        keys(ticket,fields|{'ryFavorite'},fields);text(ticket['id'],100)
+        if 'ryFavorite' in ticket and type(ticket['ryFavorite']) is not bool:raise ValueError('Invalid Ry favorite flag')
         if ticket['id'] in ids:raise ValueError('Duplicate parlay')
         ids.add(ticket['id'])
         if ticket['book'] not in ({'fanduel','draftkings'} if legacy else {'fanduel','draftkings','mixed'}) or ticket['priceKind']!='indicative' or ticket['status']!='provisional':raise ValueError('Unsupported parlay price or status')

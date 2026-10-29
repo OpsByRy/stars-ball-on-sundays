@@ -47,3 +47,13 @@ class PlusMoneyBoundary(unittest.TestCase):
         self.assertTrue(any(t['book']=='mixed' for t in body['tickets']))
         q=body['tickets'][0]['legs'][0]['bookPrices']['quotes'][0];q['private_coefficients']=[1]
         with self.assertRaisesRegex(ValueError,'unknown'):schema.validate(body)
+
+    def test_explicit_editorial_favorite_is_optional_and_boolean(self):
+        body=self.record()
+        def rehash():
+            body['version']=schema.hashlib.sha256(schema.canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16]
+        for flag in [True,False]:
+            body['tickets'][0]['ryFavorite']=flag;rehash();schema.validate(body)
+        for flag in ['true',1,None]:
+            body['tickets'][0]['ryFavorite']=flag;rehash()
+            with self.assertRaisesRegex(ValueError,'favorite flag'):schema.validate(body)

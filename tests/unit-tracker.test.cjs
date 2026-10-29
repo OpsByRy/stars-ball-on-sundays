@@ -2,6 +2,16 @@
 const test=require('node:test'),assert=require('node:assert/strict'),units=require('../assets/unit-tracker.js');
 const prop=(id,{category='value_safe',odds=-200,outcome='win',live=false,group='research'}={})=>({id,category,group,americanOdds:odds,date:'2026-10-28',playerId:'nba:'+id,market:'PTS',operator:'>=',line:10,result:{eventStatus:live?'live':'final',statisticalOutcome:live&&outcome==='win'?'reached':outcome,actual:outcome==='win'?15:8}});
 const approx=(x,y)=>assert.ok(Math.abs(x-y)<1e-9,`${x} != ${y}`);
+test('shared pick returns use category stakes and dollars, with personal singles separate from tracking',()=>{
+ const settings={unitDollars:100};
+ const layup=units.pickPayoutHTML(prop('a'),{settings});assert.match(layup,/2u wins \$100/);assert.match(layup,/\$300 Payout/);
+ const lob=units.pickPayoutHTML(prop('b',{category:'high_probability_aggressive',odds:150}),{settings});assert.match(lob,/1u wins \$150/);assert.match(lob,/\$250 Payout/);
+ const personal=prop('c',{group:'ry'}),original=JSON.stringify(personal),html=units.pickPayoutHTML(personal,{settings});assert.match(html,/Single return/);assert.match(html,/0.5u wins \$25/);assert.match(html,/\$75 Payout/);assert.equal(units.summarize([personal]).decided,0);assert.equal(JSON.stringify(personal),original);
+ assert.equal(units.pickPayoutHTML(prop('bench',{category:'honorable_mention'}),{settings}),'');
+ const custom=units.pickPayoutHTML(prop('d'),{settings:{unitDollars:25,sizes:{layup:3}}});assert.match(custom,/3u wins \$37.50/);assert.match(custom,/\$112.50 Payout/);
+ const refund=units.pickPayoutHTML(prop('e',{outcome:'dnp'}),{settings});assert.match(refund,/2u refunded/);assert.match(refund,/\$200 Refund/);
+ const fallback=units.pickPayoutHTML(prop('f'));assert.match(fallback,/2u wins 1u/);assert.match(fallback,/3u Payout/);assert.match(fallback,/Set your unit/);
+});
 test('the October 26 test slate stays visible on its date but cannot enter cumulative P/L or win rates',()=>{
  const results=require('../assets/result-utils.js'),publication=require('../assets/publication.js');
  const testLoss={...prop('test-loss',{outcome:'loss'}),date:'2026-10-26'},testWin={...prop('test-win'),date:'2026-10-26'},laterLoss=prop('later-loss',{outcome:'loss'}),laterWin=prop('later-win');

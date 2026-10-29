@@ -83,6 +83,11 @@
   }
   function stakeText(type){const stake=prefs.sizes[type];return finite(stake)?size(stake)+(prefs.unitDollars===null?'':' · $'+Number((stake*prefs.unitDollars).toFixed(2)).toLocaleString('en-US')):'';}
   function stakeHTML(row,{type=propType(row)}={}){return type?'<small class="row-unit-size" data-pick-unit-type="'+esc(type)+'">'+stakeText(type)+'</small>':'';}
+  // A personal leg's single-bet illustration does not create a tracked wager.
+  function pickPayoutHTML(row,{type=propType(row)||(row.group==='ry'?'personal':null),settings=prefs}={}){
+    if(!type)return '';
+    return (row.group==='ry'?'<small class="pick-return-kind">Single return</small>':'')+payoutHTML(row.americanOdds,{type,voided:results.isVoidedLeg(row),settings});
+  }
   const amount=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:Number.isInteger(Math.round(v*100)/100)?0:2,maximumFractionDigits:2}).format(v);
   function payoutContents(americanOdds,type,voided,settings=prefs){
     const p=payout(americanOdds,{type,settings,voided});if(!p.available)return '<small>Payout unavailable</small>';
@@ -115,5 +120,5 @@
     });
     window.addEventListener('storage',event=>{if(event.key===STORAGE){try{prefs=preferences(JSON.parse(event.newValue));refresh();}catch{}}});
   }
-  return {defaults,preferences,summarize,recordHTML,stakeHTML,payout,payoutHTML,refresh,init,decimal,ticketDecimal,propType,units,dollars,firstPersonalPrice};
+  return {defaults,preferences,summarize,recordHTML,stakeHTML,pickPayoutHTML,payout,payoutHTML,refresh,init,decimal,ticketDecimal,propType,units,dollars,firstPersonalPrice};
 });

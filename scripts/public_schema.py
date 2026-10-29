@@ -195,11 +195,12 @@ def validate_edition(body):
             if result.get('actual') is not None and (not number(result['actual']) or result['actual']<0): raise ValueError('Invalid actual')
             if result.get('minutesPlayed') is not None and (not number(result['minutesPlayed']) or not 0<=result['minutesPlayed']<=1440): raise ValueError('Invalid minutes played')
             if result['eventStatus'] not in {'scheduled','live','final','postponed','canceled','unknown'}: raise ValueError('Invalid game status')
-            if result['statisticalOutcome'] not in {'win','loss','push','dnp','canceled','postponed','pending','unavailable','reached','not_reached'}: raise ValueError('Invalid outcome')
+            if result['statisticalOutcome'] not in {'win','loss','push','out','dnp','canceled','postponed','pending','unavailable','reached','not_reached'}: raise ValueError('Invalid outcome')
             if result['statisticalOutcome'] in {'win','loss','push'} and (result['eventStatus']!='final' or result.get('actual') is None): raise ValueError('Final outcome requires final stats')
             if result.get('sportsbookSettlement') not in {None,'unverified'}: raise ValueError('Statistical results cannot verify settlement')
             stamp(result.get('checkedAt'))
-            if result.get('source') and not re.fullmatch(r'https://www\.espn\.com/nba/boxscore/_/gameId/\d+',result['source']): raise ValueError('Unsupported result URL')
+            if result.get('source') and not re.fullmatch(r'https://(?:www\.espn\.com/nba/boxscore/_/gameId/\d+|stats\.nba\.com/stats/boxscoresummaryv3\?GameID=\d{10}|site\.api\.espn\.com/apis/site/v2/sports/basketball/nba/injuries)',result['source']): raise ValueError('Unsupported result URL')
+            if (result.get('source') or '').startswith('https://stats.nba.com/') and result['source']!='https://stats.nba.com/stats/boxscoresummaryv3?GameID='+(row.get('canonicalEventId') or row['eventId']).removeprefix('nba:'): raise ValueError('Inactive result requires exact official NBA game')
     validate_honorable_mentions(body['props'])
     return body
 

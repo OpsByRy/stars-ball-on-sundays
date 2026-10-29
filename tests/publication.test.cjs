@@ -50,6 +50,8 @@ test('favorite notice shows the Eastern posting day and distinguishes the full-s
   assert.match(notice,/Individual leg prices were not supplied/);
   assert.equal(publication.favoritesNotice({}),'');
   assert.doesNotMatch(publication.favoritesNotice({sharedBetslipUrl:'javascript:alert(1)',sharedBetslipOdds:527}),/href=/);
+  const revised=publication.favoritesNotice({sharedBetslipOdds:527,props:[{group:'ry',player:'Inactive',americanOdds:-250,result:{statisticalOutcome:'out'}},{group:'ry',player:'Active',americanOdds:-200}]});
+  assert.match(revised,/1 void/);assert.match(revised,/Remaining-leg estimate <strong>-200/);assert.match(revised,/revised SGP quote may differ/);assert.match(revised,/Full-slip screenshot price: <strong>\+527/);
 });
 test('late-game favorites preserve the five supplied contracts and existing research',()=>{
   const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json')));

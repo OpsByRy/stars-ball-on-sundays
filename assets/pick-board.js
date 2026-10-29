@@ -33,6 +33,7 @@
     return {available:hasWin||hasProjection,win:hasWin?`${(win*100).toFixed(1)}%`:'—',projection:hasProjection?projection.toFixed(1):'—',status:estimate?.status==='validated'?'Validated':'Provisional'};
   }
   function addLeg(legs,row){
+    if(contracts.isVoidedLeg(row))return {legs,action:'void'};
     if(!contracts.normalizeContract(row)||math.decimalOdds(row.americanOdds)===null)return {legs,action:'unpriced'};
     const index=legs.findIndex(p=>slot(p)===slot(row));
     if(index>=0&&sameOutcome(legs[index],row))return {legs:legs.filter((_,i)=>i!==index),action:'removed'};
@@ -40,11 +41,11 @@
     return {legs:next,action:index>=0?'replaced':'added'};
   }
   function calculate(legs,stake){
-    const prices=legs.map(p=>math.decimalOdds(p.americanOdds));
+    const active=legs.filter(p=>!contracts.isVoidedLeg(p)),prices=active.map(p=>math.decimalOdds(p.americanOdds));
     const decimal=legs.length&&prices.every(p=>p!==null)?prices.reduce((a,b)=>a*b,1):null;
     const validStake=finite(stake)&&stake>0&&stake<=1000000;
-    const keys=legs.filter(row=>row.canonicalEventId||row.eventId||row.game).map(row=>row.game?.trim().toLowerCase()||JSON.stringify([row.date,row.canonicalEventId||row.eventId]));
-    const players=legs.filter(row=>row.playerId&&!row.manual).map(row=>JSON.stringify([row.date,row.playerId]));
+    const keys=active.filter(row=>row.canonicalEventId||row.eventId||row.game).map(row=>row.game?.trim().toLowerCase()||JSON.stringify([row.date,row.canonicalEventId||row.eventId]));
+    const players=active.filter(row=>row.playerId&&!row.manual).map(row=>JSON.stringify([row.date,row.playerId]));
     const correlated=new Set(keys).size<keys.length||new Set(players).size<players.length;
     return {decimal,american:decimal&&Number.isFinite(decimal)?math.americanOdds(decimal):null,returnAmount:validStake&&decimal?stake*decimal:null,profit:validStake&&decimal?stake*(decimal-1):null,correlated};
   }
@@ -55,7 +56,7 @@
     if(contracts.isStatisticalHit(row))return {tone:'hit',icon:'✓',label:'Hit',actual,live:contracts.isLiveHit(row)};
     if(final&&r.statisticalOutcome==='loss')return {tone:'miss',icon:'✕',label:'Miss',actual};
     if(final&&r.statisticalOutcome==='push')return {tone:'neutral',icon:'↔',label:'Push',actual};
-    if(['dnp','canceled','postponed'].includes(r.statisticalOutcome))return {tone:'neutral',icon:'—',label:{dnp:'DNP',canceled:'Canceled',postponed:'Postponed'}[r.statisticalOutcome],actual:'—'};
+    if(['out','dnp','canceled','postponed'].includes(r.statisticalOutcome))return {tone:'neutral',icon:'—',label:{out:'Void · Out',dnp:'Void · DNP',canceled:'Void · Canceled',postponed:'Postponed'}[r.statisticalOutcome],actual:'—'};
     if(r.eventStatus==='live')return {tone:'live',icon:'●',label:'Live',actual};
     if(final)return {tone:'neutral',icon:'—',label:'Stats unavailable',actual};
     const start=row.startTime||row.providerStartTime;
@@ -83,6 +84,7 @@
   }
   function mergeResult(previous,next){
     const resolved=new Set(['win','loss','push','dnp','canceled']);
+    if(previous?.statisticalOutcome==='out'&&!(next.actual>0)&&!(next.minutesPlayed>0)&&!['dnp','canceled','postponed'].includes(next.statisticalOutcome))return {...previous,eventStatus:next.eventStatus};
     if(previous?.eventStatus==='final'&&(next.eventStatus!=='final'||resolved.has(previous.statisticalOutcome)&&!resolved.has(next.statisticalOutcome)))return previous;
     if(previous?.eventStatus==='final'&&next.eventStatus==='final'&&previous.actual===next.actual&&previous.statisticalOutcome===next.statisticalOutcome&&finite(previous.minutesPlayed)&&!finite(next.minutesPlayed))return {...next,minutesPlayed:previous.minutesPlayed};
     return next;
@@ -95,10 +97,10 @@
     dialog.innerHTML='<div class="parlay-top"><div><span class="sbos-kicker">YOUR PICKS / YOUR COMBINATION</span><h2 id="parlay-title">Your parlay calculator</h2></div><button type="button" data-close-parlay aria-label="Close calculator">✕</button></div><p class="parlay-caption">Saved prices · illustrative combined odds. Check current sportsbook terms.</p><div id="parlay-empty">Add a pick from any row to start your combination.</div><ul id="parlay-legs"></ul><div class="parlay-math"><div><span>Illustrative odds</span><strong id="parlay-odds">—</strong></div><label>Stake ($)<input id="parlay-stake" type="number" min="0.01" max="1000000" step="0.01" placeholder="10.00" inputmode="decimal"></label><div><span>Potential return</span><strong id="parlay-return">—</strong></div><div><span>Potential net profit</span><strong id="parlay-profit">—</strong></div></div><p id="parlay-correlation" class="parlay-caption" hidden>Same-game or same-player legs are correlated. The sportsbook’s combined price may differ from this calculation.</p><p class="parlay-caption">One line per player and stat in each game. Adding a different line replaces your earlier choice. Statistical results do not verify sportsbook settlement.</p><button type="button" id="parlay-clear" class="outline-button">Clear your picks</button>';
     document.body.append(dialog);
     const launcher=document.createElement('button');launcher.type='button';launcher.className='parlay-launcher';launcher.setAttribute('aria-haspopup','dialog');launcher.innerHTML='<span>Your parlay <strong id="parlay-count">0</strong></span><span id="parlay-launch-odds">Add picks to start</span><span>Open calculator ↗</span>';document.body.append(launcher);document.body.classList.add('has-pick-calculator');
-    const rrMount=document.createElement('div');dialog.append(rrMount);const rr=window.SBOS_ROUND_ROBIN?.create(rrMount,()=>legs,{label:row=>row.player+' '+lineLabel(row)});const fullLink=document.createElement('a');fullLink.className='parlay-tools-link';fullLink.textContent='Add your own picks / full calculator ↗';dialog.append(fullLink);
+    const rrMount=document.createElement('div');dialog.append(rrMount);const rr=window.SBOS_ROUND_ROBIN?.create(rrMount,()=>legs.filter(p=>!contracts.isVoidedLeg(p)),{label:row=>row.player+' '+lineLabel(row)});const fullLink=document.createElement('a');fullLink.className='parlay-tools-link';fullLink.textContent='Add your own picks / full calculator ↗';dialog.append(fullLink);
     const liveNote=document.querySelector('[data-live-note]');
     const cartKey=day=>'sbos-parlay:'+day;
-    function saveCart(){if(!currentDate)return;try{const fields=['id','date','canonicalEventId','eventId','playerId','player','market','operator','line','side','period','americanOdds','book','startTime','bookPrices'];sessionStorage.setItem(cartKey(currentDate),JSON.stringify(legs.map(row=>Object.fromEntries(fields.filter(k=>row[k]!==undefined).map(k=>[k,row[k]])))));}catch{}}
+    function saveCart(){if(!currentDate)return;try{const fields=['id','date','canonicalEventId','eventId','playerId','player','market','operator','line','side','period','americanOdds','book','startTime','bookPrices','result'];sessionStorage.setItem(cartKey(currentDate),JSON.stringify(legs.map(row=>Object.fromEntries(fields.filter(k=>row[k]!==undefined).map(k=>[k,row[k]])))));}catch{}}
     function show(){renderCalculator();dialog.showModal();}
     launcher.addEventListener('click',show);
     dialog.querySelector('[data-close-parlay]').addEventListener('click',()=>dialog.close());
@@ -112,7 +114,7 @@
       byId('parlay-launch-odds').textContent=legs.length?`${odds(r.american)} illustrative odds`:'Add picks to start';
       byId('parlay-odds').textContent=odds(r.american);byId('parlay-return').textContent=money(r.returnAmount);byId('parlay-profit').textContent=money(r.profit);
       byId('parlay-empty').hidden=legs.length>0;byId('parlay-clear').disabled=!legs.length;byId('parlay-correlation').hidden=!r.correlated;
-      byId('parlay-legs').innerHTML=legs.map((row,i)=>`<li><div><strong>${playerNameHTML(row,{base})}</strong><span>${escape(lineLabel(row))} · ${escape(odds(row.americanOdds))}</span></div><button type="button" data-remove-leg="${i}" aria-label="Remove ${escape(row.player)} ${escape(lineLabel(row))}">✕</button></li>`).join('');
+      byId('parlay-legs').innerHTML=legs.map((row,i)=>`<li${contracts.isVoidedLeg(row)?' class="pick-voided"':''}><div><strong>${playerNameHTML(row,{base})}</strong><span>${escape(lineLabel(row))} · ${contracts.isVoidedLeg(row)?'Void · excluded from odds':escape(odds(row.americanOdds))}</span></div><button type="button" data-remove-leg="${i}" aria-label="Remove ${escape(row.player)} ${escape(lineLabel(row))}">✕</button></li>`).join('');
       for(const [token,row] of records){const button=document.querySelector(`[data-add-pick="${token}"]`);if(!button)continue;const active=legs.some(p=>slot(p)===slot(row)&&sameOutcome(p,row));button.setAttribute('aria-pressed',String(active));button.textContent=active?'✓':'+';button.setAttribute('aria-label',`${active?'Remove':'Add'} ${row.player} ${lineLabel(row)} ${active?'from':'to'} your parlay calculator`);}
     }
     byId('parlay-stake').addEventListener('input',renderCalculator);
@@ -121,24 +123,32 @@
     document.addEventListener('click',event=>{
       const add=event.target.closest('[data-add-pick]'),expand=event.target.closest('[data-expand-pick]');
       if(add){const row=records.get(add.dataset.addPick);if(!row)return;const update=addLeg(legs,row);legs=update.legs;renderCalculator();const note=byId('pick-action-status');if(note)note.textContent=update.action==='replaced'?`Replaced your earlier ${row.player} ${row.market} line.`:`${row.player} ${update.action==='removed'?'removed from':'added to'} your parlay.`;}
-      if(expand){const panel=byId(expand.getAttribute('aria-controls')),key=expand.dataset.expandPick;if(!panel)return;panel.hidden=!panel.hidden;expand.setAttribute('aria-expanded',String(!panel.hidden));panel.hidden?opened.delete(key):opened.add(key);}
+      if(expand){const panel=byId(expand.getAttribute('aria-controls')),key=expand.dataset.expandPick;if(!panel)return;panel.hidden=!panel.hidden;expand.setAttribute('aria-expanded',String(!panel.hidden));panel.hidden?opened.delete(key):opened.add(key);if(!panel.hidden)window.SBOS_PICK_RESEARCH?.hydrate(panel);return;}
+      // The dedicated button remains keyboard-accessible; noninteractive row space shares its action.
+      const main=event.target.closest('.pick-row-main');
+      if(main&&!event.target.closest('a,button,input,select,textarea,label,summary,[role=button],[data-no-pick-toggle]')&&!window.getSelection()?.toString())main.querySelector('[data-expand-pick]')?.click();
     });
     function renderRow(row,{scope='picks',detail='',personal=false,typeLabel='',context='',warning='',gameLogURL=null}={}){
       const token=String(++serial),key=scope+':'+row.id,panel='pick-detail-'+token;
       records.set(token,row);
-      if(window.SBOS_BOOK_PRICES)detail+=window.SBOS_BOOK_PRICES.quoteDetails(row);
+      const research=window.SBOS_PICK_RESEARCH;
+      if(research)detail=research.panel(row,{base,label:lineLabel(row)});
+      const quoteDetails=window.SBOS_BOOK_PRICES?.quoteDetails(row)||'';
+      const estimateTime=(row.confidenceUpdate?.estimate||row.estimate)?.asOf;
+      const audit=(row.postedAt?'<p>Posted '+escape(stamp(row.postedAt))+'.</p>':'')+quoteDetails+(window.SBOS_PUBLICATION?.confidenceDetails(row)||'')+'<p>Forecast saved '+escape(stamp(estimateTime))+'. '+escape(row.market)+' '+escape(row.operator)+' '+escape(row.line)+' · '+escape((row.period||'full_game').replaceAll('_',' '))+'. Overtime: '+(row.overtime===true?'included':row.overtime===false?'excluded':'unconfirmed')+'.</p>';
+      const photo=research?.portrait(row,{base,href:gameLogURL||playerProfileURL(row,{base})})||'';
       const selected=legs.some(p=>slot(p)===slot(row)&&sameOutcome(p,row)),priced=math.decimalOdds(row.americanOdds)!==null;
-      const canAdd=priced&&!!contracts.normalizeContract(row);
+      const canAdd=priced&&!!contracts.normalizeContract(row)&&!contracts.isVoidedLeg(row);
       const update=row.confidenceUpdate,estimate=estimateDisplay(update?update.estimate:row.estimate),original=estimateDisplay(row.estimate);
       const estimateHTML=`<span class="row-estimate" title="${estimate.status} win estimate. Expand the pick for projection and research."><small class="mobile-cell-label">Win est.</small><strong>${estimate.win}</strong>${update&&original.win!==estimate.win?`<small class="row-original-estimate">Was ${original.win}</small>`:''}${row.group==='ry'&&estimate.projection!=='—'?`<small class="row-projection">Proj. ${estimate.projection}</small>`:''}</span>`;
       const book={fanduel:'FanDuel',draftkings:'DraftKings'}[String(row.book).toLowerCase()]||row.book||'Book unavailable';
       const updateLabels={supported:'Updated',reduced:'Confidence lower',improved:'Confidence higher',review:'Review update',unavailable:'Update unavailable'};
       const updateBadge=update?`<span class="pick-update-badge update-${escape(update.status)}" title="${escape(update.summary+' Checked '+stamp(update.checkedAt))}">${update.qualification==='does_not_qualify'?'No longer qualifies':update.qualification==='unavailable'?'Original book unavailable':update.status==='review'?'Line review':updateLabels[update.status]||'Updated'}</span>`:'';
       const badges=`${updateBadge}${typeLabel?`<span class="pick-type-badge">${escape(typeLabel)}</span>`:''}${personal?'<span class="ry-favorite-badge"><span aria-hidden="true">★</span> Ry’s Favorite</span>':''}${warning?`<span class="pick-warning-badge" title="${escape(warning)}">Price check</span>`:''}`;
-      return `<article class="pick-row${personal?' ry-pick-row':''}" data-pick-row="${token}" data-pick-id="${escape(row.id)}"><div class="pick-row-main"><div class="pick-label"><span class="row-player"><strong>${playerNameHTML(row,{base,href:gameLogURL})}</strong>${badges}</span><button type="button" class="pick-expand" data-expand-pick="${escape(key)}" aria-expanded="${opened.has(key)}" aria-controls="${panel}" aria-label="Show research for ${escape(row.player)} ${escape(lineLabel(row))}"><span class="row-chevron" aria-hidden="true">›</span><span class="row-pick"><span>${escape(lineLabel(row))} <small>· ${escape(book)}${row.priceFallback?' · fallback':''}</small></span>${context?`<small class="row-game-context">${escape(context)}</small>`:''}</span></button></div><span class="row-price"><small class="mobile-cell-label">Price</small><strong>${escape(odds(row.americanOdds))}</strong></span>${estimateHTML}<span class="row-minutes" data-row-minutes title="Minutes played">${escape(minutesLabel(row.result?.minutesPlayed))}</span><span class="row-result" data-row-result>${statusHTML(row)}</span><button type="button" class="pick-add" data-add-pick="${token}" aria-pressed="${selected}" aria-label="${selected?'Remove':'Add'} ${escape(row.player)} ${escape(lineLabel(row))} ${selected?'from':'to'} your parlay calculator" ${canAdd?'':'disabled title="A saved price and exact line are required"'}>${selected?'✓':'+'}</button></div><div id="${panel}" class="pick-row-detail" ${opened.has(key)?'':'hidden'}>${detail}<p class="row-result-source" data-row-result-source>${resultSource(row)}</p></div></article>`;
+      return `<article class="pick-row${contracts.isVoidedLeg(row)?' pick-voided':''}${personal?' ry-pick-row':''}" data-pick-row="${token}" data-pick-id="${escape(row.id)}"><div class="pick-row-main"><div class="pick-label"><button type="button" class="pick-expand" data-expand-pick="${escape(key)}" aria-expanded="${opened.has(key)}" aria-controls="${panel}" aria-label="Show research for ${escape(row.player)} ${escape(lineLabel(row))}"><span class="row-chevron" aria-hidden="true">›</span></button>${photo}<span class="row-player"><strong>${playerNameHTML(row,{base,href:gameLogURL})}</strong>${badges}</span><span class="row-pick"><span>${escape(lineLabel(row))} <small>· ${escape(book)}</small></span>${context?`<small class="row-game-context">${escape(context)}</small>`:''}</span></div><span class="row-price"><small class="mobile-cell-label">Price</small><strong>${escape(odds(row.americanOdds))}</strong>${window.SBOS_UNITS?.stakeHTML({...row,category:row.category||(typeLabel==='Layups'?'value_safe':typeLabel==='Lobs'?'high_probability_aggressive':null)})||''}</span>${estimateHTML}<span class="row-minutes" data-row-minutes title="Minutes played">${escape(minutesLabel(row.result?.minutesPlayed))}</span><span class="row-result" data-row-result>${statusHTML(row)}</span><button type="button" class="pick-add" data-add-pick="${token}" aria-pressed="${selected}" aria-label="${selected?'Remove':'Add'} ${escape(row.player)} ${escape(lineLabel(row))} ${selected?'from':'to'} your parlay calculator" ${canAdd?'':'disabled title="A saved price and exact line are required"'}>${selected?'✓':'+'}</button></div><div id="${panel}" class="pick-row-detail" ${opened.has(key)?'':'hidden'}>${detail}<details class="pick-audit"><summary>Saved prices & sources</summary>${audit}<p class="row-result-source" data-row-result-source>${resultSource(row)}</p></details></div></article>`;
     }
     window.addEventListener('sbos:bookchange',()=>{const prices=window.SBOS_BOOK_PRICES;if(!prices)return;legs=legs.map(leg=>prices.pricedPick([...records.values()].find(row=>slot(row)===slot(leg)&&sameOutcome(row,leg))||leg));renderCalculator();});
-    function resultSource(row){const r=row.result;if(!r)return 'Results will appear when verified box-score stats are available.';const link=/^https:\/\/www\.espn\.com\/nba\/boxscore\/_\/gameId\/\d+$/.test(r.source||'')?`<a href="${escape(r.source)}" target="_blank" rel="noopener noreferrer">Box score ↗</a> · `:'';return `${link}Stats checked ${escape(stamp(r.checkedAt))}. Sportsbook settlement unverified.`;}
+    function resultSource(row){const r=row.result;if(!r)return 'Results will appear when verified box-score stats are available.';const availability=['out','dnp'].includes(r.statisticalOutcome),link=/^https:\/\/(?:www\.espn\.com\/nba\/boxscore\/_\/gameId\/\d+|stats\.nba\.com\/stats\/boxscoresummaryv3\?GameID=\d{10}|site\.api\.espn\.com\/apis\/site\/v2\/sports\/basketball\/nba\/injuries)$/.test(r.source||'')?`<a href="${escape(r.source)}" target="_blank" rel="noopener noreferrer">${availability?'Availability':'Box score'} ↗</a> · `:'';return `${link}${availability?'Availability':'Stats'} checked ${escape(stamp(r.checkedAt))}. Sportsbook settlement unverified.`;}
     function beginDate(day){if(day!==currentDate){saveCart();currentDate=day;records.clear();legs=[];try{const saved=JSON.parse(sessionStorage.getItem(cartKey(day))||'[]');if(Array.isArray(saved))legs=saved.filter(row=>row.date===day&&typeof row.player==='string'&&contracts.normalizeContract(row)&&math.decimalOdds(row.americanOdds)!==null).slice(0,50);}catch{}opened.clear();renderCalculator();}}
     function sourceFor(row){
       const own=row.resultSource,target=targets.get(identity(row));
@@ -148,12 +158,21 @@
     async function poll(force=false){
       if(document.hidden)return;if(busy){pendingRefresh=true;return;}busy=true;let failures=0,checked=0;
       const current=[...records].filter(([token])=>document.querySelector(`[data-pick-row="${token}"]`));records=new Map(current);
+      await window.SBOS_AVAILABILITY?.apply(current.map(([,row])=>row),sourceFor,base);
       const events=new Map();for(const [,row] of current){const source=sourceFor(row),start=Date.parse(row.startTime||row.providerStartTime||'');if(start>Date.now()+300000)continue;if(source&&!events.has(source.eventId)&&events.size<16)events.set(source.eventId,source);}
       for(const [id] of events){
         const known=cache.get(id);if(known&&!force&&(known.final||Date.now()-known.at<55000))continue;
         try{const response=await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${id}`,{credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(12000)});if(!response.ok)throw Error('Stats unavailable');const body=await response.json();if(String(body.header?.id)!==id)throw Error('Stats mismatch');cache.set(id,{body,at:Date.now(),checkedAt:new Date().toISOString(),final:body.header?.competitions?.[0]?.status?.type?.completed===true});checked++;}catch{failures++;}
       }
-      for(const [token,row] of current){const source=sourceFor(row),record=source&&cache.get(source.eventId);if(!record)continue;try{row.result=mergeResult(row.result,parseSummary(record.body,source,row,record.checkedAt));const node=document.querySelector(`[data-pick-row="${token}"]`);if(!node)continue;node.querySelector('[data-row-result]').innerHTML=statusHTML(row);node.querySelector('[data-row-minutes]').textContent=minutesLabel(row.result?.minutesPlayed);node.querySelector('[data-row-result-source]').innerHTML=resultSource(row);}catch{failures++;}}
+      for(const [token,row] of current){
+        const source=sourceFor(row),record=source&&cache.get(source.eventId);
+        if(record)try{row.result=mergeResult(row.result,parseSummary(record.body,source,row,record.checkedAt));}catch{failures++;}
+        const node=document.querySelector(`[data-pick-row="${token}"]`);if(!node)continue;
+        const voided=contracts.isVoidedLeg(row);node.classList.toggle('pick-voided',voided);
+        node.querySelector('[data-row-result]').innerHTML=statusHTML(row);node.querySelector('[data-row-minutes]').textContent=minutesLabel(row.result?.minutesPlayed);node.querySelector('[data-row-result-source]').innerHTML=resultSource(row);
+        const add=node.querySelector('[data-add-pick]');if(add)add.disabled=voided||math.decimalOdds(row.americanOdds)===null||!contracts.normalizeContract(row);
+      }
+      legs=legs.map(leg=>{const latest=current.map(([,row])=>row).find(row=>slot(row)===slot(leg)&&sameOutcome(row,leg));return latest?.result?{...leg,result:latest.result}:leg;});renderCalculator();
       onResults(current.map(([,row])=>row));
       if(checked)lastCheck=new Date().toISOString();if(liveNote)liveNote.textContent=failures?'Live source unavailable for some games; latest known stats stay visible.':lastCheck?`Stats checked ${stamp(lastCheck)} · live games refresh every minute while this page is open.`:'Waiting for verified box-score stats.';
       busy=false;
@@ -162,7 +181,7 @@
     async function loadTargets(){try{const response=await fetch(new URL('data/stat-targets.json',base),{cache:'no-store',credentials:'omit'});if(!response.ok)return;const body=await response.json();if(body.schemaVersion!=='public-1'||!Array.isArray(body.targets))return;for(const t of body.targets)if(/^\d+$/.test(t.espnEventId)&&/^\d+$/.test(t.espnAthleteId))targets.set(identity(t),t);}catch{} }
     const ready=loadTargets();
     const interval=setInterval(()=>poll(),60000);window.addEventListener('pagehide',()=>clearInterval(interval),{once:true});document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll();});
-    return {renderRow,beginDate,showCalculator:show,refresh:async(force=false)=>{await ready;renderCalculator();return poll(force);}};
+    return {renderRow,beginDate,showCalculator:show,refresh:async(force=false)=>{window.SBOS_PICK_RESEARCH?.hydrate(document);window.SBOS_UNITS?.refresh();await ready;renderCalculator();return poll(force);}};
   }
   const columns=()=>'<div class="pick-columns" aria-hidden="true"><span>Player / pick</span><span>Price</span><span>Our win est.</span><span title="Minutes played">MP</span><span>Live / result</span><span>Add</span></div>';
   // Ticket boards use the same exact-identity box-score grader without registering hidden pick rows.
@@ -172,6 +191,7 @@
     async function poll(){
       if(busy||stopped||document.hidden)return;busy=true;const current=rows,n=generation;await ready;
       const sourceFor=row=>row.resultSource||targets.get(identity(row)),events=new Set();
+      await window.SBOS_AVAILABILITY?.apply(current,sourceFor,base);
       for(const row of current){const source=sourceFor(row);if(source&&/^\d+$/.test(source.eventId)&&/^\d+$/.test(source.athleteId)&&!(Date.parse(row.startTime)>Date.now()+300000))events.add(source.eventId);}
       for(const id of events){
         const previous=cache.get(id);if(previous&&(previous.final||Date.now()-previous.at<55000))continue;

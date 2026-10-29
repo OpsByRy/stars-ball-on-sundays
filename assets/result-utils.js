@@ -8,6 +8,15 @@
   const fields = { BLK: ['blocks'], STL: ['steals'], PTS: ['points'], AST: ['assists'], REB: ['rebounds'], '3PM': ['threes'], PRA: ['points', 'rebounds', 'assists'], PR: ['points', 'rebounds'], PA: ['points', 'assists'], RA: ['rebounds', 'assists'] };
   const aliases = { blocks: 'BLK', steals: 'STL', points: 'PTS', assists: 'AST', rebounds: 'REB', threes: '3PM', '3pt': '3PM', '3pm': '3PM', pra: 'PRA', pr: 'PR', pa: 'PA', ra: 'RA' };
   const owns = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
+  // Editorial tracking policy, added October 29. The original test slate stays archived.
+  const TEST_SLATE_DATE='2026-10-26';
+  function isTestSlate(row){return typeof row==='string'?row===TEST_SLATE_DATE:row?.date===TEST_SLATE_DATE||(row?.legs||[]).some(isTestSlate);}
+  function trackingScope(rows,scope){return scope||((new Set(rows.flatMap(row=>row.date?[row.date]:(row.legs||[]).map(leg=>leg.date)).filter(Boolean))).size>1?'cumulative':'slate');}
+  function trackingRows(rows,{scope}={}){return trackingScope(rows,scope)==='cumulative'?rows.filter(row=>!isTestSlate(row)):rows;}
+  function testSlateNotice(day){
+    if(!isTestSlate(day))return '';
+    return '<aside class="test-slate-notice" role="note" aria-label="Initial algorithm test slate"><strong>October 26 · Initial algorithm test slate</strong><p>This was our first day using the algorithm. We substantially revised the model and tightened pick qualifications throughout the day, so the slate does not represent one consistent selection or staking approach. Unit returns shown here apply your current stake settings; they are hypothetical, not a record of stakes placed that day.</p><p><strong>Preserved for transparency. Excluded from cumulative win-rate and unit P/L totals.</strong> This tracking exclusion was added October 29, 2026. Every original pick, price and recorded result remains available below.</p></aside>';
+  }
   function normalizeContract(prop) {
     if (!prop || typeof prop !== 'object') return null;
     let market = owns(fields, prop.market) ? prop.market : aliases[String(prop.market).toLowerCase()];
@@ -66,20 +75,35 @@
   function isStatisticalHit(prop) {
     return prop?.result?.eventStatus==='final'&&prop.result.statisticalOutcome==='win'||isLiveHit(prop);
   }
+  function isVoidedLeg(prop){
+    const r=prop?.result||{};
+    return r.statisticalOutcome==='out'||r.statisticalOutcome==='dnp'&&r.eventStatus==='final'||r.statisticalOutcome==='push'&&r.eventStatus==='final'||r.statisticalOutcome==='canceled'&&r.eventStatus==='canceled';
+  }
+  function parlayLegs(ticket){const all=ticket?.legs||[];return {all,active:all.filter(p=>!isVoidedLeg(p)),voided:all.filter(isVoidedLeg)};}
+  function parlayDecimal(ticket,{adjusted=true}={}){
+    const split=parlayLegs(ticket),legs=adjusted?split.active:split.all;
+    if(!split.all.length)return null;
+    if(adjusted&&!legs.length)return 1;
+    const price=v=>typeof v==='number'&&Number.isFinite(v)&&Math.abs(v)>=100?1+(v>0?v/100:100/Math.abs(v)):null;
+    if(ticket.priceKind==='posted')return adjusted&&split.voided.length?null:price(ticket.americanOdds);
+    const prices=legs.map(p=>price(p.americanOdds));if(!prices.every(v=>v!==null))return null;
+    const value=prices.reduce((a,b)=>a*b,1);return Number.isFinite(value)?value:null;
+  }
   // Ticket records count each published parlay once, regardless of leg count or price view.
   function parlayOutcome(ticket) {
-    const legs=ticket?.legs||[],live=legs.some(p=>p.result?.eventStatus==='live');
-    if(!legs.length)return {outcome:'pending',live:false};
+    const split=parlayLegs(ticket),legs=split.active,live=split.all.some(p=>p.result?.eventStatus==='live');
+    if(!split.all.length)return {outcome:'pending',live:false};
+    if(!legs.length)return {outcome:'void',live};
     if(legs.some(p=>p.result?.eventStatus==='final'&&p.result.statisticalOutcome==='loss'))return {outcome:'loss',live};
     if(legs.every(isStatisticalHit))return {outcome:'win',live};
-    // A void/push can change a book's SGP settlement. Never silently call it a full-ticket win.
-    if(legs.every(p=>isStatisticalHit(p)||['push','dnp','canceled','postponed'].includes(p.result?.statisticalOutcome)))return {outcome:'review',live};
+    if(legs.every(p=>isStatisticalHit(p)||p.result?.statisticalOutcome==='postponed'))return {outcome:'review',live};
     return {outcome:'pending',live};
   }
-  function parlaySummary(tickets) {
+  function parlaySummary(tickets,{scope}={}) {
+    tickets=trackingRows(tickets,{scope});
     const unique=[...new Map(tickets.map(t=>[t.id||JSON.stringify(t.legs.map(p=>[p.date,p.canonicalEventId||p.eventId,p.playerId,normalizeContract(p)]).sort()),t])).values()];
-    const s={total:unique.length,hits:0,misses:0,pending:0,review:0,live:0};
-    for(const ticket of unique){const r=parlayOutcome(ticket);s[{win:'hits',loss:'misses',pending:'pending',review:'review'}[r.outcome]]++;if(r.live)s.live++;}
+    const s={total:unique.length,hits:0,misses:0,pending:0,review:0,live:0,voided:0,winsWithVoids:0};
+    for(const ticket of unique){const r=parlayOutcome(ticket);s[{win:'hits',loss:'misses',pending:'pending',review:'review',void:'voided'}[r.outcome]]++;if(r.live)s.live++;if(r.outcome==='win'&&parlayLegs(ticket).voided.length)s.winsWithVoids++;}
     s.hitRate=s.hits+s.misses?s.hits/(s.hits+s.misses):null;return s;
   }
   function personalParlays(body) {
@@ -89,7 +113,7 @@
   }
   function parlayRecordHTML(tickets,{scope='parlays',label='Slate parlay record'}={}) {
     const s=parlaySummary(tickets),escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    return `<div class="record-summary" data-record-summary="${escape(scope)}" aria-label="${escape(label)}"><span><strong>${s.total}</strong> ${s.total===1?'parlay':'parlays'}</span><span class="record-hits"><strong>${s.hits}</strong> hit</span><span class="record-misses"><strong>${s.misses}</strong> missed</span><span><strong>${s.hitRate===null?'—':(s.hitRate*100).toFixed(1)+'%'}</strong> parlay hit rate</span>${s.pending?`<span>${s.pending} pending</span>`:''}${s.review?`<span>${s.review} push / DNP / settlement review</span>`:''}${s.live?`<span class="row-live-flag">● ${s.live} live</span>`:''}</div><p class="parlay-record-note">${escape(label)} · one result per posted parlay. Hit rate = winning parlays ÷ winning and losing parlays. Pending and settlement-review tickets are excluded; statistical results do not confirm sportsbook settlement.</p>`;
+    return `<div class="record-summary" data-record-summary="${escape(scope)}" aria-label="${escape(label)}"><span><strong>${s.total}</strong> ${s.total===1?'parlay':'parlays'}</span><span class="record-hits"><strong>${s.hits}</strong> hit</span><span class="record-misses"><strong>${s.misses}</strong> missed</span><span><strong>${s.hitRate===null?'—':(s.hitRate*100).toFixed(1)+'%'}</strong> parlay hit rate</span>${s.winsWithVoids?`<span>${s.winsWithVoids} won with voids</span>`:''}${s.voided?`<span>${s.voided} fully voided</span>`:''}${s.pending?`<span>${s.pending} pending</span>`:''}${s.review?`<span>${s.review} settlement review</span>`:''}${s.live?`<span class="row-live-flag">● ${s.live} live</span>`:''}</div><p class="parlay-record-note">${escape(label)} · one result per posted parlay. Voided legs are removed; a ticket wins when every remaining leg hits. Fully voided, pending and review tickets are excluded from hit rate. Prices and P/L are statistical estimates, not verified sportsbook settlement.</p>`;
   }
   function applyRevisions(snapshot, revisions) {
     const players = Object.fromEntries(Object.entries(snapshot.players || {}).map(([name, player]) => [name, { ...player }]));
@@ -118,5 +142,5 @@
     }
     return { ...snapshot, players, games, checkedAt, checkedAtLabel, appliedRevisions };
   }
-  return { evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit, parlayOutcome, parlaySummary, personalParlays, parlayRecordHTML };
+  return { TEST_SLATE_DATE,isTestSlate,trackingScope,trackingRows,testSlateNotice,evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit, isVoidedLeg, parlayLegs, parlayDecimal, parlayOutcome, parlaySummary, personalParlays, parlayRecordHTML };
 });

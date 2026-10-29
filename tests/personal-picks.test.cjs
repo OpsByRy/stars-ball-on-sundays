@@ -10,6 +10,7 @@ test('personal research adds all four exact-line estimates without changing orig
  for(const p of personal){for(const [k,v] of Object.entries(prior.get(p.id)))assert.deepEqual(p[k],v,k);assert.equal(typeof p.estimate.projection,'number');assert.ok(p.estimate.winProbability>=0&&p.estimate.winProbability<=1);assert.equal(p.estimate.status,'provisional');}
  assert.match(personal.find(p=>p.player==='Walker Kessler').assessment,/Base-model personal research replay/);
 });
-test('personal page has a primary navigation link and an active personal heading',()=>{
- const html=fs.readFileSync(path.join(root,'daily/parlays/index.html'),'utf8');assert.match(html,/<h1>Ry’s Picks\.<\/h1>/);assert.match(html,/<a href="\.\.\/\.\.\/daily\/parlays\/" aria-current="page">Ry’s Picks<\/a>/);
+test('personal page is an optional Daily Board destination with its own heading',()=>{
+ const html=fs.readFileSync(path.join(root,'daily/parlays/index.html'),'utf8');assert.match(html,/<h1>Ry’s Picks\.<\/h1>/);assert.match(html,/<nav id="daily-subnav"[^>]*>.*Ry’s Picks/);
+ const main=html.match(/<nav aria-label="Main navigation">(.*?)<\/nav>/)[1];assert.match(main,/Daily Board/);assert.doesNotMatch(main,/>Ry’s Picks<|>Plus Money</);
 });

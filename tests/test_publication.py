@@ -78,6 +78,13 @@ class PublicationBoundary(unittest.TestCase):
         self.assertLess(len(build.canonical(view)),len(build.canonical(source))/100)
         self.assertEqual(set(view),{'schemaVersion','version','playerId','date','props'})
 
+    def test_personal_tracking_prices_pin_first_saved_exact_slip_quote(self):
+        view=build.personal_price_view(ROOT)['data/personal-tracking-prices.json']
+        self.assertEqual(view['schemaVersion'],'public-personal-tracking-prices-1')
+        records=[t for t in view['tickets'] if 'yr6GfmU' in t['ticketId']]
+        self.assertEqual(len(records),1);self.assertEqual(records[0]['americanOdds'],527)
+        self.assertEqual(len(records[0]['legIds']),5)
+
     def test_small_board_views_preserve_saved_picks_without_loading_passed_research(self):
         index=json.loads((ROOT/'data/editions/manifest.json').read_text())
         latest={}
@@ -159,12 +166,15 @@ class PublicationBoundary(unittest.TestCase):
     def test_arbitrary_files_and_raw_csv_are_never_copied(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)/'site';shutil.copytree(ROOT,root,ignore=shutil.ignore_patterns('dist','__pycache__'))
-            for name in ('assets/private-canary.js','data/slates/private.json','data/raw.csv','pipeline/model.py','.env','docs/internal.md'):
+            for name in ('assets/private-canary.js','data/slates/private.json','data/raw.csv','pipeline/model.py','.env','docs/internal.md','server/private-canary.js','private-lab/research.json'):
                 p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('NEVER_PUBLISH')
             build.build(root)
-            for name in ('assets/private-canary.js','data/slates/private.json','data/raw.csv','pipeline/model.py','.env','docs/internal.md'):
+            for name in ('assets/private-canary.js','data/slates/private.json','data/raw.csv','pipeline/model.py','.env','docs/internal.md','server/private-canary.js','private-lab/research.json'):
                 self.assertFalse((root/'dist'/name).exists(),name)
             self.assertFalse(any(p.suffix=='.csv' for p in (root/'dist').rglob('*')))
+            manifest_path=root/'site-manifest.json';manifest=json.loads(manifest_path.read_text());manifest['files'].append('private-lab/index.html');manifest_path.write_text(json.dumps(manifest))
+            protected=root/'private-lab/index.html';protected.write_text('PRIVATE_RESEARCH_CANARY')
+            with self.assertRaisesRegex(ValueError,'Protected Lab'):build.build(root)
 
     def test_modified_records_and_unpublished_identities_fail(self):
         with tempfile.TemporaryDirectory() as temp:

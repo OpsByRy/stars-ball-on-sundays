@@ -4,15 +4,15 @@
   const categories = {
     value_safe: {
       label: 'Layups', heading: 'Layups',
-      description: 'The Core Lineup. Higher-probability, value-screened props priced from −500 to −200.'
+      description: 'More conservative lines with higher estimated hit probability.'
     },
     high_probability_aggressive: {
       label: 'Lobs', heading: 'Lobs',
-      description: 'The Highlight Reel. Aggressive, high-flying value targets at −200 or better.'
+      description: 'More aggressive lines with greater payout potential, still screened for value.'
     },
     honorable_mention: {
       label: 'Bench', heading: 'Bench',
-      description: 'The Depth Chart. Honorable mentions, sharp leans, and alt lines to watch. For review only; excluded from our official picks and hit/miss record.'
+      description: 'Additional props our model flags for potential value. For review only; excluded from our official picks and hit/miss record.'
     }
   };
   const descriptions = new Map();
@@ -72,16 +72,16 @@
     if (!info || info.contains(event.relatedTarget) || tooltip?.contains(event.relatedTarget)) return;
     if (!pinned && document.activeElement !== info) scheduleHide();
   });
-  document.addEventListener('focusin', event => {
-    const info = event.target.closest?.('[data-category-info]');
-    if (info) show(info);
-  });
+  // Keyboard focus highlights the icon; Enter/Space performs the same explicit
+  // toggle as a tap. Merely tabbing to an icon must not pre-open its disclosure.
   document.addEventListener('focusout', event => {
     if (event.target === activeInfo && !activeInfo.matches(':hover')) hide();
   });
   document.addEventListener('click', event => {
     const info = event.target.closest?.('[data-category-info]');
     if (!info) return;
+    event.preventDefault();
+    event.stopPropagation();
     if (activeInfo === info && pinned) hide();
     else show(info, true);
   });

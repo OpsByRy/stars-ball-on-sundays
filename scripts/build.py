@@ -12,7 +12,9 @@ from public_schema import validate_edition, validate_manifest, validate_targets,
 from plus_money_schema import publication_files as plus_money_files
 
 from profile_schema import validate_profile,validate_profile_index
-from career_schema import validate_career_history,validate_career_index
+from career_schema import validate_career_history,validate_career_index,validate_defender_games,validate_defender_index
+from matchup_schema import validate_matchups
+from availability_schema import validate_availability
 
 class Links(HTMLParser):
     def __init__(self): super().__init__();self.links=[]
@@ -72,6 +74,45 @@ def profile_views(root):
         views['data/profile-views/'+u['editionVersion']+'/'+body['playerId'].split(':')[1]+'.json']={'schemaVersion':'public-profile-view-1','version':u['editionVersion'],'playerId':body['playerId'],'date':u['date'],'props':props}
     return views
 
+def portrait_view(root):
+    """Small derived artwork directory from already-validated public bios."""
+    if not (root/'data/player-profiles/index.json').exists():return {}
+    index=json.loads((root/'data/player-profiles/index.json').read_text())
+    players=[];teams={}
+    aliases={'WSH':'WAS','GS':'GSW','SA':'SAS','NO':'NOP','NY':'NYK','UTAH':'UTA'}
+    for entry in index['players']:
+        body=json.loads((root/'data/player-profiles'/entry['path']).read_text());bio=body.get('bio',{})
+        player={'id':body['playerId'],'name':body['player']}
+        if bio.get('espnId'):player['espnId']=bio['espnId']
+        if bio.get('headshot'):player['headshot']=bio['headshot']
+        players.append(player)
+        if bio.get('teamLogo') and bio.get('teamAbbreviation') and bio.get('team'):
+            abbreviation=aliases.get(bio['teamAbbreviation'],bio['teamAbbreviation'])
+            teams[abbreviation]={'abbreviation':abbreviation,'name':bio['team'],'logo':bio['teamLogo']}
+    games=json.loads((root/'data/matchups.json').read_text())['games'] if (root/'data/matchups.json').exists() else []
+    return {'data/player-portraits.json':{'schemaVersion':'public-player-portraits-1','players':players,'teams':list(teams.values()),'games':games}}
+
+def matchup_files(root):
+    name='data/matchups.json'
+    if not (root/name).exists():return []
+    validate_matchups(json.loads(safe_file(root,name).read_text()));return [name]
+
+def availability_files(root):
+    name='data/player-availability.json'
+    if not (root/name).exists():return []
+    validate_availability(json.loads(safe_file(root,name).read_text()));return [name]
+
+def personal_price_view(root):
+    """First saved quote for each exact posted personal slip, independent of later odds views."""
+    manifest=json.loads((root/'data/editions/manifest.json').read_text());saved={}
+    for entry in sorted(manifest['editions'],key=lambda e:e['updatedAt']):
+        body=json.loads((root/'data/editions'/entry['path']).read_text());legs=[p for p in body['props'] if p['group']=='ry'];price=body.get('sharedBetslipOdds')
+        if not legs or type(price) not in (int,float) or abs(price)<100:continue
+        ticket_id='ry:'+body['date']+':'+(body.get('sharedBetslipUrl') or body.get('favoritesPostedAt') or 'posted-slip')
+        leg_ids=sorted(p['id'] for p in legs);key=(ticket_id,tuple(leg_ids))
+        saved.setdefault(key,{'ticketId':ticket_id,'legIds':leg_ids,'americanOdds':price,'sourceVersion':entry['version'],'firstSavedAt':entry['updatedAt']})
+    return {'data/personal-tracking-prices.json':{'schemaVersion':'public-personal-tracking-prices-1','tickets':list(saved.values())}}
+
 def game_log_files(root):
     if not (root/'data/player-logs/catalog.json').exists():return []
     catalog=json.loads(safe_file(root,'data/player-logs/catalog.json').read_text());validate_game_log_catalog(catalog)
@@ -97,6 +138,15 @@ def career_files(root):
     for entry in index['matchups']:
         name='data/career-matchups/'+entry['path'];body=json.loads(safe_file(root,name).read_text());validate_career_history(body)
         if body['playerId']!=entry['playerId'] or body['opponent']!=entry['opponent'] or body['version']!=entry['version'] or hashlib.sha256(canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16]!=entry['version']:raise ValueError('Career history identity/digest mismatch')
+        files.append(name)
+    return files
+
+def defender_files(root):
+    if not (root/'data/defender-games/index.json').exists():return []
+    index=json.loads(safe_file(root,'data/defender-games/index.json').read_text());validate_defender_index(index);files=['data/defender-games/index.json']
+    for entry in index['matchups']:
+        name='data/defender-games/'+entry['path'];body=json.loads(safe_file(root,name).read_text());validate_defender_games(body)
+        if any(body[k]!=entry[k] for k in ('playerId','defenderId','version')) or hashlib.sha256(canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16]!=entry['version']:raise ValueError('Defender history identity/digest mismatch')
         files.append(name)
     return files
 
@@ -153,7 +203,7 @@ def build(root, publish=False, now=None):
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
     manifest=json.loads(safe_file(root,'site-manifest.json').read_text())
     if set(manifest)!={'files'} or not isinstance(manifest['files'],list): raise ValueError('Invalid site file list')
-    files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)+game_log_files(root)+profile_files(root)+career_files(root)
+    files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)+game_log_files(root)+profile_files(root)+career_files(root)+defender_files(root)+matchup_files(root)+availability_files(root)
     if publish:
         entries=json.loads((root/'data/editions/manifest.json').read_text())['editions'];assert_publication_time(entries,now)
         today=(now or datetime.now(timezone.utc)).astimezone(ZoneInfo('America/New_York')).date().isoformat()
@@ -161,10 +211,11 @@ def build(root, publish=False, now=None):
         if current:assert_personal_estimates(json.loads((root/'data/editions'/current[-1]['path']).read_text()))
     if len(set(files))!=len(files): raise ValueError('Duplicate public file')
     for name in manifest['files']:
+        if name.startswith(('server/','private-lab/')): raise ValueError('Protected Lab code and data cannot enter the static artifact')
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')
     # Validate everything before replacing the previous build.
     paths=[safe_file(root,name) for name in files]
-    views={**board_views(root),**profile_views(root)}
+    views={**board_views(root),**profile_views(root),**portrait_view(root),**personal_price_view(root)}
     if destination.exists(): shutil.rmtree(destination)
     destination.mkdir()
     for source in paths:
@@ -184,6 +235,10 @@ def build(root, publish=False, now=None):
             if url.scheme or url.netloc or not url.path: continue
             target=(page.parent/unquote(url.path)).resolve()
             if url.path.startswith('/') or (destination not in target.parents and target!=destination): errors.append(f'{page.relative_to(destination)}: escaping project link {value}')
+            elif target==destination/'private-lab':
+                # This route is owned by the authenticated server (or an approved
+                # external-host redirect), never by the static Pages artifact.
+                continue
             elif not target.exists(): errors.append(f'{page.relative_to(destination)}: missing link {value}')
     if errors: raise ValueError('\n'.join(errors))
     return len(files)+len(views)+1

@@ -48,3 +48,26 @@ test('compact rows escape content, expose explicit favorites and keep combined p
  assert.ok(html.includes('No verified combined win probability'));assert.ok(html.includes('Ry’s Favorite'));assert.ok(!html.includes('pm-card'));
  assert.match(html,/<details class="pm-row"/);assert.ok(pm.ticketRow(row,0,{open:true}).includes(' open>'));
 });
+test('category-specific parlay numbers stay stable through mixed views and sorting',()=>{
+ const rows=[ticket('a'),ticket('l1',{section:'longshots'}),ticket('b'),ticket('l2',{section:'longshots'})];
+ assert.deepEqual(rows.map(t=>pm.ticketOrdinal(rows,t)),[1,1,2,2]);
+ assert.match(pm.ticketRow(rows[0],0),/Plus Money Parlay 1/);assert.match(pm.ticketRow(rows[3],1),/Longshot Parlay 2/);
+ assert.deepEqual(pm.filterTickets(rows,pm.readState('?type=longshots&sort=price_desc')).map(t=>pm.ticketOrdinal(rows,t)),[1,2]);
+});
+test('won-with-voids rows display reduced estimated odds, preserve the full-ticket price and keep the original leg',()=>{
+ const a=leg('A',.9,-200),b={...leg('B',.6,-400),result:{eventStatus:'final',statisticalOutcome:'dnp'}},t=ticket('v',{legs:[{...a,result:{eventStatus:'final',statisticalOutcome:'win',actual:20}},b],indicativeAmericanOdds:120});
+ assert.equal(pm.lowestProbability(t),.9);
+ assert.equal(pm.effectiveOdds(t),-200);const html=pm.ticketRow(t,3);assert.match(html,/Plus Money Parlay 4/);assert.match(html,/Won with 1 void/);assert.match(html,/After voids/);assert.match(html,/Full ticket \+120/);assert.ok(html.includes('B'));assert.match(html,/-200/);
+});
+test('parlay hashes select the correct internal tab while preserving legacy filter queries',()=>{
+ assert.equal(pm.readState('?date=2026-10-29&minimum=80','#longshots').type,'longshots');
+ assert.equal(pm.readState('?type=longshots','#plus-money').type,'plus_money');
+ assert.equal(pm.readState('?type=plus_money').type,'plus_money');
+ assert.equal(pm.readState('?type=invalid','#invalid').type,'all');
+ assert.equal(pm.readState('?minimum=80','#longshots').minimum,80);
+});
+test('parlay game summaries deduplicate exact date/event identities and keep chronological tip order',()=>{
+ const first={...leg('a'),canonicalEventId:'nba:0000000001',startTime:'2026-10-29T23:00:00Z'},later={...leg('b'),canonicalEventId:'nba:0000000002',startTime:'2026-10-30T00:00:00Z'};
+ assert.deepEqual(pm.ticketGames(ticket('games',{legs:[later,first,{...first,id:'another-player',player:'Other'}]})).map(p=>p.canonicalEventId),['nba:0000000001','nba:0000000002']);
+ const html=pm.ticketRow(ticket('games',{legs:[first,later]}),0);assert.match(html,/<summary><span class="pm-row-chevron"/);assert.match(html,/class="pm-row-games"/);assert.equal((html.match(/data-compact-matchup=/g)||[]).length,2);assert.match(html,/data-parlay-payout/);
+});

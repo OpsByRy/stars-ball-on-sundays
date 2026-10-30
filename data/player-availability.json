@@ -136,6 +136,14 @@
       "status": "out",
       "asOf": "2026-10-30T20:37:14Z",
       "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"
+    },
+    {
+      "date": "2026-10-30",
+      "eventId": "nba:0022600017",
+      "playerId": "nba:1630198",
+      "status": "out",
+      "asOf": "2026-10-30T20:51:01Z",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"
     }
   ]
 }

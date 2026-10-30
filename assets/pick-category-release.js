@@ -2,6 +2,8 @@
 (() => {
   'use strict';
   const categories = {
+    free_throws: {label:'Free Throws',heading:'Free Throws',description:'More conservative lines from -500 through -250. Default tracking stake: 2u. Estimates are provisional.'},
+    floaters: {label:'Floaters',heading:'Floaters',description:'Lines better than -250 and shorter than -110, screened for value. Default tracking stake: 1u.'},
     value_safe: {
       label: 'Layups', heading: 'Layups',
       description: 'More conservative lines with higher estimated hit probability.'

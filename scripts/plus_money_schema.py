@@ -53,6 +53,7 @@ def validate_model_targets(targets,date):
         odds=estimate['fairAmericanOdds'];decimal=1+(odds/100 if odds>0 else 100/abs(odds))
         if abs(1/decimal-p)>.002:raise ValueError('Fair model odds differ from joint probability')
         if estimate['minimumAmericanOdds']<odds:raise ValueError('Target price cannot be worse than model fair odds')
+        if date>='2026-10-30' and estimate['minimumAmericanOdds']< -110:raise ValueError('SGP target final-price floor is -110')
         for leg in legs:
             if not leg.get('startTime') or not estimate['asOf'] or datetime.fromisoformat(estimate['asOf'].replace('Z','+00:00'))>=datetime.fromisoformat(leg['startTime'].replace('Z','+00:00')):raise ValueError('SGP estimate must be pregame')
 
@@ -61,13 +62,14 @@ def validate(body):
     keys(body,fields|{'modelTargets'},fields)
     if body['schemaVersion'] not in {'public-plus-money-1','public-plus-money-2'}:raise ValueError('Invalid parlay publication')
     legacy=body['schemaVersion']=='public-plus-money-1'
+    current=not legacy and body['date']>='2026-10-30'
     day(body['date']);stamp(body['firstPublishedAt']);stamp(body['updatedAt']);stamp(body['quoteObservedAt']);text(body['priceNote'])
     if 'modelTargets' in body:
         if legacy:raise ValueError('Legacy publication cannot add SGP targets')
         validate_model_targets(body['modelTargets'],body['date'])
     if not re.fullmatch('[0-9a-f]{16}',body['version']):raise ValueError('Invalid parlay version')
-    if not isinstance(body['tickets'],list) or len(body['tickets'])>(12 if legacy else 24):raise ValueError('Invalid parlay card count')
-    ids=set()
+    if not isinstance(body['tickets'],list) or len(body['tickets'])>(12 if legacy else 48 if current else 24):raise ValueError('Invalid parlay card count')
+    ids=set();tier_counts={}
     for ticket in body['tickets']:
         fields={'id','book','legs','indicativeAmericanOdds','priceKind','fitReasons','status'}
         if not legacy:fields.add('section')
@@ -76,7 +78,12 @@ def validate(body):
         if ticket['id'] in ids:raise ValueError('Duplicate parlay')
         ids.add(ticket['id'])
         if ticket['book'] not in ({'fanduel','draftkings'} if legacy else {'fanduel','draftkings','mixed'}) or ticket['priceKind']!='indicative' or ticket['status']!='provisional':raise ValueError('Unsupported parlay price or status')
-        if not number(ticket['indicativeAmericanOdds']) or ticket['indicativeAmericanOdds']<100:raise ValueError('Not a plus-money reference')
+        ref=ticket['indicativeAmericanOdds']
+        if not number(ref) or abs(ref)<100 or ref<(-110 if current else 100):raise ValueError('Outside supported parlay price floor')
+        if current:
+            tier='layups' if ref<=200 else 'mid_range' if ref<500 else 'longshots' if ref<1000 else 'logo_lottos'
+            tier_counts[tier]=tier_counts.get(tier,0)+1
+            if tier_counts[tier]>12:raise ValueError('Too many references in one prospective price tier')
         if not isinstance(ticket['fitReasons'],list) or not ticket['fitReasons'] or any(s not in FIT_REASONS for s in ticket['fitReasons']):raise ValueError('Unknown public fit statement')
         legs=ticket['legs']
         if not isinstance(legs,list) or not 2<=len(legs)<=(3 if legacy else 6):raise ValueError('Invalid parlay length')
@@ -95,7 +102,8 @@ def validate(body):
         if MIXED_BOOK_REASON in ticket['fitReasons'] and len(books)==1:raise ValueError('Incorrect mixed-book fit statement')
         if any(not number(r.get('americanOdds')) or abs(r['americanOdds'])<100 for r in legs):raise ValueError('Missing parlay leg price')
         decimal=prod(1+(r['americanOdds']/100 if r['americanOdds']>0 else 100/abs(r['americanOdds'])) for r in legs)
-        if decimal<2 or abs(round((decimal-1)*100)-ticket['indicativeAmericanOdds'])>1:raise ValueError('Indicative parlay price mismatch')
+        expected_price=round((decimal-1)*100 if decimal>=2 else -100/(decimal-1))
+        if decimal<(1+100/110 if current else 2)-1e-9 or abs(expected_price-ticket['indicativeAmericanOdds'])>1:raise ValueError('Indicative parlay price mismatch')
         if any(r.get('group')!='research' or r.get('category') not in {'value_safe','high_probability_aggressive'} for r in legs):raise ValueError('Parlay contains a passed or personal pick')
     if hashlib.sha256(canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16]!=body['version']:raise ValueError('Parlay digest mismatch')
 

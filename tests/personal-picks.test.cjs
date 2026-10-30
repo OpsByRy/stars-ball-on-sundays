@@ -19,14 +19,14 @@ test('every board with a personal-slip view loads shared compatibility after its
   const html=fs.readFileSync(path.join(root,file),'utf8'),scripts=[...html.matchAll(/<script\b([^>]*)src="([^"]+)"([^>]*)><\/script>/g)],shared=scripts.filter(m=>/\/assets\/plus-money\.js$/.test(m[2]));
   assert.equal(shared.length,1,file);assert.doesNotMatch(shared[0][0],/data-plus-money/,file);
   const index=scripts.indexOf(shared[0]);
-  for(const name of ['routes.js','math.js','result-utils.js','pick-board.js','book-prices.js','unit-tracker.js']){const dependency=scripts.findIndex(m=>m[2].split('/').at(-1).split('?')[0]===name);assert.ok(dependency>=0&&dependency<index,file+' '+name);}
+  for(const name of ['slate-policy.js','routes.js','math.js','result-utils.js','pick-board.js','book-prices.js','unit-tracker.js']){const dependency=scripts.findIndex(m=>m[2].split('/').at(-1).split('?')[0]===name);assert.ok(dependency>=0&&dependency<index,file+' '+name);}
   assert.ok(index<scripts.findIndex(m=>/\/publication\.js$/.test(m[2])),file);
  }
  const css=fs.readFileSync(path.join(root,'assets/publication.css'),'utf8');assert.match(css,/\.pm-fit-intro\{/);assert.match(css,/\.pm-saved-fit\{/);
 });
 test('personal slips show factual shared compatibility first and keep review and void context current',()=>{
  const vm=require('node:vm'),results=require('../assets/result-utils.js'),routes=require('../assets/routes.js'),parlays=require('../assets/plus-money.js'),books=require('../assets/book-prices.js');
- const sandbox={module:{exports:{}},window:{STARS_RESULT_UTILS:results,SBOS_ROUTES:routes,SBOS_PLUS_MONEY:parlays,SBOS_BOOK_PRICES:books}};
+ const sandbox={module:{exports:{}},window:{SBOS_SLATE_POLICY:require('../assets/slate-policy.js'),STARS_RESULT_UTILS:results,SBOS_ROUTES:routes,SBOS_PLUS_MONEY:parlays,SBOS_BOOK_PRICES:books}};
  const source=fs.readFileSync(path.join(root,'assets/publication.js'),'utf8');vm.runInNewContext(source,sandbox);const publication=sandbox.module.exports;
  const leg=(player,event,line,market,projection)=>({group:'ry',player,playerId:'nba:'+player,date:'2026-10-29',canonicalEventId:'nba:'+event,market,operator:'>=',line,americanOdds:-200,estimate:{projection,winProbability:.8}});
  const body={favoritesPostedAt:'2026-10-29T21:00:00Z',sharedBetslipOdds:510,props:[leg('Jarrett Allen','a',10,'PTS',13.8),leg('Ja Morant','b',6,'AST',8.2)]},before=JSON.stringify(body),html=publication.favoritesNotice(body);

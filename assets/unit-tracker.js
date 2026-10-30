@@ -1,18 +1,27 @@
 /* Visitor-sized, statistical P/L at frozen published prices. No account or wager data. */
 (function(root,factory){
-  const api=factory(typeof module==='object'&&module.exports?require('./result-utils.js'):root.STARS_RESULT_UTILS);
+  const api=factory(typeof module==='object'&&module.exports?require('./result-utils.js'):root.STARS_RESULT_UTILS,typeof module==='object'&&module.exports?require('./slate-policy.js'):root.SBOS_SLATE_POLICY);
   if(typeof module==='object'&&module.exports)module.exports=api;else{root.SBOS_UNITS=api;document.addEventListener('DOMContentLoaded',api.init);}
-})(typeof window==='undefined'?this:window,function(results){
+})(typeof window==='undefined'?this:window,function(results,policy){
   'use strict';
   const finite=v=>typeof v==='number'&&Number.isFinite(v),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const STORAGE='sbos:unit-tracker:v1',defaults=Object.freeze({layup:2,lob:1,plus_money:1,longshot:.25,personal:.5});
-  const titles={layup:'Layups',lob:'Lobs',plus_money:'Plus Money parlays',longshot:'Longshots',personal:'Ry’s personal parlays'};
+  const STORAGE='sbos:unit-tracker:v1',defaults=Object.freeze({layup:2,lob:1,plus_money:1,longshot:.25,personal:.5,free_throw:2,floater:1,daily_lob:.75,parlay_layup:1,mid_range:.5,parlay_longshot:.25,logo_lotto:.05});
+  const titles={layup:'Historical Daily Layups',lob:'Historical Daily Lobs',plus_money:'Historical Plus Money parlays',longshot:'Historical Longshots',personal:'Ry’s personal parlays',free_throw:'Daily Free Throws',floater:'Daily Floaters',daily_lob:'Daily Lobs',parlay_layup:'Layups parlays',mid_range:'Mid-Range parlays',parlay_longshot:'Longshots parlays',logo_lotto:'Logo Lottos'};
   const decimal=odds=>finite(odds)&&Math.abs(odds)>=100?1+(odds>0?odds/100:100/Math.abs(odds)):null;
   function preferences(saved){
     const sizes={...defaults};for(const key of Object.keys(sizes))if(finite(saved?.sizes?.[key])&&saved.sizes[key]>=0&&saved.sizes[key]<=10000)sizes[key]=saved.sizes[key];
     return {unitDollars:finite(saved?.unitDollars)&&saved.unitDollars>0&&saved.unitDollars<=1000000?saved.unitDollars:null,sizes};
   }
-  function propType(row){return row.group==='research'&&row.category==='value_safe'?'layup':row.group==='research'&&row.category==='high_probability_aggressive'?'lob':null;}
+  function propType(row){
+    if(policy?.isCurrent(row))return {free_throws:'free_throw',floaters:'floater',lobs:'daily_lob'}[policy.dailyTier(row)]||null;
+    return row.group==='research'&&row.category==='value_safe'?'layup':row.group==='research'&&row.category==='high_probability_aggressive'?'lob':null;
+  }
+  function benchType(row){return row.group==='research'&&row.category==='honorable_mention'&&policy?.isCurrent(row)?{free_throws:'free_throw',floaters:'floater',lobs:'daily_lob'}[policy.priceTier(policy.originalDailyOdds(row))]||null:null;}
+  function ticketType(row){
+    if(row?.priceKind==='model_target')return null;
+    if(policy?.isCurrent(row))return {layups:'parlay_layup',mid_range:'mid_range',longshots:'parlay_longshot',logo_lottos:'logo_lotto'}[policy.parlayTier(row)]||null;
+    return row.section==='longshots'?'longshot':'plus_money';
+  }
   function propOutcome(row){
     if(results.isStatisticalHit(row))return 'win';
     if(row.result?.eventStatus==='final'&&row.result.statisticalOutcome==='loss')return 'loss';
@@ -30,11 +39,11 @@
     if(!finite(profitUnits)||!finite(payoutUnits))return {available:false,stakeUnits};
     return {available:true,stakeUnits,profitUnits,payoutUnits,profitDollars:p.unitDollars===null?null:profitUnits*p.unitDollars,payoutDollars:p.unitDollars===null?null:payoutUnits*p.unitDollars,voided};
   }
-  function summarize(rows,{kind='props',personal=false,settings=preferences(),scope}={}){
+  function summarize(rows,{kind='props',personal=false,settings=preferences(),scope,bench=false}={}){
     scope=results.trackingScope(rows,scope);
     rows=results.trackingRows(rows,{scope});
     const prefs=preferences(settings),unique=new Map();
-    for(const row of rows){const type=kind==='parlays'?(personal?'personal':row.section==='longshots'?'longshot':'plus_money'):propType(row);if(!type)continue;
+    for(const row of rows){if(row.priceKind==='model_target')continue;const type=kind==='parlays'?(personal?'personal':ticketType(row)):bench?benchType(row):propType(row);if(!type)continue;
       const id=row.id||JSON.stringify(kind==='parlays'?row.legs?.map(r=>[r.date,r.canonicalEventId||r.eventId,r.playerId,r.market,r.operator,r.line]):[row.date,row.canonicalEventId||row.eventId,row.playerId,row.market,row.operator,row.line]);
       unique.set(id,{row,type});
     }
@@ -69,10 +78,10 @@
     const testSlate=rows.length>0&&rows.every(results.isTestSlate)&&options.scope!=='cumulative';
     if(options.personal)rows=rows.map(t=>firstPersonalPrice(t));
     const s=summarize(rows,{...options,settings:prefs}),policy=Object.entries(s.stakes).map(([type,stake])=>size(stake)+' / '+titles[type].replace(/parlays$/,'parlay')).join(' · ');
-    return '<div class="unit-record-top"><span class="unit-net '+(s.netUnits>0?'positive':s.netUnits<0?'negative':'')+'">'+(testSlate?'Test-run net ':s.unpriced?'Partial net ':s.indicative?'Estimated net ':'Tracked net ')+'<strong>'+units(s.netUnits)+'</strong>'+(s.netDollars===null?'':'<span> · '+dollars(s.netDollars)+'</span>')+'</span><button type="button" data-unit-settings-open>'+(prefs.unitDollars===null?'Set your units':'Your unit · $'+Number(prefs.unitDollars.toFixed(2)).toLocaleString('en-US'))+'</button></div><p class="unit-record-note">'+esc(policy)+(s.pending?' · '+size(s.openUnits)+' pending':'')+(s.liveHits?' · includes '+s.liveHits+' live '+(s.liveHits===1?'hit':'hits'):'')+(s.review?' · '+s.review+' ticket'+(s.review===1?'':'s')+' awaiting settlement review':'')+(s.unpriced?' · '+s.unpriced+' winning '+(s.unpriced===1?'return':'returns')+' excluded: price unavailable':'')+'.</p><p class="unit-record-basis">'+(testSlate?'Hypothetical test-run return at your current stake settings. Excluded from cumulative win-rate and unit P/L totals. ':s.indicative?'Combined estimates use saved leg prices; offered SGP payouts can differ. ':options.personal?'Calculated at the first saved full-ticket quote. ':'Calculated at original saved pick prices. ')+'Statistical P/L; no bets or account balances recorded.</p>';
+    return '<div class="unit-record-top"><span class="unit-net '+(s.netUnits>0?'positive':s.netUnits<0?'negative':'')+'">'+(testSlate?'Test-run net ':options.bench?'Bench hypothetical net ':s.unpriced?'Partial net ':s.indicative?'Estimated net ':'Tracked net ')+'<strong>'+units(s.netUnits)+'</strong>'+(s.netDollars===null?'':'<span> · '+dollars(s.netDollars)+'</span>')+'</span><button type="button" data-unit-settings-open>'+(prefs.unitDollars===null?'Set your units':'Your unit · $'+Number(prefs.unitDollars.toFixed(2)).toLocaleString('en-US'))+'</button></div><p class="unit-record-note">'+esc(policy)+(s.pending?' · '+size(s.openUnits)+' pending':'')+(s.liveHits?' · includes '+s.liveHits+' live '+(s.liveHits===1?'hit':'hits'):'')+(s.review?' · '+s.review+' ticket'+(s.review===1?'':'s')+' awaiting settlement review':'')+(s.unpriced?' · '+s.unpriced+' winning '+(s.unpriced===1?'return':'returns')+' excluded: price unavailable':'')+'.</p><p class="unit-record-basis">'+(options.bench?'Hypothetical Bench research only; excluded from official pick records. No stake recommendation. ':testSlate?'Hypothetical test-run return at your current stake settings. Excluded from cumulative win-rate and unit P/L totals. ':s.indicative?'Combined estimates use saved leg prices; offered SGP payouts can differ. ':options.personal?'Calculated at the first saved full-ticket quote. ':'Calculated at original saved pick prices. ')+'Statistical P/L; no bets or account balances recorded.</p>';
   }
   function recordHTML(rows,options={}){
-    if(!rows.length||options.kind!=='parlays'&&!rows.some(propType))return '';
+    if(!rows.length||options.kind!=='parlays'&&!rows.some(options.bench?benchType:propType))return '';
     const token=String(++serial);summaries.set(token,{rows,options});
     return '<div class="unit-record" data-unit-summary="'+token+'" aria-live="polite">'+contents(rows,options)+'</div>';
   }
@@ -120,5 +129,5 @@
     });
     window.addEventListener('storage',event=>{if(event.key===STORAGE){try{prefs=preferences(JSON.parse(event.newValue));refresh();}catch{}}});
   }
-  return {defaults,preferences,summarize,recordHTML,stakeHTML,pickPayoutHTML,payout,payoutHTML,refresh,init,decimal,ticketDecimal,propType,units,dollars,firstPersonalPrice};
+  return {defaults,preferences,summarize,recordHTML,stakeHTML,pickPayoutHTML,payout,payoutHTML,refresh,init,decimal,ticketDecimal,propType,benchType,ticketType,units,dollars,firstPersonalPrice};
 });

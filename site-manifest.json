@@ -111,6 +111,7 @@
     "results/index.html",
     "sundays/index.html",
     "sundays/ry/index.html",
-    "sundays/week.html"
+    "sundays/week.html",
+    "assets/slate-policy.js"
   ]
 }

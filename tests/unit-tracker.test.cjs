@@ -30,7 +30,7 @@ test('the October 26 test slate stays visible on its date but cannot enter cumul
 });
 
 test('default sizes match Ry’s policy; dollar values scale net without changing units or outcomes',()=>{
- assert.deepEqual(units.defaults,{layup:2,lob:1,plus_money:1,longshot:.25,personal:.5});
+ assert.deepEqual(units.defaults,{layup:2,lob:1,plus_money:1,longshot:.25,personal:.5,free_throw:2,floater:1,daily_lob:.75,parlay_layup:1,mid_range:.5,parlay_longshot:.25,logo_lotto:.05});
  const rows=[prop('1',{odds:-250}),prop('2',{category:'high_probability_aggressive',odds:150}),prop('3',{outcome:'loss'})];
  const a=units.summarize(rows),b=units.summarize(rows,{settings:{unitDollars:25}});
  approx(a.netUnits,.3);assert.equal(a.decided,3);assert.equal(a.netDollars,null);approx(b.netDollars,7.5);assert.equal(a.netUnits,b.netUnits);
@@ -86,4 +86,37 @@ test('parlay row return uses the displayed American price and visitor-sized stak
  const missing=units.payoutHTML(101);assert.match(missing,/1u wins 1.01u/);assert.match(missing,/2.01u Payout/);assert.match(missing,/Set your unit \$/);assert.doesNotMatch(missing,/wins \$/);
  const refund=units.payout(null,{voided:true,settings});assert.equal(refund.profitDollars,0);assert.equal(refund.payoutDollars,100);
  assert.match(units.payoutHTML(null,{voided:true,settings}),/1u refunded/);assert.equal(units.payout(null).available,false);
+});
+
+
+test('new Daily tiers use separate stake keys while historical defaults and visitor overrides stay intact',()=>{
+ const current=(id,odds,category='value_safe')=>({...prop(id,{odds,category}),date:'2026-10-30'});
+ const free=current('free',-300),floater=current('floater',-200),lob=current('lob',120,'high_probability_aggressive');
+ const settings={unitDollars:100,sizes:{layup:4,lob:2,free_throw:3}};
+ assert.equal(units.propType(free),'free_throw');assert.equal(units.propType(floater),'floater');assert.equal(units.propType(lob),'daily_lob');
+ assert.match(units.pickPayoutHTML(free,{settings}),/3u wins \$100/);
+ assert.match(units.pickPayoutHTML(floater,{settings}),/1u wins \$50/);
+ assert.match(units.pickPayoutHTML(lob,{settings}),/0.75u wins \$90/);
+ assert.match(units.pickPayoutHTML(prop('old'),{settings}),/4u wins \$200/);
+ assert.equal(units.summarize([free,floater,lob]).netUnits,2/3+.5+.9);
+ const frozen=require('../assets/slate-policy.js').freezeDaily(free);
+ assert.equal(units.propType({...frozen,americanOdds:150}),'free_throw');
+});
+test('Bench hypothetical research is opt-in, uses price tiers, and never recommends a stake',()=>{
+ const bench={...prop('bench',{category:'honorable_mention',odds:150}),date:'2026-10-30'};
+ assert.equal(units.propType(bench),null);assert.equal(units.benchType(bench),'daily_lob');
+ assert.equal(units.pickPayoutHTML(bench),'');assert.equal(units.stakeHTML(bench),'');
+ assert.equal(units.summarize([bench]).decided,0);assert.equal(units.recordHTML([bench]),'');
+ const tracked=units.summarize([bench],{bench:true});assert.equal(tracked.decided,1);assert.equal(tracked.netUnits,1.125);
+ const html=units.recordHTML([bench],{bench:true});assert.match(html,/Bench hypothetical net/);assert.match(html,/excluded from official pick records/);assert.match(html,/No stake recommendation/);
+});
+test('new parlay stakes follow original tier after voids and omit model targets entirely',()=>{
+ const leg=(id,odds,outcome='win')=>({...prop(id,{odds,outcome}),date:'2026-10-30'});
+ const make=(id,odds)=>({id,indicativeAmericanOdds:odds,legs:[leg(id+'a',-200),leg(id+'b',100)]});
+ const tickets=[make('a',200),make('b',300),make('c',650),make('d',1200)];
+ assert.deepEqual(tickets.map(units.ticketType),['parlay_layup','mid_range','parlay_longshot','logo_lotto']);
+ const s=units.summarize(tickets,{kind:'parlays'});assert.deepEqual(s.stakes,{parlay_layup:1,mid_range:.5,parlay_longshot:.25,logo_lotto:.05});assert.equal(s.decided,4);
+ const ticket=require('../assets/slate-policy.js').freezeParlay(tickets[2]);ticket.legs[1].result={eventStatus:'final',statisticalOutcome:'dnp'};ticket.indicativeAmericanOdds=-200;
+ assert.equal(units.ticketType(ticket),'parlay_longshot');assert.equal(units.summarize([ticket],{kind:'parlays'}).netUnits,.125);
+ const target={...tickets[0],priceKind:'model_target'};assert.equal(units.ticketType(target),null);assert.equal(units.summarize([target],{kind:'parlays'}).decided,0);assert.equal(units.summarize([target],{kind:'parlays'}).pending,0);
 });

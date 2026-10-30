@@ -36,7 +36,7 @@ def main():
     root=Path(__file__).resolve().parents[1]
     if json.loads((root/'hosting-policy.json').read_text())['githubMode']!='redirect':
         print('GitHub remains the full site; domain gate is inactive.');return
-    parser=argparse.ArgumentParser();parser.add_argument('--attempts',type=int,default=24);parser.add_argument('--interval',type=int,default=10);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--attempts',type=int,default=120);parser.add_argument('--interval',type=int,default=10);args=parser.parse_args()
     expected=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
     def fetch(path):
         request=urllib.request.Request(ORIGIN+path,headers={'Cache-Control':'no-cache','User-Agent':'SBOS-public-release-verification'})

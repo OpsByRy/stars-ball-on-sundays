@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "sbos-parlay-withdrawals-1",
+  "withdrawals": [
+    {
+      "date": "2026-10-30",
+      "recordedAt": "2026-10-30T23:07:27.168935+00:00",
+      "ticketIds": [
+        "c60608a2e56f66e5"
+      ],
+      "legs": [
+        [
+          "2026-10-30",
+          "nba:0022600018",
+          "nba:1626157",
+          "PR",
+          ">=",
+          25,
+          "full_game"
+        ],
+        [
+          "2026-10-30",
+          "nba:0022600018",
+          "nba:1626157",
+          "PTS",
+          ">=",
+          15,
+          "full_game"
+        ]
+      ],
+      "notice": "The Karl-Anthony Towns same-game model target has been withdrawn. Its overlapping points markets were not verified as an available sportsbook combination. Do not play this target. Other published picks remain unchanged."
+    }
+  ]
+}

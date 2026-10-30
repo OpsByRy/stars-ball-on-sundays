@@ -38,8 +38,21 @@
       decimal(j.fairAmericanOdds)!==null&&(Math.abs(j.fairAmericanOdds-asAmerican(1/j.winProbability))<=1||Math.abs(j.fairAmericanOdds)===100&&Math.abs(asAmerican(1/j.winProbability))===100)&&
       decimal(j.minimumAmericanOdds)!==null&&decimal(j.minimumAmericanOdds)>=decimal(j.fairAmericanOdds)-1e-7;
   }
-  function modelTargets(body){return Array.isArray(body?.modelTargets)?body.modelTargets.filter(isModelTarget):[];}
-  function boardRows(body){return [...(body?.tickets||[]).map(policy.freezeParlay),...modelTargets(body)];}
+  // Editorial withdrawals survive result editions, new IDs, reordering and book-price refreshes.
+  let withdrawals=typeof window==='undefined'?require('./parlay-withdrawals.json'):null;
+  const legContract=r=>JSON.stringify([r.date,eventId(r),r.playerId,r.market,r.operator,r.line,r.period||'full_game']);
+  function withdrawalFor(ticket){
+    if(!withdrawals)throw Error('Withdrawal register unavailable');
+    const legs=(ticket?.legs||[]).map(legContract).sort();
+    return withdrawals.withdrawals.find(w=>(ticket?.legs||[]).some(r=>r.date===w.date)&&(w.ticketIds.includes(ticket.id)||legs.length===w.legs.length&&legs.every((v,i)=>v===w.legs.map(r=>JSON.stringify(r)).sort()[i])));
+  }
+  function applyWithdrawals(body){return {...body,tickets:(body.tickets||[]).filter(t=>!withdrawalFor(t)),...(Array.isArray(body.modelTargets)?{modelTargets:body.modelTargets.filter(t=>!withdrawalFor(t))}:{})};}
+  function withdrawalNoticeHTML(date){
+    if(!withdrawals)throw Error('Withdrawal register unavailable');
+    return withdrawals.withdrawals.filter(w=>w.date===date).map(w=>`<p role="note" class="pm-withdrawal-notice"><strong>Withdrawal recorded ${escape(stamp(w.recordedAt))}.</strong> ${escape(w.notice)}</p>`).join('');
+  }
+  function modelTargets(body){return Array.isArray(body?.modelTargets)?body.modelTargets.filter(t=>isModelTarget(t)&&!withdrawalFor(t)):[];}
+  function boardRows(body){return [...(body?.tickets||[]).filter(t=>!withdrawalFor(t)).map(policy.freezeParlay),...modelTargets(body)];}
   const targetMinimum=t=>policy.minimumSGPPrice(t.jointEstimate.minimumAmericanOdds,policy.dateOf(t));
   function targetNeedsReview(ticket){return results.parlayLegs(ticket).voided.length>0||ticket.legs.some(r=>r.confidenceUpdate&&(['does_not_qualify','unavailable'].includes(r.confidenceUpdate.qualification)||['review','unavailable'].includes(r.confidenceUpdate.status)));}
   function categoryTickets(tickets,type='all'){const seen=new Set();return tickets.filter(t=>{if(t.id&&seen.has(t.id))return false;if(t.id)seen.add(t.id);return type==='all'||(type==='same_game'?isSameGame(t):section(t)===type);});}
@@ -146,6 +159,7 @@
     return `<p class="pick-empty">${state.favorite&&!counts.favorites?'Ry hasn’t flagged any parlays for this slate yet.':!counts[state.type]?`No qualifying ${state.type==='longshots'?'Longshots':state.type==='plus_money'?'Plus Money parlays':currentTitles[state.type]?currentTitles[state.type]+' parlays':'parlays'} in this edition. Browse Daily Board for our individual selections.`:'No published parlays match your filters. Try lowering the minimum or reset your filters.'}</p>`;
   }
   function ticketRow(ticket,index,{open=false}={}){
+    if(withdrawalFor(ticket))return '';
     if(ticket.priceKind==='model_target'){
       if(!isModelTarget(ticket))throw Error('Invalid unquoted model target');
       return modelTargetRow(ticket,index,{open});
@@ -196,7 +210,7 @@
       $('combinations-heading').textContent=activeTitles[state.type]+(state.sameGame?' · Same game':'');$('parlay-count').textContent=`${rows.length} of ${counts[state.type]} ${targetCount?'parlays / model targets':'parlays'}`;
       $('parlay-favorites').setAttribute('aria-pressed',String(state.favorite));$('parlay-favorite-count').textContent=counts.favorites;
       for(const el of document.querySelectorAll('[data-parlay-filter]'))el.value=state[el.dataset.parlayFilter]||'';
-      let ideasHeading=false;target.innerHTML=rows.length?rows.map(t=>{const heading=modern&&isModelTarget(t)&&!ideasHeading?(ideasHeading=true,'<div class="pm-ideas-heading"><h3>Unquoted model ideas</h3><p>Conditional research targets, not priced picks. No payout, stake or official record.</p></div>'):'';return heading+ticketRow(t,ticketOrdinal(tickets,t)-1,{open:opened.has(t.id)});}).join(''):emptyStateHTML(counts,state);
+      let ideasHeading=false;target.innerHTML=withdrawalNoticeHTML(body.date)+(rows.length?rows.map(t=>{const heading=modern&&isModelTarget(t)&&!ideasHeading?(ideasHeading=true,'<div class="pm-ideas-heading"><h3>Unquoted model ideas</h3><p>Conditional research targets, not priced picks. No payout, stake or official record.</p></div>'):'';return heading+ticketRow(t,ticketOrdinal(tickets,t)-1,{open:opened.has(t.id)});}).join(''):emptyStateHTML(counts,state));
       syncURL(push);window.SBOS_PICK_RESEARCH?.hydrate(target);
     }
     function options(){
@@ -211,7 +225,7 @@
       const saved=await json(new URL(safePath(entry),dataRoot),true);if(n!==serial)return;
       if(!['public-plus-money-1','public-plus-money-2'].includes(saved.schemaVersion)||saved.version!==entry.version||saved.date!==entry.date||!Array.isArray(saved.tickets))throw Error('Publication mismatch');
       if(saved.modelTargets!==undefined&&(!Array.isArray(saved.modelTargets)||saved.modelTargets.some(t=>!isModelTarget(t))))throw Error('Invalid model-target publication');
-      if(body?.date!==saved.date)opened.clear();body=saved;options();
+      if(body?.date!==saved.date)opened.clear();body=applyWithdrawals(saved);options();
       context.textContent=`Saved prices: ${stamp(body.quoteObservedAt)} · Board updated ${stamp(body.updatedAt)}.`;
       $('parlay-price-note').textContent=body.priceNote;render();
       tracker.setRows(boardRows(body).flatMap(t=>t.legs));
@@ -227,6 +241,8 @@
     target.addEventListener('toggle',event=>{const row=event.target;if(row.matches('details[data-parlay-id]'))row.open?opened.add(row.dataset.parlayId):opened.delete(row.dataset.parlayId);},true);
     window.addEventListener('popstate',()=>{state=readState(location.search,location.hash);const date=new URL(location.href).searchParams.get('date');if(date&&date!==body?.date&&editions.some(e=>e.date===date)){dateSelect.value=date;loadDate().catch(showError);}else render();});
     try{
+      withdrawals=await json(new URL('assets/parlay-withdrawals.json',base));
+      if(withdrawals.schemaVersion!=='sbos-parlay-withdrawals-1'||!Array.isArray(withdrawals.withdrawals))throw Error('Invalid withdrawal register');
       const index=await json(new URL('manifest.json',dataRoot));if(index.schemaVersion!=='public-plus-money-manifest-1')throw Error('Invalid publication');
       const latest=new Map();for(const e of index.editions){safePath(e);latest.set(e.date,e);}editions=[...latest.values()].sort((a,b)=>b.date.localeCompare(a.date));
       if(!editions.length){target.textContent='No parlays have been published yet.';return;}
@@ -237,5 +253,5 @@
     }catch{showError();}
     function showError(){target.innerHTML='<p role="alert" class="site-error">The saved parlay board is unavailable. Refresh to try again.</p>';}
   }
-  return {titles,currentTitles,titlesForDate,section,targetMinimum,isSameGame,isModelTarget,modelTargets,boardRows,targetNeedsReview,categoryTickets,emptyStateHTML,compatibilityExplanation,compatibilityHTML,ticketOrdinal,effectiveOdds,ticketGames,ticketGamesHTML,escape,label,safePath,readState,stateQuery,tabCounts,isFavorite,lowestProbability,pricedTicket,filterTickets,ticketRow,init};
+  return {withdrawalFor,applyWithdrawals,withdrawalNoticeHTML,titles,currentTitles,titlesForDate,section,targetMinimum,isSameGame,isModelTarget,modelTargets,boardRows,targetNeedsReview,categoryTickets,emptyStateHTML,compatibilityExplanation,compatibilityHTML,ticketOrdinal,effectiveOdds,ticketGames,ticketGamesHTML,escape,label,safePath,readState,stateQuery,tabCounts,isFavorite,lowestProbability,pricedTicket,filterTickets,ticketRow,init};
 });

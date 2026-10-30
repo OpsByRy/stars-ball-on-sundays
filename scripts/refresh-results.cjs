@@ -91,7 +91,7 @@ async function refresh({fetchJSON,fetchNBAJSON,fetchInjuriesJSON,now=new Date(),
     for(const e of dates.values()){
       const age=now.getTime()-Date.parse(e.date+'T12:00:00Z');if(age<0||age>7*86400000)continue;
       const raw=fs.readFileSync(path.join(siteRoot,'data/plus-money',e.path),'utf8'),body=JSON.parse(raw);if(savedVersion(raw)!==e.version)throw Error('Parlay digest mismatch');
-      let changed=false;
+      const cleaned=pm.applyWithdrawals(body);let changed=JSON.stringify(cleaned)!==JSON.stringify(body);Object.assign(body,cleaned);
       for(const row of body.tickets.flatMap(t=>t.legs)){
         const source=row.resultSource||identities.get(board.identity(row));if(!source||included&&!included.has(source.eventId))continue;
         const announced=await announcedResult(row,source);if(announced&&!equivalent(row.result,announced)){row.result=announced;changed=true;}

@@ -112,6 +112,7 @@
     "sundays/index.html",
     "sundays/ry/index.html",
     "sundays/week.html",
-    "assets/slate-policy.js"
+    "assets/slate-policy.js",
+    "assets/parlay-withdrawals.json"
   ]
 }

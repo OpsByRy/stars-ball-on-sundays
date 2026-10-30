@@ -237,3 +237,12 @@ test('screenshot-only four-leg ticket shows its quote without creating a share l
   assert.equal(contracts.evaluateStructured(kessler,{eventStatus:'final',stats:{PTS:11}}).statisticalOutcome,'loss');
   assert.equal(contracts.evaluateStructured(kessler,{eventStatus:'final',stats:{PTS:12}}).statisticalOutcome,'win');
 });
+
+test('Cup amendment is dated supplemental context without changing the saved board',()=>{
+  const note=publication.cupContextNotice('2026-10-30');
+  assert.match(note,/after the original release/);
+  assert.match(note,/Fresh odds and availability were not assessed/);
+  assert.match(note,/saved probabilities, stakes and original prices are unchanged/);
+  assert.equal(publication.cupContextNotice('2026-10-29'),'');
+  assert.equal(publication.cupContextNotice('2026-10-31'),'');
+});

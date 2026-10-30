@@ -9,3 +9,12 @@
 [data-personal-ticket-payout]{margin-top:12px;display:grid;gap:5px}[data-personal-ticket-payout]>strong{font-size:12px}[data-personal-ticket-payout] .pm-payout{display:grid;gap:3px}[data-personal-ticket-payout] .pm-payout small{display:block;font-size:11px;line-height:1.5}[data-personal-ticket-payout] .pm-set-unit{width:max-content;border:0;background:transparent;color:var(--link);padding:0;font:inherit;font-size:10px;cursor:pointer;text-decoration:underline}.personal-return-note{font-size:10px!important;line-height:1.6!important;margin-top:9px!important}
 @media(min-width:851px){.pick-columns,.pick-row .pick-row-main{grid-template-columns:minmax(190px,1fr) 100px 94px 48px 100px 40px}}
 @media(min-width:621px) and (max-width:850px){.pick-columns,.pick-row .pick-row-main{grid-template-columns:minmax(145px,1fr) 90px 78px 40px 86px 36px}}
+
+/* Basketball panel and seam colors stay recognizable in light and dark mode. */
+.unit-record{background:var(--brand-trim);border-color:var(--brand-ink);color:var(--brand-ink)}
+.unit-record .unit-net{color:var(--brand-ink)}
+.unit-record .unit-net.positive{color:#124D37}.unit-record .unit-net.negative{color:#8A1D34}
+.unit-record .unit-record-note,.unit-record .unit-record-basis{color:inherit}
+.unit-record [data-unit-settings-open]{background:var(--brand-accent);color:var(--unit-button-text);border-color:var(--unit-button-text);font-weight:700;min-height:44px;padding:9px 12px;touch-action:manipulation}
+.unit-record [data-unit-settings-open]:hover{box-shadow:0 0 0 1px var(--unit-button-text)}
+.unit-record [data-unit-settings-open]:focus-visible{outline-color:var(--brand-ink)}

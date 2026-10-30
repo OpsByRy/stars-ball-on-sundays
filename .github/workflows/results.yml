@@ -17,6 +17,9 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '22'
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
       - run: node scripts/refresh-results.cjs
       - run: python scripts/build.py
       - name: Save statistical updates
@@ -28,3 +31,25 @@ jobs:
             git commit -m 'Update published statistical results'
             git push
           fi
+      - name: Record the exact final source, including a new result commit
+        env:
+          SBOS_RESULT_BASE_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p .release/result
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          receipt = {
+              'schemaVersion': 'sbos-result-release-1',
+              'repository': 'OpsByRy/stars-ball-on-sundays',
+              'branch': 'main',
+              'baseSHA': os.environ['SBOS_RESULT_BASE_SHA'],
+              'sourceSHA': subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          }
+          Path('.release/result/source.json').write_text(json.dumps(receipt)+'\n')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: sbos-result-release
+          path: .release/result/source.json
+          retention-days: 7

@@ -1,4 +1,8 @@
 dist/
+dist-cloudflare/
+dist-github/
+.release/
+hosting-build-receipt.json
 __pycache__/
 *.py[cod]
 .DS_Store

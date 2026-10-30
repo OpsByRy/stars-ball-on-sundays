@@ -71,5 +71,15 @@ class PublicHosting(unittest.TestCase):
         bodies['/data/editions/manifest.json']=b'changed history'
         with self.assertRaises(ValueError):verify_cloudflare_release.verify(receipt,'a'*40,bodies.__getitem__)
 
+    def test_cloudflare_beacon_normalization_preserves_all_other_page_bytes(self):
+        original=b'<html><body>verified public content</body></html>\n'
+        beacon=(b'<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v'+b'a'*44+b'" integrity="sha512-'+b'A'*86+b'==" data-cf-beacon=\'{"version":"2024.11.0","token":"1ea6993beccf4beeb1b3927d67da293f","r":1,"spa":2}\' crossorigin="anonymous"></script>\n')
+        injected=original.replace(b'</body>',beacon+b'</body>')
+        self.assertEqual(verify_cloudflare_release.normalize_public_html(injected),original)
+        for unsafe in [injected.replace(b'static.cloudflareinsights.com',b'other.example'),injected.replace(b'1ea6993beccf4beeb1b3927d67da293f',b'0'*32),injected.replace(b'</script>',b'</script><script>other()</script>'),beacon+original]:
+            self.assertEqual(verify_cloudflare_release.normalize_public_html(unsafe),unsafe)
+        altered=injected.replace(b'verified public content',b'changed content')
+        self.assertNotEqual(verify_cloudflare_release.normalize_public_html(altered),original)
+
 
 if __name__=='__main__':unittest.main()

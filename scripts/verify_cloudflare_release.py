@@ -3,11 +3,20 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import time
 import urllib.request
 
 ORIGIN='https://starsballonsundays.com'
+# The owned zone adds this public Cloudflare Web Analytics beacon at the edge.
+# Accept only its known token, vendor URL/SRI format and final-body position.
+# Every other byte remains covered by the publication hash.
+CLOUDFLARE_BEACON=re.compile(rb'<script type="module" src="https://static\.cloudflareinsights\.com/beacon\.min\.js/v[0-9a-f]{32,64}" integrity="sha512-[A-Za-z0-9+/]{86}==" data-cf-beacon=\'\{"version":"[0-9]{4}\.[0-9]{1,2}\.[0-9]+","token":"1ea6993beccf4beeb1b3927d67da293f","r":1,"spa":2\}\' crossorigin="anonymous"></script>\n(?=</body></html>\s*\Z)')
+
+
+def normalize_public_html(body):
+    return CLOUDFLARE_BEACON.sub(b'',body,count=1)
 
 
 def verify(receipt,expected,fetch):
@@ -16,7 +25,9 @@ def verify(receipt,expected,fetch):
     # are already validated by the shared build and recorded in this receipt.
     paths=[p for p in receipt['files'] if p.endswith('.html')]+['/data/editions/manifest.json']
     for path in paths:
-        if hashlib.sha256(fetch(path)).hexdigest()!=receipt['files'][path]:raise ValueError('Cloudflare content differs: '+path)
+        body=fetch(path)
+        if path.endswith('.html'):body=normalize_public_html(body)
+        if hashlib.sha256(body).hexdigest()!=receipt['files'][path]:raise ValueError('Cloudflare content differs: '+path)
     if hashlib.sha256(fetch('/data/editions/manifest.json')).hexdigest()!=receipt['editionManifestSHA256']:raise ValueError('Cloudflare edition history differs')
     return len(paths)
 

@@ -10,7 +10,7 @@ test('shared pick returns use category stakes and dollars, with personal singles
  assert.equal(units.pickPayoutHTML(prop('bench',{category:'honorable_mention'}),{settings}),'');
  const custom=units.pickPayoutHTML(prop('d'),{settings:{unitDollars:25,sizes:{layup:3}}});assert.match(custom,/3u wins \$37.50/);assert.match(custom,/\$112.50 Payout/);
  const refund=units.pickPayoutHTML(prop('e',{outcome:'dnp'}),{settings});assert.match(refund,/2u refunded/);assert.match(refund,/\$200 Refund/);
- const fallback=units.pickPayoutHTML(prop('f'));assert.match(fallback,/2u wins 1u/);assert.match(fallback,/3u Payout/);assert.match(fallback,/Set your unit/);
+ const fallback=units.pickPayoutHTML(prop('f'),{settings:{unitDollars:null}});assert.match(fallback,/2u wins 1u/);assert.match(fallback,/3u Payout/);assert.match(fallback,/Set your unit/);
 });
 test('the October 26 test slate stays visible on its date but cannot enter cumulative P/L or win rates',()=>{
  const results=require('../assets/result-utils.js'),publication=require('../assets/publication.js');
@@ -33,7 +33,7 @@ test('default sizes match Ry’s policy; dollar values scale net without changin
  assert.deepEqual(units.defaults,{layup:2,lob:1,plus_money:1,longshot:.25,personal:.5,free_throw:2,floater:1,daily_lob:.75,parlay_layup:1,mid_range:.5,parlay_longshot:.25,logo_lotto:.05});
  const rows=[prop('1',{odds:-250}),prop('2',{category:'high_probability_aggressive',odds:150}),prop('3',{outcome:'loss'})];
  const a=units.summarize(rows),b=units.summarize(rows,{settings:{unitDollars:25}});
- approx(a.netUnits,.3);assert.equal(a.decided,3);assert.equal(a.netDollars,null);approx(b.netDollars,7.5);assert.equal(a.netUnits,b.netUnits);
+ approx(a.netUnits,.3);assert.equal(a.decided,3);approx(a.netDollars,3);approx(b.netDollars,7.5);assert.equal(a.netUnits,b.netUnits);
 });
 test('custom stakes apply by category; favorite flags do not convert a Layup into a personal ticket',()=>{
  const row={...prop('1',{odds:100}),ryFavorite:true};
@@ -83,7 +83,7 @@ test('parlay row return uses the displayed American price and visitor-sized stak
  const html=units.payoutHTML(101,{settings});assert.match(html,/1u wins \$101/);assert.match(html,/\$201 Payout/);assert.doesNotMatch(html,/1u · \$100/);
  const long=units.payout(400,{type:'longshot',settings});assert.equal(long.profitDollars,100);assert.equal(long.payoutDollars,125);assert.equal(long.stakeUnits,.25);
  const custom=units.payout(-200,{settings:{unitDollars:25,sizes:{plus_money:2}}});assert.equal(custom.profitDollars,25);assert.equal(custom.payoutDollars,75);
- const missing=units.payoutHTML(101);assert.match(missing,/1u wins 1.01u/);assert.match(missing,/2.01u Payout/);assert.match(missing,/Set your unit \$/);assert.doesNotMatch(missing,/wins \$/);
+ const missing=units.payoutHTML(101,{settings:{unitDollars:null}});assert.match(missing,/1u wins 1.01u/);assert.match(missing,/2.01u Payout/);assert.match(missing,/Set your unit \$/);assert.doesNotMatch(missing,/wins \$/);
  const refund=units.payout(null,{voided:true,settings});assert.equal(refund.profitDollars,0);assert.equal(refund.payoutDollars,100);
  assert.match(units.payoutHTML(null,{voided:true,settings}),/1u refunded/);assert.equal(units.payout(null).available,false);
 });
@@ -119,4 +119,28 @@ test('new parlay stakes follow original tier after voids and omit model targets 
  const ticket=require('../assets/slate-policy.js').freezeParlay(tickets[2]);ticket.legs[1].result={eventStatus:'final',statisticalOutcome:'dnp'};ticket.indicativeAmericanOdds=-200;
  assert.equal(units.ticketType(ticket),'parlay_longshot');assert.equal(units.summarize([ticket],{kind:'parlays'}).netUnits,.125);
  const target={...tickets[0],priceKind:'model_target'};assert.equal(units.ticketType(target),null);assert.equal(units.summarize([target],{kind:'parlays'}).decided,0);assert.equal(units.summarize([target],{kind:'parlays'}).pending,0);
+});
+
+test('new visitors start at $10 per unit while saved dollar and units-only choices persist',()=>{
+ for(const saved of [undefined,null,{}, {sizes:{layup:3}}])assert.equal(units.preferences(saved).unitDollars,10);
+ for(const unitDollars of [5,25,12.75,null]){
+  const saved=JSON.parse(JSON.stringify({unitDollars,sizes:{layup:3,longshot:0}}));
+  const next=units.preferences(saved);assert.equal(next.unitDollars,unitDollars);assert.equal(next.sizes.layup,3);assert.equal(next.sizes.longshot,0);
+  assert.deepEqual(units.preferences(JSON.parse(JSON.stringify(next))),next);
+ }
+ const payout=units.payout(100);assert.equal(payout.profitDollars,10);assert.equal(payout.payoutDollars,20);
+ assert.match(units.recordHTML([prop('default')]),/Set your units · \$10/);
+});
+
+test('all basketball panel and seam button palettes meet normal-text contrast',()=>{
+ const fs=require('node:fs'),path=require('node:path'),tokens=fs.readFileSync(path.join(__dirname,'../assets/brand-tokens.css'),'utf8'),css=fs.readFileSync(path.join(__dirname,'../assets/unit-tracker.css'),'utf8');
+ const luminance=hex=>{const c=hex.match(/[a-f\d]{2}/gi).map(c=>parseInt(c,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;};
+ const contrast=(a,b)=>{const values=[luminance(a),luminance(b)].sort((a,b)=>a-b);return (values[1]+.05)/(values[0]+.05);};
+ const positive=css.match(/\.unit-net\.positive\{color:(#[a-f\d]{6})\}/i)[1],negative=css.match(/\.unit-net\.negative\{color:(#[a-f\d]{6})\}/i)[1];
+ for(const brand of ['classic','violet','forest','volt']){
+  const declarations=tokens.match(new RegExp('\\[data-brand='+brand+'\\]\\{([^}]+)\\}'))[1];
+  const color=name=>declarations.match(new RegExp('--'+name+':(#[a-f\\d]{6})','i'))[1];
+  for(const text of [color('brand-ink'),positive,negative])assert.ok(contrast(color('brand-trim'),text)>=4.5,brand+' panel contrast');
+  assert.ok(contrast(color('brand-accent'),color('unit-button-text'))>=4.5,brand+' button contrast');
+ }
 });

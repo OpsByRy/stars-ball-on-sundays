@@ -2,6 +2,7 @@ import copy,json,sys,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
 from public_schema import validate_edition
+from build import assert_personal_estimates
 class Ry630Boundary(unittest.TestCase):
  def body(self):return json.loads((ROOT/'data/editions/daily/2026-10-31/7d5c2b47eb40c3ff.json').read_text())
  def test_unknown_components_allowed_but_invalid_values_rejected(self):
@@ -21,3 +22,9 @@ class Ry630Boundary(unittest.TestCase):
  def test_research_and_original_forecasts_remain_identical(self):
   prior=json.loads((ROOT/'data/editions/daily/2026-10-31/a6d49ddcbb18e732.json').read_text())
   self.assertEqual(self.body()['props'][:6753],prior['props'])
+ def test_explicit_user_tracking_publishes_without_inventing_a_model_estimate(self):
+  b=self.body();assert_personal_estimates(b)
+  r=next(r for r in b['props'] if r['group']=='ry');r['sourceType']='saved sportsbook observation'
+  with self.assertRaisesRegex(ValueError,'reviewed probabilities'):assert_personal_estimates(b)
+  r['sourceType']='user_supplied_unsubmitted_favorite';r['estimate']={'winProbability':.9}
+  with self.assertRaisesRegex(ValueError,'reviewed probabilities'):assert_personal_estimates(b)

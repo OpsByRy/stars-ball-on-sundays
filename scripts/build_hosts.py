@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+from datetime import datetime,timezone,timedelta
 import build
 
 OLD = 'https://opsbyry.github.io/stars-ball-on-sundays/'
@@ -41,6 +42,44 @@ def pages_asset(name,raw,limit=PAGES_MAX_BYTES):
         compact=json_tokens(raw)
         if len(compact)<=limit:return compact
     raise ValueError('Pages file exceeds 25 MiB: '+name)
+
+
+def publication_window(root,now=None):
+    """Gate pending prices until a verified-publication follow-up removes it."""
+    marker=root/'publication-window.json'
+    if not marker.exists():return 'no pending publication window'
+    body=json.loads(marker.read_text())
+    fields={'schemaVersion','channel','date','editionVersion','quoteObservedAt','validUntil'}
+    if set(body)!=fields or body['schemaVersion']!='sbos-publication-window-1' or body['channel']!='daily':
+        raise ValueError('Invalid publication window')
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}',body['date']) or not re.fullmatch(r'[0-9a-f]{16}',body['editionVersion']):
+        raise ValueError('Invalid publication window identity')
+    def stamp(value):
+        instant=datetime.fromisoformat(value.replace('Z','+00:00'))
+        if instant.utcoffset() is None:raise ValueError('Publication window requires explicit timezone')
+        return instant.astimezone(timezone.utc)
+    observed=stamp(body['quoteObservedAt']);end=stamp(body['validUntil'])
+    if end-observed!=timedelta(minutes=15):raise ValueError('Publication window must retain the reviewed freshness limit')
+    manifest=json.loads((root/'data/editions/manifest.json').read_text())
+    target=[e for e in manifest['editions'] if e['channel']==body['channel'] and e['date']==body['date'] and e['version']==body['editionVersion']]
+    if len(target)!=1:raise ValueError('Pending publication edition is missing from validated history')
+    relative=f"data/editions/daily/{body['date']}/{body['editionVersion']}.json"
+    edition=json.loads(build.safe_file(root,relative).read_text())
+    canonical=build.canonical({k:v for k,v in edition.items() if k!='version'})
+    if edition.get('version')!=body['editionVersion'] or hashlib.sha256(canonical).hexdigest()[:16]!=body['editionVersion']:
+        raise ValueError('Pending publication edition identity differs')
+    quotes=[]
+    for row in edition['props']:
+        quotes.extend(q['capturedAt'] for q in row.get('bookPrices',{}).get('quotes',[]) if q.get('capturedAt'))
+        if row.get('priceCheck',{}).get('sourceAsOf'):quotes.append(row['priceCheck']['sourceAsOf'])
+        if row.get('capturedAt'):quotes.append(row['capturedAt'])
+    if not quotes or max(stamp(q) for q in quotes)!=observed:
+        raise ValueError('Pending publication quote clock disagrees with saved edition observations')
+    now=now or datetime.now(timezone.utc)
+    # Leave two minutes for artifact upload and edge activation after the build.
+    if not observed<=now or now+timedelta(minutes=2)>end:
+        raise ValueError('Pending price publication expired; retain healthy deployment and use the next approved capture')
+    return 'pending price edition remains within publication window'
 
 
 def validate_policy(policy):
@@ -141,6 +180,7 @@ def main():
     source_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
     build.build(root,publish=args.publish)
     receipt=assemble(root/'dist',root/'dist-cloudflare',root/'dist-github',policy,source_sha)
+    if args.publish:receipt['publicationWindow']=publication_window(root)
     (root/'hosting-build-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print(json.dumps({k:v for k,v in receipt.items() if k not in {'pages','oldRoutes'}},indent=2))
 

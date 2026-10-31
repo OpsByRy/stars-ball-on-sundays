@@ -355,7 +355,7 @@
       event.preventDefault();const tabs=[...document.querySelectorAll('[data-pick-tab]')],index=tabs.indexOf(tab),next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
       tabs[next].focus();pickState.type=tabs[next].dataset.pickTab;refreshPicks(true);
     });
-    window.addEventListener('sbos:bookchange',()=>{if(kind==='daily')refreshPicks();else if(kind==='research'){researchState.page=0;refreshResearch();}else if(kind==='parlays'&&activeBody){showSupporting(activeBody.date).catch(showError);}else if(activeBody){const target=$({parlays:'daily-content',sundays:'sunday-current','sunday-personal':'sunday-current',week:'week-content'}[kind]);if(target){target.innerHTML=kind==='sunday-personal'?personalSundayContent(activeBody):renderEdition(activeBody);board.refresh();}}});
+    window.addEventListener('sbos:bookchange',()=>{if(kind==='daily')refreshPicks();else if(kind==='research'){researchState.page=0;refreshResearch(true);}else if(kind==='parlays'&&activeBody){showSupporting(activeBody.date).catch(showError);}else if(activeBody){const target=$({parlays:'daily-content',sundays:'sunday-current','sunday-personal':'sunday-current',week:'week-content'}[kind]);if(target){target.innerHTML=kind==='sunday-personal'?personalSundayContent(activeBody):renderEdition(activeBody);board.refresh();}}});
     window.addEventListener('popstate',()=>{if(kind==='daily'&&activeBody){const day=new URL(location.href).searchParams.get('date');if(day&&day!==activeBody.date){$('slate-date').value=day;showDaily(day).catch(showError);}else{pickState=readPickState(location.search,day||activeBody?.date);refreshPicks();}}});
     let researchRefreshTimer=null;
     function researchList(){
@@ -382,7 +382,7 @@
     }
     document.addEventListener('input',event=>{const key={'research-search':'query','research-line':'line',...researchRangeInputs}[event.target.id];if(key){researchState[key]=event.target.value;researchState.page=0;clearTimeout(researchRefreshTimer);researchRefreshTimer=setTimeout(()=>refreshResearch(true),120);}});
     document.addEventListener('change',event=>{const key={'research-market':'market','research-status':'status','research-probability':'probability','research-side':'side','research-sort':'sort'}[event.target.id];if(key){researchState[key]=event.target.value;researchState.page=0;refreshResearch(true);}});
-    document.addEventListener('click',event=>{if(event.target.closest('[data-research-reset]')){researchState={rows:researchState.rows,...readResearchState()};syncResearchControls();refreshResearch(true);}const button=event.target.closest('[data-research-page]');if(button){researchState.page+=Number(button.dataset.researchPage);refreshResearch();$('research-result-status').focus({preventScroll:true});$('research-result-status').scrollIntoView({block:'start'});}});
+    document.addEventListener('click',event=>{if(event.target.closest('[data-research-reset]')){researchState={rows:researchState.rows,...readResearchState()};syncResearchControls();refreshResearch(true);}const button=event.target.closest('[data-research-page]');if(button){researchState.page+=Number(button.dataset.researchPage);refreshResearch(true);$('research-result-status').focus({preventScroll:true});$('research-result-status').scrollIntoView({block:'start'});}});
     function versionHistory(body){const versions=allVersions.filter(e=>e.channel===body.channel&&e.date===body.date);return versions.length>1?`<details class="model-policy"><summary>Saved versions of this edition</summary><ul>${versions.map(e=>`<li><a href="${escape(safeEditionURL(e,dataRoot).href)}">${escape(stamp(e.updatedAt))} · saved record ${escape(e.version.slice(0,8))}</a></li>`).join('')}</ul><p>Earlier snapshots remain unchanged. JSON records contain published picks, reviewed lines, saved estimates, and statistical outcomes.</p></details>`:'';}
     function renderEdition(body){
       activeBody=body;ryKeys=favoriteKeys(body);board.beginDate(body.date);
@@ -401,6 +401,7 @@
       $('slate-context').textContent=`${day<etDay()?'Archived':day>etDay()?'Upcoming':'Current'} board · saved prices and dated estimates.`;board.refresh();
     }
     async function showSupporting(day){
+      if(kind==='research'&&activeBody){clearTimeout(researchRefreshTimer);history.replaceState(null,'','?'+researchSearch(day,researchState,location.search));}
       const serial=++request,entry=entries.find(e=>e.channel==='daily'&&e.date===day);if(!entry)throw Error('No published date');
       if(kind==='research'){$('daily-content').setAttribute('aria-busy','true');$('slate-context').textContent='Loading saved research for '+dateLabel(day)+'…';}
       const body=await loadEdition(entry,kind==='parlays');if(serial!==request)return;

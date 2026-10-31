@@ -1,1 +1,131 @@
-{"editions":[{"count":3,"date":"2026-10-28","path":"2026-10-28/3c70a2f8fbd2cdbe.json","updatedAt":"2026-10-28T17:25:54.424674+00:00","version":"3c70a2f8fbd2cdbe"},{"count":3,"date":"2026-10-28","path":"2026-10-28/3dd9860595468903.json","updatedAt":"2026-10-28T18:22:47.971166+00:00","version":"3dd9860595468903"},{"count":24,"date":"2026-10-28","path":"2026-10-28/3850ceebbff228fa.json","updatedAt":"2026-10-28T19:17:52.556821+00:00","version":"3850ceebbff228fa"},{"count":24,"date":"2026-10-28","path":"2026-10-28/0a5e423b94881197.json","updatedAt":"2026-10-29T05:16:04.394Z","version":"0a5e423b94881197"},{"count":1,"date":"2026-10-29","path":"2026-10-29/a6f7756e743670f6.json","updatedAt":"2026-10-29T14:49:43.437793+00:00","version":"a6f7756e743670f6"},{"count":24,"date":"2026-10-28","path":"2026-10-28/7554382769403625.json","updatedAt":"2026-10-29T18:04:30.359Z","version":"7554382769403625"},{"count":4,"date":"2026-10-29","path":"2026-10-29/fd55901833743ffb.json","updatedAt":"2026-10-29T20:59:34.204095+00:00","version":"fd55901833743ffb"},{"count":4,"date":"2026-10-29","path":"2026-10-29/42058cb227e216db.json","updatedAt":"2026-10-29T21:01:17.684126+00:00","version":"42058cb227e216db"},{"count":6,"date":"2026-10-29","path":"2026-10-29/97258a265933af03.json","updatedAt":"2026-10-29T21:57:00.148385+00:00","version":"97258a265933af03"},{"count":6,"date":"2026-10-29","path":"2026-10-29/89cb320603971bc0.json","updatedAt":"2026-10-29T22:52:52.873956+00:00","version":"89cb320603971bc0"},{"count":12,"date":"2026-10-29","path":"2026-10-29/1045c0637c141103.json","updatedAt":"2026-10-29T23:53:28.438066+00:00","version":"1045c0637c141103"},{"count":12,"date":"2026-10-29","path":"2026-10-29/7f8bf892fabc9709.json","updatedAt":"2026-10-29T23:56:38.699082+00:00","version":"7f8bf892fabc9709"},{"count":12,"date":"2026-10-29","path":"2026-10-29/b46604974ed1577f.json","updatedAt":"2026-10-30T00:21:34.819249+00:00","version":"b46604974ed1577f"},{"count":12,"date":"2026-10-29","path":"2026-10-29/da18f34f7cebcd89.json","updatedAt":"2026-10-30T05:58:32.185Z","version":"da18f34f7cebcd89"},{"count":20,"date":"2026-10-30","path":"2026-10-30/e1ada600bbb721ec.json","updatedAt":"2026-10-30T15:10:06.003908+00:00","version":"e1ada600bbb721ec"},{"count":20,"date":"2026-10-30","path":"2026-10-30/bacdcb962a1648f2.json","updatedAt":"2026-10-30T15:10:09.727445+00:00","version":"bacdcb962a1648f2"},{"count":20,"date":"2026-10-30","path":"2026-10-30/929bf376b5cc341d.json","updatedAt":"2026-10-30T23:07:27.168935+00:00","version":"929bf376b5cc341d"}],"schemaVersion":"public-plus-money-manifest-1"}
+{
+  "editions": [
+    {
+      "count": 3,
+      "date": "2026-10-28",
+      "path": "2026-10-28/3c70a2f8fbd2cdbe.json",
+      "updatedAt": "2026-10-28T17:25:54.424674+00:00",
+      "version": "3c70a2f8fbd2cdbe"
+    },
+    {
+      "count": 3,
+      "date": "2026-10-28",
+      "path": "2026-10-28/3dd9860595468903.json",
+      "updatedAt": "2026-10-28T18:22:47.971166+00:00",
+      "version": "3dd9860595468903"
+    },
+    {
+      "count": 24,
+      "date": "2026-10-28",
+      "path": "2026-10-28/3850ceebbff228fa.json",
+      "updatedAt": "2026-10-28T19:17:52.556821+00:00",
+      "version": "3850ceebbff228fa"
+    },
+    {
+      "count": 24,
+      "date": "2026-10-28",
+      "path": "2026-10-28/0a5e423b94881197.json",
+      "updatedAt": "2026-10-29T05:16:04.394Z",
+      "version": "0a5e423b94881197"
+    },
+    {
+      "count": 1,
+      "date": "2026-10-29",
+      "path": "2026-10-29/a6f7756e743670f6.json",
+      "updatedAt": "2026-10-29T14:49:43.437793+00:00",
+      "version": "a6f7756e743670f6"
+    },
+    {
+      "count": 24,
+      "date": "2026-10-28",
+      "path": "2026-10-28/7554382769403625.json",
+      "updatedAt": "2026-10-29T18:04:30.359Z",
+      "version": "7554382769403625"
+    },
+    {
+      "count": 4,
+      "date": "2026-10-29",
+      "path": "2026-10-29/fd55901833743ffb.json",
+      "updatedAt": "2026-10-29T20:59:34.204095+00:00",
+      "version": "fd55901833743ffb"
+    },
+    {
+      "count": 4,
+      "date": "2026-10-29",
+      "path": "2026-10-29/42058cb227e216db.json",
+      "updatedAt": "2026-10-29T21:01:17.684126+00:00",
+      "version": "42058cb227e216db"
+    },
+    {
+      "count": 6,
+      "date": "2026-10-29",
+      "path": "2026-10-29/97258a265933af03.json",
+      "updatedAt": "2026-10-29T21:57:00.148385+00:00",
+      "version": "97258a265933af03"
+    },
+    {
+      "count": 6,
+      "date": "2026-10-29",
+      "path": "2026-10-29/89cb320603971bc0.json",
+      "updatedAt": "2026-10-29T22:52:52.873956+00:00",
+      "version": "89cb320603971bc0"
+    },
+    {
+      "count": 12,
+      "date": "2026-10-29",
+      "path": "2026-10-29/1045c0637c141103.json",
+      "updatedAt": "2026-10-29T23:53:28.438066+00:00",
+      "version": "1045c0637c141103"
+    },
+    {
+      "count": 12,
+      "date": "2026-10-29",
+      "path": "2026-10-29/7f8bf892fabc9709.json",
+      "updatedAt": "2026-10-29T23:56:38.699082+00:00",
+      "version": "7f8bf892fabc9709"
+    },
+    {
+      "count": 12,
+      "date": "2026-10-29",
+      "path": "2026-10-29/b46604974ed1577f.json",
+      "updatedAt": "2026-10-30T00:21:34.819249+00:00",
+      "version": "b46604974ed1577f"
+    },
+    {
+      "count": 12,
+      "date": "2026-10-29",
+      "path": "2026-10-29/da18f34f7cebcd89.json",
+      "updatedAt": "2026-10-30T05:58:32.185Z",
+      "version": "da18f34f7cebcd89"
+    },
+    {
+      "count": 20,
+      "date": "2026-10-30",
+      "path": "2026-10-30/e1ada600bbb721ec.json",
+      "updatedAt": "2026-10-30T15:10:06.003908+00:00",
+      "version": "e1ada600bbb721ec"
+    },
+    {
+      "count": 20,
+      "date": "2026-10-30",
+      "path": "2026-10-30/bacdcb962a1648f2.json",
+      "updatedAt": "2026-10-30T15:10:09.727445+00:00",
+      "version": "bacdcb962a1648f2"
+    },
+    {
+      "count": 20,
+      "date": "2026-10-30",
+      "path": "2026-10-30/929bf376b5cc341d.json",
+      "updatedAt": "2026-10-30T23:07:27.168935+00:00",
+      "version": "929bf376b5cc341d"
+    },
+    {
+      "count": 20,
+      "date": "2026-10-30",
+      "path": "2026-10-30/fc19ddd9d62b3c0f.json",
+      "updatedAt": "2026-10-31T01:52:44.781Z",
+      "version": "fc19ddd9d62b3c0f"
+    }
+  ],
+  "schemaVersion": "public-plus-money-manifest-1"
+}

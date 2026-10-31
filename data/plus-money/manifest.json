@@ -155,11 +155,18 @@
       "version": "2ade9018623be183"
     },
     {
+      "count": 17,
       "date": "2026-10-31",
-      "version": "2886e38bfdd20bf5",
-      "updatedAt": "2026-10-31T20:46:21.760995+00:00",
       "path": "2026-10-31/2886e38bfdd20bf5.json",
-      "count": 17
+      "updatedAt": "2026-10-31T20:46:21.760995+00:00",
+      "version": "2886e38bfdd20bf5"
+    },
+    {
+      "date": "2026-10-31",
+      "version": "2d476a982377beef",
+      "updatedAt": "2026-10-31T21:43:04.326695+00:00",
+      "path": "2026-10-31/2d476a982377beef.json",
+      "count": 18
     }
   ],
   "schemaVersion": "public-plus-money-manifest-1"

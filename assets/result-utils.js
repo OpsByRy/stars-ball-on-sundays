@@ -112,7 +112,7 @@
       return body.personalSlips.flatMap(s=>{
         if(!Array.isArray(s.legs)||s.legs.length<2||s.legs.some(l=>!rows.has(l.pickId)))return [];
         const legs=s.legs.map(l=>({...rows.get(l.pickId),americanOdds:l.americanOdds,book:s.book,bookPrices:undefined,priceCheck:undefined}));
-        return [{id:s.id,date:body.date,legs,americanOdds:s.americanOdds,book:s.book,priceKind:'posted',ryFavorite:s.ryFavorite===true,placedAt:s.placedAt,postedAt:body.personalPublication?.publishedAt??null,recordedAt:body.personalPublication?.recordedAt??null}];
+        return [{id:s.id,date:body.date,legs,groups:s.groups,americanOdds:s.americanOdds,book:s.book,priceKind:'posted',ryFavorite:s.ryFavorite===true,placedAt:s.placedAt,postedAt:body.personalPublication?.publishedAt??null,recordedAt:body.personalPublication?.recordedAt??null}];
       });
     }
     const legs=(body?.props||[]).filter(p=>p.group==='ry');

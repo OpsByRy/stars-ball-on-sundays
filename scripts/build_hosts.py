@@ -13,6 +13,7 @@ import shutil
 import subprocess
 from datetime import datetime,timezone,timedelta
 import build
+from pending_additions import verify_pending_additions
 
 OLD = 'https://opsbyry.github.io/stars-ball-on-sundays/'
 ORIGIN = 'https://starsballonsundays.com'
@@ -186,7 +187,9 @@ def main():
     source_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
     build.build(root,publish=args.publish)
     receipt=assemble(root/'dist',root/'dist-cloudflare',root/'dist-github',policy,source_sha)
-    if args.publish:receipt['publicationWindow']=publication_window(root)
+    if args.publish:
+        receipt['publicationWindow']=publication_window(root)
+        receipt['pendingAdditions']=verify_pending_additions(root)
     (root/'hosting-build-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print(json.dumps({k:v for k,v in receipt.items() if k not in {'pages','oldRoutes'}},indent=2))
 

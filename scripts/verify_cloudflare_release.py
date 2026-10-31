@@ -21,9 +21,10 @@ def normalize_public_html(body):
 
 def verify(receipt,expected,fetch):
     if receipt.get('schemaVersion')!='sbos-public-release-1' or receipt.get('sourceSHA')!=expected or receipt.get('canonicalOrigin')!=ORIGIN:raise ValueError('Cloudflare has not published the exact source commit')
-    # Check every page and the current edition index. Immutable asset/data bytes
-    # are already validated by the shared build and recorded in this receipt.
-    paths=[p for p in receipt['files'] if p.endswith('.html')]+['/data/editions/manifest.json']
+    # Check every page/index and the exact transport bytes of any large JSON
+    # compacted by the build. Original immutable source hashes stay separate.
+    paths=list(dict.fromkeys([p for p in receipt['files'] if p.endswith('.html')]
+        +['/data/editions/manifest.json']+list(receipt.get('compactedJSON',{}))))
     for path in paths:
         body=fetch(path)
         if path.endswith('.html'):body=normalize_public_html(body)

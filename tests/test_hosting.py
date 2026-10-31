@@ -54,6 +54,29 @@ class PublicHosting(unittest.TestCase):
             root=Path(d);base=self.fixture(root);(base/'assets/private.js.map').write_text('{}')
             with self.assertRaises(ValueError):build_hosts.assemble(base,root/'cf',root/'gh',self.policy(),'c'*40)
 
+    def test_oversized_json_compaction_preserves_literal_tokens_and_source_bytes(self):
+        raw=b' '*1024+b'{\n "number": 1.0000000000000000123, "exponent": 1e-007, "text": " spaced \\\" text ", "slash": "\\\\"\n}'
+        expected=b'{"number":1.0000000000000000123,"exponent":1e-007,"text":" spaced \\\" text ","slash":"\\\\"}'
+        self.assertEqual(build_hosts.pages_asset('data/editions/saved.json',raw,len(expected)),expected)
+        self.assertEqual(json.loads(raw),json.loads(expected))
+        self.assertEqual(build_hosts.pages_asset('data/editions/saved.json',raw,len(raw)),raw)
+        for name,body,limit in [('assets/large.bin',raw,len(expected)),('data/saved.json',b'{"x":"long"}',2)]:
+            with self.assertRaises(ValueError):build_hosts.pages_asset(name,body,limit)
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);base=self.fixture(root);source=base/'data/editions/saved.json';source.write_bytes(raw)
+            old_limit=build_hosts.PAGES_MAX_BYTES
+            # Assembly uses a small test limit; the validated production limit remains 25 MiB.
+            build_hosts.PAGES_MAX_BYTES=len(raw)-1
+            old_asset=build_hosts.pages_asset
+            build_hosts.pages_asset=lambda name,body:old_asset(name,body,len(raw)-1)
+            try:result=build_hosts.assemble(base,root/'cf',root/'gh',self.policy(),'d'*40)
+            finally:build_hosts.PAGES_MAX_BYTES=old_limit;build_hosts.pages_asset=old_asset
+            self.assertEqual(source.read_bytes(),raw)
+            for host in ['cf','gh']:self.assertEqual((root/host/'data/editions/saved.json').read_bytes(),expected)
+            record=result['compactedJSON']['/data/editions/saved.json']
+            self.assertEqual(record['sourceSHA256'],hashlib.sha256(raw).hexdigest())
+            self.assertEqual(record['deployedSHA256'],hashlib.sha256(expected).hexdigest())
+
     def test_result_receipt_pins_the_actual_commit_and_rejects_other_runs_or_repositories(self):
         receipt={'schemaVersion':'sbos-result-release-1','repository':'OpsByRy/stars-ball-on-sundays','branch':'main','baseSHA':'a'*40,'sourceSHA':'b'*40}
         self.assertEqual(resolve_result_release.validate_receipt(receipt,'a'*40),'b'*40)
@@ -80,6 +103,18 @@ class PublicHosting(unittest.TestCase):
             self.assertEqual(verify_cloudflare_release.normalize_public_html(unsafe),unsafe)
         altered=injected.replace(b'verified public content',b'changed content')
         self.assertNotEqual(verify_cloudflare_release.normalize_public_html(altered),original)
+
+    def test_cloudflare_gate_checks_compacted_history_transport_hashes(self):
+        bodies={'/index.html':b'public','/data/editions/manifest.json':b'{"editions":[]}',
+                '/data/editions/saved.json':b'{"number":1.0000000000000000123}'}
+        receipt={'schemaVersion':'sbos-public-release-1','sourceSHA':'e'*40,'canonicalOrigin':build_hosts.ORIGIN,
+                 'files':{p:hashlib.sha256(b).hexdigest() for p,b in bodies.items()},
+                 'editionManifestSHA256':hashlib.sha256(bodies['/data/editions/manifest.json']).hexdigest(),
+                 'compactedJSON':{'/data/editions/saved.json':{'sourceSHA256':'f'*64,
+                    'deployedSHA256':hashlib.sha256(bodies['/data/editions/saved.json']).hexdigest()}}}
+        self.assertEqual(verify_cloudflare_release.verify(receipt,'e'*40,bodies.__getitem__),3)
+        bodies['/data/editions/saved.json']=b'{"number":1.0}'
+        with self.assertRaises(ValueError):verify_cloudflare_release.verify(receipt,'e'*40,bodies.__getitem__)
 
 
 if __name__=='__main__':unittest.main()

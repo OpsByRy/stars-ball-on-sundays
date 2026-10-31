@@ -226,7 +226,7 @@
       if(!['public-plus-money-1','public-plus-money-2'].includes(saved.schemaVersion)||saved.version!==entry.version||saved.date!==entry.date||!Array.isArray(saved.tickets))throw Error('Publication mismatch');
       if(saved.modelTargets!==undefined&&(!Array.isArray(saved.modelTargets)||saved.modelTargets.some(t=>!isModelTarget(t))))throw Error('Invalid model-target publication');
       if(body?.date!==saved.date)opened.clear();body=applyWithdrawals(saved);options();
-      context.textContent=`Saved prices: ${stamp(body.quoteObservedAt)} · Board updated ${stamp(body.updatedAt)}.`;
+      context.textContent=`Odds refreshed at ${stamp(body.quoteObservedAt)} · Board updated ${stamp(body.updatedAt)}.`;
       $('parlay-price-note').textContent=body.priceNote;render();
       tracker.setRows(boardRows(body).flatMap(t=>t.legs));
     }

@@ -84,7 +84,7 @@
     for(const team of [...teams,...games.flatMap(game=>[game.awayTeam,game.homeTeam])]){
       identities.set(key(team.name),team);identities.set(key(team.abbreviation),team);
     }
-    for(const [alias,abbreviation] of Object.entries({NO:'NOP',NY:'NYK',GS:'GSW',SA:'SAS',UTAH:'UTA',WSH:'WAS'}))if(identities.has(key(abbreviation)))identities.set(key(alias),identities.get(key(abbreviation)));
+    for(const [alias,abbreviation] of Object.entries({NO:'NOP',NY:'NYK',GS:'GSW',SA:'SAS',UTAH:'UTA',WSH:'WAS','Los Angeles Clippers':'LAC','LA Clippers':'LAC','LA Lakers':'LAL'}))if(identities.has(key(abbreviation)))identities.set(key(alias),identities.get(key(abbreviation)));
     for(const game of games)for(const id of game.eventIds)events.set(JSON.stringify([game.date,id]),game);
     const team=value=>identities.get(key(value));
     function resolve(row,pair=[row.team,row.opponent]){
@@ -163,7 +163,7 @@
       const aliases={NO:'NOP',NY:'NYK',GS:'GSW',SA:'SAS',UTAH:'UTA',WSH:'WAS'};for(const [a,b] of Object.entries(aliases))if(teams.has(b))teams.set(a,teams.get(b));
       for(const img of root.querySelectorAll('img[data-player-headshot],img[data-team-logo]')){
         if(img.hasAttribute('src'))continue;
-        const p=img.dataset.playerHeadshot?players.get(img.dataset.playerHeadshot):null,t=img.dataset.teamLogo?teams.get(img.dataset.teamLogo):null,url=p?.headshot||t?.logo;
+        const p=img.dataset.playerHeadshot?players.get(img.dataset.playerHeadshot):null,t=img.dataset.teamLogo?teams.get(matchupDirectory.team(img.dataset.teamLogo)?.abbreviation)||teams.get(img.dataset.teamLogo):null,url=p?.headshot||t?.logo;
         if(!url||!/^https:\/\/a\.espncdn\.com\/i\/(?:headshots\/nba\/players\/full\/\d+|teamlogos\/nba\/500\/[a-z]+)\.png$/.test(url))continue;
         img.classList.add('artwork-loading');
         img.addEventListener('load',()=>{img.classList.remove('artwork-loading');img.previousElementSibling.hidden=true;},{once:true});

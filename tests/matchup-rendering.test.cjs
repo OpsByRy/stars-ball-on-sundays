@@ -27,6 +27,7 @@ test('an uncovered slate keeps actual teams and both logos without inventing hom
  }
  const aliasDirectory=research.createMatchupDirectory({teams:[{name:'Washington Wizards',abbreviation:'WAS'},{name:'New Orleans Pelicans',abbreviation:'NOP'}]});
  const html=research.compactMatchup({...row,team:'WSH',opponent:'NO'},aliasDirectory);assert.match(html,/WAS <span class="matchup-at">vs<\/span> NOP/);
+ const clippers=research.createMatchupDirectory({teams:[{name:'LA Clippers',abbreviation:'LAC'}]});assert.equal(clippers.team('Los Angeles Clippers').abbreviation,'LAC');
 });
 
 test('true missing teams stay explicit and all saved labels are escaped',()=>{
@@ -67,16 +68,20 @@ test('artwork still accepts only approved ESPN URLs and restores fallback labels
  await api.paintImages(target,new URL('https://example.com/'));assert.equal(img.src,teams[0].logo);assert.equal(img.hidden,false);callbacks.error();assert.equal(img.hidden,true);assert.equal(img.previousElementSibling.hidden,false);
  const bad=painter(async()=>({schemaVersion:'public-player-portraits-1',players:[],games:[],teams:[{...teams[0],logo:'https://unapproved.example/logo.png'}]}));
  delete img.src;await bad.paintImages(target,new URL('https://example.com/'));assert.equal(img.src,undefined);
+ const clippers={name:'LA Clippers',abbreviation:'LAC',logo:'https://a.espncdn.com/i/teamlogos/nba/500/lac.png'};
+ img.dataset.teamLogo='Los Angeles Clippers';await painter(async()=>({schemaVersion:'public-player-portraits-1',players:[],games:[],teams:[clippers]})).paintImages(target,new URL('https://example.com/'));assert.equal(img.src,clippers.logo);
 });
 
 test('all immutable editions retain matchup labels and logo hooks, including uncovered dates',()=>{
- const read=name=>JSON.parse(fs.readFileSync(path.join(root,name))),directory=research.createMatchupDirectory({...read('data/matchups.json'),teams});
+ const read=name=>JSON.parse(fs.readFileSync(path.join(root,name))),bios=read('data/player-profiles/index.json').players.map(p=>read('data/player-profiles/'+p.path).bio).filter(b=>b?.teamLogo);
+ const artworkTeams=bios.map(b=>({name:b.team,abbreviation:b.teamAbbreviation,logo:b.teamLogo})),directory=research.createMatchupDirectory({...read('data/matchups.json'),teams:artworkTeams});
  let covered=0,uncovered=0;
  for(const entry of read('data/editions/manifest.json').editions){
   const edition=read('data/editions/'+entry.path),unique=new Map(edition.props.map(row=>[JSON.stringify([row.date,row.canonicalEventId||row.eventId,row.team,row.opponent]),row]));
   for(const row of unique.values()){
    if(!row.team||!row.opponent)continue;
    const html=research.compactMatchup(row,directory);
+   for(const name of [row.team,row.opponent])assert.ok(directory.team(name),'Approved identity for '+name);
    assert.doesNotMatch(html,/Matchup unavailable|Matchup loading/);
    assert.equal((html.match(/data-team-logo=/g)||[]).length,2);
    if(directory.resolve(row)){covered++;assert.match(html,/>@<\/span>/);}else{uncovered++;assert.match(html,/>vs<\/span>/);}

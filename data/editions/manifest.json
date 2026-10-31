@@ -449,6 +449,15 @@
       "researchCount": 11497,
       "updatedAt": "2026-10-31T01:52:44.781Z",
       "version": "ed467c12ea4db099"
+    },
+    {
+      "channel": "daily",
+      "count": 9,
+      "date": "2026-10-30",
+      "path": "daily/2026-10-30/ef76ec471f62b283.json",
+      "researchCount": 11497,
+      "updatedAt": "2026-10-31T08:30:11.307Z",
+      "version": "ef76ec471f62b283"
     }
   ],
   "schemaVersion": "public-1"

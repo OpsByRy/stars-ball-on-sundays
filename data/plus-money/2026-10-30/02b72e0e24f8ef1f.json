@@ -1,0 +1,3333 @@
+{
+  "date": "2026-10-30",
+  "firstPublishedAt": "2026-10-30T15:10:06.003908+00:00",
+  "modelTargets": [],
+  "priceNote": "Cross-game prices are saved-leg estimates, not offered tickets. SGP targets use our provisional joint model, with fair model odds and a target book price. Confirm the current full-ticket price; unquoted SGP targets have no tracked payout or P/L.",
+  "quoteObservedAt": "2026-10-30T15:00:15.396807+00:00",
+  "schemaVersion": "public-plus-money-2",
+  "tickets": [
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "75fa26c27c144866",
+      "indicativeAmericanOdds": 134,
+      "legs": [
+        {
+          "americanOdds": -436,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -436,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600021",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.06566379436249453,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.9343362056375055
+          },
+          "eventId": "nba:0022600021",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "67569d37ecd207842b7a39efb544d40db357555c7c10b4b6c37f32844a5f1b9b",
+          "line": 3,
+          "market": "REB",
+          "operator": ">=",
+          "opponent": "Houston Rockets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Zaccharie Risacher",
+          "playerId": "nba:1642258",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T00:00Z",
+          "team": "Dallas Mavericks",
+          "result": {
+            "actual": 6,
+            "minutesPlayed": 28,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909283"
+          }
+        },
+        {
+          "americanOdds": -111,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -118,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -111,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600016",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.199904371924566,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.800095628075434
+          },
+          "eventId": "nba:0022600016",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "69fe81e8065ff7457e2e22a99b70e911ae9b06c0296f947a9759fa18d999aa94",
+          "line": 21.5,
+          "market": "PA",
+          "operator": "<",
+          "opponent": "Chicago Bulls",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Derrick White",
+          "playerId": "nba:1628401",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Boston Celtics",
+          "result": {
+            "actual": 13,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909278"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "8e07121378e682b0",
+      "indicativeAmericanOdds": 509,
+      "legs": [
+        {
+          "americanOdds": -436,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -436,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600021",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.06566379436249453,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.9343362056375055
+          },
+          "eventId": "nba:0022600021",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "67569d37ecd207842b7a39efb544d40db357555c7c10b4b6c37f32844a5f1b9b",
+          "line": 3,
+          "market": "REB",
+          "operator": ">=",
+          "opponent": "Houston Rockets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Zaccharie Risacher",
+          "playerId": "nba:1642258",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T00:00Z",
+          "team": "Dallas Mavericks",
+          "result": {
+            "actual": 6,
+            "minutesPlayed": 28,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909283"
+          }
+        },
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.10919873214955184,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8908012678504482
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "1cd75fc8f9b71abdcd995904b267a01aef2bd2783e3f6e4b54da99f97ff3361c",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Duncan Robinson",
+          "playerId": "nba:1629130",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 17,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        },
+        {
+          "americanOdds": -111,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -118,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -111,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600016",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.199904371924566,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.800095628075434
+          },
+          "eventId": "nba:0022600016",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "69fe81e8065ff7457e2e22a99b70e911ae9b06c0296f947a9759fa18d999aa94",
+          "line": 21.5,
+          "market": "PA",
+          "operator": "<",
+          "opponent": "Chicago Bulls",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Derrick White",
+          "playerId": "nba:1628401",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Boston Celtics",
+          "result": {
+            "actual": 13,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909278"
+          }
+        },
+        {
+          "americanOdds": -102,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -108,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -102,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600019",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.2502685188500232,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7497314811499768
+          },
+          "eventId": "nba:0022600019",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "6152e4ee048e2d141460a8670d7668653d11ec32d6394a763415ae602e3dc03e",
+          "line": 21.5,
+          "market": "PTS",
+          "operator": "<",
+          "opponent": "Orlando Magic",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Scottie Barnes",
+          "playerId": "nba:1630567",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Toronto Raptors",
+          "result": {
+            "actual": 41,
+            "minutesPlayed": 39,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909281"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "longshots",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "0e65666210b9fe5c",
+      "indicativeAmericanOdds": 1032,
+      "legs": [
+        {
+          "americanOdds": -111,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -118,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -111,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600016",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.199904371924566,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.800095628075434
+          },
+          "eventId": "nba:0022600016",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "69fe81e8065ff7457e2e22a99b70e911ae9b06c0296f947a9759fa18d999aa94",
+          "line": 21.5,
+          "market": "PA",
+          "operator": "<",
+          "opponent": "Chicago Bulls",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Derrick White",
+          "playerId": "nba:1628401",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Boston Celtics",
+          "result": {
+            "actual": 13,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909278"
+          }
+        },
+        {
+          "americanOdds": -117,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -122,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -117,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600019",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.2134089139073737,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7865910860926263
+          },
+          "eventId": "nba:0022600019",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "8b29216f53af4947be28c5d40e185ded0289321f145c171bc425dc1fcf1c903d",
+          "line": 29.5,
+          "market": "PR",
+          "operator": "<",
+          "opponent": "Orlando Magic",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Scottie Barnes",
+          "playerId": "nba:1630567",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Toronto Raptors",
+          "result": {
+            "actual": 46,
+            "minutesPlayed": 39,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909281"
+          }
+        },
+        {
+          "americanOdds": -132,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              },
+              {
+                "americanOdds": -134,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.23141326662346418,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7685867333765358
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "3a58e2147e49f02260cf80f68312a005a16f49a0328db0232324320105559c25",
+          "line": 7.5,
+          "market": "RA",
+          "operator": ">",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "VJ Edgecombe",
+          "playerId": "nba:1642845",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 36,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        },
+        {
+          "americanOdds": -121,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -121,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.2397482180875683,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7602517819124317
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "6f9f164042c0cde0f0e3fa5f16ef4c2f2032c112ddfebd6c0a078431edc4aa35",
+          "line": 10.5,
+          "market": "PTS",
+          "operator": "<",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Ausar Thompson",
+          "playerId": "nba:1641709",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 11,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "longshots",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "b2ade11c609e3667",
+      "indicativeAmericanOdds": 128,
+      "legs": [
+        {
+          "americanOdds": -436,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -436,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600021",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.06566379436249453,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.9343362056375055
+          },
+          "eventId": "nba:0022600021",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "67569d37ecd207842b7a39efb544d40db357555c7c10b4b6c37f32844a5f1b9b",
+          "line": 3,
+          "market": "REB",
+          "operator": ">=",
+          "opponent": "Houston Rockets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Zaccharie Risacher",
+          "playerId": "nba:1642258",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T00:00Z",
+          "team": "Dallas Mavericks",
+          "result": {
+            "actual": 6,
+            "minutesPlayed": 28,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909283"
+          }
+        },
+        {
+          "americanOdds": -117,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -122,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -117,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600019",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.2134089139073737,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7865910860926263
+          },
+          "eventId": "nba:0022600019",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "8b29216f53af4947be28c5d40e185ded0289321f145c171bc425dc1fcf1c903d",
+          "line": 29.5,
+          "market": "PR",
+          "operator": "<",
+          "opponent": "Orlando Magic",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Scottie Barnes",
+          "playerId": "nba:1630567",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Toronto Raptors",
+          "result": {
+            "actual": 46,
+            "minutesPlayed": 39,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909281"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "e85e27d75b73e539",
+      "indicativeAmericanOdds": 104,
+      "legs": [
+        {
+          "americanOdds": -436,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -436,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600021",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.06566379436249453,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.9343362056375055
+          },
+          "eventId": "nba:0022600021",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "67569d37ecd207842b7a39efb544d40db357555c7c10b4b6c37f32844a5f1b9b",
+          "line": 3,
+          "market": "REB",
+          "operator": ">=",
+          "opponent": "Houston Rockets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Zaccharie Risacher",
+          "playerId": "nba:1642258",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T00:00Z",
+          "team": "Dallas Mavericks",
+          "result": {
+            "actual": 6,
+            "minutesPlayed": 28,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909283"
+          }
+        },
+        {
+          "americanOdds": -386,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -386,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 18,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.1064268281659586,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8935731718340414
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "56fadb4dc8b846e31f60682a9bcea81d98b82353c83bf734d8242bbe761d3773",
+          "line": 18,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Tyrese Maxey",
+          "playerId": "nba:1630178",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 27,
+            "minutesPlayed": 38,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        },
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.10919873214955184,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8908012678504482
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "1cd75fc8f9b71abdcd995904b267a01aef2bd2783e3f6e4b54da99f97ff3361c",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Duncan Robinson",
+          "playerId": "nba:1629130",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 17,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "21e0b59bd5920beb",
+      "indicativeAmericanOdds": 253,
+      "legs": [
+        {
+          "americanOdds": -111,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -118,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -111,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600016",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.199904371924566,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.800095628075434
+          },
+          "eventId": "nba:0022600016",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "69fe81e8065ff7457e2e22a99b70e911ae9b06c0296f947a9759fa18d999aa94",
+          "line": 21.5,
+          "market": "PA",
+          "operator": "<",
+          "opponent": "Chicago Bulls",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Derrick White",
+          "playerId": "nba:1628401",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Boston Celtics",
+          "result": {
+            "actual": 13,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909278"
+          }
+        },
+        {
+          "americanOdds": -117,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -122,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -117,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600019",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.2134089139073737,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7865910860926263
+          },
+          "eventId": "nba:0022600019",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "8b29216f53af4947be28c5d40e185ded0289321f145c171bc425dc1fcf1c903d",
+          "line": 29.5,
+          "market": "PR",
+          "operator": "<",
+          "opponent": "Orlando Magic",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Scottie Barnes",
+          "playerId": "nba:1630567",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Toronto Raptors",
+          "result": {
+            "actual": 46,
+            "minutesPlayed": 39,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909281"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "660ce33e4bf4c930",
+      "indicativeAmericanOdds": 139,
+      "legs": [
+        {
+          "americanOdds": -386,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -386,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 18,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.1064268281659586,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8935731718340414
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "56fadb4dc8b846e31f60682a9bcea81d98b82353c83bf734d8242bbe761d3773",
+          "line": 18,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Tyrese Maxey",
+          "playerId": "nba:1630178",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 27,
+            "minutesPlayed": 38,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        },
+        {
+          "americanOdds": -111,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -118,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -111,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600016",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.199904371924566,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.800095628075434
+          },
+          "eventId": "nba:0022600016",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "69fe81e8065ff7457e2e22a99b70e911ae9b06c0296f947a9759fa18d999aa94",
+          "line": 21.5,
+          "market": "PA",
+          "operator": "<",
+          "opponent": "Chicago Bulls",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Derrick White",
+          "playerId": "nba:1628401",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Boston Celtics",
+          "result": {
+            "actual": 13,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909278"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "027375c00ff8a2c1",
+      "indicativeAmericanOdds": 134,
+      "legs": [
+        {
+          "americanOdds": -386,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -386,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 18,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.1064268281659586,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8935731718340414
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "56fadb4dc8b846e31f60682a9bcea81d98b82353c83bf734d8242bbe761d3773",
+          "line": 18,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Tyrese Maxey",
+          "playerId": "nba:1630178",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 27,
+            "minutesPlayed": 38,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        },
+        {
+          "americanOdds": -117,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -122,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -117,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600019",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.2134089139073737,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7865910860926263
+          },
+          "eventId": "nba:0022600019",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "8b29216f53af4947be28c5d40e185ded0289321f145c171bc425dc1fcf1c903d",
+          "line": 29.5,
+          "market": "PR",
+          "operator": "<",
+          "opponent": "Orlando Magic",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Scottie Barnes",
+          "playerId": "nba:1630567",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Toronto Raptors",
+          "result": {
+            "actual": 46,
+            "minutesPlayed": 39,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909281"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "041090c03bfe1104",
+      "indicativeAmericanOdds": 506,
+      "legs": [
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 6,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600023",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.12895357590966122,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8710464240903388
+          },
+          "eventId": "nba:0022600023",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "e6aa4e06ffe5762e0d5d4f175acf3df176715c18d0000b8c864abee5a15a74fe",
+          "line": 6,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Golden State Warriors",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Sandro Mamukelashvili",
+          "playerId": "nba:1630572",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T02:00Z",
+          "team": "Los Angeles Lakers",
+          "result": {
+            "actual": 4,
+            "minutesPlayed": 20,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909285"
+          }
+        },
+        {
+          "americanOdds": -325,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -325,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 18,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.13187244525053463,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8681275547494653
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "9207b65d187f54fe46b7eb5aac9506f1a9391b193934c9abcad90e3333ba0458",
+          "line": 18,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Joel Embiid",
+          "playerId": "nba:203954",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 33,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        },
+        {
+          "americanOdds": -111,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -118,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -111,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 21.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600016",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.199904371924566,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.800095628075434
+          },
+          "eventId": "nba:0022600016",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "69fe81e8065ff7457e2e22a99b70e911ae9b06c0296f947a9759fa18d999aa94",
+          "line": 21.5,
+          "market": "PA",
+          "operator": "<",
+          "opponent": "Chicago Bulls",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Derrick White",
+          "playerId": "nba:1628401",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Boston Celtics",
+          "result": {
+            "actual": 13,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909278"
+          }
+        },
+        {
+          "americanOdds": -117,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -122,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -117,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 29.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600019",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.2134089139073737,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7865910860926263
+          },
+          "eventId": "nba:0022600019",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "8b29216f53af4947be28c5d40e185ded0289321f145c171bc425dc1fcf1c903d",
+          "line": 29.5,
+          "market": "PR",
+          "operator": "<",
+          "opponent": "Orlando Magic",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Scottie Barnes",
+          "playerId": "nba:1630567",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Toronto Raptors",
+          "result": {
+            "actual": 46,
+            "minutesPlayed": 39,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909281"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "longshots",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "d0d22f73975d4b3c",
+      "indicativeAmericanOdds": 105,
+      "legs": [
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.10919873214955184,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8908012678504482
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "1cd75fc8f9b71abdcd995904b267a01aef2bd2783e3f6e4b54da99f97ff3361c",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Duncan Robinson",
+          "playerId": "nba:1629130",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 17,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        },
+        {
+          "americanOdds": -180,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -180,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 20,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600015",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.22436299889986971,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7756370011001303
+          },
+          "eventId": "nba:0022600015",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "e305a1e96bd68b976eac58b8fa31012830904dc58e9af2a77a1eacc347b84683",
+          "line": 20,
+          "market": "PRA",
+          "operator": ">=",
+          "opponent": "Charlotte Hornets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Kyshawn George",
+          "playerId": "nba:1642273",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:00Z",
+          "team": "Washington Wizards",
+          "result": {
+            "actual": 18,
+            "minutesPlayed": 32,
+            "checkedAt": "2026-10-31T01:52:44.781Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909277"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "80e0ad90411b6546",
+      "indicativeAmericanOdds": 131,
+      "legs": [
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.10919873214955184,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8908012678504482
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "1cd75fc8f9b71abdcd995904b267a01aef2bd2783e3f6e4b54da99f97ff3361c",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Duncan Robinson",
+          "playerId": "nba:1629130",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 17,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        },
+        {
+          "americanOdds": -132,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              },
+              {
+                "americanOdds": -134,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.23141326662346418,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7685867333765358
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "3a58e2147e49f02260cf80f68312a005a16f49a0328db0232324320105559c25",
+          "line": 7.5,
+          "market": "RA",
+          "operator": ">",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "VJ Edgecombe",
+          "playerId": "nba:1642845",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 36,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "c3afc2f5a7e8352d",
+      "indicativeAmericanOdds": 113,
+      "legs": [
+        {
+          "americanOdds": -472,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -472,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600024",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.11971114152255788,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8802888584774421
+          },
+          "eventId": "nba:0022600024",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "8656706f9c67a63611adea1117c810563fcbfe723238e10b65910efcdc95edd8",
+          "line": 7,
+          "market": "AST",
+          "operator": ">=",
+          "opponent": "Phoenix Suns",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Nikola Jokic",
+          "playerId": "nba:203999",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T02:00Z",
+          "team": "Denver Nuggets",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 37,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909286"
+          }
+        },
+        {
+          "americanOdds": -132,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              },
+              {
+                "americanOdds": -134,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.23141326662346418,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7685867333765358
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "3a58e2147e49f02260cf80f68312a005a16f49a0328db0232324320105559c25",
+          "line": 7.5,
+          "market": "RA",
+          "operator": ">",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "VJ Edgecombe",
+          "playerId": "nba:1642845",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 36,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "c86b1791f99e46fd",
+      "indicativeAmericanOdds": 105,
+      "legs": [
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 6,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600023",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.12895357590966122,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8710464240903388
+          },
+          "eventId": "nba:0022600023",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "e6aa4e06ffe5762e0d5d4f175acf3df176715c18d0000b8c864abee5a15a74fe",
+          "line": 6,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Golden State Warriors",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Sandro Mamukelashvili",
+          "playerId": "nba:1630572",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T02:00Z",
+          "team": "Los Angeles Lakers",
+          "result": {
+            "actual": 4,
+            "minutesPlayed": 20,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909285"
+          }
+        },
+        {
+          "americanOdds": -180,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -180,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 20,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600015",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.22436299889986971,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7756370011001303
+          },
+          "eventId": "nba:0022600015",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "e305a1e96bd68b976eac58b8fa31012830904dc58e9af2a77a1eacc347b84683",
+          "line": 20,
+          "market": "PRA",
+          "operator": ">=",
+          "opponent": "Charlotte Hornets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Kyshawn George",
+          "playerId": "nba:1642273",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:00Z",
+          "team": "Washington Wizards",
+          "result": {
+            "actual": 18,
+            "minutesPlayed": 32,
+            "checkedAt": "2026-10-31T01:52:44.781Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909277"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "760edd11c66dfce3",
+      "indicativeAmericanOdds": 113,
+      "legs": [
+        {
+          "americanOdds": -473,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -473,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 8,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600020",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.12381813251378469,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8761818674862153
+          },
+          "eventId": "nba:0022600020",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "11283395896e3e7ffed2b03b3ed3ce2ce4a13d786fb9451a44a2969cdc45dee1",
+          "line": 8,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Indiana Pacers",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Davion Mitchell",
+          "playerId": "nba:1630558",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T00:00Z",
+          "team": "Miami Heat",
+          "result": {
+            "actual": 15,
+            "minutesPlayed": 35,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909282"
+          }
+        },
+        {
+          "americanOdds": -132,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              },
+              {
+                "americanOdds": -134,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.23141326662346418,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7685867333765358
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "3a58e2147e49f02260cf80f68312a005a16f49a0328db0232324320105559c25",
+          "line": 7.5,
+          "market": "RA",
+          "operator": ">",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "VJ Edgecombe",
+          "playerId": "nba:1642845",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 36,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "1b29b0c30558c448",
+      "indicativeAmericanOdds": 103,
+      "legs": [
+        {
+          "americanOdds": -325,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -325,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 18,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.13187244525053463,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8681275547494653
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "9207b65d187f54fe46b7eb5aac9506f1a9391b193934c9abcad90e3333ba0458",
+          "line": 18,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Joel Embiid",
+          "playerId": "nba:203954",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 33,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        },
+        {
+          "americanOdds": -180,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -180,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 20,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600015",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.22436299889986971,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7756370011001303
+          },
+          "eventId": "nba:0022600015",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "e305a1e96bd68b976eac58b8fa31012830904dc58e9af2a77a1eacc347b84683",
+          "line": 20,
+          "market": "PRA",
+          "operator": ">=",
+          "opponent": "Charlotte Hornets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Kyshawn George",
+          "playerId": "nba:1642273",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:00Z",
+          "team": "Washington Wizards",
+          "result": {
+            "actual": 18,
+            "minutesPlayed": 32,
+            "checkedAt": "2026-10-31T01:52:44.781Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909277"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "3c471887b8621c7d",
+      "indicativeAmericanOdds": -102,
+      "legs": [
+        {
+          "americanOdds": -472,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -472,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600024",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.11971114152255788,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8802888584774421
+          },
+          "eventId": "nba:0022600024",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "8656706f9c67a63611adea1117c810563fcbfe723238e10b65910efcdc95edd8",
+          "line": 7,
+          "market": "AST",
+          "operator": ">=",
+          "opponent": "Phoenix Suns",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Nikola Jokic",
+          "playerId": "nba:203999",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T02:00Z",
+          "team": "Denver Nuggets",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 37,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909286"
+          }
+        },
+        {
+          "americanOdds": -158,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -158,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -162,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600015",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.23902439024390243,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7609756097560976
+          },
+          "eventId": "nba:0022600015",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "562f68c9dc1191b4c2a5258fca1c3c019550178b91a9414d1584d0855be443a7",
+          "line": 3.5,
+          "market": "AST",
+          "operator": "<",
+          "opponent": "Washington Wizards",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Brandon Miller",
+          "playerId": "nba:1641706",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:00Z",
+          "team": "Charlotte Hornets",
+          "result": {
+            "actual": 2,
+            "minutesPlayed": 37,
+            "checkedAt": "2026-10-31T01:52:44.781Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909277"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "15a8f1213eed5f5b",
+      "indicativeAmericanOdds": 419,
+      "legs": [
+        {
+          "americanOdds": -436,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -436,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600021",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.06566379436249453,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.9343362056375055
+          },
+          "eventId": "nba:0022600021",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "67569d37ecd207842b7a39efb544d40db357555c7c10b4b6c37f32844a5f1b9b",
+          "line": 3,
+          "market": "REB",
+          "operator": ">=",
+          "opponent": "Houston Rockets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Zaccharie Risacher",
+          "playerId": "nba:1642258",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T00:00Z",
+          "team": "Dallas Mavericks",
+          "result": {
+            "actual": 6,
+            "minutesPlayed": 28,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909283"
+          }
+        },
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 6,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600023",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.12895357590966122,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8710464240903388
+          },
+          "eventId": "nba:0022600023",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "e6aa4e06ffe5762e0d5d4f175acf3df176715c18d0000b8c864abee5a15a74fe",
+          "line": 6,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Golden State Warriors",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Sandro Mamukelashvili",
+          "playerId": "nba:1630572",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T02:00Z",
+          "team": "Los Angeles Lakers",
+          "result": {
+            "actual": 4,
+            "minutesPlayed": 20,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909285"
+          }
+        },
+        {
+          "americanOdds": -132,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              },
+              {
+                "americanOdds": -134,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.23141326662346418,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7685867333765358
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "3a58e2147e49f02260cf80f68312a005a16f49a0328db0232324320105559c25",
+          "line": 7.5,
+          "market": "RA",
+          "operator": ">",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "VJ Edgecombe",
+          "playerId": "nba:1642845",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 36,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        },
+        {
+          "americanOdds": -121,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -121,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.2397482180875683,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7602517819124317
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "6f9f164042c0cde0f0e3fa5f16ef4c2f2032c112ddfebd6c0a078431edc4aa35",
+          "line": 10.5,
+          "market": "PTS",
+          "operator": "<",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Ausar Thompson",
+          "playerId": "nba:1641709",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 11,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "longshots",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "2d0d2f912af6a418",
+      "indicativeAmericanOdds": 411,
+      "legs": [
+        {
+          "americanOdds": -436,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -436,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600021",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.06566379436249453,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.9343362056375055
+          },
+          "eventId": "nba:0022600021",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "67569d37ecd207842b7a39efb544d40db357555c7c10b4b6c37f32844a5f1b9b",
+          "line": 3,
+          "market": "REB",
+          "operator": ">=",
+          "opponent": "Houston Rockets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Zaccharie Risacher",
+          "playerId": "nba:1642258",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T00:00Z",
+          "team": "Dallas Mavericks",
+          "result": {
+            "actual": 6,
+            "minutesPlayed": 28,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909283"
+          }
+        },
+        {
+          "americanOdds": -359,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -359,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 18,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600024",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.13968902673042416,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8603109732695758
+          },
+          "eventId": "nba:0022600024",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "6358c4c82cc9690900bb6feab0a09174869cf1f1e7dc2d3ff3dc15709ef812ef",
+          "line": 18,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Denver Nuggets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Devin Booker",
+          "playerId": "nba:1626164",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T02:00Z",
+          "team": "Phoenix Suns",
+          "result": {
+            "actual": 20,
+            "minutesPlayed": 39,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909286"
+          }
+        },
+        {
+          "americanOdds": -121,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -121,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.2397482180875683,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7602517819124317
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "6f9f164042c0cde0f0e3fa5f16ef4c2f2032c112ddfebd6c0a078431edc4aa35",
+          "line": 10.5,
+          "market": "PTS",
+          "operator": "<",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Ausar Thompson",
+          "playerId": "nba:1641709",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 11,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        },
+        {
+          "americanOdds": -128,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -128,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.24992343334749412,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7500765666525059
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "a25d4d5c526cf38aaad2d6d30dfc368af1d6f27494d509e397cee81e8401a807",
+          "line": 10.5,
+          "market": "PTS",
+          "operator": "<",
+          "opponent": "Philadelphia 76ers",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Mikal Bridges",
+          "playerId": "nba:1628969",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "New York Knicks",
+          "result": {
+            "actual": 12,
+            "minutesPlayed": 30,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "longshots",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "c53e3faf8b888a14",
+      "indicativeAmericanOdds": 403,
+      "legs": [
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.10919873214955184,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8908012678504482
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "1cd75fc8f9b71abdcd995904b267a01aef2bd2783e3f6e4b54da99f97ff3361c",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Duncan Robinson",
+          "playerId": "nba:1629130",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 17,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        },
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 6,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600023",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.12895357590966122,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8710464240903388
+          },
+          "eventId": "nba:0022600023",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "e6aa4e06ffe5762e0d5d4f175acf3df176715c18d0000b8c864abee5a15a74fe",
+          "line": 6,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Golden State Warriors",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Sandro Mamukelashvili",
+          "playerId": "nba:1630572",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T02:00Z",
+          "team": "Los Angeles Lakers",
+          "result": {
+            "actual": 4,
+            "minutesPlayed": 20,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909285"
+          }
+        },
+        {
+          "americanOdds": -158,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -158,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3.5,
+                "operator": "<"
+              },
+              {
+                "americanOdds": -162,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 3.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600015",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.23902439024390243,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7609756097560976
+          },
+          "eventId": "nba:0022600015",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "562f68c9dc1191b4c2a5258fca1c3c019550178b91a9414d1584d0855be443a7",
+          "line": 3.5,
+          "market": "AST",
+          "operator": "<",
+          "opponent": "Washington Wizards",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Brandon Miller",
+          "playerId": "nba:1641706",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:00Z",
+          "team": "Charlotte Hornets",
+          "result": {
+            "actual": 2,
+            "minutesPlayed": 37,
+            "checkedAt": "2026-10-31T01:52:44.781Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909277"
+          }
+        },
+        {
+          "americanOdds": -128,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -128,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10.5,
+                "operator": "<"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.24992343334749412,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7500765666525059
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "a25d4d5c526cf38aaad2d6d30dfc368af1d6f27494d509e397cee81e8401a807",
+          "line": 10.5,
+          "market": "PTS",
+          "operator": "<",
+          "opponent": "Philadelphia 76ers",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Mikal Bridges",
+          "playerId": "nba:1628969",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "New York Knicks",
+          "result": {
+            "actual": 12,
+            "minutesPlayed": 30,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "longshots",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "68a513882f204d12",
+      "indicativeAmericanOdds": 408,
+      "legs": [
+        {
+          "americanOdds": -317,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -317,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600017",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:49:24.311393+00:00",
+            "lossProbability": 0.10919873214955184,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8908012678504482
+          },
+          "eventId": "nba:0022600017",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "1cd75fc8f9b71abdcd995904b267a01aef2bd2783e3f6e4b54da99f97ff3361c",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Brooklyn Nets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Duncan Robinson",
+          "playerId": "nba:1629130",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Detroit Pistons",
+          "result": {
+            "actual": 17,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909279"
+          }
+        },
+        {
+          "americanOdds": -242,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -242,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 6,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600023",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "value_safe",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.1788895859473024,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.8211104140526976
+          },
+          "eventId": "nba:0022600023",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "21ed6eaa1193ea6ef1d8cd8738708990cdc883ff7a24f7242ca573159e603388",
+          "line": 6,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Golden State Warriors",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Quentin Grimes",
+          "playerId": "nba:1629656",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T02:00Z",
+          "team": "Los Angeles Lakers",
+          "result": {
+            "actual": 3,
+            "minutesPlayed": 26,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909285"
+          }
+        },
+        {
+          "americanOdds": -180,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -180,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 20,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600015",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.22436299889986971,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7756370011001303
+          },
+          "eventId": "nba:0022600015",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "e305a1e96bd68b976eac58b8fa31012830904dc58e9af2a77a1eacc347b84683",
+          "line": 20,
+          "market": "PRA",
+          "operator": ">=",
+          "opponent": "Charlotte Hornets",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Kyshawn George",
+          "playerId": "nba:1642273",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:00Z",
+          "team": "Washington Wizards",
+          "result": {
+            "actual": 18,
+            "minutesPlayed": 32,
+            "checkedAt": "2026-10-31T01:52:44.781Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "loss",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909277"
+          }
+        },
+        {
+          "americanOdds": -132,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-30T15:00:15.396807+00:00",
+            "quotes": [
+              {
+                "americanOdds": -132,
+                "book": "fanduel",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              },
+              {
+                "americanOdds": -134,
+                "book": "draftkings",
+                "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+                "line": 7.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600018",
+          "capturedAt": "2026-10-30T15:00:15.396807+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-30",
+          "estimate": {
+            "asOf": "2026-10-30T14:36:18.887532+00:00",
+            "lossProbability": 0.23141326662346418,
+            "pushProbability": 0,
+            "status": "provisional",
+            "winProbability": 0.7685867333765358
+          },
+          "eventId": "nba:0022600018",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "3a58e2147e49f02260cf80f68312a005a16f49a0328db0232324320105559c25",
+          "line": 7.5,
+          "market": "RA",
+          "operator": ">",
+          "opponent": "New York Knicks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "VJ Edgecombe",
+          "playerId": "nba:1642845",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-30T23:30Z",
+          "team": "Philadelphia 76ers",
+          "result": {
+            "actual": 10,
+            "minutesPlayed": 36,
+            "checkedAt": "2026-10-31T08:30:11.307Z",
+            "eventStatus": "final",
+            "statisticalOutcome": "win",
+            "sportsbookSettlement": "unverified",
+            "source": "https://www.espn.com/nba/boxscore/_/gameId/401909280"
+          }
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "longshots",
+      "status": "provisional"
+    }
+  ],
+  "updatedAt": "2026-10-31T08:30:11.307Z",
+  "version": "02b72e0e24f8ef1f"
+}

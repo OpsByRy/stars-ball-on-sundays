@@ -63,6 +63,18 @@ def publication_window(root,now=None):
     manifest=json.loads((root/'data/editions/manifest.json').read_text())
     target=[e for e in manifest['editions'] if e['channel']==body['channel'] and e['date']==body['date'] and e['version']==body['editionVersion']]
     if len(target)!=1:raise ValueError('Pending publication edition is missing from validated history')
+    relative=f"data/editions/daily/{body['date']}/{body['editionVersion']}.json"
+    edition=json.loads(build.safe_file(root,relative).read_text())
+    canonical=build.canonical({k:v for k,v in edition.items() if k!='version'})
+    if edition.get('version')!=body['editionVersion'] or hashlib.sha256(canonical).hexdigest()[:16]!=body['editionVersion']:
+        raise ValueError('Pending publication edition identity differs')
+    quotes=[]
+    for row in edition['props']:
+        quotes.extend(q['capturedAt'] for q in row.get('bookPrices',{}).get('quotes',[]) if q.get('capturedAt'))
+        if row.get('priceCheck',{}).get('sourceAsOf'):quotes.append(row['priceCheck']['sourceAsOf'])
+        if row.get('capturedAt'):quotes.append(row['capturedAt'])
+    if not quotes or max(stamp(q) for q in quotes)!=observed:
+        raise ValueError('Pending publication quote clock disagrees with saved edition observations')
     now=now or datetime.now(timezone.utc)
     # Leave two minutes for artifact upload and edge activation after the build.
     if not observed<=now or now+timedelta(minutes=2)>end:

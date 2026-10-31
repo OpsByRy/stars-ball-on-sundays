@@ -83,8 +83,14 @@ class PublicHosting(unittest.TestCase):
             root=Path(d);(root/'data/editions').mkdir(parents=True)
             window={'schemaVersion':'sbos-publication-window-1','channel':'daily','date':'2026-10-31',
                 'editionVersion':'a'*16,'quoteObservedAt':'2026-10-31T17:00:00Z','validUntil':'2026-10-31T17:15:00Z'}
+            edition={'channel':'daily','date':'2026-10-31','props':[{'capturedAt':'2026-10-31T16:00:00Z',
+                'bookPrices':{'quotes':[{'capturedAt':'2026-10-31T17:00:00Z'}]}}]}
+            version=hashlib.sha256(build_hosts.build.canonical(edition)).hexdigest()[:16];edition['version']=version
+            (root/'data/editions/daily/2026-10-31').mkdir(parents=True)
+            (root/f'data/editions/daily/2026-10-31/{version}.json').write_text(json.dumps(edition))
+            window['editionVersion']=version
             (root/'publication-window.json').write_text(json.dumps(window))
-            index={'editions':[{'channel':'daily','date':'2026-10-31','version':'a'*16}]}
+            index={'editions':[{'channel':'daily','date':'2026-10-31','version':version}]}
             (root/'data/editions/manifest.json').write_text(json.dumps(index))
             self.assertIn('within',build_hosts.publication_window(root,datetime(2026,10,31,17,10,tzinfo=timezone.utc)))
             for minute in [0,14,16]:
@@ -93,6 +99,10 @@ class PublicHosting(unittest.TestCase):
             index['editions'].append({'channel':'daily','date':'2026-10-31','version':'b'*16})
             (root/'data/editions/manifest.json').write_text(json.dumps(index))
             with self.assertRaisesRegex(ValueError,'expired'):build_hosts.publication_window(root,datetime(2026,11,1,tzinfo=timezone.utc))
+            window['quoteObservedAt']='2026-10-31T17:01:00Z';window['validUntil']='2026-10-31T17:16:00Z'
+            (root/'publication-window.json').write_text(json.dumps(window))
+            with self.assertRaisesRegex(ValueError,'saved edition observations'):build_hosts.publication_window(root,datetime(2026,10,31,17,10,tzinfo=timezone.utc))
+            window['quoteObservedAt']='2026-10-31T17:00:00Z'
             window['validUntil']='2026-11-01T17:15:00Z';(root/'publication-window.json').write_text(json.dumps(window))
             with self.assertRaisesRegex(ValueError,'freshness limit'):build_hosts.publication_window(root)
             (root/'publication-window.json').unlink()

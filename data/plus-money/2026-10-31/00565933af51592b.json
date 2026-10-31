@@ -1,0 +1,824 @@
+{
+  "date": "2026-10-31",
+  "firstPublishedAt": "2026-10-31T18:26:57.041973Z",
+  "priceNote": "Odds refreshed at 1:52 PM ET; forecasts saved at 11:01 AM ET. Seven reviewed cross-game Layups; no qualified Longshots or Same Game Parlays. Combined prices multiply individual quotes and may mix sportsbooks; they are indicative, not offered tickets or verified full-ticket prices. Individual estimates remain provisional. Confirm every leg at your book. First published at 2:26 PM ET.",
+  "quoteObservedAt": "2026-10-31T17:52:42.259498+00:00",
+  "schemaVersion": "public-plus-money-2",
+  "tickets": [
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "8b1a8b43d0448037",
+      "indicativeAmericanOdds": -108,
+      "legs": [
+        {
+          "americanOdds": -286,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -286,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 25,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600150",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.14690385148211982,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8530961485178802
+          },
+          "eventId": "nba:0022600150",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "bdf16a4263be939432fb87fa879d912c2355a5cab32826653f9ab2c3450dfdf4",
+          "line": 25,
+          "market": "PR",
+          "operator": ">=",
+          "opponent": "Memphis Grizzlies",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Domantas Sabonis",
+          "playerId": "nba:1627734",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Sacramento Kings"
+        },
+        {
+          "americanOdds": -234,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -290,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 15,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -234,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 15,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600151",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.18353614889047962,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8164638511095204
+          },
+          "eventId": "nba:0022600151",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "84aaf38a544939b9b5ddc3aaadf3bb4f488a41cc9bdbe36c1d0be66a0bf86efe",
+          "line": 15,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Milwaukee Bucks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Evan Mobley",
+          "playerId": "nba:1630596",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Cleveland Cavaliers"
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "fc945db3316f87da",
+      "indicativeAmericanOdds": -105,
+      "legs": [
+        {
+          "americanOdds": -272,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -272,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600150",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.17089410272669625,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8291058972733037
+          },
+          "eventId": "nba:0022600150",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "5f8e3c1389d19961e8f194e6a09e48d64ef923e719cdf66ef4eb2c507d1a5504",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Sacramento Kings",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Jaylen Wells",
+          "playerId": "nba:1642377",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Memphis Grizzlies"
+        },
+        {
+          "americanOdds": -234,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -290,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 15,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -234,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 15,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600151",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.18353614889047962,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8164638511095204
+          },
+          "eventId": "nba:0022600151",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "84aaf38a544939b9b5ddc3aaadf3bb4f488a41cc9bdbe36c1d0be66a0bf86efe",
+          "line": 15,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Milwaukee Bucks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Evan Mobley",
+          "playerId": "nba:1630596",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Cleveland Cavaliers"
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "8f9d56c602977a1d",
+      "indicativeAmericanOdds": -101,
+      "legs": [
+        {
+          "americanOdds": -308,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -390,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 15,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -308,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 15,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600149",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.16008382016764033,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8399161798323597
+          },
+          "eventId": "nba:0022600149",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "9ec4462ee0c90658e624c96286eb8d4cf793cad1d96856fa85f1c77131eef6dc",
+          "line": 15,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "New Orleans Pelicans",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Nickeil Alexander-Walker",
+          "playerId": "nba:1629638",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T23:00Z",
+          "team": "Atlanta Hawks"
+        },
+        {
+          "americanOdds": -199,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -199,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 20,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600150",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.20132368057756184,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.7986763194224382
+          },
+          "eventId": "nba:0022600150",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "7a9f8e495655c24ee9d1de777bf672e11045a98d7808ed7dd2ab94b2ff976c66",
+          "line": 20,
+          "market": "PA",
+          "operator": ">=",
+          "opponent": "Memphis Grizzlies",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Domantas Sabonis",
+          "playerId": "nba:1627734",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Sacramento Kings"
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "da659dabbe9b2d5c",
+      "indicativeAmericanOdds": -101,
+      "legs": [
+        {
+          "americanOdds": -400,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -400,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 10,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -410,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600151",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.12286770845759275,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8771322915424072
+          },
+          "eventId": "nba:0022600151",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "bf28eb8c43126d5fb153067622af6df7b8a07e2be24bd2f8880b9246bd1ee254",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Milwaukee Bucks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Jarrett Allen",
+          "playerId": "nba:1628386",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Cleveland Cavaliers"
+        },
+        {
+          "americanOdds": -169,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -188,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 3,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -169,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 2.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600149",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.2745164554958133,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.7254835445041867
+          },
+          "eventId": "nba:0022600149",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "fcac4842607254f20e65f6e0ade0cbd74cc492f5bb69d69d9fd76eba2e57249a",
+          "line": 2.5,
+          "market": "AST",
+          "operator": ">",
+          "opponent": "Atlanta Hawks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Jeremiah Fears",
+          "playerId": "nba:1642847",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T23:00Z",
+          "team": "New Orleans Pelicans"
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "a5961058b9fb94ef",
+      "indicativeAmericanOdds": 107,
+      "legs": [
+        {
+          "americanOdds": -335,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -335,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 30,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600150",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.1399475211342315,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8600524788657685
+          },
+          "eventId": "nba:0022600150",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "22a278c257833a41465bcc6b2e30ce6b068510cf2a27709d40359ee04aa862c6",
+          "line": 30,
+          "market": "PRA",
+          "operator": ">=",
+          "opponent": "Memphis Grizzlies",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Domantas Sabonis",
+          "playerId": "nba:1627734",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Sacramento Kings"
+        },
+        {
+          "americanOdds": -169,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -188,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 3,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -169,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 2.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600149",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.2745164554958133,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.7254835445041867
+          },
+          "eventId": "nba:0022600149",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "fcac4842607254f20e65f6e0ade0cbd74cc492f5bb69d69d9fd76eba2e57249a",
+          "line": 2.5,
+          "market": "AST",
+          "operator": ">",
+          "opponent": "Atlanta Hawks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Jeremiah Fears",
+          "playerId": "nba:1642847",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T23:00Z",
+          "team": "New Orleans Pelicans"
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "draftkings",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "94a77de3de93b97c",
+      "indicativeAmericanOdds": 118,
+      "legs": [
+        {
+          "americanOdds": -272,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -272,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600150",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.17089410272669625,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8291058972733037
+          },
+          "eventId": "nba:0022600150",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "5f8e3c1389d19961e8f194e6a09e48d64ef923e719cdf66ef4eb2c507d1a5504",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Sacramento Kings",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Jaylen Wells",
+          "playerId": "nba:1642377",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Memphis Grizzlies"
+        },
+        {
+          "americanOdds": -169,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -188,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 3,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -169,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 2.5,
+                "operator": ">"
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600149",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "high_probability_aggressive",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.2745164554958133,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.7254835445041867
+          },
+          "eventId": "nba:0022600149",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "fcac4842607254f20e65f6e0ade0cbd74cc492f5bb69d69d9fd76eba2e57249a",
+          "line": 2.5,
+          "market": "AST",
+          "operator": ">",
+          "opponent": "Atlanta Hawks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Jeremiah Fears",
+          "playerId": "nba:1642847",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T23:00Z",
+          "team": "New Orleans Pelicans"
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    },
+    {
+      "book": "mixed",
+      "fitReasons": [
+        "Algorithm-selected value legs.",
+        "Different games limit shared rotation exposure.",
+        "Recent role, minutes and opportunity reviewed."
+      ],
+      "id": "874fa8e0f1e36384",
+      "indicativeAmericanOdds": 126,
+      "legs": [
+        {
+          "americanOdds": -400,
+          "book": "fanduel",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -400,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 10,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -410,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600151",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.12286770845759275,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8771322915424072
+          },
+          "eventId": "nba:0022600151",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "bf28eb8c43126d5fb153067622af6df7b8a07e2be24bd2f8880b9246bd1ee254",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Milwaukee Bucks",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Jarrett Allen",
+          "playerId": "nba:1628386",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Cleveland Cavaliers"
+        },
+        {
+          "americanOdds": -308,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -390,
+                "book": "fanduel",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 15,
+                "operator": ">="
+              },
+              {
+                "americanOdds": -308,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 15,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600149",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.16008382016764033,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8399161798323597
+          },
+          "eventId": "nba:0022600149",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "9ec4462ee0c90658e624c96286eb8d4cf793cad1d96856fa85f1c77131eef6dc",
+          "line": 15,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "New Orleans Pelicans",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Nickeil Alexander-Walker",
+          "playerId": "nba:1629638",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-10-31T23:00Z",
+          "team": "Atlanta Hawks"
+        },
+        {
+          "americanOdds": -272,
+          "book": "draftkings",
+          "bookPrices": {
+            "checkedAt": "2026-10-31T17:52:42.259498+00:00",
+            "quotes": [
+              {
+                "americanOdds": -272,
+                "book": "draftkings",
+                "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+                "line": 10,
+                "operator": ">="
+              }
+            ]
+          },
+          "canonicalEventId": "nba:0022600150",
+          "capturedAt": "2026-10-31T17:52:42.259498+00:00",
+          "category": "value_safe",
+          "date": "2026-10-31",
+          "estimate": {
+            "asOf": "2026-10-31T15:01:57.252934+00:00",
+            "lossProbability": 0.17089410272669625,
+            "pushProbability": 0.0,
+            "status": "provisional",
+            "winProbability": 0.8291058972733037
+          },
+          "eventId": "nba:0022600150",
+          "evidence": "Selected by SBOS for this parlay combination. Estimates remain provisional.",
+          "group": "research",
+          "id": "5f8e3c1389d19961e8f194e6a09e48d64ef923e719cdf66ef4eb2c507d1a5504",
+          "line": 10,
+          "market": "PTS",
+          "operator": ">=",
+          "opponent": "Sacramento Kings",
+          "overtime": null,
+          "period": "full_game",
+          "player": "Jaylen Wells",
+          "playerId": "nba:1642377",
+          "product": "sportsbook",
+          "sourceType": "algorithm_selected_parlay_leg",
+          "startTime": "2026-11-01T00:00Z",
+          "team": "Memphis Grizzlies"
+        }
+      ],
+      "priceKind": "indicative",
+      "section": "plus_money",
+      "status": "provisional"
+    }
+  ],
+  "updatedAt": "2026-10-31T18:32:31.605730+00:00",
+  "version": "00565933af51592b"
+}

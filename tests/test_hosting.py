@@ -78,35 +78,38 @@ class PublicHosting(unittest.TestCase):
             self.assertEqual(record['sourceSHA256'],hashlib.sha256(raw).hexdigest())
             self.assertEqual(record['deployedSHA256'],hashlib.sha256(expected).hexdigest())
 
-    def test_pending_price_publication_requires_verified_followup_before_later_results_bypass_expiry(self):
+    def test_quote_context_preserves_provenance_without_age_only_publication_blocks(self):
         with tempfile.TemporaryDirectory() as d:
-            root=Path(d);(root/'data/editions').mkdir(parents=True)
-            window={'schemaVersion':'sbos-publication-window-1','channel':'daily','date':'2026-10-31',
-                'editionVersion':'a'*16,'quoteObservedAt':'2026-10-31T17:00:00Z','validUntil':'2026-10-31T17:15:00Z'}
+            root=Path(d);(root/'data/editions/daily/2026-10-31').mkdir(parents=True)
             edition={'channel':'daily','date':'2026-10-31','props':[{'capturedAt':'2026-10-31T16:00:00Z',
-                'bookPrices':{'quotes':[{'capturedAt':'2026-10-31T17:00:00Z'}]}}]}
+                'bookPrices':{'quotes':[{'capturedAt':'2026-10-31T17:00:00Z'}]},
+                'priceCheck':{'qualification':'does_not_qualify','sourceAsOf':'2026-10-31T17:00:00Z'}}]}
             version=hashlib.sha256(build_hosts.build.canonical(edition)).hexdigest()[:16];edition['version']=version
-            (root/'data/editions/daily/2026-10-31').mkdir(parents=True)
-            (root/f'data/editions/daily/2026-10-31/{version}.json').write_text(json.dumps(edition))
-            window['editionVersion']=version
-            (root/'publication-window.json').write_text(json.dumps(window))
-            index={'editions':[{'channel':'daily','date':'2026-10-31','version':version}]}
-            (root/'data/editions/manifest.json').write_text(json.dumps(index))
-            self.assertIn('within',build_hosts.publication_window(root,datetime(2026,10,31,17,10,tzinfo=timezone.utc)))
-            for minute in [0,14,16]:
-                moment=datetime(2026,10,31,16,59,tzinfo=timezone.utc) if minute==0 else datetime(2026,10,31,17,minute,tzinfo=timezone.utc)
-                with self.assertRaisesRegex(ValueError,'expired'):build_hosts.publication_window(root,moment)
-            index['editions'].append({'channel':'daily','date':'2026-10-31','version':'b'*16})
-            (root/'data/editions/manifest.json').write_text(json.dumps(index))
-            with self.assertRaisesRegex(ValueError,'expired'):build_hosts.publication_window(root,datetime(2026,11,1,tzinfo=timezone.utc))
-            window['quoteObservedAt']='2026-10-31T17:01:00Z';window['validUntil']='2026-10-31T17:16:00Z'
-            (root/'publication-window.json').write_text(json.dumps(window))
-            with self.assertRaisesRegex(ValueError,'saved edition observations'):build_hosts.publication_window(root,datetime(2026,10,31,17,10,tzinfo=timezone.utc))
-            window['quoteObservedAt']='2026-10-31T17:00:00Z'
-            window['validUntil']='2026-11-01T17:15:00Z';(root/'publication-window.json').write_text(json.dumps(window))
-            with self.assertRaisesRegex(ValueError,'freshness limit'):build_hosts.publication_window(root)
+            saved=root/f'data/editions/daily/2026-10-31/{version}.json';saved.write_text(json.dumps(edition))
+            (root/'data/editions/manifest.json').write_text(json.dumps({'editions':[{'channel':'daily','date':'2026-10-31','version':version}]}))
+            for legacy in [False,True]:
+                context={'schemaVersion':'sbos-publication-window-1' if legacy else 'sbos-publication-context-1',
+                    'channel':'daily','date':'2026-10-31','editionVersion':version,'quoteObservedAt':'2026-10-31T17:00:00Z'}
+                if legacy:context['validUntil']='2026-10-31T17:15:00Z'
+                (root/'publication-window.json').write_text(json.dumps(context))
+                original=saved.read_bytes()
+                for minute in [0,15,20,30,59]:
+                    self.assertIn('age alone does not block',build_hosts.publication_window(root,datetime(2026,10,31,17,minute,tzinfo=timezone.utc)))
+                self.assertIn('age alone does not block',build_hosts.publication_window(root,datetime(2026,11,1,tzinfo=timezone.utc)))
+                self.assertEqual(saved.read_bytes(),original) # Review state and quote clocks are never rewritten.
+                with self.assertRaisesRegex(ValueError,'future'):
+                    build_hosts.publication_window(root,datetime(2026,10,31,16,59,tzinfo=timezone.utc))
+                bad={**context,'quoteObservedAt':'2026-10-31T17:01:00Z'}
+                if legacy:bad['validUntil']='2026-10-31T17:16:00Z'
+                (root/'publication-window.json').write_text(json.dumps(bad))
+                with self.assertRaisesRegex(ValueError,'saved edition observations'):
+                    build_hosts.publication_window(root,datetime(2026,10,31,17,30,tzinfo=timezone.utc))
+                (root/'publication-window.json').write_text(json.dumps({**context,'unknown':'no'}))
+                with self.assertRaisesRegex(ValueError,'Invalid publication context'):build_hosts.publication_window(root)
+            context['validUntil']='2026-11-01T17:15:00Z';(root/'publication-window.json').write_text(json.dumps(context))
+            with self.assertRaisesRegex(ValueError,'invalid recorded interval'):build_hosts.publication_window(root)
             (root/'publication-window.json').unlink()
-            self.assertIn('no pending',build_hosts.publication_window(root,datetime(2026,11,1,tzinfo=timezone.utc)))
+            self.assertIn('no pending',build_hosts.publication_window(root))
 
     def test_result_receipt_pins_the_actual_commit_and_rejects_other_runs_or_repositories(self):
         receipt={'schemaVersion':'sbos-result-release-1','repository':'OpsByRy/stars-ball-on-sundays','branch':'main','baseSHA':'a'*40,'sourceSHA':'b'*40}

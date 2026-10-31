@@ -45,21 +45,28 @@ def pages_asset(name,raw,limit=PAGES_MAX_BYTES):
 
 
 def publication_window(root,now=None):
-    """Gate pending prices until a verified-publication follow-up removes it."""
+    """Verify a pending quote's provenance; quote age alone never blocks release.
+
+    The legacy window marker's validUntil is retained as historical context,
+    not an expiry for already-reviewed picks. New context markers omit it.
+    """
     marker=root/'publication-window.json'
     if not marker.exists():return 'no pending publication window'
     body=json.loads(marker.read_text())
-    fields={'schemaVersion','channel','date','editionVersion','quoteObservedAt','validUntil'}
-    if set(body)!=fields or body['schemaVersion']!='sbos-publication-window-1' or body['channel']!='daily':
-        raise ValueError('Invalid publication window')
+    fields={'schemaVersion','channel','date','editionVersion','quoteObservedAt'}
+    legacy=body.get('schemaVersion')=='sbos-publication-window-1'
+    if legacy:fields.add('validUntil')
+    if set(body)!=fields or body['schemaVersion'] not in {'sbos-publication-window-1','sbos-publication-context-1'} or body['channel']!='daily':
+        raise ValueError('Invalid publication context')
     if not re.fullmatch(r'\d{4}-\d{2}-\d{2}',body['date']) or not re.fullmatch(r'[0-9a-f]{16}',body['editionVersion']):
         raise ValueError('Invalid publication window identity')
     def stamp(value):
         instant=datetime.fromisoformat(value.replace('Z','+00:00'))
         if instant.utcoffset() is None:raise ValueError('Publication window requires explicit timezone')
         return instant.astimezone(timezone.utc)
-    observed=stamp(body['quoteObservedAt']);end=stamp(body['validUntil'])
-    if end-observed!=timedelta(minutes=15):raise ValueError('Publication window must retain the reviewed freshness limit')
+    observed=stamp(body['quoteObservedAt'])
+    if legacy and stamp(body['validUntil'])-observed!=timedelta(minutes=15):
+        raise ValueError('Legacy publication window has an invalid recorded interval')
     manifest=json.loads((root/'data/editions/manifest.json').read_text())
     target=[e for e in manifest['editions'] if e['channel']==body['channel'] and e['date']==body['date'] and e['version']==body['editionVersion']]
     if len(target)!=1:raise ValueError('Pending publication edition is missing from validated history')
@@ -76,10 +83,9 @@ def publication_window(root,now=None):
     if not quotes or max(stamp(q) for q in quotes)!=observed:
         raise ValueError('Pending publication quote clock disagrees with saved edition observations')
     now=now or datetime.now(timezone.utc)
-    # Leave two minutes for artifact upload and edge activation after the build.
-    if not observed<=now or now+timedelta(minutes=2)>end:
-        raise ValueError('Pending price publication expired; retain healthy deployment and use the next approved capture')
-    return 'pending price edition remains within publication window'
+    if now.utcoffset() is None or observed>now:
+        raise ValueError('Publication quote observation cannot be in the future')
+    return 'quote observation verified; saved quote age alone does not block publication'
 
 
 def validate_policy(policy):

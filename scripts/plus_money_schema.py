@@ -112,7 +112,7 @@ def publication_files(root,safe_file):
     if not (root/index_path).exists():return []
     index=json.loads(safe_file(root,index_path).read_text());keys(index,{'schemaVersion','editions'},{'schemaVersion','editions'})
     if index['schemaVersion']!='public-plus-money-manifest-1' or not isinstance(index['editions'],list):raise ValueError('Invalid parlay manifest')
-    files=[index_path];seen=set()
+    files=[index_path];seen=set();latest_updates={};posting_clocks={}
     for entry in index['editions']:
         keys(entry,{'date','version','path','updatedAt','count'},{'date','version','path','updatedAt','count'})
         day(entry['date']);stamp(entry['updatedAt'])
@@ -121,5 +121,12 @@ def publication_files(root,safe_file):
         seen.add(entry['path']);name='data/plus-money/'+entry['path']
         body=json.loads(safe_file(root,name).read_text());validate(body)
         if any(body[k]!=entry[k] for k in ['date','version','updatedAt']) or len(body['tickets'])!=entry['count']:raise ValueError('Parlay manifest mismatch')
+        instant=datetime.fromisoformat(body['updatedAt'].replace('Z','+00:00'))
+        if body['date'] in latest_updates and instant<latest_updates[body['date']]:raise ValueError('Parlay history must be chronological within each date')
+        latest_updates[body['date']]=instant
+        first=body['firstPublishedAt']
+        first=datetime.fromisoformat(first.replace('Z','+00:00')) if first is not None else None
+        if body['date'] in posting_clocks and first!=posting_clocks[body['date']]:raise ValueError('Verified parlay first-publication clock cannot change or be cleared')
+        if first is not None:posting_clocks[body['date']]=first
         files.append(name)
     return files

@@ -151,3 +151,10 @@ body[data-page=daily] #reload-data{min-height:32px;padding:6px 10px;font-size:10
 /* Shared compatibility introduction for Ry’s posted slips. */
 .pm-fit-intro{padding:14px 0 12px;border-bottom:1px solid var(--border-subtle);margin:0 0 8px}.pm-fit-intro h3{font-size:13px;line-height:1.5;margin:0 0 6px}.pm-fit-intro p{font-size:12px;line-height:1.8;color:var(--text-muted);margin:0}.pm-fit-intro>small{display:block;margin-top:5px;font-size:9px;color:var(--text-muted)}.pm-saved-fit{margin-top:10px;font-size:11px;line-height:1.7;color:var(--text-muted)}.pm-saved-fit strong{color:var(--text)}.pm-saved-fit ul{margin:4px 0 0;padding-left:17px}
 @media(max-width:620px){.pm-fit-intro p{font-size:11px}.pm-fit-intro{padding-top:12px}}
+
+/* Separate screenshot slips retain their own exact leg and full-ticket quotes. */
+.personal-slip{border:1px solid var(--line, #485161);border-radius:14px;padding:1rem;margin:1rem 0;background:var(--panel,transparent)}
+.personal-slip-heading,.personal-slip-leg{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.personal-slip-heading{flex-wrap:wrap}.personal-slip-heading h3{margin:0;font-size:1.15rem}.personal-slip-heading>strong{font-size:1.35rem}
+.personal-slip ol{padding-left:1.25rem}.personal-slip li{padding:.65rem 0}.personal-slip-leg>strong{min-width:0;overflow-wrap:anywhere}.personal-slip-leg>span{flex-shrink:0;font-weight:700}
+.personal-slip small{display:block;line-height:1.5;margin-top:.25rem}.personal-publication-note p{margin:.65rem 0}.personal-slip-placement{font-size:.9rem}

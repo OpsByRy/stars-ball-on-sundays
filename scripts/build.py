@@ -29,11 +29,26 @@ def safe_file(root,name):
     if not path.is_file(): raise ValueError(f'Missing public file: {name}')
     return path
 
+def preserve_personal_slips(body,state):
+    """New algorithm/results editions must retain the owner's posted screenshot slips."""
+    key=(body['channel'],body['date']);previous=state.get(key)
+    if previous is None and 'personalSlips' not in body:return
+    if 'personalSlips' not in body:raise ValueError('A later edition cannot remove posted personal slips')
+    slips={s['id']:s for s in body['personalSlips']}
+    rows={r['id']:{k:v for k,v in r.items() if k not in {'result','postedAt'}} for r in body['props'] if r['group']=='ry'}
+    publication=body['personalPublication']
+    if previous:
+        if any(slips.get(k)!=v for k,v in previous['slips'].items()) or any(rows.get(k)!=v for k,v in previous['rows'].items()):raise ValueError('Posted personal contracts and screenshot quotes must remain unchanged')
+        saved=previous['publication']
+        if publication['recordedAt']!=saved['recordedAt'] or saved['publishedAt'] is not None and publication['publishedAt']!=saved['publishedAt']:raise ValueError('Verified personal publication clock must remain unchanged')
+    state[key]={'slips':slips,'rows':rows,'publication':publication}
+
 def publication_files(root):
     index=json.loads(safe_file(root,'data/editions/manifest.json').read_text());validate_manifest(index)
-    files=['data/editions/manifest.json','data/stat-targets.json'];published=set()
+    files=['data/editions/manifest.json','data/stat-targets.json'];published=set();personal_state={}
     for entry in index['editions']:
         name='data/editions/'+entry['path'];body=json.loads(safe_file(root,name).read_text());validate_edition(body)
+        preserve_personal_slips(body,personal_state)
         if any(body[k]!=entry[k] for k in ('channel','date','version')): raise ValueError('Edition identity mismatch')
         unhashed={k:v for k,v in body.items() if k!='version'}
         if hashlib.sha256(canonical(unhashed)).hexdigest()[:16]!=entry['version']: raise ValueError('Edition digest mismatch')
@@ -106,7 +121,13 @@ def personal_price_view(root):
     """First saved quote for each exact posted personal slip, independent of later odds views."""
     manifest=json.loads((root/'data/editions/manifest.json').read_text());saved={}
     for entry in sorted(manifest['editions'],key=lambda e:e['updatedAt']):
-        body=json.loads((root/'data/editions'/entry['path']).read_text());legs=[p for p in body['props'] if p['group']=='ry'];price=body.get('sharedBetslipOdds')
+        body=json.loads((root/'data/editions'/entry['path']).read_text())
+        if 'personalSlips' in body:
+            for slip in body['personalSlips']:
+                leg_ids=sorted(p['pickId'] for p in slip['legs']);key=(slip['id'],tuple(leg_ids))
+                saved.setdefault(key,{'ticketId':slip['id'],'legIds':leg_ids,'americanOdds':slip['americanOdds'],'sourceVersion':entry['version'],'firstSavedAt':entry['updatedAt']})
+            continue
+        legs=[p for p in body['props'] if p['group']=='ry'];price=body.get('sharedBetslipOdds')
         if not legs or type(price) not in (int,float) or abs(price)<100:continue
         ticket_id='ry:'+body['date']+':'+(body.get('sharedBetslipUrl') or body.get('favoritesPostedAt') or 'posted-slip')
         leg_ids=sorted(p['id'] for p in legs);key=(ticket_id,tuple(leg_ids))

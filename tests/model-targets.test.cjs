@@ -48,7 +48,7 @@ test('target filters use saved marginal probabilities and exact game/stat/favori
 
 test('target row shows model pricing and support without a payout, with compatibility before its legs',()=>{
  const t=target({compatibility:'Scoring overlaps with creation. <script>not executable</script>'}),html=pm.ticketRow(t,0);
- assert.match(html,/Provisional · Not quoted/);assert.match(html,/Fair model odds/);assert.match(html,/Target book price -200 or better/);assert.match(html,/Our joint win est\./);
+ assert.match(html,/Provisional · Not quoted/);assert.match(html,/Fair model odds/);assert.match(html,/Target book price -200 or better/);assert.match(html,/Total slip est\./);assert.match(html,/Lowest leg est\./);
  assert.match(html,/40 shared games/);assert.match(html,/model range 50\.0%–80\.0%/);assert.match(html,/excluded from our hit-rate and unit records/);
  assert.doesNotMatch(html,/data-parlay-payout|\$[0-9]|class="pm-payout"|Estimated combined price|<script>/);
  assert.match(html,/&lt;script&gt;/);assert.ok(html.indexOf('Why these legs fit')<html.indexOf('pm-leg-columns'));

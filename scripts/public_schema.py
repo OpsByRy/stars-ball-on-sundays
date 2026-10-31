@@ -159,7 +159,7 @@ def validate_personal_slips(body):
     if not isinstance(slips,list) or not 1<=len(slips)<=12:raise ValueError('Invalid separate personal slips')
     rows={r['id']:r for r in body['props'] if r['group']=='ry'};seen=set();referenced=set()
     for slip in slips:
-        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields,fields)
+        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields|{'groups'},fields)
         if not isinstance(slip['id'],str) or not re.fullmatch(r'ry-\d{4}-\d{2}-\d{2}-\d{2}',slip['id']) or not slip['id'].startswith('ry-'+body['date']+'-') or slip['id'] in seen:raise ValueError('Invalid or duplicate personal slip identity')
         seen.add(slip['id'])
         if slip['book'] not in {'fanduel','draftkings'} or type(slip['ryFavorite']) is not bool:raise ValueError('Invalid personal slip attribution')
@@ -172,7 +172,18 @@ def validate_personal_slips(body):
             keys(leg,{'pickId','americanOdds'},{'pickId','americanOdds'})
             if leg['pickId'] not in rows or leg['pickId'] in legs:raise ValueError('Missing or duplicate personal slip pick')
             legs.add(leg['pickId']);referenced.add(leg['pickId'])
-            if not number(leg['americanOdds']) or abs(leg['americanOdds'])<100:raise ValueError('Invalid personal leg quote')
+            if leg['americanOdds'] is not None and (not number(leg['americanOdds']) or abs(leg['americanOdds'])<100):raise ValueError('Invalid personal leg quote')
+        if 'groups' in slip:
+            groups=slip['groups'];grouped=set()
+            if not isinstance(groups,list) or not 1<=len(groups)<=12:raise ValueError('Invalid personal ticket groups')
+            for group in groups:
+                keys(group,{'kind','canonicalEventId','pickIds'},{'kind','canonicalEventId','pickIds'})
+                ids=group['pickIds']
+                if group['kind'] not in {'same_game','standalone'} or not isinstance(ids,list):raise ValueError('Invalid personal ticket group size')
+                if group['kind']=='standalone' and len(ids)!=1 or group['kind']=='same_game' and len(ids)<2:raise ValueError('Invalid personal ticket group size')
+                if any(not isinstance(i,str) for i in ids) or len(set(ids))!=len(ids) or any(i not in legs or i in grouped or rows[i].get('canonicalEventId')!=group['canonicalEventId'] for i in ids):raise ValueError('Personal ticket group identity mismatch')
+                grouped.update(ids)
+            if grouped!=legs:raise ValueError('Personal ticket groups must cover every leg exactly once')
     if referenced!=set(rows):raise ValueError('Unattributed personal pick')
     if any(r.get('postedAt')!=publication['publishedAt'] for r in rows.values()):raise ValueError('Personal pick publication time mismatch')
 

@@ -213,8 +213,15 @@ def assert_publication_time(entries, now=None):
             raise ValueError(f'Daily picks for {day} cannot publish before 10:00 AM America/New_York on that date')
 
 def assert_personal_estimates(body):
+    # Owner-reported tracking is distinct from model-researched recommendations.
+    # Its exact ticket references and missing estimates must remain explicit.
+    from public_schema import validate_personal_slips
+    tracking={leg['pickId'] for slip in body.get('personalSlips',[]) for leg in slip['legs']}
+    if tracking:validate_personal_slips(body)
     for row in body['props']:
         if row['group']!='ry':continue
+        if row.get('sourceType')=='user_supplied_unsubmitted_favorite' and row['id'] in tracking and 'estimate' not in row:
+            continue
         estimate=row.get('estimate') or {}
         if not {'winProbability','pushProbability','lossProbability','projection','asOf','status'}<=set(estimate):
             raise ValueError('Personal picks require reviewed probabilities and projections before publication: '+row['player'])

@@ -246,3 +246,10 @@ test('Cup amendment is dated supplemental context without changing the saved boa
   assert.equal(publication.cupContextNotice('2026-10-29'),'');
   assert.equal(publication.cupContextNotice('2026-10-31'),'');
 });
+
+test('odds refresh label uses actual source observations without changing forecast time',()=>{
+  const body={props:[{capturedAt:'2026-10-31T16:00:15Z',estimate:{asOf:'2026-10-31T15:01:57Z'},priceCheck:{sourceAsOf:'2026-10-31T17:52:42Z'}},{bookPrices:{quotes:[{capturedAt:'2026-10-31T17:00:18Z'}]}}]};
+  assert.match(publication.oddsRefreshLabel(body),/1:52 PM ET/);
+  assert.equal(body.props[0].estimate.asOf,'2026-10-31T15:01:57Z');
+  assert.equal(publication.oddsRefreshLabel({props:[]}),'');
+});

@@ -73,7 +73,18 @@ def validate(body):
     for ticket in body['tickets']:
         fields={'id','book','legs','indicativeAmericanOdds','priceKind','fitReasons','status'}
         if not legacy:fields.add('section')
-        keys(ticket,fields|{'ryFavorite'},fields);text(ticket['id'],100)
+        keys(ticket,fields|{'ryFavorite','selectedAt','postedAt'},fields);text(ticket['id'],100)
+        if 'selectedAt' in ticket or 'postedAt' in ticket:
+            if not ticket.get('selectedAt') or 'postedAt' not in ticket:raise ValueError('Ticket timing requires selection and posting fields')
+            stamp(ticket['selectedAt']);stamp(ticket['postedAt'])
+            selected=datetime.fromisoformat(ticket['selectedAt'].replace('Z','+00:00'))
+            updated=datetime.fromisoformat(body['updatedAt'].replace('Z','+00:00'))
+            if selected>updated:raise ValueError('Ticket selection cannot follow its edition')
+            if ticket['postedAt'] is not None:
+                posted=datetime.fromisoformat(ticket['postedAt'].replace('Z','+00:00'))
+                if not selected<=posted<=updated:raise ValueError('Invalid ticket posting order')
+            for leg in ticket['legs']:
+                if not leg.get('startTime') or selected>=datetime.fromisoformat(leg['startTime'].replace('Z','+00:00')):raise ValueError('New ticket selection must be pregame')
         if 'ryFavorite' in ticket and type(ticket['ryFavorite']) is not bool:raise ValueError('Invalid Ry favorite flag')
         if ticket['id'] in ids:raise ValueError('Duplicate parlay')
         ids.add(ticket['id'])
@@ -112,7 +123,7 @@ def publication_files(root,safe_file):
     if not (root/index_path).exists():return []
     index=json.loads(safe_file(root,index_path).read_text());keys(index,{'schemaVersion','editions'},{'schemaVersion','editions'})
     if index['schemaVersion']!='public-plus-money-manifest-1' or not isinstance(index['editions'],list):raise ValueError('Invalid parlay manifest')
-    files=[index_path];seen=set();latest_updates={};posting_clocks={}
+    files=[index_path];seen=set();latest_updates={};posting_clocks={};ticket_clocks={}
     for entry in index['editions']:
         keys(entry,{'date','version','path','updatedAt','count'},{'date','version','path','updatedAt','count'})
         day(entry['date']);stamp(entry['updatedAt'])
@@ -128,5 +139,16 @@ def publication_files(root,safe_file):
         first=datetime.fromisoformat(first.replace('Z','+00:00')) if first is not None else None
         if body['date'] in posting_clocks and first!=posting_clocks[body['date']]:raise ValueError('Verified parlay first-publication clock cannot change or be cleared')
         if first is not None:posting_clocks[body['date']]=first
+        for ticket in body['tickets']:
+            key=(body['date'],ticket['id'])
+            if 'selectedAt' not in ticket:
+                if key in ticket_clocks:raise ValueError('Verified ticket clocks cannot change or be cleared')
+                continue
+            selected=datetime.fromisoformat(ticket['selectedAt'].replace('Z','+00:00'))
+            posted=datetime.fromisoformat(ticket['postedAt'].replace('Z','+00:00')) if ticket['postedAt'] else None
+            if key in ticket_clocks:
+                prior_selected,prior_posted=ticket_clocks[key]
+                if selected!=prior_selected or prior_posted is not None and posted!=prior_posted:raise ValueError('Verified ticket clocks cannot change or be cleared')
+            ticket_clocks[key]=(selected,posted)
         files.append(name)
     return files

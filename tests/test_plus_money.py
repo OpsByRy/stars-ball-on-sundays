@@ -59,6 +59,17 @@ class PlusMoneyBoundary(unittest.TestCase):
             body['tickets'][0]['ryFavorite']=flag;rehash()
             with self.assertRaisesRegex(ValueError,'favorite flag'):schema.validate(body)
 
+    def test_new_ticket_selection_and_verified_posting_order(self):
+        body=self.record();body['updatedAt']='2026-10-28T18:00:00Z'
+        t=body['tickets'][0];t['selectedAt']='2026-10-28T17:20:00Z';t['postedAt']=None
+        def check():
+            body['version']=schema.hashlib.sha256(schema.canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16];schema.validate(body)
+        check();t['postedAt']='2026-10-28T17:25:00Z';check()
+        t['postedAt']='2026-10-28T17:19:00Z'
+        with self.assertRaisesRegex(ValueError,'posting order'):check()
+        t['postedAt']=None;t['selectedAt']='2026-10-29T04:00:00Z'
+        with self.assertRaisesRegex(ValueError,'selection cannot follow'):check()
+
     def test_verified_posting_clock_can_be_added_once_and_survives_future_updates(self):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);directory=root/'data/plus-money';directory.mkdir(parents=True)

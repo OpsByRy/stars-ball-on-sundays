@@ -128,3 +128,10 @@ test('fit explanations use real saved projection cushions and current estimate f
  const current=pm.compatibilityExplanation(ticket('review',{legs:[{...a,estimate:{winProbability:.875}},checked]}));assert.match(current.summary,/87\.5% and 55\.0%/);assert.match(current.summary,/Ja Morant no longer qualifies under the latest review/);assert.doesNotMatch(current.summary,/70\.2%|validated synergy/);
  const unknown=pm.compatibilityExplanation(ticket('unknown-projection',{legs:[{...a,estimate:{winProbability:null}},b]}));assert.match(unknown.summary,/8\.2 assists/);assert.doesNotMatch(unknown.summary,/lowest saved individual/);
 });
+
+test('afternoon tickets distinguish selection and pending or verified posting clocks',()=>{
+ const t=ticket('timed',{selectedAt:'2026-10-31T20:35:45Z',postedAt:null});
+ let html=pm.ticketRow(t,0);assert.match(html,/Selected/);assert.match(html,/Public posting time pending verification/);
+ t.postedAt='2026-10-31T20:50:00Z';html=pm.ticketRow(t,0);assert.match(html,/Posted/);assert.doesNotMatch(html,/pending verification/);
+ assert.doesNotMatch(pm.ticketRow(ticket('legacy'),0),/pm-ticket-timing/);
+});

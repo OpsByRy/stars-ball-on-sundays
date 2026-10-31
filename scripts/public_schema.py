@@ -237,11 +237,16 @@ def validate_edition(body):
 def validate_manifest(body):
     keys(body,{'schemaVersion','editions'},{'schemaVersion','editions'})
     if body['schemaVersion']!='public-1' or not isinstance(body['editions'],list): raise ValueError('Invalid manifest')
+    latest={}
     for row in body['editions']:
         keys(row,ENTRY_FIELDS,ENTRY_FIELDS);day(row['date']);stamp(row['updatedAt'])
         if row['channel'] not in {'daily','sunday'} or not re.fullmatch(r'[0-9a-f]{16}',row['version']): raise ValueError('Invalid manifest entry')
         if row['path']!=f"{row['channel']}/{row['date']}/{row['version']}.json": raise ValueError('Invalid edition path')
         if any(type(row[k]) is not int or row[k]<0 for k in ('count','researchCount')): raise ValueError('Invalid count')
+        if row['updatedAt'] is None:raise ValueError('Edition manifest requires an update clock')
+        key=(row['channel'],row['date']);instant=datetime.fromisoformat(row['updatedAt'].replace('Z','+00:00'))
+        if key in latest and instant<latest[key]:raise ValueError('Edition manifest must be chronological within each slate')
+        latest[key]=instant
 
 def validate_targets(body):
     keys(body,{'schemaVersion','targets'},{'schemaVersion','targets'})

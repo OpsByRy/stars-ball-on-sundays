@@ -58,3 +58,9 @@ class PersonalSlipsBoundary(unittest.TestCase):
   for altered in [None,'2026-10-31T00:21:00Z']:
    changed=copy.deepcopy(later);changed['personalPublication']['publishedAt']=altered
    with self.assertRaisesRegex(ValueError,'clock'):preserve_personal_slips(changed,state)
+ def test_manifest_order_guard_uses_zoned_instants_and_rejects_prepended_newer_editions(self):
+  from public_schema import validate_manifest
+  a={'channel':'daily','date':'2026-10-30','version':'a'*16,'path':'daily/2026-10-30/'+'a'*16+'.json','count':0,'researchCount':0,'updatedAt':'2026-10-30T19:54:50-04:00'}
+  b={**a,'version':'b'*16,'path':'daily/2026-10-30/'+'b'*16+'.json','updatedAt':'2026-10-31T00:02:00Z'}
+  validate_manifest({'schemaVersion':'public-1','editions':[a,b]})
+  with self.assertRaisesRegex(ValueError,'chronological'):validate_manifest({'schemaVersion':'public-1','editions':[b,a]})

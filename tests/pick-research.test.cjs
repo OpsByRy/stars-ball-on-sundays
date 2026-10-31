@@ -58,5 +58,5 @@ test('compact parlay matchup uses verified away/home abbreviations and Eastern d
  const html=research.compactMatchupHTML(game,'2026-10-30T00:00:00Z');
  assert.match(html,/Cleveland Cavaliers @ Atlanta Hawks/);assert.match(html,/CLE <span class="matchup-at">@<\/span> ATL/);assert.match(html,/10\/29 8:00 PM ET/);assert.ok(html.indexOf('data-team-logo="CLE"')<html.indexOf('data-team-logo="ATL"'));
  const missing=research.compactMatchup({date:'2026-10-29',canonicalEventId:'nba:0000000000',team:'Atlanta Hawks',opponent:'Cleveland Cavaliers',startTime:'2026-10-30T00:00:00Z'});
- assert.match(missing,/Matchup loading/);assert.doesNotMatch(missing,/Atlanta Hawks @ Cleveland/);assert.equal(research.compactTime(null),'Tip time unavailable');
+ assert.match(missing,/Atlanta Hawks/);assert.match(missing,/Cleveland Cavaliers/);assert.match(missing,/>vs<\/span>/);assert.doesNotMatch(missing,/Atlanta Hawks @ Cleveland|Matchup unavailable|Matchup loading/);assert.equal(research.compactTime(null),'Tip time unavailable');
 });

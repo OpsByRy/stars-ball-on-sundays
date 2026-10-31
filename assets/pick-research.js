@@ -78,7 +78,27 @@
     }
     return {log,profile,research,defenderGames,get};
   }
-  const instances=new Map(),ranges=new Map(),sources=new Map(),defenders=new Map(),matchups=new Map();let serial=0,defaultBase=null,artwork=null;
+  const instances=new Map(),ranges=new Map(),sources=new Map(),defenders=new Map();let serial=0,defaultBase=null,artwork=null;
+  function createMatchupDirectory({games=[],teams=[]}={}){
+    const identities=new Map(),events=new Map(),key=value=>String(value||'').trim().toLowerCase();
+    for(const team of [...teams,...games.flatMap(game=>[game.awayTeam,game.homeTeam])]){
+      identities.set(key(team.name),team);identities.set(key(team.abbreviation),team);
+    }
+    for(const [alias,abbreviation] of Object.entries({NO:'NOP',NY:'NYK',GS:'GSW',SA:'SAS',UTAH:'UTA',WSH:'WAS','Los Angeles Clippers':'LAC','LA Clippers':'LAC','LA Lakers':'LAL'}))if(identities.has(key(abbreviation)))identities.set(key(alias),identities.get(key(abbreviation)));
+    for(const game of games)for(const id of game.eventIds)events.set(JSON.stringify([game.date,id]),game);
+    const team=value=>identities.get(key(value));
+    function resolve(row,pair=[row.team,row.opponent]){
+      const ids=[row.canonicalEventId,row.eventId,row.resultSource?.eventId&&'espn:'+row.resultSource.eventId,...(row.eventAliases||[])].filter(Boolean);
+      const matches=[...new Set(ids.map(id=>events.get(JSON.stringify([row.date,id]))).filter(Boolean))];
+      if(matches.length!==1)return null;
+      const game=matches[0],expected=[game.awayTeam.abbreviation,game.homeTeam.abbreviation];
+      // Never attach a known game's home/away order to a different pair of teams.
+      if(pair.filter(Boolean).some(value=>!expected.includes(team(value)?.abbreviation)))return null;
+      return game;
+    }
+    return {team,resolve};
+  }
+  let matchupDirectory=createMatchupDirectory();
   function baseURL(base){return base||defaultBase||new URL('../',document.querySelector('script[data-pick-research]').src);}
   function source(base){
     const key=String(base);
@@ -91,14 +111,25 @@
     return href?'<a class="player-portrait '+esc(className)+'" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" aria-label="Open '+esc(label)+' player profile in a new tab">'+image+'</a>':'<span class="player-portrait '+esc(className)+'">'+image+'</span>';
   }
   function teamIcon(team,className=''){
+    team=String(team||'');
     return '<span class="team-icon '+esc(className)+'" aria-hidden="true"><span>'+esc(team.length<=4?team:'')+'</span><img data-team-logo="'+esc(team)+'" alt="" loading="lazy" decoding="async" hidden></span>';
   }
   function matchupHTML(game){
     return teamIcon(game.awayTeam.abbreviation)+'<span>'+esc(game.awayTeam.name)+' <span class="matchup-at">@</span> '+esc(game.homeTeam.name)+'</span>'+teamIcon(game.homeTeam.abbreviation);
   }
-  function matchupHeading(title,teams,row={}){
-    const key=JSON.stringify([row.date,row.canonicalEventId||row.eventId]),game=matchups.get(key);
-    return '<span class="matchup-title" data-matchup-heading="'+esc(key)+'">'+(game?matchupHTML(game):esc(title))+'</span>';
+  function knownTeamsHTML(teams,{compact=false,title='Matchup unavailable',directory=matchupDirectory}={}){
+    const values=[...new Set((teams||[]).filter(value=>typeof value==='string'&&value.trim()).map(value=>value.trim()))];
+    if(!values.length)return '<span>'+esc(title)+'</span>';
+    const pair=[...new Map(values.map(value=>{const team=directory.team(value)||{name:value,abbreviation:value};return [team.abbreviation.toLowerCase(),team];})).values()].slice(0,2);
+    const label=pair.map(team=>team.name).join(' vs ')+(pair.length===1?' · opponent unavailable':'');
+    return '<span class="'+(compact?'pm-game-teams':'matchup-team-pair')+'" aria-label="'+esc(label)+'">'+teamIcon(pair[0].abbreviation)+'<span>'+esc(compact?pair[0].abbreviation:pair[0].name)+(pair.length===2?' <span class="matchup-at">vs</span> '+esc(compact?pair[1].abbreviation:pair[1].name):' · opponent unavailable')+'</span>'+(pair.length===2?teamIcon(pair[1].abbreviation):'')+'</span>';
+  }
+  function matchupAttributes(row,teams){
+    return ' data-matchup-events="'+esc(JSON.stringify([row.canonicalEventId,row.eventId,row.resultSource?.eventId&&'espn:'+row.resultSource.eventId].filter(Boolean)))+'" data-matchup-teams="'+esc(JSON.stringify(teams||[]))+'"';
+  }
+  function matchupHeading(title,teams,row={},directory=matchupDirectory){
+    const key=JSON.stringify([row.date,row.canonicalEventId||row.eventId]),game=directory.resolve(row,teams);
+    return '<span class="matchup-title" data-matchup-heading="'+esc(key)+'"'+matchupAttributes(row,teams)+'>'+(game?matchupHTML(game):knownTeamsHTML(teams,{title,directory}))+'</span>';
   }
   function compactTime(value){
     if(!Number.isFinite(Date.parse(value)))return 'Tip time unavailable';
@@ -109,31 +140,36 @@
     const title=game.awayTeam.name+' @ '+game.homeTeam.name;
     return '<span class="pm-game-teams" aria-label="'+esc(title)+'">'+teamIcon(game.awayTeam.abbreviation)+'<span>'+esc(game.awayTeam.abbreviation)+' <span class="matchup-at">@</span> '+esc(game.homeTeam.abbreviation)+'</span>'+teamIcon(game.homeTeam.abbreviation)+'</span><time datetime="'+esc(startTime||'')+'">'+esc(compactTime(startTime))+'</time>';
   }
-  function compactMatchup(row){
-    const key=JSON.stringify([row.date,row.canonicalEventId||row.eventId]),game=matchups.get(key);
-    return '<span class="pm-game" data-compact-matchup="'+esc(key)+'" data-tip-time="'+esc(row.startTime||'')+'">'+(game?compactMatchupHTML(game,row.startTime):'<span>Matchup loading…</span><time datetime="'+esc(row.startTime||'')+'">'+esc(compactTime(row.startTime))+'</time>')+'</span>';
+  function compactMatchup(row,directory=matchupDirectory){
+    const key=JSON.stringify([row.date,row.canonicalEventId||row.eventId]),teams=[row.team,row.opponent],game=directory.resolve(row);
+    return '<span class="pm-game" data-compact-matchup="'+esc(key)+'"'+matchupAttributes(row,teams)+' data-tip-time="'+esc(row.startTime||'')+'">'+(game?compactMatchupHTML(game,row.startTime):knownTeamsHTML(teams,{compact:true,directory})+'<time datetime="'+esc(row.startTime||'')+'">'+esc(compactTime(row.startTime))+'</time>')+'</span>';
   }
   async function paintImages(root=document,base){
-    if(!root.querySelector('img[data-player-headshot],img[data-team-logo],[data-compact-matchup]'))return;
+    if(!root.querySelector('img[data-player-headshot],img[data-team-logo],[data-compact-matchup],[data-matchup-heading]'))return;
     try{
       if(!artwork)artwork=source(baseURL(base)).get(new URL('data/player-portraits.json',baseURL(base))).catch(e=>{artwork=null;throw e;});
       const body=await artwork;if(body.schemaVersion!=='public-player-portraits-1')return;
-      for(const game of body.games||[])for(const id of game.eventIds)matchups.set(JSON.stringify([game.date,id]),game);
-      for(const title of root.querySelectorAll('[data-matchup-heading]')){const game=matchups.get(title.dataset.matchupHeading);if(game&&!title.dataset.matchupReady){title.innerHTML=matchupHTML(game);title.dataset.matchupReady='true';}}
-      for(const title of root.querySelectorAll('[data-compact-matchup]')){const game=matchups.get(title.dataset.compactMatchup);if(game&&!title.dataset.matchupReady){title.innerHTML=compactMatchupHTML(game,title.dataset.tipTime);title.dataset.matchupReady='true';}else if(!game)title.firstElementChild.textContent='Matchup unavailable';}
+      matchupDirectory=createMatchupDirectory(body);
+      for(const title of root.querySelectorAll('[data-matchup-heading],[data-compact-matchup]')){
+        if(title.dataset.matchupReady)continue;
+        const [date,id]=JSON.parse(title.dataset.matchupHeading||title.dataset.compactMatchup),ids=JSON.parse(title.dataset.matchupEvents||'[]'),teams=JSON.parse(title.dataset.matchupTeams||'[]');
+        const row={date,eventAliases:ids.length?ids:[id]},game=matchupDirectory.resolve(row,teams),compact=title.hasAttribute('data-compact-matchup');
+        title.innerHTML=game?(compact?compactMatchupHTML(game,title.dataset.tipTime):matchupHTML(game)):knownTeamsHTML(teams,{compact,title:title.textContent})+(compact?'<time datetime="'+esc(title.dataset.tipTime||'')+'">'+esc(compactTime(title.dataset.tipTime))+'</time>':'');
+        title.dataset.matchupReady=game?'verified':'teams';
+      }
       const players=new Map(body.players.map(p=>[p.id,p])),teams=new Map();
       for(const p of body.players)if(p.espnId)players.set('espn:'+p.espnId,p);
       for(const t of body.teams){teams.set(t.abbreviation,t);teams.set(t.name,t);}
       const aliases={NO:'NOP',NY:'NYK',GS:'GSW',SA:'SAS',UTAH:'UTA',WSH:'WAS'};for(const [a,b] of Object.entries(aliases))if(teams.has(b))teams.set(a,teams.get(b));
       for(const img of root.querySelectorAll('img[data-player-headshot],img[data-team-logo]')){
         if(img.hasAttribute('src'))continue;
-        const p=img.dataset.playerHeadshot?players.get(img.dataset.playerHeadshot):null,t=img.dataset.teamLogo?teams.get(img.dataset.teamLogo):null,url=p?.headshot||t?.logo;
+        const p=img.dataset.playerHeadshot?players.get(img.dataset.playerHeadshot):null,t=img.dataset.teamLogo?teams.get(matchupDirectory.team(img.dataset.teamLogo)?.abbreviation)||teams.get(img.dataset.teamLogo):null,url=p?.headshot||t?.logo;
         if(!url||!/^https:\/\/a\.espncdn\.com\/i\/(?:headshots\/nba\/players\/full\/\d+|teamlogos\/nba\/500\/[a-z]+)\.png$/.test(url))continue;
         img.classList.add('artwork-loading');
         img.addEventListener('load',()=>{img.classList.remove('artwork-loading');img.previousElementSibling.hidden=true;},{once:true});
-        img.addEventListener('error',()=>{img.hidden=true;},{once:true});img.src=url;img.hidden=false;
+        img.addEventListener('error',()=>{img.hidden=true;img.previousElementSibling.hidden=false;},{once:true});img.src=url;img.hidden=false;
       }
-    }catch{for(const title of root.querySelectorAll('[data-compact-matchup]'))if(!title.dataset.matchupReady&&title.firstElementChild)title.firstElementChild.textContent='Matchup unavailable';}
+    }catch{/* Keep the pick's saved team names if the optional artwork directory fails. */}
   }
   function panel(row,{base,label}={}){
     const token=String(++serial),key=JSON.stringify([row.date,row.canonicalEventId||row.eventId,row.playerId,row.market,row.operator,row.line]);
@@ -266,5 +302,5 @@
     if(!point)return;
     node.querySelector('.research-game-detail').textContent=point.game.date+' · '+(point.game.home?'vs ':'@ ')+point.game.opponent+' · '+(finite(point.actual)?point.actual:'Unavailable')+' '+(names[state.row.market]||state.row.market)+' · MP '+fmt(point.game.stats?.MIN)+' · '+({win:'Hit',loss:'Miss',push:'Push'}[point.outcome]||'Unavailable');
   }
-  return {init,panel,hydrate,paintImages,portrait,teamIcon,matchupHeading,matchupHTML,compactMatchup,compactMatchupHTML,compactTime,seasonFor,appearances,recentSample,earlySeasonSample,chartHTML,readText,createSource,trackedTable,defenderGameTable,defenderHistoryMarkup};
+  return {init,panel,hydrate,paintImages,portrait,teamIcon,createMatchupDirectory,matchupHeading,matchupHTML,compactMatchup,compactMatchupHTML,compactTime,seasonFor,appearances,recentSample,earlySeasonSample,chartHTML,readText,createSource,trackedTable,defenderGameTable,defenderHistoryMarkup};
 });

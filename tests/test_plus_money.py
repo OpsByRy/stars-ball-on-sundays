@@ -58,3 +58,25 @@ class PlusMoneyBoundary(unittest.TestCase):
         for flag in ['true',1,None]:
             body['tickets'][0]['ryFavorite']=flag;rehash()
             with self.assertRaisesRegex(ValueError,'favorite flag'):schema.validate(body)
+
+    def test_verified_posting_clock_can_be_added_once_and_survives_future_updates(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);directory=root/'data/plus-money';directory.mkdir(parents=True)
+            original=self.record();original['firstPublishedAt']=None
+            bodies=[]
+            for minute,first in [(26,None),(27,'2026-10-28T17:25:54.424674Z'),(28,'2026-10-28T17:25:54.424674+00:00')]:
+                body=copy.deepcopy(original);body['updatedAt']=f'2026-10-28T17:{minute}:00Z';body['firstPublishedAt']=first;body.pop('version',None)
+                body['version']=schema.hashlib.sha256(schema.canonical(body)).hexdigest()[:16];schema.validate(body);bodies.append(body)
+            def write(records):
+                entries=[]
+                for body in records:
+                    target=directory/body['date']/(body['version']+'.json');target.parent.mkdir(exist_ok=True);target.write_bytes(schema.canonical(body)+b'\n')
+                    entries.append({k:body[k] for k in ['date','version','updatedAt']}|{'path':body['date']+'/'+body['version']+'.json','count':len(body['tickets'])})
+                (directory/'manifest.json').write_text(json.dumps({'schemaVersion':'public-plus-money-manifest-1','editions':entries}))
+            write(bodies);schema.publication_files(root,lambda r,n:r/n)
+            for first in [None,'2026-10-28T18:00:00Z']:
+                bad=copy.deepcopy(bodies[-1]);bad['firstPublishedAt']=first;bad.pop('version');bad['version']=schema.hashlib.sha256(schema.canonical(bad)).hexdigest()[:16]
+                write(bodies[:2]+[bad])
+                with self.assertRaisesRegex(ValueError,'clock cannot change or be cleared'):schema.publication_files(root,lambda r,n:r/n)
+            write([bodies[1],bodies[0]])
+            with self.assertRaisesRegex(ValueError,'chronological'):schema.publication_files(root,lambda r,n:r/n)

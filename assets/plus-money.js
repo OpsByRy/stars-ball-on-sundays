@@ -64,7 +64,7 @@
     const native=r.operator==='>='&&(r.market==='3PM'||r.market==='PTS'&&[5,10,15,20,25,30,35].includes(r.line)||['REB','AST'].includes(r.market)&&[4,6,8,10].includes(r.line)||['PRA','PA','PR','RA'].includes(r.market)&&r.line>=10&&r.line%5===0);
     return `${native?r.line+'+':r.operator==='>='?'Alt O'+(Math.ceil(r.line)-.5):r.operator==='<='?'Alt U'+(Math.floor(r.line)+.5):(r.operator==='>'?'Over ':'Under ')+r.line} ${markets[r.market]||r.market}`;
   };
-  const stamp=value=>value&&Number.isFinite(Date.parse(value))?new Date(value).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}):'Time unavailable';
+  const stamp=value=>value&&Number.isFinite(Date.parse(value))?new Date(value).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+' ET':'Time unavailable';
   function safePath(entry){if(!/^\d{4}-\d{2}-\d{2}$/.test(entry.date)||!Number.isFinite(Date.parse(entry.date))||!/^[a-f0-9]{16}$/.test(entry.version)||entry.path!==`${entry.date}/${entry.version}.json`)throw Error('Invalid parlay publication path');return entry.path;}
   function readState(search='',hash=''){
     const p=new URLSearchParams(search),minimum=Number(p.get('minimum')),minPrice=Number(p.get('minPrice'));

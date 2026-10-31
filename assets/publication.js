@@ -79,10 +79,10 @@
     const groups=new Map();for(const p of sortPicks(rows)){const key=gameKey(p);if(!groups.has(key))groups.set(key,{key,rows:[]});groups.get(key).rows.push(p);}
     return [...groups.values()].map(g=>({...g,title:g.rows.find(p=>p.matchup)?.matchup||[...new Set(g.rows.flatMap(p=>[p.team,p.opponent]).filter(Boolean))].sort(compareText).join(' vs ')||'Game unavailable',startTime:g.rows.find(p=>p.startTime)?.startTime}));
   }
-  function pricedPick(pick){
+  function pricedPick(pick,preferredBook){
     pick=policy.freezeDaily(pick);
     const books=typeof window==='undefined'?require('./book-prices.js'):window.SBOS_BOOK_PRICES;
-    if(books)return books.pricedPick(pick);
+    if(books)return books.pricedPick(pick,preferredBook);
     if(pick.confidenceUpdate)return {...pick,americanOdds:pick.confidenceUpdate.americanOdds??null};
     const quote=pick.priceCheck;
     return pick.americanOdds==null&&quote?.status==='returned'&&typeof quote.americanOdds==='number'&&Number.isFinite(quote.americanOdds)&&Math.abs(quote.americanOdds)>=100?{...pick,americanOdds:quote.americanOdds}:pick;
@@ -146,36 +146,86 @@
     return `${fit?'<div data-personal-fit>'+fit+'</div>':''}<div class="publication-note favorites-posted">${posted}${posted&&slip?'<br>':''}${slip}${updated}${priced?allPriced?'<br>Straight prices appear below. FanDuel’s SGP quote can differ from our calculator’s multiplied straight prices. Check current odds and availability.':'<br>Individual leg prices were not supplied. Check FanDuel for current odds and availability.':''}<div data-personal-ticket-payout>${personalPayoutHTML(body)}</div><p class="personal-return-note">Leg returns illustrate singles at your personal stake setting. Ry’s record tracks the whole parlay.</p><div data-personal-void-note>${personalVoidNote(body)}</div></div>`;
   }
   const researchProbabilityFilters=['all','with_probability','without_probability','needs_review'];
+  const researchSorts=['reviewed','probability_desc','probability_asc','price_desc','price_asc'];
+  const researchRangeParams={minProbability:'win_min',maxProbability:'win_max',minPrice:'price_min',maxPrice:'price_max'};
+  const researchRangeInputs={'research-win-min':'minProbability','research-win-max':'maxProbability','research-price-min':'minPrice','research-price-max':'maxPrice'};
+  const payoutOdds=value=>typeof value==='number'&&Number.isFinite(value)&&Math.abs(value)>=100?(value>0?1+value/100:1+100/-value):null;
+  function researchPrice(row,preferredBook){
+    const books=typeof window==='undefined'?require('./book-prices.js'):window.SBOS_BOOK_PRICES;
+    return payoutOdds(books?books.selectedQuote(row,preferredBook)?.americanOdds:pricedPick(row,preferredBook).americanOdds);
+  }
+  function researchRanges(state={}){
+    const values={},errors={};
+    for(const key of Object.keys(researchRangeParams)){
+      const text=String(state[key]??'').trim().replace(/\u2212/g,'-'),probability=key.endsWith('Probability');
+      if(!text){values[key]=null;continue;}
+      const number=/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(text)?Number(text):NaN;
+      if(!Number.isFinite(number)||probability&&(number<0||number>100)||!probability&&payoutOdds(number)===null){
+        errors[key]=probability?'Win estimate limits must be numbers from 0 to 100.':'Price limits must be American odds of −100 or lower, or +100 or higher.';
+        values[key]=null;
+      }else values[key]=probability?number/100:payoutOdds(number);
+    }
+    for(const [min,max,label] of [['minProbability','maxProbability','win estimate'],['minPrice','maxPrice','price by payout']]){
+      if(values[min]!==null&&values[max]!==null&&values[min]>values[max])errors[min]=errors[max]='Minimum '+label+' must not exceed its maximum.';
+    }
+    return {values,errors};
+  }
   const researchSide=row=>results.normalizeContract(row)?.operator.startsWith('>')?'over':'under';
   const researchLine=row=>Number(lineLabel(row).match(/\d+(?:\.\d+)?/)?.[0]);
   const searchText=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
   function readResearchState(search=''){
     const params=new URLSearchParams(search),line=params.get('line')||'';
-    return {query:params.get('q')??params.get('player')??'',market:statOrder.includes(params.get('market'))?params.get('market'):'all',status:Object.hasOwn(categoryTitles,params.get('review'))?params.get('review'):'all',probability:researchProbabilityFilters.includes(params.get('probability'))?params.get('probability'):'all',side:['over','under'].includes(params.get('side'))?params.get('side'):'all',line:line!==''&&Number.isFinite(Number(line))&&Number(line)>=0?line:'',page:0};
+    return {query:params.get('q')??params.get('player')??'',market:statOrder.includes(params.get('market'))?params.get('market'):'all',status:Object.hasOwn(categoryTitles,params.get('review'))?params.get('review'):'all',probability:researchProbabilityFilters.includes(params.get('probability'))?params.get('probability'):'all',side:['over','under'].includes(params.get('side'))?params.get('side'):'all',line:line!==''&&Number.isFinite(Number(line))&&Number(line)>=0?line:'',sort:researchSorts.includes(params.get('sort'))?params.get('sort'):'reviewed',...Object.fromEntries(Object.entries(researchRangeParams).map(([key,param])=>[key,params.get(param)||''])),page:0};
   }
   function researchSearch(day,state,search=''){
     const params=new URLSearchParams(search);params.set('date',day);params.delete('player');
-    for(const [key,param] of Object.entries({query:'q',market:'market',status:'review',probability:'probability',side:'side',line:'line'})){
-      const value=state[key];if(value!==undefined&&value!==''&&value!=='all')params.set(param,value);else params.delete(param);
+    for(const [key,param] of Object.entries({query:'q',market:'market',status:'review',probability:'probability',side:'side',line:'line',sort:'sort',...researchRangeParams})){
+      const value=state[key],isDefault=key==='sort'?value==='reviewed':['market','status','probability','side'].includes(key)&&value==='all';
+      if(value!==undefined&&value!==''&&!isDefault)params.set(param,value);else params.delete(param);
     }
     return params.toString();
   }
-  function researchPage(rows,{query='',market='all',status='all',probability='all',side='all',line='',page=0,size=40}={}){
+  function researchPage(rows,{query='',market='all',status='all',probability='all',side='all',line='',sort='reviewed',minProbability='',maxProbability='',minPrice='',maxPrice='',preferredBook,page=0,size=40}={}){
+    if(!researchSorts.includes(sort))sort='reviewed';
+    const {values,errors}=researchRanges({minProbability,maxProbability,minPrice,maxPrice});
+    if(Object.keys(errors).length)return {rows:[],total:0,pages:1,page:0,errors};
+    const winRange=values.minProbability!==null||values.maxProbability!==null,priceRange=values.minPrice!==null||values.maxPrice!==null;
+    if(priceRange||sort.startsWith('price_')){
+      const books=typeof window==='undefined'?require('./book-prices.js'):window.SBOS_BOOK_PRICES;
+      preferredBook=preferredBook??books?.getPreferredBook();
+    }
     const tokens=searchText(query).replace(/(>=|<=|>|<)\s*(\d)/g,'$1 $2').trim().split(/\s+/).filter(Boolean),symbol=tokens.find(t=>['>','<','>=','<='].includes(t));
-    const filtered=rows.filter(p=>{
+    const filtered=[];
+    rows.forEach((p,index)=>{
       if(market!=='all'&&p.market!==market||status!=='all'&&publishedCategory(p)!==status||side!=='all'&&researchSide(p)!==side||line!==''&&researchLine(p)!==Number(line))return false;
+      if(tokens.length){
+        const label=lineLabel(p),operator=results.normalizeContract(p)?.operator;
+        if(symbol&&operator!==symbol||tokens.includes('over')&&!/^(Over |Alt O)/.test(label)||tokens.includes('under')&&!/^(Under |Alt U)/.test(label))return;
+        const text=searchText(`${p.player} ${p.team||''} ${p.opponent||''} ${p.market} ${markets[p.market]||''} ${label} ${operator==='>='?'at least':operator==='<='?'at most':researchSide(p)}`);
+        if(!tokens.every(token=>{
+          if(['>','<','>=','<=','over','under'].includes(token))return true;
+          const milestone=token.match(/^(\d+(?:\.\d+)?)\+$/);if(milestone)return operator==='>='&&p.line===Number(milestone[1]);
+          return /^\d+(?:\.\d+)?$/.test(token)?(symbol?p.line:researchLine(p))===Number(token):text.includes(token);
+        }))return;
+      }
       const read=research.researchProbability(p);
-      if(probability==='with_probability'&&read.status!=='available'||probability==='without_probability'&&read.status==='available'||probability==='needs_review'&&!['held','unavailable','stale'].includes(read.status))return false;
-      const label=lineLabel(p),operator=results.normalizeContract(p)?.operator;
-      if(symbol&&operator!==symbol||tokens.includes('over')&&!/^(Over |Alt O)/.test(label)||tokens.includes('under')&&!/^(Under |Alt U)/.test(label))return false;
-      const text=searchText(`${p.player} ${p.team||''} ${p.opponent||''} ${p.market} ${markets[p.market]||''} ${label} ${operator==='>='?'at least':operator==='<='?'at most':researchSide(p)}`);
-      return tokens.every(token=>{
-        if(['>','<','>=','<=','over','under'].includes(token))return true;
-        const milestone=token.match(/^(\d+(?:\.\d+)?)\+$/);if(milestone)return operator==='>='&&p.line===Number(milestone[1]);
-        return /^\d+(?:\.\d+)?$/.test(token)?(symbol?p.line:researchLine(p))===Number(token):text.includes(token);
-      });
+      if(probability==='with_probability'&&read.status!=='available'||probability==='without_probability'&&read.status==='available'||probability==='needs_review'&&!['held','unavailable','stale'].includes(read.status))return;
+      const win=read.status==='available'?read.probability:null;
+      if(winRange&&(win===null||values.minProbability!==null&&win<values.minProbability||values.maxProbability!==null&&win>values.maxProbability))return;
+      // Cache each comparison value once; sorting never re-reads forecasts or prices.
+      const price=priceRange||sort.startsWith('price_')?researchPrice(p,preferredBook):null;
+      if(priceRange&&(price===null||values.minPrice!==null&&price<values.minPrice||values.maxPrice!==null&&price>values.maxPrice))return;
+      filtered.push({row:p,index,win,price});
     });
-    const pages=Math.max(1,Math.ceil(filtered.length/size)),current=Math.max(0,Math.min(page,pages-1));return {rows:filtered.slice(current*size,(current+1)*size),total:filtered.length,pages,page:current};
+    if(researchSorts.includes(sort)&&sort!=='reviewed')filtered.sort((a,b)=>{
+      const key=sort.startsWith('price_')?'price':'win',x=a[key],y=b[key];
+      return x===null?(y===null?a.index-b.index:1):y===null?-1:(x-y)*(sort.endsWith('_desc')?-1:1)||a.index-b.index;
+    });
+    const pages=Math.max(1,Math.ceil(filtered.length/size)),current=Math.max(0,Math.min(page,pages-1));return {rows:filtered.slice(current*size,(current+1)*size).map(record=>record.row),total:filtered.length,pages,page:current,errors};
+  }
+  function researchValueControls(state={}){
+    const active=Object.keys(researchRangeParams).some(key=>String(state[key]??'').trim());
+    return `<details class="research-numeric-filters"${active?' open':''}><summary>Win estimate &amp; price ranges</summary><div class="research-range-grid"><fieldset><legend>Win estimate (%)</legend><div class="research-range-pair"><label>Minimum win estimate (%)<input id="research-win-min" type="text" inputmode="decimal" value="${escape(state.minProbability)}" placeholder="0" aria-describedby="research-win-help research-range-error"></label><label>Maximum win estimate (%)<input id="research-win-max" type="text" inputmode="decimal" value="${escape(state.maxProbability)}" placeholder="100" aria-describedby="research-win-help research-range-error"></label></div><p id="research-win-help">Use 0–100. Limits include endpoints and use saved estimates before rounding. Missing or held estimates do not match a win range.</p></fieldset><fieldset><legend>Saved price · American odds</legend><div class="research-range-pair"><label>Minimum price (American)<input id="research-price-min" type="text" value="${escape(state.minPrice)}" placeholder="−200" aria-describedby="research-price-help research-range-error" autocapitalize="off" spellcheck="false"></label><label>Maximum price (American)<input id="research-price-max" type="text" value="${escape(state.maxPrice)}" placeholder="+200" aria-describedby="research-price-help research-range-error" autocapitalize="off" spellcheck="false"></label></div><p id="research-price-help">Payout order: −200, −100/+100, +200. Use odds ≤ −100 or ≥ +100; even-money prices are equivalent. Missing prices do not match a price range.</p></fieldset></div><p class="research-range-note">Blank limits are open. Price sorting and ranges use the displayed saved quote and sportsbook preference, including a labeled fallback when needed.</p><p id="research-range-error" class="research-range-error" role="alert" hidden></p></details>`;
   }
   function researchCoverage(rows){
     return statOrder.map(market=>{const reviewed=rows.filter(row=>row.market===market),estimates=reviewed.filter(row=>{return research.researchProbability(row).status==='available';}).length;
@@ -305,15 +355,34 @@
       event.preventDefault();const tabs=[...document.querySelectorAll('[data-pick-tab]')],index=tabs.indexOf(tab),next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
       tabs[next].focus();pickState.type=tabs[next].dataset.pickTab;refreshPicks(true);
     });
-    window.addEventListener('sbos:bookchange',()=>{if(kind==='daily')refreshPicks();else if(kind==='research')refreshResearch();else if(kind==='parlays'&&activeBody){showSupporting(activeBody.date).catch(showError);}else if(activeBody){const target=$({parlays:'daily-content',sundays:'sunday-current','sunday-personal':'sunday-current',week:'week-content'}[kind]);if(target){target.innerHTML=kind==='sunday-personal'?personalSundayContent(activeBody):renderEdition(activeBody);board.refresh();}}});
+    window.addEventListener('sbos:bookchange',()=>{if(kind==='daily')refreshPicks();else if(kind==='research'){researchState.page=0;refreshResearch(true);}else if(kind==='parlays'&&activeBody){showSupporting(activeBody.date).catch(showError);}else if(activeBody){const target=$({parlays:'daily-content',sundays:'sunday-current','sunday-personal':'sunday-current',week:'week-content'}[kind]);if(target){target.innerHTML=kind==='sunday-personal'?personalSundayContent(activeBody):renderEdition(activeBody);board.refresh();}}});
     window.addEventListener('popstate',()=>{if(kind==='daily'&&activeBody){const day=new URL(location.href).searchParams.get('date');if(day&&day!==activeBody.date){$('slate-date').value=day;showDaily(day).catch(showError);}else{pickState=readPickState(location.search,day||activeBody?.date);refreshPicks();}}});
-    function researchList(){const page=researchPage(researchState.rows,researchState);researchState.page=page.page;return {status:`${page.total} matching saved lines · page ${page.page+1} of ${page.pages}`,html:`<div class="pick-list">${window.SBOS_PICK_BOARD.columns()}${page.rows.map(p=>row(p,'research')).join('')||'<p class="pick-empty">'+escape(researchEmptyMessage(researchState.rows,researchState))+' No probability is inferred for a missing match.</p>'}</div><div class="research-pagination"><button type="button" class="outline-button" data-research-page="-1" ${page.page===0?'disabled':''}>Previous</button><button type="button" class="outline-button" data-research-page="1" ${page.page+1===page.pages?'disabled':''}>Next</button></div>`};}
-    function researchGroup(rows,standalone=false){researchState={rows,...readResearchState(standalone?location.search:'')};const list=researchList();return `${standalone?'<section class="research-library standalone-research">':'<details class="pick-group research-library"><summary><h3>SBOS Research <span class="count">'+rows.length+'</span></h3></summary>'}<div class="pick-group-body"><p class="research-intro">Explore lines beyond our featured picks. Choose <strong>With a saved probability</strong> for dated pregame estimates—not live probabilities.</p><div class="research-controls"><label>Search a player, team or line<input id="research-search" value="${escape(researchState.query)}" type="search" placeholder="Player, team, or over 8.5 points" autocomplete="off" aria-describedby="research-search-help"></label><label>Probability<select id="research-probability"><option value="all">All saved research</option><option value="with_probability">With a saved probability</option><option value="without_probability">Without an available probability</option><option value="needs_review">Held, unavailable or freshness review</option></select></label><label>Market<select id="research-market"><option value="all">All markets</option>${researchMarketOptions(rows)}</select></label><label>Review<select id="research-status"><option value="all">All reviewed lines</option>${Object.entries(categoryTitles).map(([key,title])=>`<option value="${key}">${title}</option>`).join('')}</select></label></div><p id="research-search-help" class="research-search-help">Search words combine. A number matches the displayed line, not a projection or a historical hit rate. Missing results mean no matching saved assessment; no probability is inferred.</p><div class="research-extra"><details class="research-line-filters"${researchState.side!=='all'||researchState.line!==''?' open':''}><summary>Filter by side and line</summary><div class="research-controls"><label>Side<select id="research-side"><option value="all">All sides</option><option value="over">Over / at least</option><option value="under">Under / at most</option></select></label><label>Displayed line<input id="research-line" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 8.5" aria-describedby="research-search-help"></label></div></details><button type="button" class="outline-button" data-research-reset>Reset filters</button></div>${researchCoverageHTML(rows)}<details class="research-data-note"><summary>What these estimates cover</summary><p class="publication-note">Reviewed lines include <strong>Not a Pick</strong> and are not all recommendations. Probabilities apply only to the displayed side and line; nearby lines and opposite sides do not inherit a read. A projection or historical hit rate is not a win probability. Forecast and odds times are separate. Older pregame snapshots are labeled once the game starts; no live estimate is calculated. Overtime terms may be unconfirmed; open a line’s saved sources. Prices below −800 are outside this research scope.</p></details><div id="research-result-status" class="research-page-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1">${list.status}</div><div id="research-lines">${list.html}</div></div>${standalone?'</section>':'</details>'}`;}
-    function syncResearchControls(){for(const [id,key] of Object.entries({'research-search':'query','research-market':'market','research-status':'status','research-probability':'probability','research-side':'side','research-line':'line'}))if($(id))$(id).value=researchState[key];}
-    function refreshResearch(saveState=false){const target=$('research-lines');if(target){const list=researchList();target.innerHTML=list.html;$('research-result-status').textContent=list.status;if(saveState&&kind==='research')history.replaceState(null,'','?'+researchSearch(activeBody.date,researchState,location.search));board.refresh();}}
-    document.addEventListener('input',event=>{const key={'research-search':'query','research-line':'line'}[event.target.id];if(key){researchState[key]=event.target.value;researchState.page=0;refreshResearch(true);}});
-    document.addEventListener('change',event=>{const key={'research-market':'market','research-status':'status','research-probability':'probability','research-side':'side'}[event.target.id];if(key){researchState[key]=event.target.value;researchState.page=0;refreshResearch(true);}});
-    document.addEventListener('click',event=>{if(event.target.closest('[data-research-reset]')){researchState={rows:researchState.rows,...readResearchState()};syncResearchControls();refreshResearch(true);}const button=event.target.closest('[data-research-page]');if(button){researchState.page+=Number(button.dataset.researchPage);refreshResearch();$('research-result-status').focus({preventScroll:true});$('research-result-status').scrollIntoView({block:'start'});}});
+    let researchRefreshTimer=null;
+    function researchList(){
+      const page=researchPage(researchState.rows,researchState),invalid=Object.keys(page.errors).length>0;researchState.page=page.page;
+      return {errors:page.errors,status:invalid?'Correct the highlighted range filters to view matching lines.':`${page.total} matching saved lines · page ${page.page+1} of ${page.pages}`,html:`<div class="pick-list">${window.SBOS_PICK_BOARD.columns()}${page.rows.map(p=>row(p,'research')).join('')||'<p class="pick-empty">'+escape(invalid?'Correct the range filters above.':researchEmptyMessage(researchState.rows,researchState)+' No probability is inferred for a missing match.')+'</p>'}</div><div class="research-pagination"><button type="button" class="outline-button" data-research-page="-1" ${page.page===0?'disabled':''}>Previous</button><button type="button" class="outline-button" data-research-page="1" ${page.page+1===page.pages?'disabled':''}>Next</button></div>`};
+    }
+    function researchGroup(rows,standalone=false){
+      clearTimeout(researchRefreshTimer);researchState={rows,...readResearchState(standalone?location.search:'')};const list=researchList();
+      return `${standalone?'<section class="research-library standalone-research">':'<details class="pick-group research-library"><summary><h3>SBOS Research <span class="count">'+rows.length+'</span></h3></summary>'}<div class="pick-group-body"><p class="research-intro">Explore lines beyond our featured picks. Choose <strong>With a saved probability</strong> for dated pregame estimates—not live probabilities.</p>${window.SBOS_BOOK_PRICES?.controlHTML()||''}
+      <div class="research-controls research-main-controls"><label>Search a player, team or line<input id="research-search" value="${escape(researchState.query)}" type="search" placeholder="Player, team, or over 8.5 points" autocomplete="off" aria-describedby="research-search-help"></label><label>Sort by<select id="research-sort"><option value="reviewed">Saved research order</option><option value="probability_desc">Win estimate: high to low</option><option value="probability_asc">Win estimate: low to high</option><option value="price_desc">Price: payout high to low</option><option value="price_asc">Price: payout low to high</option></select></label><label>Probability<select id="research-probability"><option value="all">All saved research</option><option value="with_probability">With a saved probability</option><option value="without_probability">Without an available probability</option><option value="needs_review">Held, unavailable or freshness review</option></select></label><label>Market<select id="research-market"><option value="all">All markets</option>${researchMarketOptions(rows)}</select></label><label>Review<select id="research-status"><option value="all">All reviewed lines</option>${Object.entries(categoryTitles).map(([key,title])=>`<option value="${key}">${title}</option>`).join('')}</select></label></div>
+      <p id="research-search-help" class="research-search-help">Search words combine. A number matches the displayed line, not a projection or a historical hit rate. Missing or held values stay last in both sort directions. Missing results mean no matching saved assessment; no probability is inferred.</p>${researchValueControls(researchState)}
+      <div class="research-extra"><details class="research-line-filters"${researchState.side!=='all'||researchState.line!==''?' open':''}><summary>Filter by side and line</summary><div class="research-controls"><label>Side<select id="research-side"><option value="all">All sides</option><option value="over">Over / at least</option><option value="under">Under / at most</option></select></label><label>Displayed line<input id="research-line" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 8.5" aria-describedby="research-search-help"></label></div></details><button type="button" class="outline-button" data-research-reset>Reset filters</button></div>${researchCoverageHTML(rows)}<details class="research-data-note"><summary>What these estimates cover</summary><p class="publication-note">Reviewed lines include <strong>Not a Pick</strong> and are not all recommendations. Probabilities apply only to the displayed side and line; nearby lines and opposite sides do not inherit a read. A projection or historical hit rate is not a win probability. Forecast and odds times are separate. Older pregame snapshots are labeled once the game starts; no live estimate is calculated. Overtime terms may be unconfirmed; open a line’s saved sources. Prices below −800 are outside this research scope.</p></details><div id="research-result-status" class="research-page-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1">${list.status}</div><div id="research-lines">${list.html}</div></div>${standalone?'</section>':'</details>'}`;
+    }
+    function syncResearchValidation(errors){
+      for(const [id,key] of Object.entries(researchRangeInputs))if($(id))$(id).setAttribute('aria-invalid',String(!!errors[key]));
+      const target=$('research-range-error');if(target){target.textContent=[...new Set(Object.values(errors))].join(' ');target.hidden=!target.textContent;}
+    }
+    function syncResearchControls(){
+      for(const [id,key] of Object.entries({'research-search':'query','research-market':'market','research-status':'status','research-probability':'probability','research-side':'side','research-line':'line','research-sort':'sort',...researchRangeInputs}))if($(id))$(id).value=researchState[key];
+      syncResearchValidation(researchRanges(researchState).errors);
+    }
+    function refreshResearch(saveState=false){
+      clearTimeout(researchRefreshTimer);const target=$('research-lines');if(target){const list=researchList();target.innerHTML=list.html;$('research-result-status').textContent=list.status;syncResearchValidation(list.errors);if(saveState&&kind==='research')history.replaceState(null,'','?'+researchSearch(activeBody.date,researchState,location.search));board.refresh();}
+    }
+    document.addEventListener('input',event=>{const key={'research-search':'query','research-line':'line',...researchRangeInputs}[event.target.id];if(key){researchState[key]=event.target.value;researchState.page=0;clearTimeout(researchRefreshTimer);researchRefreshTimer=setTimeout(()=>refreshResearch(true),120);}});
+    document.addEventListener('change',event=>{const key={'research-market':'market','research-status':'status','research-probability':'probability','research-side':'side','research-sort':'sort'}[event.target.id];if(key){researchState[key]=event.target.value;researchState.page=0;refreshResearch(true);}});
+    document.addEventListener('click',event=>{if(event.target.closest('[data-research-reset]')){researchState={rows:researchState.rows,...readResearchState()};syncResearchControls();refreshResearch(true);}const button=event.target.closest('[data-research-page]');if(button){researchState.page+=Number(button.dataset.researchPage);refreshResearch(true);$('research-result-status').focus({preventScroll:true});$('research-result-status').scrollIntoView({block:'start'});}});
     function versionHistory(body){const versions=allVersions.filter(e=>e.channel===body.channel&&e.date===body.date);return versions.length>1?`<details class="model-policy"><summary>Saved versions of this edition</summary><ul>${versions.map(e=>`<li><a href="${escape(safeEditionURL(e,dataRoot).href)}">${escape(stamp(e.updatedAt))} · saved record ${escape(e.version.slice(0,8))}</a></li>`).join('')}</ul><p>Earlier snapshots remain unchanged. JSON records contain published picks, reviewed lines, saved estimates, and statistical outcomes.</p></details>`:'';}
     function renderEdition(body){
       activeBody=body;ryKeys=favoriteKeys(body);board.beginDate(body.date);
@@ -332,6 +401,7 @@
       $('slate-context').textContent=`${day<etDay()?'Archived':day>etDay()?'Upcoming':'Current'} board · saved prices and dated estimates.`;board.refresh();
     }
     async function showSupporting(day){
+      if(kind==='research'&&activeBody){clearTimeout(researchRefreshTimer);history.replaceState(null,'','?'+researchSearch(day,researchState,location.search));}
       const serial=++request,entry=entries.find(e=>e.channel==='daily'&&e.date===day);if(!entry)throw Error('No published date');
       if(kind==='research'){$('daily-content').setAttribute('aria-busy','true');$('slate-context').textContent='Loading saved research for '+dateLabel(day)+'…';}
       const body=await loadEdition(entry,kind==='parlays');if(serial!==request)return;
@@ -366,5 +436,5 @@
     }catch{showError();}
     function showError(){const id={daily:'daily-content',research:'daily-content',parlays:'daily-content',home:'home-current',sundays:'sunday-current','sunday-personal':'sunday-current',week:'week-content',archives:'sunday-archive'}[kind];if(id&&$(id)){$(id).removeAttribute('aria-busy');$(id).innerHTML='<p class="site-error" role="alert">The publication record is unavailable. Refresh to try again.</p>';} }
   }
-  return {oddsRefreshLabel,personalPostingLabel,personalSlipsHTML,cupContextNotice,dailyCategories,readResearchState,researchSearch,researchCoverage,researchMarketOptions,researchCoverageHTML,researchEmptyMessage,latestEstimate,confidenceDetails,init,validDate,dateLabel,etDay,nextSunday,lineLabel,latestEntries,summary,safeEditionURL,publishedCategory,editionGroups,researchPage,favoritesNotice,pricedPick,gameKey,favoriteKey,favoriteKeys,isFavorite,allPicks,honorableMentions,dailyRows,sortPicks,filterPicks,gameGroups,readPickState,pickSearch,tabCounts};
+  return {oddsRefreshLabel,personalPostingLabel,personalSlipsHTML,cupContextNotice,dailyCategories,researchRanges,researchValueControls,readResearchState,researchSearch,researchCoverage,researchMarketOptions,researchCoverageHTML,researchEmptyMessage,latestEstimate,confidenceDetails,init,validDate,dateLabel,etDay,nextSunday,lineLabel,latestEntries,summary,safeEditionURL,publishedCategory,editionGroups,researchPage,favoritesNotice,pricedPick,gameKey,favoriteKey,favoriteKeys,isFavorite,allPicks,honorableMentions,dailyRows,sortPicks,filterPicks,gameGroups,readPickState,pickSearch,tabCounts};
 });

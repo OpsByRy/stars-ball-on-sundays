@@ -59,6 +59,18 @@ class PlusMoneyBoundary(unittest.TestCase):
             body['tickets'][0]['ryFavorite']=flag;rehash()
             with self.assertRaisesRegex(ValueError,'favorite flag'):schema.validate(body)
 
+    def test_joint_method_review_is_optional_for_history_but_atomic_and_strict(self):
+        index=json.loads((ROOT/'data/plus-money/manifest.json').read_text())
+        original=next(json.loads((ROOT/'data/plus-money'/e['path']).read_text()) for e in index['editions'] if json.loads((ROOT/'data/plus-money'/e['path']).read_text()).get('modelTargets'))
+        body=copy.deepcopy(original);estimate=body['modelTargets'][0]['jointEstimate']
+        def check():
+            body['version']=schema.hashlib.sha256(schema.canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16];schema.validate(body)
+        check();estimate['method']='Joint scenario model'
+        with self.assertRaisesRegex(ValueError,'supplied together'):check()
+        estimate.update(reviewedAt=estimate['asOf'],reviewStatus='reviewed_provisional');check()
+        estimate['reviewStatus']='validated'
+        with self.assertRaisesRegex(ValueError,'review evidence'):check()
+
     def test_new_ticket_selection_and_verified_posting_order(self):
         body=self.record();body['updatedAt']='2026-10-28T18:00:00Z'
         t=body['tickets'][0];t['selectedAt']='2026-10-28T17:20:00Z';t['postedAt']=None

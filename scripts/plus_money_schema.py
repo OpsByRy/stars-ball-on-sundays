@@ -40,7 +40,13 @@ def validate_model_targets(targets,date):
         estimate=target['jointEstimate']
         fields={'asOf','winProbability','pushProbability','lossProbability','fairAmericanOdds','minimumAmericanOdds',
                 'lowerProbability','upperProbability','sampleGames','calibrationNote'}
-        keys(estimate,fields,fields);stamp(estimate['asOf']);text(estimate['calibrationNote'],300)
+        keys(estimate,fields|{'method','reviewedAt','reviewStatus'},fields);stamp(estimate['asOf']);text(estimate['calibrationNote'],300)
+        review_fields={'method','reviewedAt','reviewStatus'}
+        if review_fields & set(estimate):
+            if not review_fields<=set(estimate):raise ValueError('Joint method and review evidence must be supplied together')
+            text(estimate['method'],120);stamp(estimate['reviewedAt'])
+            if not estimate['method'].strip() or estimate['reviewStatus']!='reviewed_provisional' or not estimate['reviewedAt']:raise ValueError('Invalid joint review evidence')
+            if datetime.fromisoformat(estimate['reviewedAt'].replace('Z','+00:00'))<datetime.fromisoformat(estimate['asOf'].replace('Z','+00:00')):raise ValueError('Joint review cannot precede its forecast')
         p=estimate['winProbability']
         if not number(p) or not 0<p<1 or estimate['pushProbability']!=0 or not number(estimate['lossProbability']) or abs(p+estimate['lossProbability']-1)>1e-7:raise ValueError('Invalid joint model probabilities')
         marginal=[r['estimate']['winProbability'] for r in legs]

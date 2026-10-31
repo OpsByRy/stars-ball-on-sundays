@@ -3,7 +3,7 @@ from datetime import date, datetime
 import math
 import re
 
-EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds'}
+EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds','personalSlips','personalPublication'}
 PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected','confidenceUpdate','bookPrices'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
 RESULT_FIELDS={'actual','minutesPlayed','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
@@ -147,6 +147,35 @@ def validate_honorable_mentions(rows):
         price=row.get('americanOdds');prob=row.get('estimate',{}).get('winProbability')
         if not number(price) or price < -500 or abs(price)<100 or not number(prob) or prob<.7:raise ValueError('Honorable mention price or probability outside published bounds')
 
+def validate_personal_slips(body):
+    if 'personalSlips' not in body and 'personalPublication' not in body:return
+    publication=body.get('personalPublication');keys(publication,{'recordedAt','publishedAt'},{'recordedAt','publishedAt'})
+    for key in ['recordedAt','publishedAt']:stamp(publication[key])
+    if publication['recordedAt'] is None:raise ValueError('Missing personal recording time')
+    parsed=lambda value:datetime.fromisoformat(value.replace('Z','+00:00'))
+    if publication['publishedAt'] is not None and parsed(publication['publishedAt'])<parsed(publication['recordedAt']):raise ValueError('Personal publication precedes recording')
+    if body.get('sharedBetslipUrl') or body.get('sharedBetslipOdds') is not None or body.get('favoritesPostedAt') is not None:raise ValueError('Separate slips cannot also claim one legacy slip')
+    slips=body.get('personalSlips')
+    if not isinstance(slips,list) or not 1<=len(slips)<=12:raise ValueError('Invalid separate personal slips')
+    rows={r['id']:r for r in body['props'] if r['group']=='ry'};seen=set();referenced=set()
+    for slip in slips:
+        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields,fields)
+        if not isinstance(slip['id'],str) or not re.fullmatch(r'ry-\d{4}-\d{2}-\d{2}-\d{2}',slip['id']) or not slip['id'].startswith('ry-'+body['date']+'-') or slip['id'] in seen:raise ValueError('Invalid or duplicate personal slip identity')
+        seen.add(slip['id'])
+        if slip['book'] not in {'fanduel','draftkings'} or type(slip['ryFavorite']) is not bool:raise ValueError('Invalid personal slip attribution')
+        if not number(slip['americanOdds']) or abs(slip['americanOdds'])<100:raise ValueError('Invalid personal full-ticket quote')
+        stamp(slip['placedAt'])
+        if slip['placedAt'] is not None and parsed(slip['placedAt'])>parsed(publication['recordedAt']):raise ValueError('Personal placement follows recording')
+        if not isinstance(slip['legs'],list) or not 2<=len(slip['legs'])<=12:raise ValueError('Invalid personal slip legs')
+        legs=set()
+        for leg in slip['legs']:
+            keys(leg,{'pickId','americanOdds'},{'pickId','americanOdds'})
+            if leg['pickId'] not in rows or leg['pickId'] in legs:raise ValueError('Missing or duplicate personal slip pick')
+            legs.add(leg['pickId']);referenced.add(leg['pickId'])
+            if not number(leg['americanOdds']) or abs(leg['americanOdds'])<100:raise ValueError('Invalid personal leg quote')
+    if referenced!=set(rows):raise ValueError('Unattributed personal pick')
+    if any(r.get('postedAt')!=publication['publishedAt'] for r in rows.values()):raise ValueError('Personal pick publication time mismatch')
+
 def validate_edition(body):
     keys(body,EDITION_FIELDS,{'schemaVersion','channel','date','props'})
     if body['schemaVersion']!='public-1' or body['channel'] not in {'daily','sunday'}: raise ValueError('Invalid edition')
@@ -202,16 +231,22 @@ def validate_edition(body):
             if result.get('source') and not re.fullmatch(r'https://(?:www\.espn\.com/nba/boxscore/_/gameId/\d+|stats\.nba\.com/stats/boxscoresummaryv3\?GameID=\d{10}|site\.api\.espn\.com/apis/site/v2/sports/basketball/nba/injuries)',result['source']): raise ValueError('Unsupported result URL')
             if (result.get('source') or '').startswith('https://stats.nba.com/') and result['source']!='https://stats.nba.com/stats/boxscoresummaryv3?GameID='+(row.get('canonicalEventId') or row['eventId']).removeprefix('nba:'): raise ValueError('Inactive result requires exact official NBA game')
     validate_honorable_mentions(body['props'])
+    validate_personal_slips(body)
     return body
 
 def validate_manifest(body):
     keys(body,{'schemaVersion','editions'},{'schemaVersion','editions'})
     if body['schemaVersion']!='public-1' or not isinstance(body['editions'],list): raise ValueError('Invalid manifest')
+    latest={}
     for row in body['editions']:
         keys(row,ENTRY_FIELDS,ENTRY_FIELDS);day(row['date']);stamp(row['updatedAt'])
         if row['channel'] not in {'daily','sunday'} or not re.fullmatch(r'[0-9a-f]{16}',row['version']): raise ValueError('Invalid manifest entry')
         if row['path']!=f"{row['channel']}/{row['date']}/{row['version']}.json": raise ValueError('Invalid edition path')
         if any(type(row[k]) is not int or row[k]<0 for k in ('count','researchCount')): raise ValueError('Invalid count')
+        if row['updatedAt'] is None:raise ValueError('Edition manifest requires an update clock')
+        key=(row['channel'],row['date']);instant=datetime.fromisoformat(row['updatedAt'].replace('Z','+00:00'))
+        if key in latest and instant<latest[key]:raise ValueError('Edition manifest must be chronological within each slate')
+        latest[key]=instant
 
 def validate_targets(body):
     keys(body,{'schemaVersion','targets'},{'schemaVersion','targets'})

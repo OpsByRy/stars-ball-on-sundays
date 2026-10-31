@@ -107,6 +107,14 @@
     s.hitRate=s.hits+s.misses?s.hits/(s.hits+s.misses):null;return s;
   }
   function personalParlays(body) {
+    if(Array.isArray(body?.personalSlips)){
+      const rows=new Map((body.props||[]).filter(p=>p.group==='ry').map(p=>[p.id,p]));
+      return body.personalSlips.flatMap(s=>{
+        if(!Array.isArray(s.legs)||s.legs.length<2||s.legs.some(l=>!rows.has(l.pickId)))return [];
+        const legs=s.legs.map(l=>({...rows.get(l.pickId),americanOdds:l.americanOdds,book:s.book,bookPrices:undefined,priceCheck:undefined}));
+        return [{id:s.id,date:body.date,legs,americanOdds:s.americanOdds,book:s.book,priceKind:'posted',ryFavorite:s.ryFavorite===true,placedAt:s.placedAt,postedAt:body.personalPublication?.publishedAt??null,recordedAt:body.personalPublication?.recordedAt??null}];
+      });
+    }
     const legs=(body?.props||[]).filter(p=>p.group==='ry');
     // Legacy editions explicitly identify one posted slip. Favorite flags alone are not tickets.
     return legs.length&&(body.sharedBetslipUrl||Number.isFinite(body.sharedBetslipOdds))?[{id:'ry:'+body.date+':'+(body.sharedBetslipUrl||body.favoritesPostedAt||'posted-slip'),legs}]:[];

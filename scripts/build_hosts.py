@@ -17,6 +17,30 @@ OLD = 'https://opsbyry.github.io/stars-ball-on-sundays/'
 ORIGIN = 'https://starsballonsundays.com'
 PREFIX = '/stars-ball-on-sundays'
 PRIVATE_PATH = re.compile(r'(^|/)(?:\.git|\.env(?:\..*)?|\.local-data|pipeline|server|private-lab|functions)(?:/|$)|(?:\.map|\.csv|\.py|\.cjs|\.sqlite3?|\.db)$|(^|/)_worker\.js$', re.I)
+PAGES_MAX_BYTES = 25*1024*1024
+
+
+def json_tokens(raw):
+    """Remove formatting only, preserving every string and number token byte."""
+    json.loads(raw)  # Reject invalid JSON before scanning its lexical form.
+    out=bytearray();quoted=False;escaped=False
+    for char in raw:
+        if quoted:
+            out.append(char)
+            if escaped:escaped=False
+            elif char==92:escaped=True
+            elif char==34:quoted=False
+        elif char==34:quoted=True;out.append(char)
+        elif char not in b' \t\r\n':out.append(char)
+    return bytes(out)
+
+
+def pages_asset(name,raw,limit=PAGES_MAX_BYTES):
+    if len(raw)<=limit:return raw
+    if name.startswith('data/') and name.endswith('.json'):
+        compact=json_tokens(raw)
+        if len(compact)<=limit:return compact
+    raise ValueError('Pages file exceeds 25 MiB: '+name)
 
 
 def validate_policy(policy):
@@ -60,13 +84,20 @@ def assemble(baseline,cf,github,policy,source_sha):
     if not re.fullmatch('[0-9a-f]{40}',source_sha):raise ValueError('Invalid source SHA')
     files=sorted(p for p in baseline.rglob('*') if p.is_file())
     if not files or not (baseline/'index.html').is_file():raise ValueError('Missing validated baseline')
+    compacted={};compaction_receipts={}
     for file in files:
         name=file.relative_to(baseline).as_posix()
         if file.is_symlink() or PRIVATE_PATH.search(name):raise ValueError('Private/unsafe artifact path: '+name)
-        if file.stat().st_size>25*1024*1024:raise ValueError('Pages file exceeds 25 MiB: '+name)
+        if file.stat().st_size>PAGES_MAX_BYTES:
+            raw=file.read_bytes();compact=pages_asset(name,raw)
+            compacted[name]=compact
+            compaction_receipts['/'+name]={'sourceSHA256':hashlib.sha256(raw).hexdigest(),
+                'deployedSHA256':hashlib.sha256(compact).hexdigest(),'sourceBytes':len(raw),
+                'deployedBytes':len(compact),'transformation':'JSON formatting whitespace only; literal tokens unchanged'}
     for directory in [cf,github]:
         if directory.exists():shutil.rmtree(directory)
         shutil.copytree(baseline,directory)
+        for name,raw in compacted.items():(directory/name).write_bytes(raw)
     routes={};pages=[]
     for page in (p for p in files if p.suffix=='.html'):
         name=page.relative_to(baseline).as_posix();pages.append(name);routes.update(page_routes(name))
@@ -88,17 +119,19 @@ def assemble(baseline,cf,github,policy,source_sha):
     for file in files:
         name=file.relative_to(baseline).as_posix()
         if file.suffix!='.html':
-            original=sha256(file)
+            original=hashlib.sha256(compacted[name]).hexdigest() if name in compacted else sha256(file)
             if sha256(cf/name)!=original or sha256(github/name)!=original:raise ValueError('Public data/assets changed: '+name)
         checks['/'+name]=sha256(cf/name)
     receipt={'schemaVersion':'sbos-public-release-1','sourceSHA':source_sha,'canonicalOrigin':ORIGIN,
              'githubMode':policy['githubMode'],'editionManifestSHA256':sha256(baseline/'data/editions/manifest.json'),
              'files':checks}
+    if compaction_receipts:receipt['compactedJSON']=compaction_receipts
     (cf/'_sbos-release.json').write_text(json.dumps(receipt,sort_keys=True,separators=(',',':'))+'\n')
     if sum(p.is_file() for p in cf.rglob('*'))>20000:raise ValueError('Pages file limit exceeded')
     return {'sourceSHA':source_sha,'githubMode':policy['githubMode'],'pages':pages,'oldRoutes':routes,
             'baselineFileCount':len(files),'cloudflareFileCount':sum(p.is_file() for p in cf.rglob('*')),
-            'unchangedNonHTMLFileCount':sum(p.suffix!='.html' for p in files)}
+            'unchangedNonHTMLFileCount':sum(p.suffix!='.html' and p.relative_to(baseline).as_posix() not in compacted for p in files),
+            'compactedJSON':compaction_receipts}
 
 
 def main():

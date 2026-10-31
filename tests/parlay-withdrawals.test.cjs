@@ -2,6 +2,9 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const pm=require('../assets/plus-money.js'),refresh=require('../scripts/refresh-results.cjs');
 const root=path.resolve(__dirname,'..'),read=name=>JSON.parse(fs.readFileSync(path.join(root,name)));
 const original=read('data/plus-money/2026-10-30/bacdcb962a1648f2.json'),withdrawn=original.modelTargets[0];
+// Result refreshes append statistical grades; every original contract, quote,
+// forecast and ticket field must remain identical while those grades advance.
+const frozenTickets=tickets=>tickets.map(t=>({...t,legs:t.legs.map(({result,...leg})=>leg)}));
 
 test('withdrawal suppresses both original immutable editions while preserving every unrelated ticket and input byte',()=>{
  for(const name of ['e1ada600bbb721ec','bacdcb962a1648f2']){
@@ -25,9 +28,16 @@ test('withdrawal is scoped to the date and exact combination, preserving individ
 });
 test('latest October 30 publication cannot restore the target, and original quotes and 20 other parlays are unchanged',()=>{
  const entry=read('data/plus-money/manifest.json').editions.filter(e=>e.date==='2026-10-30').at(-1),current=read('data/plus-money/'+entry.path);
- assert.equal(current.modelTargets.length,0);assert.deepEqual(current.tickets,original.tickets);
+ assert.equal(current.modelTargets.length,0);assert.deepEqual(frozenTickets(current.tickets),frozenTickets(original.tickets));
  for(const k of ['firstPublishedAt','quoteObservedAt'])assert.equal(current[k],original[k]);
  assert.notEqual(current.version,original.version);assert.ok(Date.parse(current.updatedAt)>Date.parse(original.updatedAt));
+});
+test('withdrawal preservation permits result updates but still detects contract, price and forecast changes',()=>{
+ const next=structuredClone(original.tickets);next[0].legs[0].result={actual:20,eventStatus:'final',statisticalOutcome:'win'};
+ assert.deepEqual(frozenTickets(next),frozenTickets(original.tickets));
+ for(const change of [leg=>leg.line+=1,leg=>leg.americanOdds=-110,leg=>leg.book='changed-book',leg=>leg.estimate.asOf='2099-01-01T00:00:00Z']){
+  const mutated=structuredClone(next);change(mutated[0].legs[0]);assert.notDeepEqual(frozenTickets(mutated),frozenTickets(original.tickets));
+ }
 });
 test('dated withdrawal notice appears only on the affected slate without presenting new prices or probabilities',()=>{
  const html=pm.withdrawalNoticeHTML('2026-10-30');assert.match(html,/Withdrawal recorded/);assert.match(html,/has been withdrawn/);assert.match(html,/Do not play this target/);

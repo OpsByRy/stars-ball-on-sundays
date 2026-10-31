@@ -190,6 +190,10 @@
     const {values,errors}=researchRanges({minProbability,maxProbability,minPrice,maxPrice});
     if(Object.keys(errors).length)return {rows:[],total:0,pages:1,page:0,errors};
     const winRange=values.minProbability!==null||values.maxProbability!==null,priceRange=values.minPrice!==null||values.maxPrice!==null;
+    if(priceRange||sort.startsWith('price_')){
+      const books=typeof window==='undefined'?require('./book-prices.js'):window.SBOS_BOOK_PRICES;
+      preferredBook=preferredBook??books?.getPreferredBook();
+    }
     const tokens=searchText(query).replace(/(>=|<=|>|<)\s*(\d)/g,'$1 $2').trim().split(/\s+/).filter(Boolean),symbol=tokens.find(t=>['>','<','>=','<='].includes(t));
     const filtered=[];
     rows.forEach((p,index)=>{

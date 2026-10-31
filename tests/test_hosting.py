@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from datetime import datetime,timezone,timedelta
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
@@ -76,6 +77,26 @@ class PublicHosting(unittest.TestCase):
             record=result['compactedJSON']['/data/editions/saved.json']
             self.assertEqual(record['sourceSHA256'],hashlib.sha256(raw).hexdigest())
             self.assertEqual(record['deployedSHA256'],hashlib.sha256(expected).hexdigest())
+
+    def test_pending_price_publication_requires_verified_followup_before_later_results_bypass_expiry(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);(root/'data/editions').mkdir(parents=True)
+            window={'schemaVersion':'sbos-publication-window-1','channel':'daily','date':'2026-10-31',
+                'editionVersion':'a'*16,'quoteObservedAt':'2026-10-31T17:00:00Z','validUntil':'2026-10-31T17:15:00Z'}
+            (root/'publication-window.json').write_text(json.dumps(window))
+            index={'editions':[{'channel':'daily','date':'2026-10-31','version':'a'*16}]}
+            (root/'data/editions/manifest.json').write_text(json.dumps(index))
+            self.assertIn('within',build_hosts.publication_window(root,datetime(2026,10,31,17,10,tzinfo=timezone.utc)))
+            for minute in [0,14,16]:
+                moment=datetime(2026,10,31,16,59,tzinfo=timezone.utc) if minute==0 else datetime(2026,10,31,17,minute,tzinfo=timezone.utc)
+                with self.assertRaisesRegex(ValueError,'expired'):build_hosts.publication_window(root,moment)
+            index['editions'].append({'channel':'daily','date':'2026-10-31','version':'b'*16})
+            (root/'data/editions/manifest.json').write_text(json.dumps(index))
+            with self.assertRaisesRegex(ValueError,'expired'):build_hosts.publication_window(root,datetime(2026,11,1,tzinfo=timezone.utc))
+            window['validUntil']='2026-11-01T17:15:00Z';(root/'publication-window.json').write_text(json.dumps(window))
+            with self.assertRaisesRegex(ValueError,'freshness limit'):build_hosts.publication_window(root)
+            (root/'publication-window.json').unlink()
+            self.assertIn('no pending',build_hosts.publication_window(root,datetime(2026,11,1,tzinfo=timezone.utc)))
 
     def test_result_receipt_pins_the_actual_commit_and_rejects_other_runs_or_repositories(self):
         receipt={'schemaVersion':'sbos-result-release-1','repository':'OpsByRy/stars-ball-on-sundays','branch':'main','baseSHA':'a'*40,'sourceSHA':'b'*40}

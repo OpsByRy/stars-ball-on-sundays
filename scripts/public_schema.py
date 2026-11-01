@@ -173,7 +173,10 @@ def validate_personal_slips(body):
     if not isinstance(slips,list) or not 1<=len(slips)<=12:raise ValueError('Invalid separate personal slips')
     rows={r['id']:r for r in body['props'] if r['group']=='ry'};seen=set();referenced=set()
     for slip in slips:
-        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields|{'groups','shareUrl','priceEvidence'},fields)
+        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields|{'groups','shareUrl','priceEvidence','label'},fields)
+        if 'label' in slip:
+            text(slip['label'],80)
+            if not slip['label'].strip():raise ValueError('Empty personal ticket label')
         if not isinstance(slip['id'],str) or not re.fullmatch(r'ry-\d{4}-\d{2}-\d{2}-\d{2}',slip['id']) or not slip['id'].startswith('ry-'+body['date']+'-') or slip['id'] in seen:raise ValueError('Invalid or duplicate personal slip identity')
         seen.add(slip['id'])
         if slip['book'] not in {'fanduel','draftkings'} or type(slip['ryFavorite']) is not bool:raise ValueError('Invalid personal slip attribution')

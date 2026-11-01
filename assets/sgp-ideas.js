@@ -47,8 +47,12 @@
       }
       for (let i=0;i<a.legs.length;i++) for (let j=i+1;j<a.legs.length;j++) {
         const x=a.legs[i],y=a.legs[j];
-        if ((x.nativePlayerId || x.player) !== (y.nativePlayerId || y.player)) continue;
-        check(!components[x.market].some(c=>components[y.market].includes(c)), 'Same-player component overlap');
+        const name=l=>l.player.normalize('NFKC').trim().replace(/\s+/g,' ').toLowerCase();
+        const sameName=name(x)===name(y), sameId=x.nativePlayerId !== null && x.nativePlayerId===y.nativePlayerId;
+        check(!sameName || x.nativePlayerId === null || y.nativePlayerId === null || x.nativePlayerId === y.nativePlayerId, 'Contradictory player identity');
+        if (!sameName && !sameId) continue;
+        check(x.nativeTeamId === null || y.nativeTeamId === null || x.nativeTeamId === y.nativeTeamId, 'Contradictory player team');
+        check(!components[x.market].some(c=>components[y.market].includes(c)) && !([x.market,y.market].includes('3PM') && [x,y].some(l=>components[l.market].includes('PTS'))), 'Same-player component overlap');
       }
       check(Array.isArray(a.holds) && new Set(a.holds).size === a.holds.length && a.holds.every(x=>HOLDS.includes(x)) && a.holds.includes('quote_not_execution') && a.holds.includes('joint_probability_unavailable'), 'Research holds required');
       check(a.nativeEventId !== null && a.legs.every(l=>l.nativePlayerId !== null && l.nativeTeamId !== null) || a.holds.includes('native_identity_unverified'), 'Missing native identity hold');
@@ -72,6 +76,7 @@
     const r=resolutions.find(x=>x.ideaId === a.id); if (!r) return 'pending';
     if (r.legResults.includes('unknown')) return 'unknown';
     if (r.legResults.includes('dnp')) return 'dnp';
+    if (r.legResults.includes('loss')) return 'loss';
     if (r.legResults.includes('push')) return 'push';
     return r.legResults.every(x=>x==='win')?'win':'loss';
   }

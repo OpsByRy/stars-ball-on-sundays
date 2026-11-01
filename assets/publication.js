@@ -121,6 +121,19 @@
     const base=typeof window==='undefined'?undefined:new URL('../',document.querySelector('script[data-publication]').src);
     return tickets.length?`<div class="pm-list personal-parlay-list">${tickets.map((ticket,index)=>parlays.personalTicketRow(ticket,index,{base})).join('')}</div><p class="personal-return-note">Returns use your illustrative unit settings; Ry’s wager amounts are not published. Results are statistical, not verified sportsbook settlement.</p>`:'<p class="pick-empty">No favorite parlays were posted for this date. Individual favorites appear under Picks.</p>';
   }
+  function sundaySourceEntries(entries,day){
+    const latest=latestEntries(entries),personalEntry=latest.find(e=>e.channel==='sunday'&&e.date===day);
+    if(!personalEntry)return null;
+    return {personalEntry,boardEntry:latest.find(e=>e.channel==='daily'&&e.date===day)||personalEntry};
+  }
+  function sundayStarsRecord(body){
+    const tickets=results.personalParlays(body),units=typeof window==='undefined'?require('./unit-tracker.js'):window.SBOS_UNITS;
+    return results.parlayRecordHTML(tickets,{scope:'sunday-stars',label:'Ry’s Sunday Stars personal-ticket record'})+(units?.recordHTML(tickets,{kind:'parlays',personal:true})||'');
+  }
+  function sundayStarsHTML(body){
+    const tickets=body?results.personalParlays(body):[];
+    return `<section class="edition-panel sunday-stars" id="ry-sunday-stars" aria-labelledby="sunday-stars-title" data-sunday-source-version="${escape(body?.version||'')}"><div class="edition-heading"><div><p class="sbos-kicker">RY’S PERSONAL PARLAY</p><h2 id="sunday-stars-title">Ry’s Sunday Stars</h2>${body?`<p class="edition-asof">${escape(dateLabel(body.date))} · saved personal ticket</p>`:''}</div></div><p class="board-intro">Ry’s personal parlay, separate from our algorithm selections. Parlay membership does not mark individual picks as favorites.</p>${body?.priceNote?`<p class="publication-note personal-source-note">${escape(body.priceNote)}</p>`:''}${tickets.length?`<div data-sunday-stars-record>${sundayStarsRecord(body)}</div><div data-personal-slips data-personal-source="sunday">${personalSlipsHTML(body)}</div>`:'<p class="pick-empty">No saved Sunday parlay for this date.</p>'}</section>`;
+  }
   function favoritesNotice(body){
     if(Array.isArray(body.personalSlips))return `<div data-personal-slips>${personalSlipsHTML(body)}</div>`;
     const posted=body.favoritesPostedAt?`<strong>Posted <time datetime="${escape(body.favoritesPostedAt)}">${escape(stamp(body.favoritesPostedAt))}</time></strong>`:'';
@@ -266,10 +279,11 @@
   async function init(){
     const script=document.querySelector('script[data-publication]');if(!script)return;
     const base=new URL('../',script.src),dataRoot=new URL('data/editions/',base),kind=document.body.dataset.page;
+    const isSundayBoard=kind==='daily'&&document.body.dataset.boardChannel==='sunday';
     if(!kind)return;
     const $=id=>document.getElementById(id),link=path=>new URL(path,base).href;
     const dailyURL=day=>link('daily/?date='+encodeURIComponent(day)),weeklyURL=day=>link('sundays/week.html?date='+encodeURIComponent(day));
-    let activeBody=null,ryKeys=new Set(),pickState={};
+    let activeBody=null,activeSundayBody=null,ryKeys=new Set(),pickState={};
     const board=['daily','research','parlays','sundays','week','sunday-personal'].includes(kind)?window.SBOS_PICK_BOARD.create({base,lineLabel,onResults:rows=>{
       if(!activeBody)return;const updates=new Map(rows.map(p=>[p.id,p.result]));for(const p of activeBody.props)if(updates.has(p.id))p.result=updates.get(p.id);
       if($('research-lines')){
@@ -289,6 +303,11 @@
       for(const element of document.querySelectorAll('[data-personal-void-note]'))element.innerHTML=personalVoidNote(activeBody);
       for(const element of document.querySelectorAll('[data-personal-ticket-payout]'))element.innerHTML=personalPayoutHTML(activeBody);
       for(const element of document.querySelectorAll('[data-personal-fit]'))element.innerHTML=personalFitHTML(activeBody);
+    }}):null;
+    const sundayTracker=isSundayBoard?window.SBOS_PICK_BOARD.watchResults({base,onResults:()=>{
+      if(!activeSundayBody)return;
+      const record=document.querySelector('[data-sunday-stars-record]');if(record)record.innerHTML=sundayStarsRecord(activeSundayBody);
+      refreshPersonalSlips();
     }}):null;
     function personalSundayContent(body){const rows=editionGroups(body).ry;return `<div class="edition-panel"><div class="edition-heading"><h2>${dateLabel(body.date)}</h2><a class="back-to-board" href="${escape(weeklyURL(body.date))}">← Sunday Edition board</a></div><p class="board-intro">Ry’s personal selections, separately attributed and preserved as posted. Favorite flags do not change algorithm selection or tracking.</p>${body.priceNote?`<p class="publication-note personal-source-note">${escape(body.priceNote)}</p>`:''}${favoritesView(body,'ry-sunday')}</div>`;}
     let entries=[],allVersions=[],request=0,researchState={rows:[],...readPublicResearchState()};
@@ -326,9 +345,10 @@
     }
     function refreshPersonalSlips(){
       for(const element of document.querySelectorAll('[data-personal-slips]')){
+        const source=element.dataset?.personalSource==='sunday'?activeSundayBody:activeBody;if(!source)continue;
         // Result polling keeps each independent card and nested disclosure in its current state.
         const details=[...element.querySelectorAll('details')],opened=details.map(node=>node.open),focused=details.findIndex(node=>node.firstElementChild===document.activeElement);
-        element.innerHTML=personalSlipsHTML(activeBody);
+        element.innerHTML=personalSlipsHTML(source);
         const next=[...element.querySelectorAll('details')];next.forEach((node,index)=>node.open=opened[index]||false);
         if(focused>=0)next[focused]?.firstElementChild?.focus({preventScroll:true});
       }
@@ -345,7 +365,7 @@
       const params=new URLSearchParams({date:activeBody.date,board:search});if(player)params.set('player',player);
       return link(page+'/?'+params);
     }
-    function dailyTabs(body){const counts=tabCounts(body);return `<div class="daily-tabs${policy.isCurrent(body)?' daily-tabs-current':''}" role="tablist" aria-label="Daily pick category">${dailyCategories(body).map(([type,label])=>`<span class="pick-category-tab" role="presentation"><button type="button" role="tab" id="pick-tab-${type}" aria-controls="daily-picks-panel" aria-selected="${pickState.type===type}" tabindex="${pickState.type===type?'0':'-1'}" data-pick-tab="${type}"><span>${label}</span><strong>${counts[type]}</strong></button>${type==='all'?'':`<button type="button" class="pick-category-info" data-category-info="${type}" aria-label="About ${escape(label)}" aria-expanded="false" aria-controls="pick-category-description-${type}" aria-describedby="pick-category-description-${type}"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 9v5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="6" r=".9" fill="currentColor"/></svg></button>`}</span>`).join('')}</div>`;}
+    function dailyTabs(body){const counts=tabCounts(body);return `<div class="daily-tabs${policy.isCurrent(body)?' daily-tabs-current':''}" role="tablist" aria-label="${isSundayBoard?'Sunday':'Daily'} pick category">${dailyCategories(body).map(([type,label])=>`<span class="pick-category-tab" role="presentation"><button type="button" role="tab" id="pick-tab-${type}" aria-controls="daily-picks-panel" aria-selected="${pickState.type===type}" tabindex="${pickState.type===type?'0':'-1'}" data-pick-tab="${type}"><span>${isSundayBoard&&type==='all'?'All Sunday Picks':label}</span><strong>${counts[type]}</strong></button>${type==='all'?'':`<button type="button" class="pick-category-info" data-category-info="${type}" aria-label="About ${escape(label)}" aria-expanded="false" aria-controls="pick-category-description-${type}" aria-describedby="pick-category-description-${type}"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 9v5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="6" r=".9" fill="currentColor"/></svg></button>`}</span>`).join('')}</div>`;}
     function dailyControls(body){
       const picks=[...allPicks(body),...honorableMentions(body)],games=gameGroups(picks),counts=tabCounts(body),options=(values,label)=>values.map(v=>`<option value="${escape(v)}">${escape(label?label(v):v)}</option>`).join('');
       return `<div class="daily-filter-bar"><div class="pick-controls daily-essential-filters"><label class="pick-search">Find a pick<input data-pick-filter="query" type="search" placeholder="Player, team or stat" autocomplete="off"></label><label>Min. win estimate (%)<input data-pick-filter="minimum" type="number" min="0" max="100" step="1" value="0" inputmode="decimal"></label><label>Sort by<select data-pick-filter="sort"><option value="game">Game → team → player → stat</option><option value="probability_desc">Win estimate: high to low</option><option value="probability_asc">Win estimate: low to high</option><option value="price_desc">Price: highest payout</option><option value="price_asc">Price: lowest payout</option><option value="team">Team A–Z</option><option value="player">Player A–Z</option><option value="stat">Stat</option></select></label></div><div class="daily-filter-actions"><button type="button" class="favorite-toggle" data-favorite-toggle aria-pressed="${pickState.favoritesOnly}"><span aria-hidden="true">★</span> Ry’s Favorites <strong>${counts.favorites}</strong></button><details class="more-pick-filters"><summary>More filters</summary><div class="pick-controls secondary-filters"><label>Game<select data-pick-filter="game"><option value="all">All games</option>${games.map(g=>`<option value="${escape(g.key)}">${escape(g.title)}</option>`).join('')}</select></label><label>Team<select data-pick-filter="team"><option value="all">All teams</option>${options([...new Set(picks.map(p=>p.team).filter(Boolean))].sort(compareText))}</select></label><label>Stat<select data-pick-filter="market"><option value="all">All stats</option>${options(statOrder.filter(m=>picks.some(p=>p.market===m)),m=>markets[m])}</select></label></div></details><button type="button" data-reset-pick-filters class="text-button">Reset</button></div></div>`;
@@ -357,7 +377,7 @@
       for(const control of document.querySelectorAll('[data-pick-filter]')){const value=pickState[control.dataset.pickFilter];if(document.activeElement!==control)control.value=value??'';}
       document.querySelector('[data-favorite-toggle]')?.setAttribute('aria-pressed',String(!!pickState.favoritesOnly));
       $('daily-picks-panel')?.setAttribute('aria-labelledby','pick-tab-'+type);
-      if($('daily-list-title'))$('daily-list-title').textContent=type==='all'?(policy.isCurrent(activeBody)?'All Daily Picks':'All Picks'):categoryTitles[type];
+      if($('daily-list-title'))$('daily-list-title').textContent=type==='all'?(isSundayBoard?'All Sunday Picks':policy.isCurrent(activeBody)?'All Daily Picks':'All Picks'):categoryTitles[type];
       const total=dailyRows(activeBody,type).filter(p=>type==='all'||publishedCategory(p)===type).length,shown=filterPicks(dailyRows(activeBody,pickState.type),pickState,ryKeys).length;
       if($('daily-pick-count'))$('daily-pick-count').textContent=`${shown} of ${total} ${type==='honorable_mention'?'bench props':'picks'}`;
       if($('daily-category-note'))$('daily-category-note').textContent=type==='honorable_mention'?'Additional model value, including supported high-probability plus-money lines. No stake recommendation. Bench tracking is hypothetical and separate from the official picks and hit/miss record.':'Latest provisional win estimates shown. Updated or review badges explain pregame changes; original picks remain in the record. Expand a pick to compare snapshots.';
@@ -370,7 +390,7 @@
     }
     function renderDailyEdition(body){
       const picks=allPicks(body),settled=picks.length>0&&summary(picks).pending===0&&!picks.some(p=>p.result?.eventStatus==='live'),ry=editionGroups(body).ry;
-      return `${results.testSlateNotice(body.date)}${cupContextNotice(body.date)}${personalSpotlight(body)}<div class="edition-panel daily-edition"><div class="edition-heading"><div><p class="sbos-kicker">DAILY BOARD</p><h2>${dateLabel(body.date)}</h2><p class="edition-asof">${escape(oddsRefreshLabel(body))} · Board updated ${escape(stamp(body.updatedAt))}</p></div><span class="edition-status">${settled?'Final results':'Published picks'}</span></div><div class="daily-destinations"><a data-supporting-page="research" href="${escape(supportingURL('research'))}">SBOS Research ↗</a><a href="${link('players/')}">Player Profiles ↗</a>${ry.length?`<a data-supporting-page="daily/parlays" href="${escape(supportingURL('daily/parlays'))}">${(body.sharedBetslipUrl||body.sharedBetslipOdds)?'Ry’s Posted Parlay':'Ry’s Posted Picks'} ↗</a>`:''}<a href="${link('guide/')}">How Our Picks Work ↗</a></div>${dailyTabs(body)}${window.SBOS_BOOK_PRICES?.controlHTML()||''}${dailyControls(body)}<section id="daily-picks-panel" class="daily-picks-panel" role="tabpanel" aria-labelledby="pick-tab-${pickState.type}" tabindex="0"><div class="daily-list-heading"><h3 id="daily-list-title">${pickState.type==='all'?(policy.isCurrent(body)?'All Daily Picks':'All Picks'):categoryTitles[pickState.type]}</h3><span id="daily-pick-count" role="status"></span></div><p id="daily-category-note" class="board-intro">Provisional win estimates · expand a pick for details and research.</p><div id="all-pick-lines" aria-live="polite">${allPickList()}</div></section><p class="daily-caption">Prices are saved quotes. MP means minutes played. Hit rates include reached live overs and exclude pending picks, pushes and DNPs. Live stats can be corrected; statistical results do not verify sportsbook settlement.</p><details class="model-policy edition-record"><summary>About this board & saved versions</summary><p class="publication-note">${escape(body.priceNote)}<br>First published: ${escape(stamp(body.firstPublishedAt))}. Last saved update: ${escape(stamp(body.updatedAt))}.</p>${versionHistory(body)}</details></div>`;
+      return `${results.testSlateNotice(body.date)}${cupContextNotice(body.date)}${isSundayBoard?sundayStarsHTML(activeSundayBody):personalSpotlight(body)}<div class="edition-panel daily-edition" data-board-source="${escape(body.channel)}:${escape(body.version)}"><div class="edition-heading"><div><p class="sbos-kicker">${isSundayBoard?'SUNDAY EDITION':'DAILY BOARD'}</p><h2>${dateLabel(body.date)}</h2><p class="edition-asof">${escape(oddsRefreshLabel(body))} · Board updated ${escape(stamp(body.updatedAt))}</p></div><span class="edition-status">${settled?'Final results':'Published picks'}</span></div><div class="daily-destinations"><a data-supporting-page="research" href="${escape(supportingURL('research'))}">SBOS Research ↗</a><a href="${link('players/')}">Player Profiles ↗</a>${ry.length?`<a data-supporting-page="daily/parlays" href="${escape(supportingURL('daily/parlays'))}">${(body.sharedBetslipUrl||body.sharedBetslipOdds)?'Ry’s Posted Parlay':'Ry’s Posted Picks'} ↗</a>`:''}<a href="${link('guide/')}">How Our Picks Work ↗</a></div>${dailyTabs(body)}${window.SBOS_BOOK_PRICES?.controlHTML()||''}${dailyControls(body)}<section id="daily-picks-panel" class="daily-picks-panel" role="tabpanel" aria-labelledby="pick-tab-${pickState.type}" tabindex="0"><div class="daily-list-heading"><h3 id="daily-list-title">${pickState.type==='all'?(isSundayBoard?'All Sunday Picks':policy.isCurrent(body)?'All Daily Picks':'All Picks'):categoryTitles[pickState.type]}</h3><span id="daily-pick-count" role="status"></span></div><p id="daily-category-note" class="board-intro">Provisional win estimates · expand a pick for details and research.</p><div id="all-pick-lines" aria-live="polite">${allPickList()}</div></section><p class="daily-caption">Prices are saved quotes. MP means minutes played. Hit rates include reached live overs and exclude pending picks, pushes and DNPs. Live stats can be corrected; statistical results do not verify sportsbook settlement.</p><details class="model-policy edition-record"><summary>About this board & saved versions</summary><p class="publication-note">${escape(body.priceNote)}<br>First published: ${escape(stamp(body.firstPublishedAt))}. Last saved update: ${escape(stamp(body.updatedAt))}.</p>${versionHistory(body)}</details></div>`;
     }
     function refreshPicks(push=false){const target=$('all-pick-lines');if(target){target.innerHTML=allPickList();const count=document.querySelector('[data-pick-filter-count]');if(count)count.textContent=`${filterPicks(dailyRows(activeBody,pickState.type),pickState,ryKeys).length} of ${allPicks(activeBody).length} picks`;syncDailyControls(true,push);board.refresh();}}
     document.addEventListener('input',event=>{const key=event.target.dataset?.pickFilter;if(key==='query'||key==='minimum'){pickState[key]=event.target.value;refreshPicks();}});
@@ -424,11 +444,12 @@
     }
     function archiveCard(e){return `<a class="archive-card" href="${e.channel==='sunday'?weeklyURL(e.date):dailyURL(e.date)}"><span class="sbos-kicker">${e.channel==='sunday'?'SUNDAY EDITION':'DAILY RESEARCH'}</span><h3>${dateLabel(e.date)}</h3>${results.isTestSlate(e.date)?'<span class="test-slate-badge">Test slate · excluded from cumulative totals</span>':''}<p>${e.count} of Ry’s picks · ${e.researchCount} reviewed lines.</p><span class="archive-link">Picks & recorded outcomes ↗</span></a>`;}
     async function showDaily(day){
-      const serial=++request,entry=entries.find(e=>e.channel==='daily'&&e.date===day);if(!entry)throw Error('No published date');
-      const body=await loadEdition(entry,true);if(serial!==request)return;
+      const serial=++request,sources=isSundayBoard?sundaySourceEntries(entries,day):null,entry=isSundayBoard?sources?.boardEntry:entries.find(e=>e.channel==='daily'&&e.date===day);if(!entry)throw Error('No published date');
+      const [body,personal]=await Promise.all([loadEdition(entry,entry.channel==='daily'),isSundayBoard?(sources.personalEntry===entry?Promise.resolve(null):loadEdition(sources.personalEntry)):Promise.resolve(null)]);if(serial!==request)return;
+      activeSundayBody=isSundayBoard?(personal||body):null;
       pickState=readPickState(location.search,day||activeBody?.date);
       if(!new URL(location.href).searchParams.has('type')){const legacy={'#value_safe-section':'value_safe','#high_probability_aggressive-section':'high_probability_aggressive'}[location.hash];if(legacy)pickState.type=legacy;}
-      $('daily-content').innerHTML=renderEdition(body);syncDailyControls();
+      $('daily-content').innerHTML=renderEdition(body);syncDailyControls();if(sundayTracker)sundayTracker.setRows(activeSundayBody.props.filter(p=>p.group==='ry'));
       $('slate-context').textContent=`${day<etDay()?'Archived':day>etDay()?'Upcoming':'Current'} board · saved prices and dated estimates.`;board.refresh();
     }
     async function showSupporting(day){
@@ -456,10 +477,10 @@
       }
       if(kind==='week'){const day=document.body.dataset.date||new URL(location.href).searchParams.get('date'),e=sundays.find(e=>e.date===day);if(e){$('week-title').textContent=dateLabel(e.date)+'.';$('week-content').innerHTML=renderEdition(await loadEdition(e));board.refresh();}else $('week-content').textContent='No published Sunday edition for that date. Choose an edition in Results.';}
       if(['daily','research','parlays'].includes(kind)){
-        const select=$('slate-date');select.innerHTML=daily.map(e=>`<option value="${e.date}">${dateLabel(e.date)}${results.isTestSlate(e.date)?' · Test slate':''}</option>`).join('');select.disabled=!daily.length;
+        const days=isSundayBoard?sundays:daily,select=$('slate-date');select.innerHTML=days.map(e=>`<option value="${e.date}">${dateLabel(e.date)}${results.isTestSlate(e.date)?' · Test slate':''}</option>`).join('');select.disabled=!days.length;
         const requested=new URL(location.href).searchParams.get('date'),show=kind==='daily'?showDaily:showSupporting;
-        if(requested&&!daily.some(e=>e.date===requested)){$('daily-content').textContent='No published board for this date. Choose an available date above.';$('slate-context').textContent='Requested board unavailable.';}
-        else if(daily.length){select.value=requested||daily[0].date;await show(select.value);}
+        if(requested&&!days.some(e=>e.date===requested)){$('daily-content').textContent='No published board for this date. Choose an available date above.';$('slate-context').textContent='Requested board unavailable.';}
+        else if(days.length){select.value=requested||days[0].date;await show(select.value);}
         else $('daily-content').textContent='No daily research published yet.';
         select.addEventListener('change',()=>{history.replaceState(null,'',kind==='research'?'?'+publicResearchSearch(select.value,researchState,location.search):'?'+favorites.searchWithTab('date='+encodeURIComponent(select.value),favorites.readTab(location.search)));show(select.value).catch(showError);});
         $('reload-data').addEventListener('click',()=>location.reload());
@@ -467,5 +488,5 @@
     }catch{showError();}
     function showError(){const id={daily:'daily-content',research:'daily-content',parlays:'daily-content',home:'home-current',sundays:'sunday-current','sunday-personal':'sunday-current',week:'week-content',archives:'sunday-archive'}[kind];if(id&&$(id)){$(id).removeAttribute('aria-busy');$(id).innerHTML='<p class="site-error" role="alert">The publication record is unavailable. Refresh to try again.</p>';} }
   }
-  return {publicResearchRows,readPublicResearchState,publicResearchSearch,publicResearchPage,publicResearchMarketOptions,publicResearchCoverageHTML,publicResearchEmptyMessage,oddsRefreshLabel,personalPostingLabel,personalSlipsHTML,cupContextNotice,dailyCategories,researchRanges,researchValueControls,readResearchState,researchSearch,researchCoverage,researchMarketOptions,researchCoverageHTML,researchEmptyMessage,latestEstimate,confidenceDetails,init,validDate,dateLabel,etDay,nextSunday,lineLabel,latestEntries,summary,safeEditionURL,publishedCategory,editionGroups,researchPage,favoritesNotice,pricedPick,gameKey,favoriteKey,favoriteKeys,isFavorite,allPicks,honorableMentions,dailyRows,sortPicks,filterPicks,gameGroups,readPickState,pickSearch,tabCounts};
+  return {sundaySourceEntries,sundayStarsHTML,publicResearchRows,readPublicResearchState,publicResearchSearch,publicResearchPage,publicResearchMarketOptions,publicResearchCoverageHTML,publicResearchEmptyMessage,oddsRefreshLabel,personalPostingLabel,personalSlipsHTML,cupContextNotice,dailyCategories,researchRanges,researchValueControls,readResearchState,researchSearch,researchCoverage,researchMarketOptions,researchCoverageHTML,researchEmptyMessage,latestEstimate,confidenceDetails,init,validDate,dateLabel,etDay,nextSunday,lineLabel,latestEntries,summary,safeEditionURL,publishedCategory,editionGroups,researchPage,favoritesNotice,pricedPick,gameKey,favoriteKey,favoriteKeys,isFavorite,allPicks,honorableMentions,dailyRows,sortPicks,filterPicks,gameGroups,readPickState,pickSearch,tabCounts};
 });

@@ -1,12 +1,12 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const pub=require('../assets/publication.js'),results=require('../assets/result-utils.js');
 const read=p=>JSON.parse(fs.readFileSync(path.join(__dirname,'..',p)));
-const sunday=()=>read('data/editions/sunday/2026-11-01/bb42e33e7a59f527.json');
+const sunday=()=>{const entry=read('data/editions/manifest.json').editions.filter(e=>e.channel==='sunday'&&e.date==='2026-11-01').at(-1);return read('data/editions/'+entry.path);};
 const daily=()=>read('data/editions/daily/2026-11-01/f5042547c4eaa13f.json');
 
 test('Sunday uses the latest same-date Daily source without duplicating its recommendations',()=>{
  const index=read('data/editions/manifest.json'),before=JSON.stringify(index),sources=pub.sundaySourceEntries(index.editions,'2026-11-01');
- assert.equal(sources.personalEntry.version,'bb42e33e7a59f527');assert.equal(sources.boardEntry.version,'f5042547c4eaa13f');assert.equal(sources.boardEntry.channel,'daily');
+ assert.equal(sources.personalEntry.version,sunday().version);assert.equal(sources.boardEntry.version,'f5042547c4eaa13f');assert.equal(sources.boardEntry.channel,'daily');
  assert.equal(pub.allPicks(daily()).length,10);assert.equal(pub.tabCounts(daily()).favorites,0);
  assert.equal(pub.allPicks(sunday()).length,0);assert.equal(results.personalParlays(sunday()).length,1);assert.equal(JSON.stringify(index),before);
 });
@@ -21,7 +21,7 @@ test('historical Sundays retain their own source when no same-date Daily record 
 
 test('Sunday Stars renders one personal parlay, never an inferred individual-favorites list',()=>{
  const b=sunday(),before=JSON.stringify(b),html=pub.sundayStarsHTML(b);
- assert.match(html,/<h2 id="sunday-stars-title">Ry’s Sunday Stars<\/h2>/);assert.match(html,/data-sunday-source-version="bb42e33e7a59f527"/);
+ assert.match(html,/<h2 id="sunday-stars-title">Ry’s Sunday Stars<\/h2>/);assert.ok(html.includes('data-sunday-source-version="'+b.version+'"'));
  assert.equal((html.match(/data-personal-slip-id=/g)||[]).length,1);assert.match(html,/\+530/);assert.match(html,/\+110/);assert.match(html,/\+117/);
  assert.match(html,/Parlay membership does not mark individual picks as favorites/);assert.doesNotMatch(html,/data-favorites-tab=|data-favorite-pick-record|role="tablist"/);
  assert.match(html,/not an algorithm-qualified recommendation/);assert.match(html,/pre-placement observations, not accepted component prices/);assert.equal(JSON.stringify(b),before);
@@ -60,7 +60,18 @@ test('actual Sunday initialization places Stars first and reuses the Daily tabs 
  assert.match(html,/data-board-source="daily:f5042547c4eaa13f"/);assert.match(html,/All Sunday Picks/);assert.match(html,/aria-label="Sunday pick category"/);
  assert.match(html,/Free Throws<\/span><strong>6/);assert.match(html,/Floaters<\/span><strong>4/);assert.equal((html.match(/data-test-pick=/g)||[]).length,10);
  assert.equal(mounted.watch.rows.length,5);assert.ok(mounted.requests.every(p=>p.startsWith('/project/data/')));assert.equal(mounted.location.href,'https://example.com/project/sundays/?date=2026-11-01');
- assert.ok(mounted.requests.includes('/project/data/editions/sunday/2026-11-01/bb42e33e7a59f527.json'));assert.ok(!mounted.requests.some(p=>p.includes('/data/boards/sunday/')));
+ assert.ok(mounted.requests.includes('/project/data/editions/sunday/2026-11-01/'+sunday().version+'.json'));assert.ok(!mounted.requests.some(p=>p.includes('/data/boards/sunday/')));
+});
+
+test('verified posting appends an immutable successor without rewriting ticket or source facts',()=>{
+ const original=read('data/editions/sunday/2026-11-01/bb42e33e7a59f527.json'),posted=read('data/editions/sunday/2026-11-01/3b91e2be313d30e2.json');
+ const first='2026-11-01T19:02:17.705924Z';
+ assert.equal(original.firstPublishedAt,null);assert.equal(original.personalPublication.publishedAt,null);
+ assert.equal(posted.firstPublishedAt,first);assert.equal(posted.personalPublication.publishedAt,first);
+ assert.equal(posted.personalPublication.recordedAt,original.personalPublication.recordedAt);assert.deepEqual(posted.personalSlips,original.personalSlips);
+ assert.equal(posted.props.length,original.props.length);
+ posted.props.forEach((row,i)=>{assert.equal(original.props[i].postedAt,null);assert.equal(row.postedAt,first);assert.ok(Date.parse(first)<Date.parse(row.startTime));const withoutPosting=({postedAt,...rest})=>rest;assert.deepEqual(withoutPosting(row),withoutPosting(original.props[i]));});
+ assert.doesNotMatch(posted.priceNote,/awaiting deployment/);assert.match(posted.priceNote,/First public posting verified/);
 });
 
 test('Sunday ticket polling retains the owner source and cannot turn it into the Daily board',async()=>{

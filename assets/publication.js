@@ -290,7 +290,7 @@
       for(const element of document.querySelectorAll('[data-personal-ticket-payout]'))element.innerHTML=personalPayoutHTML(activeBody);
       for(const element of document.querySelectorAll('[data-personal-fit]'))element.innerHTML=personalFitHTML(activeBody);
     }}):null;
-    function personalSundayContent(body){const rows=editionGroups(body).ry;return `<div class="edition-panel"><div class="edition-heading"><h2>${dateLabel(body.date)}</h2><a class="back-to-board" href="${escape(weeklyURL(body.date))}">← Sunday Edition board</a></div><p class="board-intro">Ry’s personal selections, separately attributed and preserved as posted. Favorite flags do not change algorithm selection or tracking.</p>${favoritesView(body,'ry-sunday')}</div>`;}
+    function personalSundayContent(body){const rows=editionGroups(body).ry;return `<div class="edition-panel"><div class="edition-heading"><h2>${dateLabel(body.date)}</h2><a class="back-to-board" href="${escape(weeklyURL(body.date))}">← Sunday Edition board</a></div><p class="board-intro">Ry’s personal selections, separately attributed and preserved as posted. Favorite flags do not change algorithm selection or tracking.</p>${body.priceNote?`<p class="publication-note personal-source-note">${escape(body.priceNote)}</p>`:''}${favoritesView(body,'ry-sunday')}</div>`;}
     let entries=[],allVersions=[],request=0,researchState={rows:[],...readPublicResearchState()};
     async function loadJSON(url,immutable=false){const r=await fetch(url,{cache:immutable?'force-cache':'no-store',credentials:'omit'});if(!r.ok)throw Error('Publication unavailable');return r.json();}
     async function loadEdition(entry,compact=false){

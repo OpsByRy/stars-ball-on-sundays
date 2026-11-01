@@ -1,0 +1,13 @@
+# SGP research ideas (draft consumer)
+
+`research/sgp/` is separate from picks, the calculator, personal slips and financial tracking. It displays narrow `public-sgp-ideas-1` observations; it does not execute research, source collection or selection. The included dataset is intentionally empty. No private or actual research data is adopted by this code PR.
+
+Each idea binds one book event and one capture interval, literal integer/alternate operators, leg prices from that same capture, an actual observed combined price or unavailable, and explicit scope/identity/context reviews. An acquisition clock is not a bookmaker update clock. Observed prices are historical display evidence, not executable guarantees. Joint win probability, ticket EV and compatibility remain null; qualification and bet-ready stay false. No marginal-product price or probability is computed. Compatibility must not rank, filter or truncate ideas.
+
+The exact-key validator rejects private/unrecognized fields at every object boundary. Only a separately reviewed allowlist projection may populate the public dataset. Raw sources, screenshots, paths, browser metadata, research indexes, proprietary parameters and source authentication receipts belong outside this repository and the static artifact. Native identities and official start may remain unknown; never infer them from display names or book IDs. These records do not use or weaken the proposition/edition validator.
+
+Results are statistical hit tracking, never units, profit/loss or sportsbook settlement. Pending, unknown, DNP and push records are separate from wins/losses. An explicit final status plus finality/identity review, native event/player binding, all leg results and actual final/observation clocks are required by the read contract. Repeated legs/games are correlated and the hit rate is descriptive. A timestamp alone cannot establish source finality. The static reader checks a supplied reviewed record; it is not a source authenticator or an outcome collector.
+
+Before any actual data activation, Publishing must review the source adapter, exact same-capture contracts/prices, jurisdiction/OT unknowns, public-safe projection, immutable source/selection clocks and append-only identity/resolution history. Data changes remain subject to the current release/export holds and independent review. No default future run, live quote refresh, algorithm promotion or publishing authority follows from this draft.
+
+Validation: `node --test tests/sgp-ideas.test.cjs` (also included in the existing public CI glob). Full repository CI/build remains authoritative for integration. Visual acceptance is separate; no browser/file-policy workaround is implied.

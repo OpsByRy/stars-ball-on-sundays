@@ -3984,6 +3984,430 @@
       "eventId": "nba:0022600153",
       "expectedTeam": "Houston Rockets",
       "playerId": "nba:201142"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4065648",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Boston Celtics",
+      "playerId": "nba:1628369"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3078576",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Boston Celtics",
+      "playerId": "nba:1628401"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4277847",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Orlando Magic",
+      "playerId": "nba:1628976"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4397424",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Boston Celtics",
+      "playerId": "nba:1629674"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4066354",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Boston Celtics",
+      "playerId": "nba:1630202"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4066320",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Orlando Magic",
+      "playerId": "nba:1630217"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4566434",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Orlando Magic",
+      "playerId": "nba:1630532"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4712849",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Orlando Magic",
+      "playerId": "nba:1641710"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4683689",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Boston Celtics",
+      "playerId": "nba:1641775"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4702382",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Orlando Magic",
+      "playerId": "nba:1641783"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "5239561",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Orlando Magic",
+      "playerId": "nba:1642859"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4251",
+      "espnEventId": "401909903",
+      "eventId": "nba:0022600154",
+      "expectedTeam": "Boston Celtics",
+      "playerId": "nba:202331"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3133603",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Indiana Pacers",
+      "playerId": "nba:1626162"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3149673",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Indiana Pacers",
+      "playerId": "nba:1627783"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4278104",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Brooklyn Nets",
+      "playerId": "nba:1629008"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3150844",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Brooklyn Nets",
+      "playerId": "nba:1629021"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4395712",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Indiana Pacers",
+      "playerId": "nba:1629614"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4278355",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Indiana Pacers",
+      "playerId": "nba:1630167"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4396909",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Indiana Pacers",
+      "playerId": "nba:1630174"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4432194",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Brooklyn Nets",
+      "playerId": "nba:1630549"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4065731",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Indiana Pacers",
+      "playerId": "nba:1630643"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4702177",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Brooklyn Nets",
+      "playerId": "nba:1631165"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "5106060",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Indiana Pacers",
+      "playerId": "nba:1641716"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4712896",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Brooklyn Nets",
+      "playerId": "nba:1641730"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "5279130",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Brooklyn Nets",
+      "playerId": "nba:1642849"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3064514",
+      "espnEventId": "401909904",
+      "eventId": "nba:0022600155",
+      "expectedTeam": "Brooklyn Nets",
+      "playerId": "nba:203944"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "2991139",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "LA Clippers",
+      "playerId": "nba:1627739"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "2990969",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "Golden State Warriors",
+      "playerId": "nba:1627777"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3936099",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "LA Clippers",
+      "playerId": "nba:1627884"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4066436",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "Golden State Warriors",
+      "playerId": "nba:1629001"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4066648",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "LA Clippers",
+      "playerId": "nba:1629060"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4396907",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "LA Clippers",
+      "playerId": "nba:1629636"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4397040",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "Golden State Warriors",
+      "playerId": "nba:1630314"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4432170",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "LA Clippers",
+      "playerId": "nba:1630543"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4997536",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "Golden State Warriors",
+      "playerId": "nba:1630611"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4709138",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "Golden State Warriors",
+      "playerId": "nba:1641764"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "5175737",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "Golden State Warriors",
+      "playerId": "nba:1642865"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "5254165",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "LA Clippers",
+      "playerId": "nba:1643413"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3448",
+      "espnEventId": "401909905",
+      "eventId": "nba:0022600156",
+      "expectedTeam": "LA Clippers",
+      "playerId": "nba:201572"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3134908",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Toronto Raptors",
+      "playerId": "nba:1627751"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4277811",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Los Angeles Lakers",
+      "playerId": "nba:1629012"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3945274",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Los Angeles Lakers",
+      "playerId": "nba:1629029"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4395625",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Toronto Raptors",
+      "playerId": "nba:1629628"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "3907498",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Los Angeles Lakers",
+      "playerId": "nba:1629680"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4395724",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Toronto Raptors",
+      "playerId": "nba:1630193"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4433137",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Los Angeles Lakers",
+      "playerId": "nba:1630533"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4066457",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Los Angeles Lakers",
+      "playerId": "nba:1630559"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4433134",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Toronto Raptors",
+      "playerId": "nba:1630567"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4278580",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Los Angeles Lakers",
+      "playerId": "nba:1630572"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4433136",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Los Angeles Lakers",
+      "playerId": "nba:1631117"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4684272",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Toronto Raptors",
+      "playerId": "nba:1642266"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "4432241",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Toronto Raptors",
+      "playerId": "nba:1642347"
+    },
+    {
+      "date": "2026-11-01",
+      "espnAthleteId": "5093267",
+      "espnEventId": "401909906",
+      "eventId": "nba:0022600157",
+      "expectedTeam": "Toronto Raptors",
+      "playerId": "nba:1642867"
     }
   ]
 }

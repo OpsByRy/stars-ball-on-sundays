@@ -15,6 +15,11 @@ test('committed dataset is an empty reviewed-data boundary',()=>{const b=JSON.pa
 test('literal integer alt contract and exact prices retained',()=>{const b=fixture(),copy=structuredClone(b);assert.equal(api.validate(b),b);assert.deepEqual(b,copy);assert.equal(b.ideas[0].legs[1].operator,'>=');});
 test('unknown native identity remains unverified',()=>reject((b,a)=>a.holds=a.holds.filter(x=>x!=='native_identity_unverified')));
 test('book event ID cannot masquerade as NBA event',()=>reject((b,a)=>a.nativeEventId=a.bookEventId));
+test('book event identity must be a literal string even for safe integers',()=>reject((b,a)=>a.bookEventId=10000001));
+test('JSON numeric identity loses precision and must reject',()=>{const b=fixture();b.ideas[0].bookEventId=JSON.parse('9007199254740993');assert.equal(b.ideas[0].bookEventId,9007199254740992);assert.throws(()=>api.validate(b));});
+test('large digit-string identity retains its exact spelling',()=>{const b=fixture();b.ideas[0].bookEventId='9007199254740993';const copy=JSON.parse(JSON.stringify(b));api.validate(copy);assert.equal(copy.ideas[0].bookEventId,'9007199254740993');});
+test('leading-zero book identity retains literal digits',()=>{const b=fixture();b.ideas[0].bookEventId='0009007199254740993';api.validate(b);assert.equal(b.ideas[0].bookEventId,'0009007199254740993');});
+test('book identity length is bounded before use',()=>reject((b,a)=>a.bookEventId='1'.repeat(25)));
 test('unknown official start keeps its hold',()=>reject((b,a)=>a.holds=a.holds.filter(x=>x!=='official_start_unverified')));
 test('unknown terms remain held',()=>reject((b,a)=>a.holds=a.holds.filter(x=>x!=='terms_jurisdiction_unverified')));
 for(const key of ['jointWinProbability','ticketEV','betReady','algorithmQualified'])test('no qualification through '+key,()=>reject((b,a)=>a[key]=1));

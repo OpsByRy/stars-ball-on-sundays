@@ -575,6 +575,24 @@
       "updatedAt": "2026-11-01T09:47:59.443Z",
       "count": 7,
       "researchCount": 6753
+    },
+    {
+      "channel": "daily",
+      "count": 0,
+      "date": "2026-10-29",
+      "path": "daily/2026-10-29/cb6e95afdac24587.json",
+      "researchCount": 4508,
+      "updatedAt": "2026-11-01T16:50:35.933Z",
+      "version": "cb6e95afdac24587"
+    },
+    {
+      "channel": "daily",
+      "count": 9,
+      "date": "2026-10-30",
+      "path": "daily/2026-10-30/fdcc427326c22744.json",
+      "researchCount": 11497,
+      "updatedAt": "2026-11-01T16:50:35.933Z",
+      "version": "fdcc427326c22744"
     }
   ],
   "schemaVersion": "public-1"

@@ -82,7 +82,7 @@
     const unit={PTS:'pts',AST:'ast',REB:'reb','3PM':r.actual===1?'three':'threes',PRA:'total',PR:'total',PA:'total',RA:'total'}[row.market]||row.market||'';
     const actual=finite(r.actual)?`${r.actual} ${unit}`:'—';
     if(contracts.isStatisticalHit(row))return {tone:'hit',icon:'✓',label:'Hit',actual,live:contracts.isLiveHit(row)};
-    if(final&&r.statisticalOutcome==='loss')return {tone:'miss',icon:'✕',label:'Miss',actual};
+    if(contracts.isStatisticalMiss(row))return {tone:'miss',icon:'✕',label:'Miss',actual,...(contracts.isLiveMiss(row)?{live:true}:{})};
     if(final&&r.statisticalOutcome==='push')return {tone:'neutral',icon:'↔',label:'Push',actual};
     if(['out','dnp','canceled','postponed'].includes(r.statisticalOutcome))return {tone:'neutral',icon:'—',label:{out:'Void · Out',dnp:'Void · DNP',canceled:'Void · Canceled',postponed:'Postponed'}[r.statisticalOutcome],actual:'—'};
     if(r.eventStatus==='live')return {tone:'live',icon:'●',label:'Live',actual};

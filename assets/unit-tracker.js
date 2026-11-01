@@ -26,7 +26,7 @@
   }
   function propOutcome(row){
     if(results.isStatisticalHit(row))return 'win';
-    if(row.result?.eventStatus==='final'&&row.result.statisticalOutcome==='loss')return 'loss';
+    if(results.isStatisticalMiss(row))return 'loss';
     if(row.result?.eventStatus==='final'&&row.result.statisticalOutcome==='push')return 'push';
     if(['out','dnp','canceled','postponed'].includes(row.result?.statisticalOutcome))return 'excluded';
     return 'pending';
@@ -49,9 +49,9 @@
       const id=row.id||JSON.stringify(kind==='parlays'?row.legs?.map(r=>[r.date,r.canonicalEventId||r.eventId,r.playerId,r.market,r.operator,r.line]):[row.date,row.canonicalEventId||row.eventId,row.playerId,row.market,row.operator,row.line]);
       unique.set(id,{row,type});
     }
-    const total={netUnits:0,netDollars:null,decided:0,pending:0,review:0,unpriced:0,excluded:0,openUnits:0,settledStake:0,liveHits:0,indicative:false,stakes:{}};
+    const total={netUnits:0,netDollars:null,decided:0,pending:0,review:0,unpriced:0,excluded:0,openUnits:0,settledStake:0,liveHits:0,liveMisses:0,indicative:false,stakes:{}};
     for(const {row,type} of unique.values()){
-      const stake=prefs.sizes[type],grade=kind==='parlays'?results.parlayOutcome(row):{outcome:propOutcome(row),live:results.isLiveHit(row)},outcome=grade.outcome;
+      const stake=prefs.sizes[type],grade=kind==='parlays'?results.parlayOutcome(row):{outcome:propOutcome(row),live:results.isLiveHit(row)||results.isLiveMiss(row)},outcome=grade.outcome;
       total.stakes[type]=stake;
       if(kind==='parlays'&&!personal)total.indicative=true;
       if(outcome==='pending'){total.pending++;total.openUnits+=stake;continue;}
@@ -64,6 +64,7 @@
       total.decided++;total.settledStake+=stake;
       total.netUnits+=outcome==='win'?stake*(price-1):-stake;
       if(outcome==='win'&&grade.live)total.liveHits++;
+      if(outcome==='loss'&&grade.live)total.liveMisses++;
     }
     if(Math.abs(total.netUnits)<1e-10)total.netUnits=0;
     total.netDollars=prefs.unitDollars===null?null:total.netUnits*prefs.unitDollars;return total;
@@ -80,7 +81,7 @@
     const testSlate=rows.length>0&&rows.every(results.isTestSlate)&&options.scope!=='cumulative';
     if(options.personal)rows=rows.map(t=>firstPersonalPrice(t));
     const s=summarize(rows,{...options,settings:prefs}),policy=Object.entries(s.stakes).map(([type,stake])=>size(stake)+' / '+titles[type].replace(/parlays$/,'parlay')).join(' · ');
-    return '<div class="unit-record-top"><span class="unit-net '+(s.netUnits>0?'positive':s.netUnits<0?'negative':'')+'">'+(testSlate?'Test-run net ':options.bench?'Bench hypothetical net ':s.unpriced?'Partial net ':s.indicative?'Estimated net ':'Tracked net ')+'<strong>'+units(s.netUnits)+'</strong>'+(s.netDollars===null?'':'<span> · '+dollars(s.netDollars)+'</span>')+'</span><button type="button" data-unit-settings-open>'+('Set your units'+(prefs.unitDollars===null?'':' · $'+Number(prefs.unitDollars.toFixed(2)).toLocaleString('en-US')))+'</button></div><p class="unit-record-note">'+esc(policy)+(s.pending?' · '+size(s.openUnits)+' pending':'')+(s.liveHits?' · includes '+s.liveHits+' live '+(s.liveHits===1?'hit':'hits'):'')+(s.review?' · '+s.review+' ticket'+(s.review===1?'':'s')+' awaiting settlement review':'')+(s.unpriced?' · '+s.unpriced+' winning '+(s.unpriced===1?'return':'returns')+' excluded: price unavailable':'')+'.</p><p class="unit-record-basis">'+(options.bench?'Hypothetical Bench research only; excluded from official pick records. No stake recommendation. ':testSlate?'Hypothetical test-run return at your current stake settings. Excluded from cumulative win-rate and unit P/L totals. ':s.indicative?'Combined estimates use saved leg prices; offered SGP payouts can differ. ':options.personal?'Calculated at the first saved full-ticket quote. ':'Calculated at original saved pick prices. ')+'Statistical P/L; no bets or account balances recorded.</p>';
+    return '<div class="unit-record-top"><span class="unit-net '+(s.netUnits>0?'positive':s.netUnits<0?'negative':'')+'">'+(testSlate?'Test-run net ':options.bench?'Bench hypothetical net ':s.unpriced?'Partial net ':s.indicative?'Estimated net ':'Tracked net ')+'<strong>'+units(s.netUnits)+'</strong>'+(s.netDollars===null?'':'<span> · '+dollars(s.netDollars)+'</span>')+'</span><button type="button" data-unit-settings-open>'+('Set your units'+(prefs.unitDollars===null?'':' · $'+Number(prefs.unitDollars.toFixed(2)).toLocaleString('en-US')))+'</button></div><p class="unit-record-note">'+esc(policy)+(s.pending?' · '+size(s.openUnits)+' pending':'')+(s.liveHits?' · includes '+s.liveHits+' live '+(s.liveHits===1?'hit':'hits'):'')+(s.liveMisses?' · includes '+s.liveMisses+' live '+(s.liveMisses===1?'miss':'misses'):'')+((s.liveHits||s.liveMisses)?' · live results remain subject to stat corrections':'')+(s.review?' · '+s.review+' ticket'+(s.review===1?'':'s')+' awaiting settlement review':'')+(s.unpriced?' · '+s.unpriced+' winning '+(s.unpriced===1?'return':'returns')+' excluded: price unavailable':'')+'.</p><p class="unit-record-basis">'+(options.bench?'Hypothetical Bench research only; excluded from official pick records. No stake recommendation. ':testSlate?'Hypothetical test-run return at your current stake settings. Excluded from cumulative win-rate and unit P/L totals. ':s.indicative?'Combined estimates use saved leg prices; offered SGP payouts can differ. ':options.personal?'Calculated at the first saved full-ticket quote. ':'Calculated at original saved pick prices. ')+'Statistical P/L; no bets or account balances recorded.</p>';
   }
   function recordHTML(rows,options={}){
     if(!rows.length||options.kind!=='parlays'&&!rows.some(options.bench?benchType:propType))return '';

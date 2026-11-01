@@ -35,7 +35,7 @@ test('all original research outputs and forecast times remain unchanged and exac
 });
 test('public notice distinguishes actual posting from placement and labels every relevant game after verified deployment',()=>{
  const pending=publication.personalSlipsHTML(body);assert.match(pending,/Public posting time awaiting deployment verification/);assert.doesNotMatch(pending,/Publicly posted <time/);
- assert.equal((pending.match(/data-personal-slip-id=/g)||[]).length,5);assert.match(pending,/5 separate favorite parlays · 9 distinct favorite pick lines/);assert.equal((pending.match(/target="_blank"/g)||[]).length,14);assert.match(pending,/Saved pregame estimate/);
+ assert.equal((pending.match(/data-personal-slip-id=/g)||[]).length,5);assert.equal((pending.match(/class="pm-row personal-parlay-row"/g)||[]).length,5);assert.equal((pending.match(/class="pm-leg-row/g)||[]).length,14);assert.match(pending,/Saved pregame estimates/);
  assert.equal((pending.match(/Placement time not supplied/g)||[]).length,2);assert.match(pending,/current odds and availability were not checked/);
  const posted=structuredClone(body);posted.personalPublication.publishedAt='2026-10-31T00:20:00Z';const html=publication.personalSlipsHTML(posted);
  assert.match(html,/Publicly posted <time datetime="2026-10-31T00:20:00Z"/);assert.match(html,/Posted after scheduled tip/);assert.match(html,/Posted before scheduled tip/);

@@ -1,0 +1,245 @@
+{
+  "schemaVersion": "public-1",
+  "channel": "sunday",
+  "date": "2026-11-01",
+  "timezone": "America/New_York",
+  "firstPublishedAt": "2026-11-01T19:02:17.705924Z",
+  "recordedAt": "2026-11-01T17:42:30.291612+00:00",
+  "updatedAt": "2026-11-01T21:14:31.224Z",
+  "priceNote": "Ry’s Sunday Pick: personal five-leg SGP+, not an algorithm-qualified recommendation. Accepted full ticket +530; SGP groups +110/+117. Earlier straight prices are pre-placement observations, not accepted component prices; the placed record separately confirms Garland -265. Placement clock: 12:33 PM ET, minute precision. FanDuel event labels are ten minutes after the saved official schedule. First public posting verified.",
+  "props": [
+    {
+      "player": "Jayson Tatum",
+      "playerId": "nba:1628369",
+      "canonicalEventId": "nba:0022600154",
+      "team": "Boston Celtics",
+      "opponent": "Orlando Magic",
+      "startTime": "2026-11-01T20:30Z",
+      "id": "ry-2026-11-01-jayson-tatum-points-25plus",
+      "date": "2026-11-01",
+      "eventId": "nba:0022600154",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "PTS",
+      "operator": ">=",
+      "line": 25,
+      "group": "ry",
+      "americanOdds": -194,
+      "book": "fanduel",
+      "capturedAt": null,
+      "postedAt": "2026-11-01T19:02:17.705924Z",
+      "ryFavorite": true,
+      "selected": false,
+      "overtime": null,
+      "sourceType": "user_supplied_unsubmitted_favorite",
+      "evidence": "Pre-placement FanDuel straight price supplied by Ry; its complete quote timestamp was not supplied. This observation is not an accepted individual SGP component price. The separately placed personal ticket and original SGP group prices are recorded under Parlays; no model estimate is assigned.",
+      "result": {
+        "actual": 8,
+        "minutesPlayed": 12,
+        "checkedAt": "2026-11-01T21:14:31.224Z",
+        "eventStatus": "live",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified",
+        "source": "https://www.espn.com/nba/boxscore/_/gameId/401909903"
+      }
+    },
+    {
+      "player": "Franz Wagner",
+      "playerId": "nba:1630532",
+      "canonicalEventId": "nba:0022600154",
+      "team": "Orlando Magic",
+      "opponent": "Boston Celtics",
+      "startTime": "2026-11-01T20:30Z",
+      "id": "ry-2026-11-01-franz-wagner-points-20plus",
+      "date": "2026-11-01",
+      "eventId": "nba:0022600154",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "PTS",
+      "operator": ">=",
+      "line": 20,
+      "group": "ry",
+      "americanOdds": -225,
+      "book": "fanduel",
+      "capturedAt": null,
+      "postedAt": "2026-11-01T19:02:17.705924Z",
+      "ryFavorite": true,
+      "selected": false,
+      "overtime": null,
+      "sourceType": "user_supplied_unsubmitted_favorite",
+      "evidence": "Pre-placement FanDuel straight price supplied by Ry; its complete quote timestamp was not supplied. This observation is not an accepted individual SGP component price. The separately placed personal ticket and original SGP group prices are recorded under Parlays; no model estimate is assigned.",
+      "result": {
+        "actual": 3,
+        "minutesPlayed": 11,
+        "checkedAt": "2026-11-01T21:14:31.224Z",
+        "eventStatus": "live",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified",
+        "source": "https://www.espn.com/nba/boxscore/_/gameId/401909903"
+      }
+    },
+    {
+      "player": "RJ Barrett",
+      "playerId": "nba:1629628",
+      "canonicalEventId": "nba:0022600157",
+      "team": "Toronto Raptors",
+      "opponent": "Los Angeles Lakers",
+      "startTime": "2026-11-02T02:00Z",
+      "id": "ry-2026-11-01-rj-barrett-points-20plus",
+      "date": "2026-11-01",
+      "eventId": "nba:0022600157",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "PTS",
+      "operator": ">=",
+      "line": 20,
+      "group": "ry",
+      "americanOdds": -162,
+      "book": "fanduel",
+      "capturedAt": null,
+      "postedAt": "2026-11-01T19:02:17.705924Z",
+      "ryFavorite": true,
+      "selected": false,
+      "overtime": null,
+      "sourceType": "user_supplied_unsubmitted_favorite",
+      "evidence": "Pre-placement FanDuel straight price supplied by Ry; its complete quote timestamp was not supplied. This observation is not an accepted individual SGP component price. The separately placed personal ticket and original SGP group prices are recorded under Parlays; no model estimate is assigned."
+    },
+    {
+      "player": "Luka Doncic",
+      "playerId": "nba:1629029",
+      "canonicalEventId": "nba:0022600157",
+      "team": "Los Angeles Lakers",
+      "opponent": "Toronto Raptors",
+      "startTime": "2026-11-02T02:00Z",
+      "id": "ry-2026-11-01-luka-doncic-points-30plus",
+      "date": "2026-11-01",
+      "eventId": "nba:0022600157",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "PTS",
+      "operator": ">=",
+      "line": 30,
+      "group": "ry",
+      "americanOdds": -280,
+      "book": "fanduel",
+      "capturedAt": null,
+      "postedAt": "2026-11-01T19:02:17.705924Z",
+      "ryFavorite": true,
+      "selected": false,
+      "overtime": null,
+      "sourceType": "user_supplied_unsubmitted_favorite",
+      "evidence": "Pre-placement FanDuel straight price supplied by Ry; its complete quote timestamp was not supplied. This observation is not an accepted individual SGP component price. The separately placed personal ticket and original SGP group prices are recorded under Parlays; no model estimate is assigned."
+    },
+    {
+      "player": "Darius Garland",
+      "playerId": "nba:1629636",
+      "canonicalEventId": "nba:0022600156",
+      "team": "Los Angeles Clippers",
+      "opponent": "Golden State Warriors",
+      "startTime": "2026-11-02T01:30Z",
+      "id": "ry-2026-11-01-darius-garland-points-20plus",
+      "date": "2026-11-01",
+      "eventId": "nba:0022600156",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "PTS",
+      "operator": ">=",
+      "line": 20,
+      "group": "ry",
+      "americanOdds": -265,
+      "book": "fanduel",
+      "capturedAt": null,
+      "postedAt": "2026-11-01T19:02:17.705924Z",
+      "ryFavorite": true,
+      "selected": false,
+      "overtime": null,
+      "sourceType": "user_supplied_unsubmitted_favorite",
+      "evidence": "Pre-placement FanDuel straight price supplied by Ry; its complete quote timestamp was not supplied. This observation is not an accepted individual SGP component price. The separately placed personal ticket and original SGP group prices are recorded under Parlays; no model estimate is assigned. The placed record independently also shows this standalone at -265."
+    }
+  ],
+  "personalPublication": {
+    "recordedAt": "2026-11-01T17:42:30.291612+00:00",
+    "publishedAt": "2026-11-01T19:02:17.705924Z"
+  },
+  "personalSlips": [
+    {
+      "id": "ry-2026-11-01-01",
+      "label": "Ry’s Sunday Pick",
+      "book": "fanduel",
+      "americanOdds": 530,
+      "placedAt": "2026-11-01T12:33-05:00",
+      "ryFavorite": true,
+      "shareUrl": "https://sportsbook.fanduel.com/addToBetslip?shareCode=CeC45QU",
+      "priceEvidence": {
+        "source": "screenshot",
+        "context": "original_slip",
+        "observedAt": "2026-11-01T12:33-05:00"
+      },
+      "legs": [
+        {
+          "pickId": "ry-2026-11-01-jayson-tatum-points-25plus",
+          "americanOdds": null
+        },
+        {
+          "pickId": "ry-2026-11-01-franz-wagner-points-20plus",
+          "americanOdds": null
+        },
+        {
+          "pickId": "ry-2026-11-01-rj-barrett-points-20plus",
+          "americanOdds": null
+        },
+        {
+          "pickId": "ry-2026-11-01-luka-doncic-points-30plus",
+          "americanOdds": null
+        },
+        {
+          "pickId": "ry-2026-11-01-darius-garland-points-20plus",
+          "americanOdds": -265,
+          "priceEvidence": {
+            "source": "screenshot",
+            "context": "original_slip",
+            "observedAt": "2026-11-01T12:33-05:00"
+          }
+        }
+      ],
+      "groups": [
+        {
+          "kind": "same_game",
+          "canonicalEventId": "nba:0022600154",
+          "pickIds": [
+            "ry-2026-11-01-jayson-tatum-points-25plus",
+            "ry-2026-11-01-franz-wagner-points-20plus"
+          ],
+          "americanOdds": 110,
+          "priceEvidence": {
+            "source": "screenshot",
+            "context": "original_slip",
+            "observedAt": "2026-11-01T12:33-05:00"
+          }
+        },
+        {
+          "kind": "same_game",
+          "canonicalEventId": "nba:0022600157",
+          "pickIds": [
+            "ry-2026-11-01-rj-barrett-points-20plus",
+            "ry-2026-11-01-luka-doncic-points-30plus"
+          ],
+          "americanOdds": 117,
+          "priceEvidence": {
+            "source": "screenshot",
+            "context": "original_slip",
+            "observedAt": "2026-11-01T12:33-05:00"
+          }
+        },
+        {
+          "kind": "standalone",
+          "canonicalEventId": "nba:0022600156",
+          "pickIds": [
+            "ry-2026-11-01-darius-garland-points-20plus"
+          ]
+        }
+      ]
+    }
+  ],
+  "version": "d4f152ee753c9df6"
+}

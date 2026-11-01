@@ -30,11 +30,16 @@ for(const value of ['2026-02-30T17:28:58Z','2026-11-01T17:28:58','2026-11-01T17:
 test('post-tip observation rejects',()=>reject((b,a)=>a.officialStart='2026-11-01T17:28:58.383Z'));
 test('DST display uses EST on Nov1',()=>{assert.match(api.et('2026-11-01T17:28:58.384Z'),/12:28:58 PM EST/);assert.match(api.et('2026-10-31T17:28:58.384Z'),/1:28:58 PM EDT/);});
 test('same-player combo/component rejects',()=>reject((b,a)=>{a.legs[1].player=a.legs[0].player;a.legs[1].market='PA';}));
+for(const market of ['PTS','PA','PR','PRA'])test('same-player threes plus '+market+' rejects',()=>reject((b,a)=>{a.legs[1].player=a.legs[0].player;a.legs[0].market='3PM';a.legs[1].market=market;}));
+test('mixed null/native IDs cannot duplicate a named exact contract',()=>reject((b,a)=>{a.legs[1]=structuredClone(a.legs[0]);a.legs[1].nativePlayerId='nba:1';}));
+test('same name with contradictory native identity rejects',()=>reject((b,a)=>{a.legs[1].player=a.legs[0].player;a.legs[0].nativePlayerId='nba:1';a.legs[1].nativePlayerId='nba:2';}));
+test('native identity with an alternate label still detects component overlap',()=>reject((b,a)=>{a.legs[0].nativePlayerId='nba:1';a.legs[1].nativePlayerId='nba:1';a.legs[1].market='PA';}));
 test('duplicate contract rejects',()=>reject((b,a)=>a.legs[1]=structuredClone(a.legs[0])));
 test('compatibility is unavailable, never a gate',()=>reject((b,a)=>a.compatibility.value=.8));
 test('pending is not a zero result',()=>{const s=api.summary(fixture());assert.equal(s.hitRate,null);assert.equal(s.pending,1);assert.equal(s.loss,0);});
 function resolved(results){const b=fixture(),a=b.ideas[0];a.nativeEventId='nba:0000000001';a.officialStart='2026-11-01T18:00:00Z';a.legs.forEach((l,i)=>{l.nativePlayerId='nba:'+(i+1);l.nativeTeamId='nba:100';});b.resolutions=[{ideaId:a.id,sourceRef:'fictional-final',nativeEventId:a.nativeEventId,finalAt:'2026-11-01T20:30:00Z',observedAt:'2026-11-01T20:31:00Z',identityVerified:true,eventState:'final',finalityVerified:true,resultBasis:'statistical_only_not_book_settlement',legResults:results}];return b;}
 test('verified statistical wins/losses only enter denominator',()=>{assert.equal(api.summary(resolved(['win','win']),Date.parse('2026-11-02T00:00:00Z')).hitRate,1);assert.equal(api.summary(resolved(['win','loss']),Date.parse('2026-11-02T00:00:00Z')).hitRate,0);});
+test('fully observed loss plus push is a statistical miss',()=>{const b=resolved(['loss','push']),other=resolved(['win','win']);other.ideas[0].id='synthetic-win';other.resolutions[0].ideaId='synthetic-win';b.ideas.push(other.ideas[0]);b.resolutions.push(other.resolutions[0]);const s=api.summary(b,Date.parse('2026-11-02T00:00:00Z'));assert.equal(s.loss,1);assert.equal(s.push,0);assert.equal(s.hitRate,.5);});
 for (const x of ['push','dnp','unknown'])test(x+' remains outside hit rate',()=>{const s=api.summary(resolved(['win',x]),Date.parse('2026-11-02T00:00:00Z'));assert.equal(s.hitRate,null);assert.equal(s[x],1);});
 test('results require verified native event/player binding',()=>{const b=resolved(['win','win']);b.ideas[0].nativeEventId=null;assert.throws(()=>api.validate(b));});
 test('live or pre-start final receipt rejects',()=>{const b=resolved(['win','win']);b.resolutions[0].finalAt='2026-11-01T17:59:00Z';assert.throws(()=>api.validate(b));});

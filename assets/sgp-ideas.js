@@ -28,7 +28,7 @@
       keys(a, ['id','kind','date','book','bookEventId','eventLabel','nativeEventId','officialStart','legs','observed','combinedPrice','holds','jointWinProbability','ticketEV','betReady','algorithmQualified','compatibility']);
       check(id(a.id) && !ids.has(a.id) && a.kind === 'research_idea', 'Unique research ideas required'); ids.set(a.id,a);
       check(/^\d{4}-\d\d-\d\d$/.test(a.date) && new Date(a.date+'T12:00:00Z').toISOString().slice(0,10) === a.date, 'Exact slate date required');
-      check(['FanDuel','DraftKings'].includes(a.book) && /^\d+$/.test(a.bookEventId) && label(a.eventLabel) && native(a.nativeEventId,true), 'Book event identity required');
+      check(['FanDuel','DraftKings'].includes(a.book) && typeof a.bookEventId === 'string' && /^\d{1,24}$/.test(a.bookEventId) && label(a.eventLabel) && native(a.nativeEventId,true), 'Literal book event identity required');
       check(a.officialStart === null || dateAt(clock(a.officialStart)) === a.date, 'Official start/slate mismatch');
       keys(a.observed,['captureId','startedAt','completedAt','bookUpdatedAt']); check(id(a.observed.captureId), 'Opaque capture reference required');
       const start=clock(a.observed.startedAt), end=clock(a.observed.completedAt);

@@ -14,7 +14,7 @@ test('seven unsubmitted favorite quotes do not become placed-ticket component pr
 test('placed ticket renders unknowns, original groups and unavailable joint probability honestly',()=>{
  const html=pub.personalSlipsHTML(body);assert.match(html,/\+630/);assert.doesNotMatch(html,/\+790|>null<|NaN|libfile_|IMG_/);
  assert.match(html,/earlier unsubmitted selection/);assert.match(html,/Total slip probability: <strong>Unavailable/);assert.match(html,/Same-game group 1/);assert.match(html,/Same-game group 2/);assert.match(html,/Standalone selection/);
- assert.equal((html.match(/Not supplied/g)||[]).length,7);assert.match(html,/Placement time not supplied/);
+ assert.equal((html.match(/Original ticket leg price unavailable/g)||[]).length,7);assert.match(html,/Placement time not supplied/);
  const posted=structuredClone(body);posted.personalPublication.publishedAt='2026-10-31T22:05:00Z';const later=pub.personalSlipsHTML(posted);assert.equal((later.match(/Posted after scheduled tip/g)||[]).length,1);assert.equal((later.match(/Posted before scheduled tip/g)||[]).length,6);
 });
 test('one whole ticket is graded with known full price, and a void never invents revised SGP odds',()=>{

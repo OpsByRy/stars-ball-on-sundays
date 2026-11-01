@@ -174,3 +174,19 @@ body[data-page=daily] #reload-data{min-height:32px;padding:6px 10px;font-size:10
 .personal-slip-heading{flex-wrap:wrap}.personal-slip-heading h3{margin:0;font-size:1.15rem}.personal-slip-heading>strong{font-size:1.35rem}
 .personal-slip ol{padding-left:1.25rem}.personal-slip li{padding:.65rem 0}.personal-slip-leg>strong{min-width:0;overflow-wrap:anywhere}.personal-slip-leg>span{flex-shrink:0;font-weight:700}
 .personal-slip small{display:block;line-height:1.5;margin-top:.25rem}.personal-publication-note p{margin:.65rem 0}.personal-slip-placement{font-size:.9rem}
+/* Favorites share the normal pick rows and parlay disclosures, without a duplicate slip block. */
+.daily-tabs.favorites-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:16px 0;overflow:visible}
+.favorites-tabs [role=tab]{min-width:0;min-height:44px;justify-content:space-between}
+.favorites-view [role=tabpanel][hidden]{display:none}
+.favorites-view [role=tabpanel]:focus-visible{outline:2px solid var(--focus-ring,var(--link));outline-offset:3px}
+.personal-parlay-list{margin-top:14px}
+.personal-parlay-row .pm-row-detail{padding-top:10px}
+.personal-parlay-row .pm-row-preview{overflow-wrap:anywhere}
+.personal-parlay-row .pm-row-price>.pm-price-caption{display:block;font-size:9px}
+.personal-parlay-row .pm-row-price>.pm-price-caption::after{content:none}
+.personal-ticket-provenance{border:0;margin:12px 0}
+.personal-ticket-provenance>summary{cursor:pointer;min-height:44px;padding:10px 0;font-size:11px;color:var(--text-muted)}
+.personal-ticket-provenance p,.personal-group-prices p{font-size:11px;line-height:1.7;color:var(--text-muted);margin:7px 0;overflow-wrap:anywhere}
+.personal-group-prices{padding:8px 0;border-block:1px solid var(--border-subtle)}
+.personal-group-prices h4{font-size:12px;margin:0 0 7px}
+.personal-parlay-row .pm-fit>summary,.personal-parlay-row .pm-leg-research>summary{min-height:44px;display:flex;align-items:center}

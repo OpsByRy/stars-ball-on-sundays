@@ -147,6 +147,20 @@ def validate_honorable_mentions(rows):
         price=row.get('americanOdds');prob=row.get('estimate',{}).get('winProbability')
         if not number(price) or price < -500 or abs(price)<100 or not number(prob) or prob<.7:raise ValueError('Honorable mention price or probability outside published bounds')
 
+def validate_personal_price_evidence(record,slip,publication,*,required=False,original_only=False):
+    evidence=record.get('priceEvidence')
+    if evidence is None:
+        if required and record.get('americanOdds') is not None:raise ValueError('Personal group quote requires price evidence')
+        return
+    keys(evidence,{'source','context','observedAt'},{'source','context','observedAt'})
+    if evidence['source'] not in {'screenshot','share_link'} or evidence['context'] not in {'original_slip','later_quote'}:raise ValueError('Invalid personal price evidence')
+    if original_only and evidence['context']!='original_slip':raise ValueError('Full-ticket tracking requires original slip price')
+    if evidence['source']=='share_link' and not slip.get('shareUrl'):raise ValueError('Shared price evidence requires its slip link')
+    stamp(evidence['observedAt'])
+    if evidence['observedAt'] is None or record.get('americanOdds') is None:raise ValueError('Personal price evidence needs a quote and observation time')
+    parsed=lambda value:datetime.fromisoformat(value.replace('Z','+00:00'))
+    if parsed(evidence['observedAt'])>parsed(publication['recordedAt']):raise ValueError('Personal price observation follows recording')
+
 def validate_personal_slips(body):
     if 'personalSlips' not in body and 'personalPublication' not in body:return
     publication=body.get('personalPublication');keys(publication,{'recordedAt','publishedAt'},{'recordedAt','publishedAt'})
@@ -159,29 +173,34 @@ def validate_personal_slips(body):
     if not isinstance(slips,list) or not 1<=len(slips)<=12:raise ValueError('Invalid separate personal slips')
     rows={r['id']:r for r in body['props'] if r['group']=='ry'};seen=set();referenced=set()
     for slip in slips:
-        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields|{'groups'},fields)
+        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields|{'groups','shareUrl','priceEvidence'},fields)
         if not isinstance(slip['id'],str) or not re.fullmatch(r'ry-\d{4}-\d{2}-\d{2}-\d{2}',slip['id']) or not slip['id'].startswith('ry-'+body['date']+'-') or slip['id'] in seen:raise ValueError('Invalid or duplicate personal slip identity')
         seen.add(slip['id'])
         if slip['book'] not in {'fanduel','draftkings'} or type(slip['ryFavorite']) is not bool:raise ValueError('Invalid personal slip attribution')
         if not number(slip['americanOdds']) or abs(slip['americanOdds'])<100:raise ValueError('Invalid personal full-ticket quote')
+        if 'shareUrl' in slip and (slip['book']!='fanduel' or not isinstance(slip['shareUrl'],str) or not re.fullmatch(r'https://sportsbook\.fanduel\.com/addToBetslip\?shareCode=[a-zA-Z0-9]{1,64}',slip['shareUrl'])):raise ValueError('Invalid personal shared slip URL')
+        validate_personal_price_evidence(slip,slip,publication,original_only=True)
         stamp(slip['placedAt'])
         if slip['placedAt'] is not None and parsed(slip['placedAt'])>parsed(publication['recordedAt']):raise ValueError('Personal placement follows recording')
         if not isinstance(slip['legs'],list) or not 2<=len(slip['legs'])<=12:raise ValueError('Invalid personal slip legs')
         legs=set()
         for leg in slip['legs']:
-            keys(leg,{'pickId','americanOdds'},{'pickId','americanOdds'})
+            keys(leg,{'pickId','americanOdds','priceEvidence'},{'pickId','americanOdds'})
             if leg['pickId'] not in rows or leg['pickId'] in legs:raise ValueError('Missing or duplicate personal slip pick')
             legs.add(leg['pickId']);referenced.add(leg['pickId'])
             if leg['americanOdds'] is not None and (not number(leg['americanOdds']) or abs(leg['americanOdds'])<100):raise ValueError('Invalid personal leg quote')
+            validate_personal_price_evidence(leg,slip,publication)
         if 'groups' in slip:
             groups=slip['groups'];grouped=set()
             if not isinstance(groups,list) or not 1<=len(groups)<=12:raise ValueError('Invalid personal ticket groups')
             for group in groups:
-                keys(group,{'kind','canonicalEventId','pickIds'},{'kind','canonicalEventId','pickIds'})
+                keys(group,{'kind','canonicalEventId','pickIds','americanOdds','priceEvidence'},{'kind','canonicalEventId','pickIds'})
                 ids=group['pickIds']
                 if group['kind'] not in {'same_game','standalone'} or not isinstance(ids,list):raise ValueError('Invalid personal ticket group size')
                 if group['kind']=='standalone' and len(ids)!=1 or group['kind']=='same_game' and len(ids)<2:raise ValueError('Invalid personal ticket group size')
                 if any(not isinstance(i,str) for i in ids) or len(set(ids))!=len(ids) or any(i not in legs or i in grouped or rows[i].get('canonicalEventId')!=group['canonicalEventId'] for i in ids):raise ValueError('Personal ticket group identity mismatch')
+                if group.get('americanOdds') is not None and (group['kind']!='same_game' or not number(group['americanOdds']) or abs(group['americanOdds'])<100):raise ValueError('Invalid personal group quote')
+                validate_personal_price_evidence(group,slip,publication,required=True)
                 grouped.update(ids)
             if grouped!=legs:raise ValueError('Personal ticket groups must cover every leg exactly once')
     if referenced!=set(rows):raise ValueError('Unattributed personal pick')

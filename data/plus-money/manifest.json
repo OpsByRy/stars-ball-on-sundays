@@ -162,39 +162,46 @@
       "version": "2886e38bfdd20bf5"
     },
     {
+      "count": 18,
       "date": "2026-10-31",
-      "version": "2d476a982377beef",
-      "updatedAt": "2026-10-31T21:43:04.326695+00:00",
       "path": "2026-10-31/2d476a982377beef.json",
-      "count": 18
+      "updatedAt": "2026-10-31T21:43:04.326695+00:00",
+      "version": "2d476a982377beef"
     },
     {
+      "count": 18,
       "date": "2026-10-31",
-      "version": "50a91305da575c8c",
-      "updatedAt": "2026-10-31T21:57:11.447417+00:00",
       "path": "2026-10-31/50a91305da575c8c.json",
-      "count": 18
+      "updatedAt": "2026-10-31T21:57:11.447417+00:00",
+      "version": "50a91305da575c8c"
     },
     {
+      "count": 18,
       "date": "2026-10-31",
-      "version": "3ac55bd07d57516e",
-      "updatedAt": "2026-10-31T22:52:01.449Z",
       "path": "2026-10-31/3ac55bd07d57516e.json",
-      "count": 18
+      "updatedAt": "2026-10-31T22:52:01.449Z",
+      "version": "3ac55bd07d57516e"
     },
     {
+      "count": 18,
       "date": "2026-10-31",
-      "version": "388af6ab40ae4595",
-      "updatedAt": "2026-11-01T02:19:10.560Z",
       "path": "2026-10-31/388af6ab40ae4595.json",
-      "count": 18
+      "updatedAt": "2026-11-01T02:19:10.560Z",
+      "version": "388af6ab40ae4595"
     },
     {
+      "count": 18,
       "date": "2026-10-31",
-      "version": "cb10e36d269532f4",
-      "updatedAt": "2026-11-01T09:47:59.443Z",
       "path": "2026-10-31/cb10e36d269532f4.json",
-      "count": 18
+      "updatedAt": "2026-11-01T09:47:59.443Z",
+      "version": "cb10e36d269532f4"
+    },
+    {
+      "count": 6,
+      "date": "2026-11-01",
+      "path": "2026-11-01/d2251ecd55a67cce.json",
+      "updatedAt": "2026-11-01T16:35:44.307126+00:00",
+      "version": "d2251ecd55a67cce"
     }
   ],
   "schemaVersion": "public-plus-money-manifest-1"

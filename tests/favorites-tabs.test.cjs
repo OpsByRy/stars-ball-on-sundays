@@ -84,3 +84,16 @@ test('every personal entry point loads the shared tab controller/card styles and
  const source=fs.readFileSync(path.join(root,'assets/publication.js'),'utf8');assert.match(source,/picksHTML:.*pickList\(rows,id\+'-picks'\).*parlaysHTML:.*recordSummary\(rows,'ry'\)/);
  assert.match(source,/opened=details.map\(node=>node.open\)/);assert.match(source,/node.open=opened\[index\]/);
 });
+
+
+test('personal quote and placement labels preserve shared-link versus screenshot provenance without repricing',()=>{
+ const body=seven(),slip=body.personalSlips[0],evidence={source:'share_link',context:'original_slip',observedAt:body.personalPublication.recordedAt};
+ slip.shareUrl='https://sportsbook.fanduel.com/addToBetslip?shareCode=Example';slip.priceEvidence={...evidence};slip.legs[0].americanOdds=-155;slip.legs[0].priceEvidence={...evidence};slip.placedAt='2026-10-31T21:45:00Z';
+ const before=JSON.stringify(body),html=publication.personalSlipsHTML(body),originalPrice=results.personalParlays(body)[0].americanOdds;
+ assert.match(html,/Saved shared slip leg price: <strong>-155/);assert.match(html,/Source: shared slip/);assert.doesNotMatch(html,/Saved screenshot leg price|Screenshot placement time/);
+ assert.match(html,/Recorded placement time:/);assert.match(html,/full-ticket shared-slip quote/);assert.equal(originalPrice,630);assert.equal(JSON.stringify(body),before);
+ slip.priceEvidence.source='screenshot';slip.legs[0].priceEvidence.source='screenshot';
+ const screenshot=publication.personalSlipsHTML(body);assert.match(screenshot,/Saved screenshot leg price: <strong>-155/);assert.match(screenshot,/Source: screenshot/);assert.match(screenshot,/Recorded placement time:/);
+ slip.legs[0].priceEvidence={...evidence,context:'later_quote'};
+ const later=publication.personalSlipsHTML(body);assert.match(later,/Original ticket leg price unavailable/);assert.doesNotMatch(later,/>-155<\/strong>/);assert.equal(results.personalParlays(body)[0].americanOdds,originalPrice);
+});

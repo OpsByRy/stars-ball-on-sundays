@@ -114,6 +114,11 @@
     "sundays/ry/index.html",
     "sundays/week.html",
     "assets/slate-policy.js",
-    "assets/parlay-withdrawals.json"
+    "assets/parlay-withdrawals.json",
+    "research/sgp/index.html",
+    "assets/sgp-ideas.js",
+    "assets/sgp-ideas-page.js",
+    "assets/sgp-ideas.json",
+    "assets/sgp-ideas.css"
   ]
 }

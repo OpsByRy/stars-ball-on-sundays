@@ -4,6 +4,7 @@
 .designation-status,.designation-price{display:flex;flex-direction:column;gap:.25rem;min-width:0}
 .designation-status small,.designation-price small{font-size:.75rem;line-height:1.4}
 .designation-tag{display:inline-block;align-self:flex-start;border:1px solid currentColor;border-radius:.3rem;padding:.2rem .4rem;font-size:.75rem;letter-spacing:.025em}
+.designation-historical{font-size:.6875rem;letter-spacing:0}
 .designation-warning{color:#f4cd73;background:#30280f}
 .designation-danger,.designation-price-void{color:#ffb4b4;background:#4d1616}
 .designation-price-void{padding:.15rem .35rem;border-radius:.25rem}

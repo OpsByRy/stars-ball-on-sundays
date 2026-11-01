@@ -58,11 +58,26 @@ test('private nested data and accessor inputs are rejected without interpolation
 test('missing original price/clock stays unknown while provisional display never fabricates a quote',()=>{const f=fresh();f.context.originalSelection={americanOdds:null,capturedAt:null,selectedAt:null};f.record.designation='out';assert.equal(view(f).voidPrice,true);assert.match(html(f),/Original posted pick price: <strong>Unavailable/);assert.doesNotMatch(html(f),/\+0|\+140/);});
 test('render and repeated mount clear superseded OUT/VOID/Q tags; they never mutate source or financial state',()=>{
  const f=fresh();f.record.designation='out';const before=JSON.stringify(f),node={innerHTML:''};api.mount(node,f.record,f.context,opts);assert.match(node.innerHTML,/designation-price-void/);assert.equal(JSON.stringify(f),before);
- f.record.designation='available';api.mount(node,f.record,f.context,opts);assert.doesNotMatch(node.innerHTML,/designation-tag|designation-price-void/);
+ f.record.designation='available';f.record.source.effectiveAt='2026-11-01T21:00:00.000000001Z';api.mount(node,f.record,f.context,opts);assert.doesNotMatch(node.innerHTML,/designation-tag|designation-price-void/);
  f.record=null;api.mount(node,f.record,f.context,opts);assert.match(node.innerHTML,/STATUS UNKNOWN/);assert.doesNotMatch(node.innerHTML,/Available update|designation-price-void/);
  assert.equal(Object.keys(api).some(k=>/result|settle|eligib|fetch/i.test(k)),false);
 });
 test('renderer is inactive and inaccessible to production pages/build; no fetch/storage/data writer is added',()=>{
  const root=path.join(__dirname,'..');for(const p of ['scripts/build.py','assets/publication.js','assets/pick-board.js'])assert.doesNotMatch(fs.readFileSync(path.join(root,p),'utf8'),/pick-designation/);
  assert.doesNotMatch(fs.readFileSync(path.join(root,'assets/pick-designation.js'),'utf8'),/\bfetch\(|localStorage|sessionStorage|indexedDB|\.result\s*=/);
+});
+test('Unknown after Q/GTD/Out keeps a visible historical flag without asserting current VOID',()=>{
+ for(const designation of ['questionable','gtd','out']){const f=fresh();f.record.designation=designation;const node={innerHTML:''};api.mount(node,f.record,f.context,opts);const v=api.mount(node,null,f.context,opts);assert.equal(v.state,'unknown');assert.equal(v.lastVerified.designation,designation);assert.match(node.innerHTML,/Last verified:/);assert.doesNotMatch(node.innerHTML,/designation-price-void/);}
+});
+test('only a reliable newer Available clears a mounted injury flag',()=>{
+ const f=fresh(),node={innerHTML:''};f.record.designation='out';api.mount(node,f.record,f.context,opts);f.record.designation='available';f.record.source.effectiveAt='2026-11-01T21:00:00.000000001Z';const v=api.mount(node,f.record,f.context,opts);assert.equal(v.state,'current');assert.doesNotMatch(node.innerHTML,/designation-tag|Last verified: OUT/);api.mount(node,null,f.context,opts);assert.doesNotMatch(node.innerHTML,/Last verified: OUT/);
+});
+test('late older Available and same-effective contradictory updates cannot hide a mounted OUT',()=>{
+ for(const effective of ['2026-11-01T20:59:59.999999999Z','2026-11-01T21:00:00Z']){const f=fresh(),node={innerHTML:''};f.record.designation='out';api.mount(node,f.record,f.context,opts);f.record.designation='available';f.record.source.effectiveAt=effective;const v=api.mount(node,f.record,f.context,opts);assert.equal(v.state,'conflicting');assert.match(node.innerHTML,/Last verified: OUT/);assert.doesNotMatch(node.innerHTML,/Available update|designation-price-void/);}
+});
+test('mounted history cannot cross exact record, book, edition or synthetic/public contexts',()=>{
+ for(const mutate of [c=>c.binding.recordId='other',c=>c.binding.book='fanduel',c=>c.binding.editionVersion='b'.repeat(16),c=>c.dataKind='accepted_public']){const f=fresh(),node={innerHTML:''};f.record.designation='out';api.mount(node,f.record,f.context,opts);mutate(f.context);const v=api.mount(node,null,f.context,opts);assert.equal(v.lastVerified,null);assert.doesNotMatch(node.innerHTML,/Last verified: OUT/);}
+});
+test('conflicting historical Available cannot hide an equal-effective mounted OUT',()=>{
+ const f=fresh(),node={innerHTML:''};f.record.designation='out';api.mount(node,f.record,f.context,opts);f.record.lastVerified={designation:'available',source:f.record.source};Object.assign(f.record,{state:'unknown',designation:null,source:null});const v=api.mount(node,f.record,f.context,opts);assert.equal(v.state,'conflicting');assert.match(node.innerHTML,/Last verified: OUT/);assert.doesNotMatch(node.innerHTML,/designation-price-void/);
 });

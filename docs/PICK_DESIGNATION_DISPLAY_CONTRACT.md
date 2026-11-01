@@ -27,7 +27,7 @@ Record fields, all explicit:
 - `state`: `current | stale | unknown | conflicting | unverified`.
 - `designation`: `available | questionable | gtd | probable | doubtful | out`, or explicit null for unknown/conflicting/unverified state.
 - `source`: `name`, `effectiveAt`, `reportedAt`, `observedAt`, `validUntil`; explicit null for unknown/conflicting/unverified state. Current/stale facts require known clocks. Unverified/missing timing must not be fabricated to fit this shape.
-- `lastVerified`: optional `{designation, source}`, otherwise null. It is historical context, not an automatic current fallback.
+- `lastVerified`: optional `{designation, source}`, otherwise null. It is historical context, not an automatic current fallback. Unknown/stale/conflicting updates retain its visible historical Q/GTD/Out flag; only explicit reliable Available clears the injury tag.
 
 The host independently supplies `dataKind`, identical `binding`, immutable `originalSelection: {americanOdds, capturedAt, selectedAt}` with honest nulls, `publication: {kind, at}`, `eventStatus`, and `participation`. Publication kind is `actual_first_row_publication`, `first_known_deployed_presence`, or `unknown`. Event status is `scheduled | live | final | postponed | canceled | unknown`. Participation is `unverified | played | inactive`; appearance must come from the separately reviewed actual-stat/participation path, not from missing data.
 
@@ -54,3 +54,5 @@ Production integration must cover shared pick rows, personal favorites and each 
 Validation: `node --test tests/pick-designation.test.cjs`. Existing CI discovers the new test automatically. Browser/mobile checks use only the separate synthetic development preview and are not hosted or live-site acceptance.
 
 The host must recompute this display on every accepted projection, at the freshness cutoff, and on visible/page restoration, using the actual current clock. This renderer computes freshness when called; it does not install a timer or fetch loop. A frozen synthetic `options.now` is for tests only. Review of that host lifecycle is an activation prerequisite.
+
+Within one mounted element and exact immutable binding, an unknown/missing/invalid update retains the preceding verified designation as explicitly historical. Older or same-effective contradictory updates cannot clear it. A new record/edition/book/contract clears this transient association. This in-memory guard has no storage and cannot replace the producer's history across reloads; the approved projection must supply `lastVerified` with truthful clocks. Historical Out alone never supplies current provisional VOID or changes exposure/settlement.

@@ -2,6 +2,7 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.SBOS_PICK_DESIGNATION=api;})(typeof window==='undefined'?this:window,function(){
   'use strict';
   const VERSION='sbos-public-pick-designation-1';
+  const mountedHistory=new WeakMap();
   const bindingKeys=['recordId','editionVersion','slateDate','eventId','playerId','book','market','operator','line','period','product','overtime','settlementRules','jurisdiction','startTime'];
   const designations=['available','questionable','gtd','probable','doubtful','out'];
   const labels={available:'Available',questionable:'QUESTIONABLE',gtd:'GTD',probable:'PROBABLE',doubtful:'DOUBTFUL',out:'OUT'};
@@ -92,15 +93,34 @@
   function stamp(v){if(v===null||v===undefined)return 'Unknown';const n=clock(v);return new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',second:'2-digit',timeZoneName:'short'}).format(new Date(Number(n/1000000n)));}
   const time=v=>v===null||v===undefined?'Unknown':`<time datetime="${escape(v)}" title="${escape(v)}">${escape(stamp(v))}</time>`;
   const odds=v=>v===null?'Unavailable':v>0?'+'+v:String(v).replace('-','−');
-  function render(record,context,options={}){
-    const v=buildView(record,context,options),badge=v.label?`<strong class="designation-tag designation-${escape(v.tone)}">${escape(v.label)}</strong>`:'';
+  function renderView(v){
+    const badge=v.label?`<strong class="designation-tag designation-${escape(v.tone)}">${escape(v.label)}</strong>`:'';
+    const priorBadge=v.lastVerified&&v.lastVerified.designation!=='available'?`<span class="designation-tag designation-${v.lastVerified.designation==='out'?'danger':'warning'} designation-historical">Last verified: ${escape(labels[v.lastVerified.designation])}</span>`:'';
     const statusTime=v.source?`<small>${v.designation==='available'?'Available update':'Status reported'} ${time(v.source.reportedAt)}</small>`:v.lastVerified?`<small>Last verified observation ${time(v.lastVerified.source.observedAt)}</small>`:'';
     const price=v.voidPrice?'<strong class="designation-price-void">VOID</strong><small>SBOS provisional</small>':`<strong>${escape(odds(v.quote))}</strong><small>Saved pick price</small>`;
     const sourceHTML=s=>`<dl><dt>Source</dt><dd>${escape(s.name)}</dd><dt>Effective</dt><dd>${time(s.effectiveAt)}</dd><dt>Reported</dt><dd>${time(s.reportedAt)}</dd><dt>Observed</dt><dd>${time(s.observedAt)}</dd><dt>Freshness cutoff</dt><dd>${time(s.validUntil)}</dd></dl>`;
     const history=v.lastVerified?`<p>Last verified designation: <strong>${escape(labels[v.lastVerified.designation])}</strong>. This is historical status.</p>${sourceHTML(v.lastVerified.source)}`:'';
     const saved=v.publication?`<p>Original posted pick price: <strong>${escape(odds(v.quote))}</strong> · quote captured ${time(v.quoteAt)}. Selection recorded ${time(v.selectedAt)}.</p><p>${v.publication.kind==='actual_first_row_publication'?'First published':v.publication.kind==='first_known_deployed_presence'?'First known deployed presence (actual first publication unverified)':'First publication unknown'}: ${time(v.publication.at)}.</p>`:'';
-    return `<section class="pick-designation" data-designation-state="${escape(v.state)}" aria-label="Pick availability and saved price"><div class="designation-compact"><span class="designation-status">${badge}${statusTime}</span><span class="designation-price" aria-label="${v.voidPrice?'VOID — SBOS provisional tracking; sportsbook settlement unverified':'Saved pick price'}">${price}</span></div><details class="designation-details"><summary>Availability &amp; saved-price details</summary><p>${escape(v.detail)}</p>${v.source?sourceHTML(v.source):''}${history}${saved}<p>Sportsbook settlement is separate. Original quotes, statistical results, submitted exposure and financial records are unchanged.</p></details></section>`;
+    return `<section class="pick-designation" data-designation-state="${escape(v.state)}" aria-label="Pick availability and saved price"><div class="designation-compact"><span class="designation-status">${badge}${priorBadge}${statusTime}</span><span class="designation-price" aria-label="${v.voidPrice?'VOID — SBOS provisional tracking; sportsbook settlement unverified':'Saved pick price'}">${price}</span></div><details class="designation-details"><summary>Availability &amp; saved-price details</summary><p>${escape(v.detail)}</p>${v.source?sourceHTML(v.source):''}${history}${saved}<p>Sportsbook settlement is separate. Original quotes, statistical results, submitted exposure and financial records are unchanged.</p></details></section>`;
   }
-  function mount(container,record,context,options={}){container.innerHTML=render(record,context,options);return buildView(record,context,options);}
+  const render=(record,context,options={})=>renderView(buildView(record,context,options));
+  function mount(container,record,context,options={}){
+    let v=buildView(record,context,options);const key=v.publication?JSON.stringify([context.dataKind,...bindingKeys.map(k=>context.binding[k])]):null,old=mountedHistory.get(container);
+    const prior=old?.key===key&&key&&clock(old.last.source.observedAt)<=BigInt(options.now??Date.now())*1000000n?old.last:null;
+    if(v.state==='current'&&prior){
+      const nextAt=clock(v.source.effectiveAt),oldAt=clock(prior.source.effectiveAt);
+      if(nextAt<oldAt||nextAt===oldAt&&v.designation!==prior.designation)v={...v,state:'conflicting',label:'STATUS CONFLICT',tone:'warning',voidPrice:false,source:null,lastVerified:prior,detail:'An older or contradictory update cannot clear the last verified designation. A reliable newer update is required.'};
+    }
+    if(v.state==='current')mountedHistory.set(container,{key,last:{designation:v.designation,source:{...v.source}}});
+    else if(key){
+      if(prior&&v.lastVerified&&clock(v.lastVerified.source.effectiveAt)===clock(prior.source.effectiveAt)&&v.lastVerified.designation!==prior.designation){
+        const last=prior.designation==='out'?prior:v.lastVerified.designation==='out'?v.lastVerified:prior.designation==='available'?v.lastVerified:prior;
+        v={...v,state:'conflicting',label:'STATUS CONFLICT',tone:'warning',voidPrice:false,source:null,lastVerified:last,detail:'Conflicting historical designations cannot establish clearance. A reliable newer update is required.'};
+      }
+      if(prior&&(!v.lastVerified||clock(v.lastVerified.source.effectiveAt)<clock(prior.source.effectiveAt)))v={...v,lastVerified:prior};
+      if(v.lastVerified)mountedHistory.set(container,{key,last:{designation:v.lastVerified.designation,source:{...v.lastVerified.source}}});else mountedHistory.delete(container);
+    }else mountedHistory.delete(container);
+    container.innerHTML=renderView(v);return v;
+  }
   return {VERSION,buildView,render,mount};
 });

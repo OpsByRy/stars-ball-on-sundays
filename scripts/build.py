@@ -226,8 +226,8 @@ def assert_personal_estimates(body):
         if not {'winProbability','pushProbability','lossProbability','projection','asOf','status'}<=set(estimate):
             raise ValueError('Personal picks require reviewed probabilities and projections before publication: '+row['player'])
 
-def build(root, publish=False, now=None):
-    root=Path(root).resolve();destination=root/'dist'
+def build(root, publish=False, now=None, destination=None):
+    root=Path(root).resolve();destination=Path(destination) if destination is not None else root/'dist'
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
     manifest=json.loads(safe_file(root,'site-manifest.json').read_text())
     if set(manifest)!={'files'} or not isinstance(manifest['files'],list): raise ValueError('Invalid site file list')

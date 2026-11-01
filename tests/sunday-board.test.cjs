@@ -38,15 +38,15 @@ test('Sunday and dated Sunday pages share Daily layout controls and preserve rou
  assert.doesNotMatch(fs.readFileSync(path.join(__dirname,'../daily/index.html'),'utf8'),/data-board-channel="sunday"/);
 });
 
-async function mountedSunday(){
- const script=fs.readFileSync(path.join(__dirname,'../assets/publication.js'),'utf8'),elements={},listeners={},watch={};let address=new URL('https://example.com/project/sundays/?date=2026-11-01');
+async function mountedSunday(day='2026-11-01'){
+ const script=fs.readFileSync(path.join(__dirname,'../assets/publication.js'),'utf8'),elements={},listeners={},watch={};let address=new URL('https://example.com/project/sundays/?date='+day);
  const element=id=>elements[id]||(elements[id]={innerHTML:'',textContent:'',value:'',disabled:false,addEventListener(){},setAttribute(){},removeAttribute(){}});
  for(const id of ['daily-content','slate-date','slate-context','reload-data'])element(id);
  const slot={dataset:{personalSource:'sunday'},innerHTML:'',querySelectorAll(){return [];}};
  const document={body:{dataset:{page:'daily',boardChannel:'sunday'}},activeElement:null,getElementById:id=>elements[id]||null,addEventListener(name,fn){(listeners[name]||=[]).push(fn);},querySelector(selector){return selector==='script[data-publication]'?{src:'https://example.com/project/assets/publication.js'}:selector==='[data-sunday-stars-record]'?element('stars-record'):null;},querySelectorAll(selector){return selector==='[data-personal-slips]'?[slot]:[];}};
  const board={...require('../assets/pick-board.js'),create(){return {beginDate(){},renderRow(row){return '<article data-test-pick="'+row.id+'"></article>';},refresh(){return Promise.resolve();}};},watchResults(options){watch.callback=options.onResults;return {setRows(rows){watch.rows=rows;},stop(){}};}};
  const window={SBOS_SLATE_POLICY:require('../assets/slate-policy.js'),STARS_RESULT_UTILS:results,SBOS_ROUTES:require('../assets/routes.js'),SBOS_FAVORITES:require('../assets/favorites.js'),SBOS_PICK_BOARD:board,SBOS_PLUS_MONEY:require('../assets/plus-money.js'),SBOS_UNITS:require('../assets/unit-tracker.js'),addEventListener(){}};
- const all=read('data/editions/manifest.json'),bodies=new Map([[daily().version,daily()],[sunday().version,sunday()]]),requests=[];
+ const all=read('data/editions/manifest.json'),historicalEntry=pub.sundaySourceEntries(all.editions,'2026-10-25').personalEntry,historical=read('data/editions/'+historicalEntry.path),bodies=new Map([[daily().version,daily()],[sunday().version,sunday()],[historical.version,historical]]),requests=[];
  const fetch=async input=>{const url=new URL(input);requests.push(url.pathname);let value;if(url.pathname.endsWith('/manifest.json'))value=all;else {const version=path.basename(url.pathname,'.json'),b=bodies.get(version);assert.ok(b,'Unexpected source '+url.pathname);value=url.pathname.includes('/data/boards/')?{schemaVersion:'public-board-1',sourceVersion:version,edition:{...b,props:b.props.filter(r=>r.category!=='not_a_pick')}}:b;}return {ok:true,json:async()=>JSON.parse(JSON.stringify(value))};};
  const location={get href(){return address.href;},get search(){return address.search;},get hash(){return address.hash;}};
  const history={replaceState(_a,_b,url){address=new URL(url,address);},pushState(_a,_b,url){address=new URL(url,address);}};
@@ -68,4 +68,10 @@ test('Sunday ticket polling retains the owner source and cannot turn it into the
  mounted.watch.callback();assert.match(mounted.elements['stars-record'].innerHTML,/>1<\/strong> hit/);assert.match(mounted.slot.innerHTML,/Ry’s Sunday Pick/);assert.match(mounted.slot.innerHTML,/\+530/);
  assert.match(mounted.elements['daily-content'].innerHTML,/data-board-source="daily:f5042547c4eaa13f"/);
  assert.equal((mounted.elements['daily-content'].innerHTML.match(/data-test-pick=/g)||[]).length,10);
+});
+
+test('an archived Sunday with no Daily source retains local saved research and personal-record access',async()=>{
+ const mounted=await mountedSunday('2026-10-25'),html=mounted.elements['daily-content'].innerHTML;
+ assert.match(html,/data-board-source="sunday:/);assert.match(html,/href="#sunday-saved-research"/);assert.match(html,/id="sunday-saved-research"/);
+ assert.ok(!mounted.requests.some(p=>p.includes('/data/boards/sunday/')));assert.ok(mounted.requests.some(p=>p.includes('/data/editions/sunday/2026-10-25/')));
 });

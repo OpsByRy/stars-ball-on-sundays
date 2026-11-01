@@ -17565,7 +17565,7 @@
         "status": "provisional",
         "projection": 11.521640535056163,
         "winProbability": 0.8487749081933659,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.15122509180663415,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -55135,7 +55135,7 @@
         "status": "provisional",
         "projection": 21.749171742954076,
         "winProbability": 0.8323365953848012,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.16766340461519874,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -63812,7 +63812,7 @@
         "status": "provisional",
         "projection": 36.274702923847364,
         "winProbability": 0.9025873621276157,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.09741263787238429,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -71813,7 +71813,7 @@
         "status": "provisional",
         "projection": 2.850552922590837,
         "winProbability": 0.7734324236517219,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.22656757634827807,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -73250,7 +73250,7 @@
         "status": "provisional",
         "projection": 4.724486571879936,
         "winProbability": 0.79296486584774,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.20703513415226005,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -76700,7 +76700,7 @@
         "status": "provisional",
         "projection": 24.542764914889005,
         "winProbability": 0.8227909557497572,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.17720904425024275,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -84689,7 +84689,7 @@
         "status": "provisional",
         "projection": 12.39252535292026,
         "winProbability": 0.7497986036519871,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.25020139634801286,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -86290,7 +86290,7 @@
         "status": "provisional",
         "projection": 11.250008339671256,
         "winProbability": 0.8144978421476117,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.18550215785238827,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -88755,7 +88755,7 @@
         "status": "provisional",
         "projection": 20.755683320122635,
         "winProbability": 0.7003146067415731,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.2996853932584269,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -94561,7 +94561,7 @@
         "status": "provisional",
         "projection": 14.877095939834883,
         "winProbability": 0.8642854967875522,
-        "pushProbability": 0.0,
+        "pushProbability": 0,
         "lossProbability": 0.13571450321244785,
         "asOf": "2026-11-01T16:09:03.894473+00:00"
       },
@@ -98443,5 +98443,5 @@
       "selected": false
     }
   ],
-  "version": "79b4b4635b4d2211"
+  "version": "5883c347646ef502"
 }

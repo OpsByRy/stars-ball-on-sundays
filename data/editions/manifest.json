@@ -620,6 +620,15 @@
       "count": 5,
       "researchCount": 0,
       "updatedAt": "2026-11-01T17:42:30.291612+00:00"
+    },
+    {
+      "channel": "sunday",
+      "date": "2026-11-01",
+      "version": "3b91e2be313d30e2",
+      "path": "sunday/2026-11-01/3b91e2be313d30e2.json",
+      "count": 5,
+      "researchCount": 0,
+      "updatedAt": "2026-11-01T19:03:42.305677+00:00"
     }
   ],
   "schemaVersion": "public-1"

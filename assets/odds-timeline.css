@@ -1,0 +1,36 @@
+/* Opt-in component. No page selectors or automatic activation. */
+.odds-timeline{color:var(--text,#f4f7fb);font:inherit;line-height:1.5;min-width:0}
+.odds-timeline *{box-sizing:border-box}
+.odds-timeline .ot-demo{border-left:3px solid var(--warning,#f5d69b);padding:8px 12px;color:var(--warning,#f5d69b);font-size:12px}
+.odds-timeline .ot-record{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:12px 0}
+.odds-timeline .ot-record>strong{font-size:23px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.odds-timeline .ot-label{display:block;color:var(--text-muted,#a9b9cc);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.odds-timeline .ot-record p{font-size:12px;color:var(--text-muted,#a9b9cc);margin:5px 0 0}
+.odds-timeline details{border-top:1px solid var(--border-subtle,#435267);padding:0}
+.odds-timeline summary{cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:6px 10px;font-size:12px;font-weight:600;padding:10px 2px;list-style:none}
+.odds-timeline summary::-webkit-details-marker{display:none}
+.odds-timeline summary::before{content:"+";font-size:18px;line-height:1}
+.odds-timeline details[open]>summary::before{content:"−"}
+.odds-timeline summary:focus-visible{outline:3px solid var(--focus-ring,#c6d9f4);outline-offset:3px;border-radius:3px}
+.odds-timeline .ot-summary-price{font-weight:400;color:var(--text-muted,#a9b9cc);font-variant-numeric:tabular-nums}
+.odds-timeline .ot-content{padding:0 0 12px}
+.odds-timeline .ot-metrics,.odds-timeline .ot-range{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:6px 0}
+.odds-timeline .ot-metrics>div{background:var(--surface-raised,#1a2a3e);padding:9px 10px;border-radius:6px;min-width:0}
+.odds-timeline dt{font-size:11px;color:var(--text-muted,#a9b9cc)}
+.odds-timeline dd{margin:2px 0;font-size:16px;font-weight:650;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.odds-timeline .ot-range dd{font-size:14px}
+.odds-timeline .ot-metrics time,.odds-timeline .ot-range time{font-size:11px;color:var(--text-muted,#a9b9cc);display:block}
+.odds-timeline .ot-direction,.odds-timeline .ot-status,.odds-timeline .ot-note,.odds-timeline .ot-unavailable{font-size:12px;margin:10px 0;overflow-wrap:anywhere}
+.odds-timeline .ot-better{color:var(--success,#86e5b5)}
+.odds-timeline .ot-lower{color:var(--danger,#ffb1bf)}
+.odds-timeline .ot-status{color:var(--warning,#f5d69b)}
+.odds-timeline .ot-note,.odds-timeline .ot-unavailable{color:var(--text-muted,#a9b9cc)}
+.odds-timeline .ot-table-wrap{max-width:100%;overflow:auto}
+.odds-timeline table{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums;table-layout:fixed}
+.odds-timeline caption{text-align:left;color:var(--text-muted,#a9b9cc);padding:10px 0}
+.odds-timeline th,.odds-timeline td{padding:8px 5px;text-align:left;border-bottom:1px solid var(--border-subtle,#435267);vertical-align:top;overflow-wrap:anywhere}
+.odds-timeline th{font-weight:500;color:var(--text-muted,#a9b9cc)}
+.odds-timeline th:first-child{width:45%}
+.odds-timeline th:nth-child(2){width:20%}
+.odds-timeline th:nth-child(3){width:35%}
+.odds-timeline .ot-content>details p{font-size:12px;color:var(--text-muted,#a9b9cc)}

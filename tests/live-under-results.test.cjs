@@ -71,7 +71,7 @@ test('personal and algorithm parlay legs and records share the provisional Miss 
  const row=body.props.find(r=>r.group==='ry'&&r.player==='Brandon Miller'&&r.market==='AST'&&r.operator==='<'&&r.line===3.5);assert.ok(row);
  row.result=grade(row,5).result;const beforeRender=JSON.stringify(body),personal=results.personalParlays(body)[0];
  assert.deepEqual(results.parlayOutcome(personal),{outcome:'loss',live:true});
- const html=publication.personalSlipsHTML(body);assert.match(html,/full-ticket screenshot quote · Miss · Live/);assert.match(html,/Miss · Live · 5 ast/);
+ const html=publication.personalSlipsHTML(body);assert.match(html,/full-ticket screenshot quote · Miss · Live/);assert.match(html,/Miss · ● Live · 5 ast/);
  assert.match(results.parlayRecordHTML([personal]),/1 live/);assert.equal(results.parlaySummary([personal]).misses,1);
  const generated={...ticket(row),priceKind:'indicative',indicativeAmericanOdds:130,fitReasons:[]};
  const generatedHTML=parlays.ticketRow(generated,0);assert.match(generatedHTML,/✕ Miss · ● Live/);assert.match(generatedHTML,/Miss · ● Live · 5 ast/);

@@ -117,18 +117,24 @@
     for(const ticket of unique){const r=parlayOutcome(ticket);s[{win:'hits',loss:'misses',pending:'pending',review:'review',void:'voided'}[r.outcome]]++;if(r.live)s.live++;if(r.outcome==='win'&&parlayLegs(ticket).voided.length)s.winsWithVoids++;}
     s.hitRate=s.hits+s.misses?s.hits/(s.hits+s.misses):null;return s;
   }
+  function personalPrice(record,{requireEvidence=false}={}) {
+    const value=record?.americanOdds,evidence=record?.priceEvidence;
+    if(typeof value!=='number'||!Number.isFinite(value)||Math.abs(value)<100)return null;
+    if(!evidence)return requireEvidence?null:value; // Original screenshot records predate evidence metadata.
+    return ['screenshot','share_link'].includes(evidence.source)&&evidence.context==='original_slip'&&Number.isFinite(Date.parse(evidence.observedAt))?value:null;
+  }
   function personalParlays(body) {
     if(Array.isArray(body?.personalSlips)){
       const rows=new Map((body.props||[]).filter(p=>p.group==='ry').map(p=>[p.id,p]));
       return body.personalSlips.flatMap(s=>{
         if(!Array.isArray(s.legs)||s.legs.length<2||s.legs.some(l=>!rows.has(l.pickId)))return [];
-        const legs=s.legs.map(l=>({...rows.get(l.pickId),americanOdds:l.americanOdds,book:s.book,bookPrices:undefined,priceCheck:undefined}));
-        return [{id:s.id,date:body.date,legs,groups:s.groups,americanOdds:s.americanOdds,book:s.book,priceKind:'posted',ryFavorite:s.ryFavorite===true,placedAt:s.placedAt,postedAt:body.personalPublication?.publishedAt??null,recordedAt:body.personalPublication?.recordedAt??null}];
+        const legs=s.legs.map(l=>({...rows.get(l.pickId),americanOdds:personalPrice(l),priceEvidence:l.priceEvidence,book:s.book,bookPrices:undefined,priceCheck:undefined}));
+        return [{id:s.id,date:body.date,legs,groups:s.groups,americanOdds:personalPrice(s),priceEvidence:s.priceEvidence,shareUrl:s.shareUrl,book:s.book,priceKind:'posted',ryFavorite:s.ryFavorite===true,placedAt:s.placedAt,postedAt:body.personalPublication?.publishedAt??null,recordedAt:body.personalPublication?.recordedAt??null}];
       });
     }
     const legs=(body?.props||[]).filter(p=>p.group==='ry');
     // Legacy editions explicitly identify one posted slip. Favorite flags alone are not tickets.
-    return legs.length&&(body.sharedBetslipUrl||Number.isFinite(body.sharedBetslipOdds))?[{id:'ry:'+body.date+':'+(body.sharedBetslipUrl||body.favoritesPostedAt||'posted-slip'),legs}]:[];
+    return legs.length&&(body.sharedBetslipUrl||Number.isFinite(body.sharedBetslipOdds))?[{id:'ry:'+body.date+':'+(body.sharedBetslipUrl||body.favoritesPostedAt||'posted-slip'),date:body.date,legs,americanOdds:body.sharedBetslipOdds??null,shareUrl:body.sharedBetslipUrl,book:legs.find(r=>r.book)?.book||(body.sharedBetslipUrl?'fanduel':null),priceKind:'posted',postedAt:body.favoritesPostedAt??null}]:[];
   }
   function parlayRecordHTML(tickets,{scope='parlays',label='Slate parlay record'}={}) {
     const s=parlaySummary(tickets),escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -161,5 +167,5 @@
     }
     return { ...snapshot, players, games, checkedAt, checkedAtLabel, appliedRevisions };
   }
-  return { TEST_SLATE_DATE,isTestSlate,trackingScope,trackingRows,testSlateNotice,evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit, isLiveMiss, isStatisticalMiss, isVoidedLeg, parlayLegs, parlayDecimal, parlayOutcome, parlaySummary, personalParlays, parlayRecordHTML };
+  return { TEST_SLATE_DATE,isTestSlate,trackingScope,trackingRows,testSlateNotice,evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit, isLiveMiss, isStatisticalMiss, isVoidedLeg, parlayLegs, parlayDecimal, parlayOutcome, parlaySummary, personalPrice, personalParlays, parlayRecordHTML };
 });

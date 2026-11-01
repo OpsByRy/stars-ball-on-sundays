@@ -38,8 +38,8 @@
   function source(s,asOf){
     keys(s,['name','effectiveAt','reportedAt','observedAt','validUntil']);
     if(!sourceNames.includes(s.name))fail();
-    const effective=clock(s.effectiveAt),reported=clock(s.reportedAt),observed=clock(s.observedAt),until=clock(s.validUntil,true);
-    if(effective>reported||reported>observed||observed>asOf||until!==null&&until<observed)fail();
+    const effective=clock(s.effectiveAt),reported=clock(s.reportedAt,true),observed=clock(s.observedAt),until=clock(s.validUntil,true);
+    if(effective>observed||reported!==null&&(effective>reported||reported>observed)||observed>asOf||until!==null&&until<observed)fail();
     return {effective,reported,observed,until};
   }
   function buildView(record,context,options={}){
@@ -96,7 +96,7 @@
   function renderView(v){
     const badge=v.label?`<strong class="designation-tag designation-${escape(v.tone)}">${escape(v.label)}</strong>`:'';
     const priorBadge=v.lastVerified&&v.lastVerified.designation!=='available'?`<span class="designation-tag designation-${v.lastVerified.designation==='out'?'danger':'warning'} designation-historical">Last verified: ${escape(labels[v.lastVerified.designation])}</span>`:'';
-    const statusTime=v.source?`<small>${v.designation==='available'?'Available update':'Status reported'} ${time(v.source.reportedAt)}</small>`:v.lastVerified?`<small>Last verified observation ${time(v.lastVerified.source.observedAt)}</small>`:'';
+    const statusTime=v.source?`<small>${v.designation==='available'?'Available update · ':''}${v.source.reportedAt===null?'Status observed':'Status reported'} ${time(v.source.reportedAt??v.source.observedAt)}</small>`:v.lastVerified?`<small>Last verified observation ${time(v.lastVerified.source.observedAt)}</small>`:'';
     const price=v.voidPrice?'<strong class="designation-price-void">VOID</strong><small>SBOS provisional</small>':`<strong>${escape(odds(v.quote))}</strong><small>Saved pick price</small>`;
     const sourceHTML=s=>`<dl><dt>Source</dt><dd>${escape(s.name)}</dd><dt>Effective</dt><dd>${time(s.effectiveAt)}</dd><dt>Reported</dt><dd>${time(s.reportedAt)}</dd><dt>Observed</dt><dd>${time(s.observedAt)}</dd><dt>Freshness cutoff</dt><dd>${time(s.validUntil)}</dd></dl>`;
     const history=v.lastVerified?`<p>Last verified designation: <strong>${escape(labels[v.lastVerified.designation])}</strong>. This is historical status.</p>${sourceHTML(v.lastVerified.source)}`:'';

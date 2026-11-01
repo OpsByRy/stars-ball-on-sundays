@@ -81,3 +81,4 @@ test('mounted history cannot cross exact record, book, edition or synthetic/publ
 test('conflicting historical Available cannot hide an equal-effective mounted OUT',()=>{
  const f=fresh(),node={innerHTML:''};f.record.designation='out';api.mount(node,f.record,f.context,opts);f.record.lastVerified={designation:'available',source:f.record.source};Object.assign(f.record,{state:'unknown',designation:null,source:null});const v=api.mount(node,f.record,f.context,opts);assert.equal(v.state,'conflicting');assert.match(node.innerHTML,/Last verified: OUT/);assert.doesNotMatch(node.innerHTML,/designation-price-void/);
 });
+test('unknown source reported time stays Unknown; observed time is never relabeled reported',()=>{const f=fresh();f.record.source.reportedAt=null;assert.equal(view(f).state,'current');const s=html(f);assert.match(s,/Status observed/);assert.doesNotMatch(s,/Status reported/);assert.match(s,/<dt>Reported<\/dt><dd>Unknown<\/dd>/);});

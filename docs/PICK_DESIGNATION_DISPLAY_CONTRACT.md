@@ -26,7 +26,7 @@ Record fields, all explicit:
 - `asOf`: projection clock, distinct from source facts.
 - `state`: `current | stale | unknown | conflicting | unverified`.
 - `designation`: `available | questionable | gtd | probable | doubtful | out`, or explicit null for unknown/conflicting/unverified state.
-- `source`: `name`, `effectiveAt`, `reportedAt`, `observedAt`, `validUntil`; explicit null for unknown/conflicting/unverified state. Current/stale facts require known clocks. Unverified/missing timing must not be fabricated to fit this shape.
+- `source`: `name`, `effectiveAt`, `reportedAt`, `observedAt`, `validUntil`; explicit null for unknown/conflicting/unverified state. Current/stale facts require known effective/observed clocks; `reportedAt` may be honest null. An observed timestamp is labeled observed and never relabeled reported. Unverified/missing timing must not be fabricated to fit this shape.
 - `lastVerified`: optional `{designation, source}`, otherwise null. It is historical context, not an automatic current fallback. Unknown/stale/conflicting updates retain its visible historical Q/GTD/Out flag; only explicit reliable Available clears the injury tag.
 
 The host independently supplies `dataKind`, identical `binding`, immutable `originalSelection: {americanOdds, capturedAt, selectedAt}` with honest nulls, `publication: {kind, at}`, `eventStatus`, and `participation`. Publication kind is `actual_first_row_publication`, `first_known_deployed_presence`, or `unknown`. Event status is `scheduled | live | final | postponed | canceled | unknown`. Participation is `unverified | played | inactive`; appearance must come from the separately reviewed actual-stat/participation path, not from missing data.
@@ -37,7 +37,7 @@ Source names are bounded public labels. Private source payloads, catalogue paths
 
 ## Timing and conservative holds
 
-Strict ISO clocks retain 0–9 fractional digits with integer nanosecond comparison, explicit timezone and calendar validation. `effectiveAt <= reportedAt <= observedAt <= asOf <= now`; caller-supplied `validUntil` must not predate observation and expires at its cutoff. The projection owner must define and review freshness policy; the client invents no six-hour/day-wide clearance window and cannot extend it. Display timestamps use Eastern dates/timezone and retain the exact source string in the `time` element.
+Strict ISO clocks retain 0–9 fractional digits with integer nanosecond comparison, explicit timezone and calendar validation. `effectiveAt <= observedAt <= asOf <= now`; when reported time is known, `effectiveAt <= reportedAt <= observedAt` also applies. Caller-supplied `validUntil` must not predate observation and expires at its cutoff. The projection owner must define and review freshness policy; the client invents no six-hour/day-wide clearance window and cannot extend it. Display timestamps use Eastern dates/timezone and retain the exact source string in the `time` element.
 
 To show provisional VOID: exact actual publication is required, `effectiveAt > publication.at` strictly, both effective/observed clocks precede scheduled start, event is scheduled/live, and participation is not verified played. Capture time alone cannot turn an old Out fact into a post-publication update. Unknown actual tip/offered terms remain unknown; the scheduled-start guard is deliberately conservative. Final results remain owned by the separate result path. This is consumer safety behavior proposed for review, not a new engine/selection policy.
 

@@ -128,3 +128,75 @@ test('draft renderer and synthetic fixtures are not deployed or loaded by any cu
  assert(!manifest.files.some(p=>p.includes('odds-timeline.synthetic')));
  for(const name of manifest.files.filter(p=>p.endsWith('.html')))assert.doesNotMatch(fs.readFileSync(path.join(root,name),'utf8'),/odds-timeline\.(js|css)/);
 });
+test('a quote one microsecond after publication rejects the original context and its price',()=>{
+ const f=fresh();f.context.originalSelection.capturedAt='2026-10-31T14:05:00.000002Z';f.context.publication.at='2026-10-31T14:05:00.000001Z';
+ assert.equal(view(f).reason,'invalid_context');assert.equal(view(f).context,null);assert.doesNotMatch(html(f),/-150|<table|First published:/);
+});
+test('distinct microsecond captures keep chronological order despite reversed input and IDs',()=>{
+ const f=fresh();f.record.events=[event('a-new','2026-10-31T13:00:00.000002Z',130),event('z-old','2026-10-31T13:00:00.000001Z',120)];
+ const before=JSON.stringify(f),v=view(f);assert.equal(v.available,true);assert.equal(v.first.id,'z-old');assert.equal(v.latest.id,'a-new');
+ assert.deepEqual(v.events.map(e=>e.id),['z-old','a-new']);assert.equal(v.firstState,'usable');assert.equal(v.hasConflicts,false);assert.equal(v.direction,'better');
+ assert.equal(v.longest.americanOdds,130);assert.equal(v.shortest.americanOdds,120);assert.equal(JSON.stringify(f),before);
+ assert.match(html(f),/datetime="2026-10-31T13:00:00.000001Z"/);assert.match(html(f),/datetime="2026-10-31T13:00:00.000002Z"/);
+ assert.doesNotMatch(html(f),/>Conflicting<\/td>|Same-time captures disagree/);
+});
+test('a correction one microsecond before its observation rejects history',()=>{
+ const f=fresh();f.record.events=[event('corrected','2026-10-31T13:00:00.000002Z',120,'usable','2026-10-31T13:00:00.000001Z')];
+ assert.equal(view(f).reason,'invalid_data');assert.doesNotMatch(html(f),/<table/);
+});
+for(const quote of ['2026-10-31T14:05:00.123455Z','2026-10-31T10:05:00.123456-04:00','2026-10-31T19:35:00.123456+05:30'])test('publication equality/order normalizes offsets exactly: '+quote,()=>{
+ const f=fresh();f.context.originalSelection.capturedAt=quote;f.context.publication.at='2026-10-31T14:05:00.123456Z';
+ assert.equal(view(f).available,true);
+});
+for(const field of ['quote_after_selection','selection_after_posting'])test('microsecond chronology rejects '+field,()=>{
+ const f=fresh();f.context.originalSelection.capturedAt='2026-10-31T14:00:00.000001Z';
+ if(field==='quote_after_selection')f.context.originalSelection.selectedAt='2026-10-31T14:00:00.000000Z';
+ else{f.context.originalSelection.selectedAt='2026-10-31T14:05:00.000002Z';f.context.publication.at='2026-10-31T14:05:00.000001Z';}
+ assert.equal(view(f).reason,'invalid_context');
+});
+test('quote, selection, posting and correction equality remain permitted at exact microseconds',()=>{
+ const f=fresh(),at='2026-10-31T14:05:00.000001Z';
+ f.context.originalSelection.capturedAt=at;f.context.originalSelection.selectedAt=at;f.context.publication.at=at;
+ f.record.events=[event('same',at,-150,'usable',at)];f.record.asOf=at;assert.equal(view(f).available,true);assert.equal(view(f).firstState,'retracted');
+});
+for(const [b,price,conflict]of [['2026-10-31T09:00:00.123456-04:00',130,true],['2026-10-31T18:30:00.123456+05:30',120,false]])test('same normalized instant preserves genuine conflict/equality: '+b,()=>{
+ const f=fresh();f.record.events=[event('a','2026-10-31T13:00:00.123456Z',120),event('b',b,price)];const v=view(f);
+ assert.equal(v.hasConflicts,conflict);assert.equal(v.firstState,conflict?'conflicted':'usable');assert.equal(v.direction,conflict?null:'unchanged');
+});
+test('fraction widths normalize trailing zeros without rounding distinct frames together',()=>{
+ const f=fresh();f.record.events=[event('a','2026-10-31T13:00:00.1Z',100),event('b','2026-10-31T13:00:00.100000Z',-100),event('c','2026-10-31T13:00:00.100001Z',130)];
+ const v=view(f);assert.equal(v.hasConflicts,false);assert.equal(v.firstState,'usable');assert.equal(v.latest.id,'c');assert.equal(v.direction,'better');
+});
+test('different microsecond frames do not falsely contradict the original quote',()=>{
+ const f=fresh();f.context.originalSelection.capturedAt='2026-10-31T14:00:00.000001Z';
+ f.record.events=[event('later','2026-10-31T14:00:00.000002Z',130)];assert.equal(view(f).available,true);
+ f.record.events[0].capturedAt='2026-10-31T10:00:00.000001-04:00';assert.equal(view(f).reason,'invalid_data');
+});
+for(const kind of ['observation','correction'])test('one microsecond beyond asOf rejects '+kind+'; equality remains valid',()=>{
+ const f=fresh();f.record.asOf='2026-10-31T13:00:00.000001Z';f.record.events=[event('point','2026-10-31T13:00:00.000001Z',120)];
+ assert.equal(view(f).available,true);
+ if(kind==='observation')f.record.events[0].capturedAt='2026-10-31T13:00:00.000002Z';else f.record.events[0].retractedAt='2026-10-31T13:00:00.000002Z';
+ assert.equal(view(f).reason,'invalid_data');f.record.asOf='2026-10-31T13:00:00.000002Z';assert.equal(view(f).available,true);
+});
+for(const [fraction,available]of [['000001',true],['000002',false],['000003',false]])test('strict pregame boundary retains microseconds: '+fraction,()=>{
+ const f=fresh();f.context.binding.startTime='2026-10-31T23:00:00.000002Z';f.record.binding={...f.context.binding};
+ f.record.asOf='2026-10-31T23:00:00.000003Z';f.record.events=[event('tip','2026-10-31T23:00:00.'+fraction+'Z',120)];
+ assert.equal(api.buildView(f.record,f.context,{...opts,now:Date.parse('2026-10-31T23:00:00.001Z')}).available,available);
+});
+for(const year of [2000,2100])test('supported year '+year+' retains one-microsecond ordering at safe-integer bounds',()=>{
+ const f=fresh();f.context.originalSelection=null;f.context.publication={kind:'unknown',at:null};f.context.binding.slateDate=year+'-10-31';f.context.binding.startTime=year+'-10-31T23:00:00Z';f.record.binding={...f.context.binding};
+ f.record.asOf=year+'-10-31T22:00:00Z';f.record.events=[event('a-later',year+'-10-31T13:00:00.999999Z',130),event('z-first',year+'-10-31T13:00:00.999998Z',120)];
+ const v=api.buildView(f.record,f.context,{...opts,now:Date.parse(year+'-10-31T22:30:00Z')});assert.equal(v.available,true);assert.equal(v.first.id,'z-first');assert.equal(v.latest.id,'a-later');assert.equal(v.direction,'better');
+});
+test('daily range preserves the Eastern midnight microsecond boundary',()=>{
+ const f=fresh();f.context.originalSelection=null;f.context.publication={kind:'unknown',at:null};f.context.binding.slateDate='2026-11-01';f.context.binding.startTime='2026-11-01T23:00:00Z';f.record.binding={...f.context.binding};
+ f.record.asOf='2026-11-01T22:00:00Z';f.record.events=[event('prior','2026-11-01T03:59:59.999999Z',200),event('day','2026-11-01T04:00:00.000000Z',120)];
+ const v=api.buildView(f.record,f.context,{...opts,now:Date.parse('2026-11-01T22:30:00Z')});assert.equal(v.available,true);assert.equal(v.first.id,'prior');assert.equal(v.longest.id,'day');assert.equal(v.shortest.id,'day');
+});
+test('unsupported fractional precision rejects instead of rounding',()=>{
+ const f=fresh();f.record.events[0].capturedAt='2026-10-31T13:00:00.0000001Z';assert.equal(view(f).reason,'invalid_data');
+});
+test('runtime millisecond boundary does not accept a snapshot one microsecond into the future',()=>{
+ const f=fresh();f.record.asOf='2026-10-31T22:30:00.000001Z';assert.equal(view(f).reason,'invalid_data');
+ f.record.asOf='2026-10-31T22:30:00.000000Z';assert.equal(view(f).available,true);
+});

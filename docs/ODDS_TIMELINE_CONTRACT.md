@@ -33,8 +33,9 @@ CommonJS: `require('./assets/odds-timeline.js')`. Browser: load the existing
 - `mount(element, record, context, options)` replaces only that component target.
 - `VERSION` is `sbos-public-odds-timeline-1`; `MAX_EVENTS` is 512.
 
-Options: `open: true` initially expands history; `now` supplies a numeric test
-clock. `allowSynthetic: true` is exclusively for explicit development previews;
+Options: `open: true` initially expands history; `now` supplies a safe integer
+epoch-millisecond test clock, as returned by `Date.now()`. `allowSynthetic: true`
+is exclusively for explicit development previews;
 synthetic data is otherwise rejected, including the original quote. Enabled
 synthetic previews always carry a visible synthetic notice.
 
@@ -49,7 +50,14 @@ It does not start polling or replace surrounding pick/parlay cards.
 All keys below are required. Nullable values must be explicit `null`; extra keys
 at every level fail closed. Clocks are valid ISO timestamps with seconds and an
 explicit UTC offset, never date-only/local clock strings. Unknown clocks remain
-null. Prices are numeric American odds with absolute value at least 100; no
+null. Fractional seconds may have one through six digits. Comparisons, ordering,
+same-time grouping, retractions and start/publication boundaries retain every
+digit as exact integer microsecond instants after offset normalization. More
+than six fractional digits reject explicitly. Raw source strings remain intact;
+only consumer date formatting is coarser. The supported 2000–2100 clock range
+fits within JavaScript's safe integer microsecond range. The runtime/test clock
+has millisecond precision; observations beyond that exact instant fail closed.
+Prices are numeric American odds with absolute value at least 100; no
 numeric strings, nonfinite values or zero placeholders.
 
 Context:

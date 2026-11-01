@@ -18,7 +18,7 @@
   const finite=v=>typeof v==='number'&&Number.isFinite(v);
   const payout=v=>finite(v)&&Math.abs(v)>=100&&math?math.decimalOdds(v):null;
   function validPrice(v){const d=payout(v);return finite(d)&&d>1;}
-  const localDay=at=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(at));
+  const localDay=at=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(Math.floor(at/1000)));
   function day(v){
     if(typeof v!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(v))fail();
     const [y,m,d]=v.split('-').map(Number),t=new Date(Date.UTC(y,m-1,d));
@@ -26,8 +26,12 @@
   }
   function clock(v,nullable=false){
     if(nullable&&v===null)return null;
-    if(typeof v!=='string'||!/^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,6})?(?:Z|[+-](?:0\d|1[0-4]):[0-5]\d)$/.test(v))fail();
-    day(v.slice(0,10));const n=Date.parse(v);if(!finite(n))fail();return n;
+    const match=typeof v==='string'&&v.match(/^(\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d)(?:\.(\d{1,6}))?(Z|[+-](?:0\d|1[0-4]):[0-5]\d)$/);
+    if(!match)fail();day(match[1].slice(0,10));
+    // Parse only whole seconds through Date; retain every declared fractional
+    // digit as exact integer microseconds. Years 2000–2100 fit safely in Number.
+    const at=Date.parse(match[1]+match[3])*1000+Number((match[2]||'').padEnd(6,'0'));
+    if(!Number.isSafeInteger(at))fail();return at;
   }
   function binding(b){
     keys(b,bindingKeys);text(b.recordId);if(!/^[a-f0-9]{16,64}$/.test(b.editionVersion))fail();day(b.slateDate);
@@ -72,9 +76,12 @@
     terms:'History comparison is unavailable while settlement terms are unverified.'
   };
   function buildView(record,c,options={}){
-    const now=options.now??Date.now(),allowSynthetic=options.allowSynthetic===true;
-    let safe;
-    try{if(!finite(now))fail();safe=context(c,now,allowSynthetic);}
+    const nowMillis=options.now??Date.now(),allowSynthetic=options.allowSynthetic===true;
+    let safe,now;
+    try{
+      if(!Number.isSafeInteger(nowMillis))fail();now=nowMillis*1000;
+      if(!Number.isSafeInteger(now))fail();safe=context(c,now,allowSynthetic);
+    }
     catch(e){return {available:false,reason:e.message==='synthetic'?'synthetic':'invalid_context',context:null};}
     const unavailable=reason=>({available:false,reason,context:safe});
     try{

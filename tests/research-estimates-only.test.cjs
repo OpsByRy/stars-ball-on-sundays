@@ -33,8 +33,8 @@ test('search, selection filters, price/probability ranges and pagination use the
  assert.deepEqual(pages.flatMap(p=>p.rows).map(r=>r.id),all.rows.map(r=>r.id));assert.equal(JSON.stringify(rows),before);
 });
 
-test('current public edition matches Research census while selected/personal/result records remain intact',()=>{
- const manifest=read('data/editions/manifest.json'),entry=manifest.editions.filter(e=>e.channel==='daily'&&e.date==='2026-10-31').at(-1),body=read('data/editions/'+entry.path),before=JSON.stringify(body),rows=body.props.filter(r=>r.group==='research');
+test('pinned immutable edition matches Research census while selected/personal/result records remain intact',()=>{
+ const manifest=read('data/editions/manifest.json'),entry=manifest.editions.find(e=>e.channel==='daily'&&e.date==='2026-10-31'&&e.version==='24fe9b55d8c4d31c'),body=read('data/editions/'+entry.path),before=JSON.stringify(body),rows=body.props.filter(r=>r.group==='research');
  assert.equal(entry.version,'24fe9b55d8c4d31c');assert.equal(rows.length,6753);assert.equal(pub.publicResearchRows(rows).length,3687);
  const page=pub.publicResearchPage(rows,{size:10000});assert.equal(page.total,3687);assert.ok(page.rows.every(r=>board.researchProbability(r).status==='available'));
  assert.equal(rows.filter(r=>board.researchProbability(r).status==='held').length,1554);assert.equal(body.props.filter(r=>r.group==='ry').length,7);assert.equal(pub.allPicks(body).length,25);assert.equal(JSON.stringify(body),before);
@@ -46,4 +46,25 @@ test('public labels count supported estimates and never equate suppressed output
  assert.match(html,/<strong>1<\/strong> lines with an available saved win estimate/);assert.match(html,/Zero displayed estimates does not mean no assessment occurred/);assert.doesNotMatch(html,/saved reviewed lines/);
  assert.match(options,/Assists \(AST\) · 0 · no saved supported estimate/);assert.match(empty,/No saved supported estimate for assists \(AST\)/);assert.doesNotMatch(empty,/no saved evaluation|0%|never assessed/i);
  const source=fs.readFileSync(path.join(root,'assets/publication.js'),'utf8');assert.doesNotMatch(source,/<select id="research-probability">/);assert.match(source,/rows=publicResearchRows\(rows\);researchState=/);assert.match(source,/const page=publicResearchPage\(researchState.rows,researchState\)/);
+});
+
+
+test('latest and valid appended result editions follow reader eligibility without fixing future versions or totals',()=>{
+ const manifest=read('data/editions/manifest.json'),entry=manifest.editions.filter(e=>e.channel==='daily'&&e.date==='2026-10-31').at(-1),sourcePath=path.join(root,'data/editions',entry.path),sourceBytes=fs.readFileSync(sourcePath),latest=JSON.parse(sourceBytes);
+ const appended=structuredClone(latest);appended.updatedAt=new Date(Date.parse(latest.updatedAt)+60000).toISOString();
+ const formerlyAvailable=appended.props.find(r=>r.group==='research'&&board.researchProbability(r).status==='available');
+ if(formerlyAvailable)formerlyAvailable.result={eventStatus:'final',statisticalOutcome:'dnp',checkedAt:appended.updatedAt,sportsbookSettlement:'unverified'};
+ // Reuse the publication canonicalizer and schema validator. This is a synthetic in-memory append, with no source file writes.
+ const script="import hashlib,json,sys;sys.path.insert(0,'scripts');from build import canonical;from public_schema import validate_edition;b=json.load(sys.stdin);b['version']=hashlib.sha256(canonical({k:v for k,v in b.items() if k!='version'})).hexdigest()[:16];validate_edition(b);print(b['version'])";
+ appended.version=require('node:child_process').execFileSync('python3',['-c',script],{cwd:root,input:JSON.stringify(appended),encoding:'utf8',env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}}).trim();
+ assert.match(appended.version,/^[0-9a-f]{16}$/);assert.notEqual(appended.version,latest.version);
+ const nextEntry={...entry,version:appended.version,path:`daily/${appended.date}/${appended.version}.json`,updatedAt:appended.updatedAt},appendedManifest={...manifest,editions:[...manifest.editions,nextEntry]};
+ assert.equal(appendedManifest.editions.filter(e=>e.channel==='daily'&&e.date==='2026-10-31').at(-1).version,appended.version);
+ assert.equal(appendedManifest.editions.find(e=>e.channel==='daily'&&e.date==='2026-10-31'&&e.version==='24fe9b55d8c4d31c').version,'24fe9b55d8c4d31c');
+ for(const body of [latest,appended]){
+  const rows=body.props.filter(r=>r.group==='research'),before=JSON.stringify(body),expected=rows.filter(r=>board.researchProbability(r).status==='available'),page=pub.publicResearchPage(rows,{size:Math.max(1,rows.length)});
+  assert.equal(page.total,expected.length);assert.deepEqual(page.rows.map(r=>r.id),expected.map(r=>r.id));assert.equal(JSON.stringify(body),before);
+ }
+ assert.equal(pub.publicResearchRows(appended.props.filter(r=>r.group==='research')).length,pub.publicResearchRows(latest.props.filter(r=>r.group==='research')).length-(formerlyAvailable?1:0));
+ assert.deepEqual(fs.readFileSync(sourcePath),sourceBytes);
 });

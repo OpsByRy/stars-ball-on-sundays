@@ -57,12 +57,12 @@
     const wins = operator === '>' ? actual > line : operator === '>=' ? actual >= line : operator === '<' ? actual < line : actual <= line;
     // Equality is a push for strict sportsbook lines, never for an n+ offer.
     const push = actual === line && ['>', '<'].includes(operator);
-    return { ...base, actual, statisticalOutcome: base.final ? (push ? 'push' : wins ? 'win' : 'loss') : (wins && operator.startsWith('>') ? 'reached' : 'pending') };
+    return { ...base, actual, statisticalOutcome: base.final ? (push ? 'push' : wins ? 'win' : 'loss') : (wins && operator.startsWith('>') ? 'reached' : !wins && !push && operator.startsWith('<') ? 'not_reached' : 'pending') };
   }
   // Preserve the original card/table contract while grading structured terms internally.
   function evaluate(prop, player) {
     const result = evaluateStructured(prop, player);
-    const labels = { unavailable: 'Unavailable', dnp: 'DNP', canceled: 'Canceled', postponed: 'Postponed', win: 'Hit', loss: 'Miss', push: 'Push', reached: 'Reached', pending: 'Pending' };
+    const labels = { unavailable: 'Unavailable', dnp: 'DNP', canceled: 'Canceled', postponed: 'Postponed', win: 'Hit', loss: 'Miss', push: 'Push', reached: 'Reached', not_reached: 'Not reached', pending: 'Pending' };
     return { ...result, label: labels[result.statisticalOutcome], tone: result.statisticalOutcome === 'win' ? 'hit' : result.statisticalOutcome === 'loss' ? 'miss' : ['reached', 'pending'].includes(result.statisticalOutcome) ? 'live' : 'pending' };
   }
   // A reached live over can count now, while remaining open to source corrections.
@@ -74,6 +74,17 @@
   }
   function isStatisticalHit(prop) {
     return prop?.result?.eventStatus==='final'&&prop.result.statisticalOutcome==='win'||isLiveHit(prop);
+  }
+  // Counting-stat unders cannot recover after exceeding the line, except for
+  // source corrections. Strict integer equality can still push, so stays pending.
+  // Read legacy pending snapshots too; never rewrite them as final losses.
+  function isLiveMiss(prop) {
+    const r=prop?.result,c=normalizeContract(prop);
+    return r?.eventStatus==='live'&&['pending','not_reached'].includes(r.statisticalOutcome)&&
+      !!c&&c.operator.startsWith('<')&&Number.isInteger(r.actual)&&r.actual>=0&&r.actual>c.line;
+  }
+  function isStatisticalMiss(prop) {
+    return prop?.result?.eventStatus==='final'&&prop.result.statisticalOutcome==='loss'||isLiveMiss(prop);
   }
   function isVoidedLeg(prop){
     const r=prop?.result||{};
@@ -94,7 +105,7 @@
     const split=parlayLegs(ticket),legs=split.active,live=split.all.some(p=>p.result?.eventStatus==='live');
     if(!split.all.length)return {outcome:'pending',live:false};
     if(!legs.length)return {outcome:'void',live};
-    if(legs.some(p=>p.result?.eventStatus==='final'&&p.result.statisticalOutcome==='loss'))return {outcome:'loss',live};
+    if(legs.some(isStatisticalMiss))return {outcome:'loss',live};
     if(legs.every(isStatisticalHit))return {outcome:'win',live};
     if(legs.every(p=>isStatisticalHit(p)||p.result?.statisticalOutcome==='postponed'))return {outcome:'review',live};
     return {outcome:'pending',live};
@@ -150,5 +161,5 @@
     }
     return { ...snapshot, players, games, checkedAt, checkedAtLabel, appliedRevisions };
   }
-  return { TEST_SLATE_DATE,isTestSlate,trackingScope,trackingRows,testSlateNotice,evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit, isVoidedLeg, parlayLegs, parlayDecimal, parlayOutcome, parlaySummary, personalParlays, parlayRecordHTML };
+  return { TEST_SLATE_DATE,isTestSlate,trackingScope,trackingRows,testSlateNotice,evaluate, evaluateStructured, normalizeContract, applyRevisions, isLiveHit, isStatisticalHit, isLiveMiss, isStatisticalMiss, isVoidedLeg, parlayLegs, parlayDecimal, parlayOutcome, parlaySummary, personalParlays, parlayRecordHTML };
 });

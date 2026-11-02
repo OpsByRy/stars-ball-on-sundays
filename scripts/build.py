@@ -219,8 +219,13 @@ def assert_personal_estimates(body):
     from public_schema import validate_personal_slips
     tracking={leg['pickId'] for slip in body.get('personalSlips',[]) for leg in slip['legs']}
     if tracking:validate_personal_slips(body)
+    snapshots={leg['pickId'] for slip in body.get('personalSlips',[]) if slip.get('recordKind')=='selection_snapshot' for leg in slip['legs']}
+    # Only the complete schema-validated ticket-only shape may lack a model.
+    # A row marker alone, legacy ticket or model selection gets no exception.
+    if snapshots:validate_edition(body)
     for row in body['props']:
         if row['group']!='ry':continue
+        if row['id'] in snapshots:continue
         if row.get('sourceType')=='user_supplied_unsubmitted_favorite' and row['id'] in tracking and 'estimate' not in row:
             continue
         estimate=row.get('estimate') or {}

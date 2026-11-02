@@ -120,6 +120,7 @@
   function personalPrice(record,{requireEvidence=false}={}) {
     const value=record?.americanOdds,evidence=record?.priceEvidence;
     if(typeof value!=='number'||!Number.isFinite(value)||Math.abs(value)<100)return null;
+    if(record?.recordKind==='selection_snapshot')return Array.isArray(record.legs)&&record.legs.length>=2&&record.legs.length<=12&&record.placedAt===null&&record.quoteBasis==='unboosted'&&typeof record.oddsChangedAtCapture==='boolean'&&evidence?.source==='screenshot'&&evidence.context==='selection_snapshot'&&(evidence.observedAt===null||Number.isFinite(Date.parse(evidence.observedAt)))?value:null;
     if(!evidence)return requireEvidence?null:value; // Original screenshot records predate evidence metadata.
     return ['screenshot','share_link'].includes(evidence.source)&&evidence.context==='original_slip'&&Number.isFinite(Date.parse(evidence.observedAt))?value:null;
   }
@@ -129,7 +130,7 @@
       return body.personalSlips.flatMap(s=>{
         if(!Array.isArray(s.legs)||s.legs.length<2||s.legs.some(l=>!rows.has(l.pickId)))return [];
         const legs=s.legs.map(l=>({...rows.get(l.pickId),americanOdds:personalPrice(l),priceEvidence:l.priceEvidence,book:s.book,bookPrices:undefined,priceCheck:undefined}));
-        return [{id:s.id,date:body.date,...(s.label?{label:s.label}:{}),legs,groups:s.groups,americanOdds:personalPrice(s),priceEvidence:s.priceEvidence,shareUrl:s.shareUrl,book:s.book,priceKind:'posted',ryFavorite:s.ryFavorite===true,placedAt:s.placedAt,postedAt:body.personalPublication?.publishedAt??null,recordedAt:body.personalPublication?.recordedAt??null}];
+        return [{id:s.id,date:body.date,...(s.label?{label:s.label}:{}),...(s.recordKind==='selection_snapshot'?{recordKind:s.recordKind,quoteBasis:s.quoteBasis,oddsChangedAtCapture:s.oddsChangedAtCapture}:{}),legs,groups:s.groups,americanOdds:personalPrice(s),priceEvidence:s.priceEvidence,shareUrl:s.shareUrl,book:s.book,priceKind:'posted',ryFavorite:s.ryFavorite===true,placedAt:s.placedAt,postedAt:body.personalPublication?.publishedAt??null,recordedAt:body.personalPublication?.recordedAt??null}];
       });
     }
     const legs=(body?.props||[]).filter(p=>p.group==='ry');

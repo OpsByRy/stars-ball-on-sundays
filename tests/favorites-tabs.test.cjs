@@ -81,7 +81,7 @@ test('every personal entry point loads the shared tab controller/card styles and
   const html=fs.readFileSync(path.join(root,file),'utf8');assert.match(html,/assets\/favorites\.js/);assert.match(html,/assets\/plus-money\.css/);assert.ok(html.indexOf('assets/favorites.js')<html.indexOf('assets/publication.js'));
  }
  assert.ok(read('site-manifest.json').files.includes('assets/favorites.js'));
- const source=fs.readFileSync(path.join(root,'assets/publication.js'),'utf8');assert.match(source,/picksHTML:.*pickList\(rows,id\+'-picks'\).*parlaysHTML:.*recordSummary\(rows,'ry'\)/);
+ const source=fs.readFileSync(path.join(root,'assets/publication.js'),'utf8');assert.match(source,/picksHTML:.*pickList\(rows,id\+'-picks'\).*parlaysHTML:.*recordSummary\(editionGroups\(body\)\.ry,'ry'\)/);
  assert.match(source,/opened=details.map\(node=>node.open\)/);assert.match(source,/node.open=opened\[index\]/);
 });
 

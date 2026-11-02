@@ -50,7 +50,8 @@
     let {operator,line}=c;if(!Number.isInteger(line)){line=operator.startsWith('>')?Math.ceil(line):Math.floor(line);operator=operator.startsWith('>')?'>=':'<=';}
     return JSON.stringify([gameKey(row),row.playerId||row.player.trim().toLowerCase(),c.market,operator,line,row.period||'full_game',row.product||'sportsbook',row.overtime??null]);
   }
-  function favoriteKeys(body){return new Set(body.props.filter(p=>p.group==='ry'||p.ryFavorite===true).map(favoriteKey).filter(Boolean));}
+  function individualFavorites(body){return body.props.filter(p=>p.group==='ry'&&(p.sourceType!=='user_supplied_parlay_snapshot'||p.ryFavorite===true));}
+  function favoriteKeys(body){return new Set(body.props.filter(p=>p.ryFavorite===true||p.group==='ry'&&p.sourceType!=='user_supplied_parlay_snapshot').map(favoriteKey).filter(Boolean));}
   function isFavorite(row,keys){return row.ryFavorite===true||keys.has(favoriteKey(row));}
   function allPicks(body){return body.props.filter(p=>['free_throws','floaters','value_safe','high_probability_aggressive'].includes(publishedCategory(p)));}
   function honorableMentions(body){return body.props.filter(p=>p.group==='research'&&publishedCategory(p)==='honorable_mention');}
@@ -119,7 +120,7 @@
   function personalSlipsHTML(body){
     const tickets=results.personalParlays(body),parlays=typeof window==='undefined'?require('./plus-money.js'):window.SBOS_PLUS_MONEY;
     const base=typeof window==='undefined'?undefined:new URL('../',document.querySelector('script[data-publication]').src);
-    return tickets.length?`<div class="pm-list personal-parlay-list">${tickets.map((ticket,index)=>parlays.personalTicketRow(ticket,index,{base})).join('')}</div><p class="personal-return-note">Returns use your illustrative unit settings; Ry’s wager amounts are not published. Results are statistical, not verified sportsbook settlement.</p>`:'<p class="pick-empty">No favorite parlays were posted for this date. Individual favorites appear under Picks.</p>';
+    return tickets.length?`<div class="pm-list personal-parlay-list">${tickets.map((ticket,index)=>parlays.personalTicketRow(ticket,index,{base})).join('')}</div><p class="personal-return-note">${tickets.every(t=>t.recordKind==='selection_snapshot')?'Selection snapshots have no unit or P/L record. Outcomes are statistical and do not verify sportsbook settlement.':'Returns use your illustrative unit settings; Ry’s wager amounts are not published. Results are statistical, not verified sportsbook settlement.'}</p>`:'<p class="pick-empty">No favorite parlays were posted for this date. Individual favorites appear under Picks.</p>';
   }
   function sundaySourceEntries(entries,day){
     const latest=latestEntries(entries),personalEntry=latest.find(e=>e.channel==='sunday'&&e.date===day);
@@ -299,7 +300,7 @@
         element.outerHTML=recordSummary(sectionRows(activeBody.props,element.dataset.recordScope),element.dataset.recordScope);
       }
       refreshPersonalSlips();
-      for(const element of document.querySelectorAll('[data-favorite-pick-record]'))element.innerHTML=favoritePickRecord(activeBody.props.filter(p=>p.group==='ry'));
+      for(const element of document.querySelectorAll('[data-favorite-pick-record]'))element.innerHTML=favoritePickRecord(individualFavorites(activeBody));
       for(const element of document.querySelectorAll('[data-personal-void-note]'))element.innerHTML=personalVoidNote(activeBody);
       for(const element of document.querySelectorAll('[data-personal-ticket-payout]'))element.innerHTML=personalPayoutHTML(activeBody);
       for(const element of document.querySelectorAll('[data-personal-fit]'))element.innerHTML=personalFitHTML(activeBody);
@@ -340,8 +341,8 @@
       return `<div class="record-summary" aria-label="Individual favorite line results"><span><strong>${s.total}</strong> individual favorites</span><span class="record-hits"><strong>${s.hits}</strong> hit</span><span class="record-misses"><strong>${s.misses}</strong> missed</span><span>${s.pushes} pushed · ${s.other} void / DNP · ${s.pending} pending</span>${live?'<span class="row-live-flag">● Live stats can be corrected</span>':''}</div>`;
     }
     function favoritesView(body,id){
-      const rows=editionGroups(body).ry,tickets=results.personalParlays(body);
-      return favorites.shell({id,tab:favorites.readTab(location.search),pickCount:rows.length,parlayCount:tickets.length,picksHTML:`<div data-favorite-pick-record>${favoritePickRecord(rows)}</div><p class="daily-caption">Individual selections · single returns are illustrative. Saved straight prices may come from unsubmitted favorite lines; placed-ticket prices and parlay P/L appear under Parlays.</p>${pickList(rows,id+'-picks')}`,parlaysHTML:`${recordSummary(rows,'ry')}<div data-personal-slips>${personalSlipsHTML(body)}</div>`});
+      const rows=individualFavorites(body),tickets=results.personalParlays(body);
+      return favorites.shell({id,tab:favorites.readTab(location.search),pickCount:rows.length,parlayCount:tickets.length,picksHTML:`<div data-favorite-pick-record>${favoritePickRecord(rows)}</div><p class="daily-caption">Individual favorites only. Parlay membership alone does not endorse a leg individually. Single returns are illustrative; personal ticket quotes appear under Parlays.</p>${pickList(rows,id+'-picks')}`,parlaysHTML:`${recordSummary(editionGroups(body).ry,'ry')}<div data-personal-slips>${personalSlipsHTML(body)}</div>`});
     }
     function refreshPersonalSlips(){
       for(const element of document.querySelectorAll('[data-personal-slips]')){
@@ -488,5 +489,5 @@
     }catch{showError();}
     function showError(){const id={daily:'daily-content',research:'daily-content',parlays:'daily-content',home:'home-current',sundays:'sunday-current','sunday-personal':'sunday-current',week:'week-content',archives:'sunday-archive'}[kind];if(id&&$(id)){$(id).removeAttribute('aria-busy');$(id).innerHTML='<p class="site-error" role="alert">The publication record is unavailable. Refresh to try again.</p>';} }
   }
-  return {sundaySourceEntries,sundayStarsHTML,publicResearchRows,readPublicResearchState,publicResearchSearch,publicResearchPage,publicResearchMarketOptions,publicResearchCoverageHTML,publicResearchEmptyMessage,oddsRefreshLabel,personalPostingLabel,personalSlipsHTML,cupContextNotice,dailyCategories,researchRanges,researchValueControls,readResearchState,researchSearch,researchCoverage,researchMarketOptions,researchCoverageHTML,researchEmptyMessage,latestEstimate,confidenceDetails,init,validDate,dateLabel,etDay,nextSunday,lineLabel,latestEntries,summary,safeEditionURL,publishedCategory,editionGroups,researchPage,favoritesNotice,pricedPick,gameKey,favoriteKey,favoriteKeys,isFavorite,allPicks,honorableMentions,dailyRows,sortPicks,filterPicks,gameGroups,readPickState,pickSearch,tabCounts};
+  return {individualFavorites,sundaySourceEntries,sundayStarsHTML,publicResearchRows,readPublicResearchState,publicResearchSearch,publicResearchPage,publicResearchMarketOptions,publicResearchCoverageHTML,publicResearchEmptyMessage,oddsRefreshLabel,personalPostingLabel,personalSlipsHTML,cupContextNotice,dailyCategories,researchRanges,researchValueControls,readResearchState,researchSearch,researchCoverage,researchMarketOptions,researchCoverageHTML,researchEmptyMessage,latestEstimate,confidenceDetails,init,validDate,dateLabel,etDay,nextSunday,lineLabel,latestEntries,summary,safeEditionURL,publishedCategory,editionGroups,researchPage,favoritesNotice,pricedPick,gameKey,favoriteKey,favoriteKeys,isFavorite,allPicks,honorableMentions,dailyRows,sortPicks,filterPicks,gameGroups,readPickState,pickSearch,tabCounts};
 });

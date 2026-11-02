@@ -124,6 +124,7 @@ def personal_price_view(root):
         body=json.loads((root/'data/editions'/entry['path']).read_text())
         if 'personalSlips' in body:
             for slip in body['personalSlips']:
+                if slip.get('recordKind')=='selection_snapshot':continue
                 leg_ids=sorted(p['pickId'] for p in slip['legs']);key=(slip['id'],tuple(leg_ids))
                 saved.setdefault(key,{'ticketId':slip['id'],'legIds':leg_ids,'americanOdds':slip['americanOdds'],'sourceVersion':entry['version'],'firstSavedAt':entry['updatedAt']})
             continue

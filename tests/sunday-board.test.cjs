@@ -2,13 +2,21 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const pub=require('../assets/publication.js'),results=require('../assets/result-utils.js');
 const read=p=>JSON.parse(fs.readFileSync(path.join(__dirname,'..',p)));
 const sunday=()=>{const entry=read('data/editions/manifest.json').editions.filter(e=>e.channel==='sunday'&&e.date==='2026-11-01').at(-1);return read('data/editions/'+entry.path);};
-const daily=()=>read('data/editions/daily/2026-11-01/f5042547c4eaa13f.json');
+const dailyEntry=()=>read('data/editions/manifest.json').editions.filter(e=>e.channel==='daily'&&e.date==='2026-11-01').at(-1);
+const daily=()=>read('data/editions/'+dailyEntry().path);
 
 test('Sunday uses the latest same-date Daily source without duplicating its recommendations',()=>{
  const index=read('data/editions/manifest.json'),before=JSON.stringify(index),sources=pub.sundaySourceEntries(index.editions,'2026-11-01');
- assert.equal(sources.personalEntry.version,sunday().version);assert.equal(sources.boardEntry.version,'f5042547c4eaa13f');assert.equal(sources.boardEntry.channel,'daily');
+ assert.equal(sources.personalEntry.version,sunday().version);assert.equal(sources.boardEntry.version,dailyEntry().version);assert.equal(sources.boardEntry.channel,'daily');
  assert.equal(pub.allPicks(daily()).length,10);assert.equal(pub.tabCounts(daily()).favorites,0);
  assert.equal(pub.allPicks(sunday()).length,0);assert.equal(results.personalParlays(sunday()).length,1);assert.equal(JSON.stringify(index),before);
+});
+
+test('a later same-date result edition advances the board while Stars retain their own source',()=>{
+ const entries=read('data/editions/manifest.json').editions,before=JSON.stringify(entries),last=dailyEntry();
+ const newer={...last,version:'f'.repeat(16),path:'daily/2026-11-01/'+'f'.repeat(16)+'.json',updatedAt:new Date(Date.parse(last.updatedAt)+1000).toISOString()};
+ const selected=pub.sundaySourceEntries([...entries,newer],'2026-11-01');
+ assert.equal(selected.boardEntry,newer);assert.equal(selected.personalEntry.version,sunday().version);assert.equal(JSON.stringify(entries),before);
 });
 
 test('historical Sundays retain their own source when no same-date Daily record exists',()=>{
@@ -57,7 +65,7 @@ async function mountedSunday(day='2026-11-01'){
 test('actual Sunday initialization places Stars first and reuses the Daily tabs and exact source',async()=>{
  const mounted=await mountedSunday(),html=mounted.elements['daily-content'].innerHTML;
  assert.ok(html.indexOf('id="ry-sunday-stars"')<html.indexOf('class="edition-panel daily-edition"'));
- assert.match(html,/data-board-source="daily:f5042547c4eaa13f"/);assert.match(html,/All Sunday Picks/);assert.match(html,/aria-label="Sunday pick category"/);
+ assert.ok(html.includes('data-board-source="daily:'+daily().version+'"'));assert.match(html,/All Sunday Picks/);assert.match(html,/aria-label="Sunday pick category"/);
  assert.match(html,/Free Throws<\/span><strong>6/);assert.match(html,/Floaters<\/span><strong>4/);assert.equal((html.match(/data-test-pick=/g)||[]).length,10);
  assert.equal(mounted.watch.rows.length,5);assert.ok(mounted.requests.every(p=>p.startsWith('/project/data/')));assert.equal(mounted.location.href,'https://example.com/project/sundays/?date=2026-11-01');
  assert.ok(mounted.requests.includes('/project/data/editions/sunday/2026-11-01/'+sunday().version+'.json'));assert.ok(!mounted.requests.some(p=>p.includes('/data/boards/sunday/')));
@@ -77,7 +85,7 @@ test('verified posting appends an immutable successor without rewriting ticket o
 test('Sunday ticket polling retains the owner source and cannot turn it into the Daily board',async()=>{
  const mounted=await mountedSunday();for(const row of mounted.watch.rows)row.result={eventStatus:'final',statisticalOutcome:'win',actual:40};
  mounted.watch.callback();assert.match(mounted.elements['stars-record'].innerHTML,/>1<\/strong> hit/);assert.match(mounted.slot.innerHTML,/Ry’s Sunday Pick/);assert.match(mounted.slot.innerHTML,/\+530/);
- assert.match(mounted.elements['daily-content'].innerHTML,/data-board-source="daily:f5042547c4eaa13f"/);
+ assert.ok(mounted.elements['daily-content'].innerHTML.includes('data-board-source="daily:'+daily().version+'"'));
  assert.equal((mounted.elements['daily-content'].innerHTML.match(/data-test-pick=/g)||[]).length,10);
 });
 

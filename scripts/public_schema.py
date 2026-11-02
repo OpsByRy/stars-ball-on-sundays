@@ -153,6 +153,13 @@ def validate_personal_price_evidence(record,slip,publication,*,required=False,or
         if required and record.get('americanOdds') is not None:raise ValueError('Personal group quote requires price evidence')
         return
     keys(evidence,{'source','context','observedAt'},{'source','context','observedAt'})
+    if evidence['context']=='selection_snapshot':
+        if record is not slip or slip.get('recordKind')!='selection_snapshot' or slip.get('placedAt') is not None or slip.get('quoteBasis')!='unboosted' or type(slip.get('oddsChangedAtCapture')) is not bool or evidence['source']!='screenshot' or not number(record.get('americanOdds')) or abs(record['americanOdds'])<100:
+            raise ValueError('Invalid full-ticket selection snapshot evidence')
+        stamp(evidence['observedAt'])
+        if evidence['observedAt'] is not None and datetime.fromisoformat(evidence['observedAt'].replace('Z','+00:00'))>datetime.fromisoformat(publication['recordedAt'].replace('Z','+00:00')):
+            raise ValueError('Personal price observation follows recording')
+        return
     if evidence['source'] not in {'screenshot','share_link'} or evidence['context'] not in {'original_slip','later_quote'}:raise ValueError('Invalid personal price evidence')
     if original_only and evidence['context']!='original_slip':raise ValueError('Full-ticket tracking requires original slip price')
     if evidence['source']=='share_link' and not slip.get('shareUrl'):raise ValueError('Shared price evidence requires its slip link')
@@ -173,7 +180,12 @@ def validate_personal_slips(body):
     if not isinstance(slips,list) or not 1<=len(slips)<=12:raise ValueError('Invalid separate personal slips')
     rows={r['id']:r for r in body['props'] if r['group']=='ry'};seen=set();referenced=set()
     for slip in slips:
-        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields|{'groups','shareUrl','priceEvidence','label'},fields)
+        fields={'id','book','americanOdds','placedAt','ryFavorite','legs'};keys(slip,fields|{'groups','shareUrl','priceEvidence','label','recordKind','quoteBasis','oddsChangedAtCapture'},fields)
+        snapshot=slip.get('recordKind')=='selection_snapshot'
+        if 'recordKind' in slip or 'quoteBasis' in slip or 'oddsChangedAtCapture' in slip:
+            snapshot_evidence=slip.get('priceEvidence')
+            if not snapshot or slip.get('quoteBasis')!='unboosted' or type(slip.get('oddsChangedAtCapture')) is not bool or slip['placedAt'] is not None or not isinstance(snapshot_evidence,dict) or snapshot_evidence.get('context')!='selection_snapshot' or 'shareUrl' in slip or 'groups' in slip:
+                raise ValueError('Invalid personal selection snapshot shape')
         if 'label' in slip:
             text(slip['label'],80)
             if not slip['label'].strip():raise ValueError('Empty personal ticket label')
@@ -191,6 +203,8 @@ def validate_personal_slips(body):
             keys(leg,{'pickId','americanOdds','priceEvidence'},{'pickId','americanOdds'})
             if leg['pickId'] not in rows or leg['pickId'] in legs:raise ValueError('Missing or duplicate personal slip pick')
             legs.add(leg['pickId']);referenced.add(leg['pickId'])
+            if snapshot and (rows[leg['pickId']].get('sourceType')!='user_supplied_parlay_snapshot' or rows[leg['pickId']].get('ryFavorite') is not False or rows[leg['pickId']].get('selected') is not False or any(rows[leg['pickId']].get(k) is not None for k in ['estimate','confidenceUpdate','bookPrices','priceCheck']) or leg.get('americanOdds') is not None or leg.get('priceEvidence') is not None):
+                raise ValueError('Snapshot membership is not an individual favorite or component quote')
             if leg['americanOdds'] is not None and (not number(leg['americanOdds']) or abs(leg['americanOdds'])<100):raise ValueError('Invalid personal leg quote')
             validate_personal_price_evidence(leg,slip,publication)
         if 'groups' in slip:

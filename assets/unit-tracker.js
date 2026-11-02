@@ -45,7 +45,7 @@
     scope=results.trackingScope(rows,scope);
     rows=results.trackingRows(rows,{scope});
     const prefs=preferences(settings),unique=new Map();
-    for(const row of rows){if(row.priceKind==='model_target')continue;const type=kind==='parlays'?(personal?'personal':ticketType(row)):bench?benchType(row):propType(row);if(!type)continue;
+    for(const row of rows){if(row.priceKind==='model_target'||row.recordKind==='selection_snapshot')continue;const type=kind==='parlays'?(personal?'personal':ticketType(row)):bench?benchType(row):propType(row);if(!type)continue;
       const id=row.id||JSON.stringify(kind==='parlays'?row.legs?.map(r=>[r.date,r.canonicalEventId||r.eventId,r.playerId,r.market,r.operator,r.line]):[row.date,row.canonicalEventId||row.eventId,row.playerId,row.market,row.operator,row.line]);
       unique.set(id,{row,type});
     }
@@ -84,6 +84,7 @@
     return '<div class="unit-record-top"><span class="unit-net '+(s.netUnits>0?'positive':s.netUnits<0?'negative':'')+'">'+(testSlate?'Test-run net ':options.bench?'Bench hypothetical net ':s.unpriced?'Partial net ':s.indicative?'Estimated net ':'Tracked net ')+'<strong>'+units(s.netUnits)+'</strong>'+(s.netDollars===null?'':'<span> · '+dollars(s.netDollars)+'</span>')+'</span><button type="button" data-unit-settings-open>'+('Set your units'+(prefs.unitDollars===null?'':' · $'+Number(prefs.unitDollars.toFixed(2)).toLocaleString('en-US')))+'</button></div><p class="unit-record-note">'+esc(policy)+(s.pending?' · '+size(s.openUnits)+' pending':'')+(s.liveHits?' · includes '+s.liveHits+' live '+(s.liveHits===1?'hit':'hits'):'')+(s.liveMisses?' · includes '+s.liveMisses+' live '+(s.liveMisses===1?'miss':'misses'):'')+((s.liveHits||s.liveMisses)?' · live results remain subject to stat corrections':'')+(s.review?' · '+s.review+' ticket'+(s.review===1?'':'s')+' awaiting settlement review':'')+(s.unpriced?' · '+s.unpriced+' winning '+(s.unpriced===1?'return':'returns')+' excluded: price unavailable':'')+'.</p><p class="unit-record-basis">'+(options.bench?'Hypothetical Bench research only; excluded from official pick records. No stake recommendation. ':testSlate?'Hypothetical test-run return at your current stake settings. Excluded from cumulative win-rate and unit P/L totals. ':s.indicative?'Combined estimates use saved leg prices; offered SGP payouts can differ. ':options.personal?'Calculated at the first saved full-ticket quote. ':'Calculated at original saved pick prices. ')+'Statistical P/L; no bets or account balances recorded.</p>';
   }
   function recordHTML(rows,options={}){
+    rows=rows.filter(row=>row.recordKind!=='selection_snapshot');
     if(!rows.length||options.kind!=='parlays'&&!rows.some(options.bench?benchType:propType))return '';
     const token=String(++serial);summaries.set(token,{rows,options});
     return '<div class="unit-record" data-unit-summary="'+token+'" aria-live="polite">'+contents(rows,options)+'</div>';

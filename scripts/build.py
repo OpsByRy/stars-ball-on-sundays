@@ -225,7 +225,7 @@ def assert_personal_estimates(body):
     if snapshots:validate_edition(body)
     for row in body['props']:
         if row['group']!='ry':continue
-        if row['id'] in snapshots:continue
+        if row.get('id') in snapshots:continue
         if row.get('sourceType')=='user_supplied_unsubmitted_favorite' and row['id'] in tracking and 'estimate' not in row:
             continue
         estimate=row.get('estimate') or {}

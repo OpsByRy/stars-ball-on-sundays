@@ -1,0 +1,9 @@
+SBOS CUSTOM FONT PACKAGE — OWNER USE
+
+Created for Ryan McKenzie / Stars Ball On Sundays, 2026.
+
+SBOS Angular Solid, SBOS Angular Slim, SBOS Angular Logo and SBOS Angular Logo Outline are supplied for the owner's personal and commercial brand use, including installation, graphic creation, print output, video, web embedding, application embedding, modification, and sharing with collaborators or production vendors working on the owner's behalf. No separate font subscription or usage fee is imposed by this delivery.
+
+This is the official 2.0 organization of the previously supplied custom SBOS fonts and owner-approved refinements. The Logo cuts preserve the capital and numeral artwork from the original 1.3 package. Solid uses the approved Study 03 construction. Slim uses the approved refined Slim with its corrected 4. Existing SBOS artwork remains the owner's supplied brand artwork; the package does not change ownership of it or claim to recover an unavailable original font.
+
+Build-tool libraries are not distributed in the font files. Their own licenses apply if separately installed. The package is delivered as custom brand artwork and editable font source; it makes no representation about trademark registration or exclusivity. No third-party specimen font is included in this release.

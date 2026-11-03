@@ -114,6 +114,11 @@
     "sundays/ry/index.html",
     "sundays/week.html",
     "assets/slate-policy.js",
-    "assets/parlay-withdrawals.json"
+    "assets/parlay-withdrawals.json",
+    "assets/election-day.js",
+    "assets/election-day.css",
+    "assets/fonts/SBOSAngular-Logo.woff2",
+    "assets/fonts/SBOSAngular-Slim.woff2",
+    "assets/fonts/SBOSAngular-LICENSE.txt"
   ]
 }

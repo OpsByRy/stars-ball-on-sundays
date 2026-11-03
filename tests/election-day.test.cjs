@@ -7,7 +7,7 @@ function fixture({dismissed=false,storageFails=false,native=true,now=Date.parse(
  class Element{
   constructor(tag){this.tag=tag;this.listeners=new Map();this.children=[];this.parts={};this.attrs={};this.hidden=false;this.open=false;this.isConnected=false;this.classList={set:new Set(),add:x=>this.classList.set.add(x),remove:x=>this.classList.set.delete(x)};if(tag==='dialog'&&native){this.showModal=()=>{this.open=true;};this.close=()=>{this.open=false;this.emit('close');};}}
   setAttribute(k,v){this.attrs[k]=v;}append(e){this.children.push(e);e.isConnected=this.isConnected;}prepend(e){this.children.unshift(e);e.isConnected=this.isConnected;}insertAdjacentElement(_,e){doc.body.append(e);}remove(){this.isConnected=false;for(const p of nodes)p.children=p.children.filter(e=>e!==this);}addEventListener(type,fn){this.listeners.set(type,fn);}emit(type){const event={type,prevented:false,preventDefault(){this.prevented=true;}};this.listeners.get(type)?.(event);return event;}focus(){doc.activeElement=this;}
-  set innerHTML(value){this.markup=value;this.parts={};const keys=this.tag==='dialog'?['.sbos-election-logo','.sbos-election-polling','[data-election-history]','.sbos-election-disclosure','[data-election-close]','[data-election-continue]']:['button'];for(const key of keys){const e=new Element(key.includes('logo')?'img':key.includes('polling')||key.includes('history')?'a':'button');this.parts[key]=e;}}
+  set innerHTML(value){this.markup=value;this.parts={};const keys=this.tag==='dialog'?['.sbos-election-logo','.sbos-election-polling','.sbos-election-disclosure','[data-election-close]','[data-election-continue]']:['button'];for(const key of keys){const e=new Element(key.includes('logo')?'img':key.includes('polling')||key.includes('history')?'a':'button');this.parts[key]=e;}}
   get innerHTML(){return this.markup||'';}querySelector(selector){return this.parts[selector]||null;}
  }
  doc.body=new Element('body');doc.body.isConnected=true;doc.header=new Element('header');doc.header.isConnected=true;doc.head=new Element('head');doc.head.isConnected=true;doc.documentElement=new Element('html');doc.activeElement=doc.body;
@@ -23,7 +23,7 @@ test('notice is bounded to Nov3 Eastern with an exclusive end, including wrong/i
 });
 test('exact requested copy, verified locator, actual artwork and locked disclosure appear in native dialog',()=>{
  const f=fixture();f.load();const d=f.api.dialog;assert.equal(d.open,true);assert.equal(d.attrs['aria-labelledby'],'sbos-election-title');assert.equal(d.attrs['aria-describedby'],'sbos-election-message');
- assert.match(d.innerHTML,/HAPPY /);assert.match(d.innerHTML,/ELECTION /);assert.match(d.innerHTML,/DAY<span class="sbos-election-punctuation">!<\/span>/);assert.match(d.innerHTML,/NO NBA GAME SCHEDULED, /);assert.match(d.innerHTML,/PLEASE GO VOTE!/);
+ assert.match(d.innerHTML,/HAPPY /);assert.match(d.innerHTML,/ELECTION /);assert.match(d.innerHTML,/>DAY<\/span>/);assert.doesNotMatch(d.innerHTML,/DAY!|sbos-election-punctuation|Browse history|data-election-history/);assert.match(d.innerHTML,/NO NBA GAME SCHEDULED, /);assert.match(d.innerHTML,/PLEASE GO VOTE!/);
  const a=d.querySelector('.sbos-election-polling');assert.equal(a.href,'https://www.vote.org/polling-place-locator/');assert.match(d.innerHTML,/>Find Your Polling Place/);assert.match(d.innerHTML,/rel="noopener noreferrer"/);
  assert.equal(d.querySelector('.sbos-election-logo').src,'https://example.invalid/assets/brand/sbos-primary-compact-classic-720.webp');assert.equal(d.querySelector('.sbos-election-disclosure').textContent,notice.DISCLOSURE);assert.equal(f.writes.length,0);
 });
@@ -34,8 +34,8 @@ test('close persists only the dated dismissal and keeps the site/history in plac
 test('keyboard focus starts at Close and returns to the previous connected control',()=>{
  const f=fixture(),prior=f.doc.createElement('button');f.doc.body.append(prior);prior.focus();f.load();assert.equal(f.doc.activeElement,f.api.dialog.querySelector('[data-election-close]'));f.api.dismiss();assert.equal(f.doc.activeElement,prior);
 });
-test('continue, history and polling actions dismiss without rewriting the current edition',()=>{
- for(const selector of ['[data-election-continue]','[data-election-history]','.sbos-election-polling']){const f=fixture();f.load();f.api.dialog.querySelector(selector).emit('click');assert.equal(f.api.dialog.open,false);assert.equal(f.writes.length,1);assert.equal(f.api.dialog.querySelector('[data-election-history]').href,'https://example.invalid/archive/');}
+test('continue and polling actions dismiss without rewriting the current edition',()=>{
+ for(const selector of ['[data-election-continue]','.sbos-election-polling']){const f=fixture();f.load();f.api.dialog.querySelector(selector).emit('click');assert.equal(f.api.dialog.open,false);assert.equal(f.writes.length,1);assert.equal(f.api.dialog.querySelector('[data-election-history]'),null);}
 });
 test('Escape retains the native cancel action and remembers dismissal',()=>{
  const f=fixture();f.load();const event=f.api.dialog.emit('cancel');assert.equal(event.prevented,false);f.api.dialog.close();assert.equal(f.api.banner.hidden,false);assert.equal(f.writes.length,1);
@@ -65,7 +65,7 @@ test('shared loader is date-bound, duplicate-safe and keeps hosted-subpath asset
  const source=fs.readFileSync(path.join(__dirname,'../assets/navigation.js'),'utf8'),loader=source.slice(source.indexOf('/* Election Day notice:'));
  for(const[now,count]of [[notice.START-1,0],[notice.START,1],[notice.END-1,1],[notice.END,0]]){
   const loaded=[],doc={querySelector(selector){return selector==='script[data-sbos-navigation]'?{src:'https://example.invalid/stars-ball-on-sundays/assets/navigation.js?v=old'}:loaded[0]||null;},createElement:()=>({dataset:{}}),head:{append:e=>loaded.push(e)}};
-  const ctx={document:doc,URL,Date:{now:()=>now,parse:Date.parse}};vm.runInNewContext(loader,ctx);vm.runInNewContext(loader,ctx);assert.equal(loaded.length,count);if(count)assert.equal(loaded[0].src,'https://example.invalid/stars-ball-on-sundays/assets/election-day.js?v=20261103-1');
+  const ctx={document:doc,URL,Date:{now:()=>now,parse:Date.parse}};vm.runInNewContext(loader,ctx);vm.runInNewContext(loader,ctx);assert.equal(loaded.length,count);if(count)assert.equal(loaded[0].src,'https://example.invalid/stars-ball-on-sundays/assets/election-day.js?v=20261103-2');
  }
 });
 test('manifest adds only the reviewed overlay/font assets without exposing source kits',()=>{
@@ -76,5 +76,22 @@ test('manifest adds only the reviewed overlay/font assets without exposing sourc
 test('approved font binaries are unchanged, web-licensed and loaded without synthetic styling',()=>{
  const fonts={'SBOSAngular-Logo.woff2':'a3ddcfa1fa2b425fe81df0e96bc8e060f62783bab91a4c4f570c22aa2f8d2514','SBOSAngular-Slim.woff2':'83643ead175b9d4a6e782bf4392645352d764627a9cf652a82070a8b2d2f8e7f'};
  for(const[n,hash]of Object.entries(fonts)){const b=fs.readFileSync(path.join(__dirname,'../assets/fonts',n));assert.equal(b.subarray(0,4).toString(),'wOF2');assert.equal(crypto.createHash('sha256').update(b).digest('hex'),hash);}
- assert.match(fs.readFileSync(path.join(__dirname,'../assets/fonts/SBOSAngular-LICENSE.txt'),'utf8'),/web embedding/);const css=fs.readFileSync(path.join(__dirname,'../assets/election-day.css'),'utf8');assert.match(css,/font-synthesis:none/);assert.match(css,/sbos-election-punctuation\{font-family:Inter/);
+ assert.match(fs.readFileSync(path.join(__dirname,'../assets/fonts/SBOSAngular-LICENSE.txt'),'utf8'),/web embedding/);const css=fs.readFileSync(path.join(__dirname,'../assets/election-day.css'),'utf8');assert.match(css,/font-synthesis:none/);assert.doesNotMatch(css,/sbos-election-punctuation/);
+});
+test('all overlay content, close control and disclosure use the center axis without a float',()=>{
+ const css=fs.readFileSync(path.join(__dirname,'../assets/election-day.css'),'utf8');
+ const rule=name=>css.match(new RegExp('\\.'+name+'\\{([^}]+)\\}'))?.[1]||'';
+ assert.match(rule('sbos-election-art'),/justify-items:center/);
+ assert.match(rule('sbos-election-close'),/float:none/);assert.match(rule('sbos-election-close'),/margin:-16px auto 24px/);
+ assert.match(rule('sbos-election-disclosure'),/text-align:center/);assert.doesNotMatch(css,/float:right|text-align:left|justify-content:space-between/);
+ assert.match(rule('sbos-election-actions'),/width:100%/);assert.match(rule('sbos-election-actions'),/justify-items:center/);
+});
+test('post-dismissal banner inherits current palette and accessible focus colors without another preference writer',()=>{
+ const css=fs.readFileSync(path.join(__dirname,'../assets/election-day.css'),'utf8');
+ const banner=css.match(/\.sbos-election-banner\{([^}]+)\}/)[1];
+ for(const token of ['--surface','--text','--border-control'])assert.ok(banner.includes('var('+token+','),token);
+ const action=css.match(/\.sbos-election-banner button,\.sbos-election-banner a\{([^}]+)\}/)[1];
+ for(const token of ['--action','--action-text'])assert.ok(action.includes('var('+token+','),token);
+ assert.match(css,/\.sbos-election-banner :is\(a,button\):focus-visible\{outline:3px solid var\(--focus-ring,/);
+ const source=fs.readFileSync(path.join(__dirname,'../assets/election-day.js'),'utf8');assert.doesNotMatch(source,/localStorage|dataset\.(?:brand|mode)|setAttribute\(['"]data-(?:brand|mode)/);
 });

@@ -23,7 +23,7 @@ test('notice is bounded to Nov3 Eastern with an exclusive end, including wrong/i
 });
 test('exact requested copy, verified locator, actual artwork and locked disclosure appear in native dialog',()=>{
  const f=fixture();f.load();const d=f.api.dialog;assert.equal(d.open,true);assert.equal(d.attrs['aria-labelledby'],'sbos-election-title');assert.equal(d.attrs['aria-describedby'],'sbos-election-message');
- assert.match(d.innerHTML,/HAPPY /);assert.match(d.innerHTML,/ELECTION /);assert.match(d.innerHTML,/>DAY<\/span>/);assert.doesNotMatch(d.innerHTML,/DAY!|sbos-election-punctuation|Browse history|data-election-history/);assert.match(d.innerHTML,/NO NBA GAME SCHEDULED, /);assert.match(d.innerHTML,/PLEASE GO VOTE!/);
+ assert.match(d.innerHTML,/HAPPY /);assert.match(d.innerHTML,/ELECTION /);assert.match(d.innerHTML,/>DAY<\/span>/);assert.doesNotMatch(d.innerHTML,/DAY!|sbos-election-punctuation|Browse history|data-election-history/);assert.match(d.innerHTML,/NO NBA GAMES SCHEDULED, /);assert.doesNotMatch(d.innerHTML,/NO NBA GAME SCHEDULED/);assert.match(f.api.banner.innerHTML,/No NBA games scheduled/);assert.doesNotMatch(f.api.banner.innerHTML,/No NBA game scheduled/);assert.match(d.innerHTML,/PLEASE GO VOTE!/);
  const a=d.querySelector('.sbos-election-polling');assert.equal(a.href,'https://www.vote.org/polling-place-locator/');assert.match(d.innerHTML,/>Find Your Polling Place/);assert.match(d.innerHTML,/rel="noopener noreferrer"/);
  assert.equal(d.querySelector('.sbos-election-logo').src,'https://example.invalid/assets/brand/sbos-primary-compact-classic-720.webp');assert.equal(d.querySelector('.sbos-election-disclosure').textContent,notice.DISCLOSURE);assert.equal(f.writes.length,0);
 });
@@ -65,7 +65,7 @@ test('shared loader is date-bound, duplicate-safe and keeps hosted-subpath asset
  const source=fs.readFileSync(path.join(__dirname,'../assets/navigation.js'),'utf8'),loader=source.slice(source.indexOf('/* Election Day notice:'));
  for(const[now,count]of [[notice.START-1,0],[notice.START,1],[notice.END-1,1],[notice.END,0]]){
   const loaded=[],doc={querySelector(selector){return selector==='script[data-sbos-navigation]'?{src:'https://example.invalid/stars-ball-on-sundays/assets/navigation.js?v=old'}:loaded[0]||null;},createElement:()=>({dataset:{}}),head:{append:e=>loaded.push(e)}};
-  const ctx={document:doc,URL,Date:{now:()=>now,parse:Date.parse}};vm.runInNewContext(loader,ctx);vm.runInNewContext(loader,ctx);assert.equal(loaded.length,count);if(count)assert.equal(loaded[0].src,'https://example.invalid/stars-ball-on-sundays/assets/election-day.js?v=20261103-2');
+  const ctx={document:doc,URL,Date:{now:()=>now,parse:Date.parse}};vm.runInNewContext(loader,ctx);vm.runInNewContext(loader,ctx);assert.equal(loaded.length,count);if(count)assert.equal(loaded[0].src,'https://example.invalid/stars-ball-on-sundays/assets/election-day.js?v=20261103-3');
  }
 });
 test('manifest adds only the reviewed overlay/font assets without exposing source kits',()=>{

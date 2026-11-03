@@ -117,7 +117,7 @@
       array(idea.legs, 2, 6);
       for (const leg of idea.legs) {
         keys(leg, ['player', 'nativePlayerId', 'nativeTeamId', 'market', 'operator', 'side', 'threshold', 'americanOdds', 'period', 'overtime', 'settlementTermsState']);
-        check(label(leg.player) && normalizedName(leg).length > 0 && nativeId(leg.nativePlayerId) && nativeId(leg.nativeTeamId) && Object.hasOwn(COMPONENTS, leg.market), 'Exact player/stat required');
+        check(label(leg.player) && normalizedName(leg).length > 0 && nativeId(leg.nativePlayerId) && nativeId(leg.nativeTeamId) && typeof leg.market === 'string' && Object.hasOwn(COMPONENTS, leg.market), 'Exact player/stat required');
         check(['>', '>=', '<', '<='].includes(leg.operator) && leg.side === (leg.operator.startsWith('>') ? 'over' : 'under') && Number.isFinite(leg.threshold) && leg.threshold >= 0 && leg.threshold <= 1000 && !(leg.operator === '<' && leg.threshold === 0) && price(leg.americanOdds), 'Possible exact counting contract and saved price required');
         check(leg.period === 'full_game' && [null, true, false].includes(leg.overtime) && leg.overtime === idea.legs[0].overtime && ['unverified', 'verified'].includes(leg.settlementTermsState), 'Matching explicit scope and terms required');
       }
@@ -196,10 +196,10 @@
       add(card, 'p', 'Unverified estimate. This is not a sportsbook quote, fair price, EV or probability. No SGP dependence or sportsbook repricing is modeled.');
       const metric = idea.compatibility;
       if (metric.state === 'unavailable') {
-        add(card, 'p', 'Historical all-win excess: unavailable · evidence games: 0 · history vintage: unavailable · 95% interval: unavailable.', 'compatibility');
+        add(card, 'p', 'Historical all-win excess: unavailable · evidence games: 0 · history vintage: unavailable · Exploratory historical game-sample 95% interval: unavailable.', 'compatibility');
       } else {
         add(card, 'p', `Historical all-win excess: ${signed(metric.value)} percentage points · evidence games: ${metric.evidenceGames} · ${metric.vintageMode === 'retrospective_revised' ? 'Retrospective revised history' : 'Strict as-of history'}.`, 'compatibility');
-        add(card, 'p', metric.interval95 === null ? '95% interval: unavailable.' : `95% interval: [${signed(metric.interval95[0])}, ${signed(metric.interval95[1])}] percentage points.`);
+        add(card, 'p', metric.interval95 === null ? 'Exploratory historical game-sample 95% interval: unavailable.' : `Exploratory historical game-sample 95% interval: [${signed(metric.interval95[0])}, ${signed(metric.interval95[1])}] percentage points.`);
       }
       add(card, 'p', 'Historical compatibility is descriptive, informational only and unvalidated. It is not used for eligibility, order, probability or value claims.');
       add(card, 'p', `Captured ${et(idea.observed.startedAt)} to ${et(idea.observed.completedAt)}. Historical observation; current availability and execution are unverified.`);

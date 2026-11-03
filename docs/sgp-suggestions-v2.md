@@ -54,8 +54,11 @@ resolutions. Coverage counts are integers: available/omitted 0–256 and display
 0–64. Displayed equals `ideas.length`, available equals displayed plus omitted,
 and `searchComplete` is a boolean. These counts describe the supplied retained
 candidate pool: omitted counts public-display-cap omissions within that pool,
-not candidates absent from it. The paired producer marks search incomplete if
-either the visit census is incomplete or candidate-retention omissions exist.
+not candidates absent from it. The paired producer uses a private bound
+`sourcePoolComplete` flag to account for source omissions or abstentions; that
+flag is not part of the public schema. Public `searchComplete` is false for
+source omissions/abstentions, an incomplete engine visit census, or engine
+candidate-retention omissions.
 The renderer labels supplied-pool coverage and warns that additional combinations
 may be absent when incomplete. It does not claim full-slate completeness.
 Coverage and display follow fixed input contract order, with no compatibility
@@ -79,7 +82,10 @@ plus digits. Display names never originate from interpreting these IDs.
 
 Each idea has two to six legs under its one book/event and a common `full_game`
 scope with matching overtime states. Markets are `PTS`, `REB`, `AST`, `3PM`,
-`PRA`, `PR`, `PA`, or `RA`. Operators are `>`, `>=`, `<`, or `<=`; side must agree
+`PRA`, `PR`, `PA`, or `RA`. Markets must be primitive strings before component
+lookup; nested arrays, boxed strings, and coercible objects reject without
+conversion. All other enums use strict equality or noncoercing membership
+checks. Operators are `>`, `>=`, `<`, or `<=`; side must agree
 with the operator. Thresholds are finite numbers from 0 to 1000. Counting `< 0`
 is impossible and rejects. Saved American leg odds are integers with absolute
 value 100–1,000,000. Overtime is explicitly `true`, `false`, or `null`, and terms
@@ -148,7 +154,8 @@ value claims, and it does not supply a probability.
   non-null interval requires at least ten evidence games.
 
 The renderer shows the signed value, evidence count, vintage, and interval (or
-its unavailability). Revised data is plainly labeled **Retrospective revised
+its unavailability), labeled **Exploratory historical game-sample 95% interval**.
+Numeric JSON values remain unchanged. Revised data is plainly labeled **Retrospective revised
 history**. There are no high/medium/low score bands.
 
 ## Exact clocks and statistical finality

@@ -85,7 +85,7 @@ for (const [name, target] of [
   ['combined price', b => b.ideas[0].combinedPrice], ['estimate', b => b.ideas[0].estimatedCombinedPrice],
   ['compatibility', b => b.ideas[0].compatibility]
 ]) test('exact allowlist rejects private fields at ' + name, () => {
-  for (const key of ['sourceRows', 'legAudit', 'originalSelections', 'retainedExposure', 'model', 'features', 'history', 'weights', 'rawPath', 'receiptHash', 'reason']) {
+  for (const key of ['sourceRows', 'legAudit', 'originalSelections', 'retainedExposure', 'model', 'features', 'history', 'weights', 'rawPath', 'receiptHash', 'reason', 'sourcePoolComplete']) {
     reject(body => { target(body)[key] = 'private'; });
   }
   reject(body => { target(body)[Symbol('private')] = 'private'; });
@@ -126,6 +126,53 @@ test('literal book identity and opaque public references never coerce', () => {
 test('native event and leg IDs use distinct exact namespaces', () => {
   for (const value of ['0000000001', 'nba:1', 'nba:12345678901', 1, 'provider-uuid']) reject((b, a) => { a.nativeEventId = value; });
   for (const value of ['player:1', 'nba:', 1, new String('nba:1')]) for (const key of ['nativePlayerId', 'nativeTeamId']) reject((b, a) => { a.legs[0][key] = value; });
+});
+test('market requires a primitive string before any component-key conversion', () => {
+  for (const market of [JSON.parse('["AST"]'), JSON.parse('[[["AST"]]]'),
+    Object.assign(['AST'], {sourceRows: [{privateReceipt: 'FICTIONAL_PRIVATE_SENTINEL'}]}),
+    Object.assign(new String('AST'), {privateReceipt: 'FICTIONAL_PRIVATE_SENTINEL'}),
+    Object.defineProperty(['AST'], 'sourceRows', {value: ['FICTIONAL_PRIVATE_SENTINEL']})]) {
+    reject((b, a) => { a.legs[0].market = market; });
+  }
+  let conversions = 0;
+  for (const market of [
+    {toString() { conversions++; return 'AST'; }},
+    {valueOf() { conversions++; return 'AST'; }},
+    {[Symbol.toPrimitive]() { conversions++; return 'AST'; }}
+  ]) reject((b, a) => { a.legs[0].market = market; });
+  assert.equal(conversions, 0, 'Malformed market objects must reject without invoking conversion hooks');
+});
+test('every string enum rejects nested arrays, boxed strings and coercible metadata objects', () => {
+  const fields = [
+    [b => b, 'schemaVersion'], [b => b.ideas[0], 'kind'], [b => b.ideas[0], 'book'],
+    ...['market', 'operator', 'side', 'period', 'settlementTermsState'].map(key => [b => b.ideas[0].legs[0], key]),
+    [b => b.ideas[0].combinedPrice, 'kind'], [b => b.ideas[0].estimatedCombinedPrice, 'kind'],
+    [b => b.ideas[0].estimatedCombinedPrice, 'method'],
+    ...['state', 'metric', 'units', 'vintageMode', 'selectionUse'].map(key => [b => b.ideas[0].compatibility, key]),
+    [b => b.ideas[0].holds, 0], [b => b.resolutions[0], 'eventState'],
+    [b => b.resolutions[0], 'resultBasis'], [b => b.resolutions[0].legResults, 0]
+  ];
+  for (const [locate, key] of fields) for (const wrap of [
+    value => [[[value]]], value => Object.assign(new String(value), {sourceRows: ['FICTIONAL_PRIVATE_SENTINEL']}),
+    value => ({privateReceipt: 'FICTIONAL_PRIVATE_SENTINEL', toString() { return value; }})
+  ]) {
+    const body = resolved(), target = locate(body);
+    target[key] = wrap(target[key]);
+    assert.throws(() => api.validate(body, NOW));
+  }
+});
+test('boolean contract states reject boxed booleans and coercible containers', () => {
+  const fields = [
+    [b => b.coverage, 'searchComplete'], [b => b.ideas[0], 'betReady'], [b => b.ideas[0], 'algorithmQualified'],
+    [b => b.ideas[0].legs[0], 'overtime'], [b => b.ideas[0].estimatedCombinedPrice, 'sportsbookVerified'],
+    [b => b.ideas[0].compatibility, 'validated'], [b => b.resolutions[0], 'identityVerified'],
+    [b => b.resolutions[0], 'finalityVerified']
+  ];
+  for (const [locate, key] of fields) for (const wrap of [value => [value], value => new Boolean(value), value => ({valueOf() { return value; }})]) {
+    const body = resolved(), target = locate(body);
+    target[key] = wrap(target[key]);
+    assert.throws(() => api.validate(body, NOW));
+  }
 });
 test('nullable v1 identity/start/terms states need the original holds', () => {
   const body = fixture(), a = body.ideas[0];
@@ -327,6 +374,7 @@ test('rendering shows signed history, sample, interval and plainly labeled revis
   let text = view(body).textContent;
   assert.match(text, /Historical all-win excess: -2.75 percentage points · evidence games: 12 · Strict as-of history/);
   assert.match(text, /95% interval: \[-10.25, \+4.5\] percentage points/);
+  assert.match(text, /Exploratory historical game-sample 95% interval/);
   assert.match(text, /descriptive, informational only and unvalidated/);
   Object.assign(metric, {value: 7, vintageMode: 'retrospective_revised', interval95: null});
   text = view(body).textContent;

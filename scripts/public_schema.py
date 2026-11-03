@@ -1,5 +1,5 @@
 """The complete public-data contract. Unknown fields fail closed at every level."""
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 import math
 import re
 
@@ -109,6 +109,7 @@ def validate_price_review(review,row):
     for k in ('providerAsOf','collectorObservedAt','checkedAt'):stamp(review[k])
     if not review['collectorObservedAt'] or not review['checkedAt']:raise ValueError('Missing price review clocks')
     clock=lambda s:datetime.fromisoformat(s.replace('Z','+00:00'))
+    if clock(review['checkedAt'])>datetime.now(timezone.utc):raise ValueError('Price review clock is in the future')
     if clock(review['collectorObservedAt'])>clock(review['checkedAt']):raise ValueError('Review precedes saved feed')
     if review['providerAsOf'] and clock(review['providerAsOf'])>clock(review['collectorObservedAt']):raise ValueError('Provider clock after capture')
     if row.get('capturedAt') and clock(row['capturedAt'])>clock(review['collectorObservedAt']):raise ValueError('Review predates original quote')
@@ -116,6 +117,7 @@ def validate_price_review(review,row):
     if review['status']=='not_found':
         if price is not None or review['providerAsOf'] is not None or review['sourceMatch']=='exact_saved_contract':raise ValueError('Missing quote cannot carry a price or clock')
     else:
+        if not review['providerAsOf']:raise ValueError('Observed price requires provider clock')
         if not number(price) or abs(price)<100 or review['sourceMatch']!='exact_saved_contract':raise ValueError('Invalid observed price')
         if not number(row.get('americanOdds')) or (price==row['americanOdds'])!=(review['status']=='unchanged'):raise ValueError('Price comparison mismatch')
 

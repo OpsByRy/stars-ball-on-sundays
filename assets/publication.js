@@ -13,7 +13,7 @@
   const stamp=value=>value&&Number.isFinite(Date.parse(value))?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',dateStyle:'medium',timeStyle:'short'}).format(new Date(value))+' ET':'Unavailable';
   function oddsRefreshLabel(body){
     const books=typeof window==='undefined'?require('./book-prices.js'):window.SBOS_BOOK_PRICES;
-    const clocks=(body.props||[]).flatMap(row=>books?books.quotes(row).map(q=>q.capturedAt):[...(row.bookPrices?.quotes||[]).map(q=>q.capturedAt),row.capturedAt]).filter(value=>value&&Number.isFinite(Date.parse(value)));
+    const clocks=(body.props||[]).flatMap(row=>books?books.quotes(row).filter(q=>typeof q.americanOdds==='number'&&Number.isFinite(q.americanOdds)&&Math.abs(q.americanOdds)>=100).map(q=>q.capturedAt):[...(row.bookPrices?.quotes||[]).map(q=>q.capturedAt),row.capturedAt]).filter(value=>value&&Number.isFinite(Date.parse(value)));
     if(!clocks.length)return '';
     const latest=clocks.reduce((a,b)=>Date.parse(a)>=Date.parse(b)?a:b);
     const checks=(body.props||[]).map(row=>row.priceReview?.collectorObservedAt).filter(value=>value&&Number.isFinite(Date.parse(value)));

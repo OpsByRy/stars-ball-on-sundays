@@ -30,6 +30,12 @@ class SavedPriceFacts(unittest.TestCase):
    old=copy.deepcopy(self.review);self.review[key]=value
    with self.assertRaises(ValueError):self.check()
    self.review=old
+ def test_observed_price_requires_provider_clock(self):
+  self.review['providerAsOf']=None
+  with self.assertRaises(ValueError):self.check()
+ def test_future_complete_clock_chain_rejects(self):
+  self.review.update(providerAsOf='2099-01-01T10:00:00Z',collectorObservedAt='2099-01-01T10:01:00Z',checkedAt='2099-01-01T10:02:00Z')
+  with self.assertRaises(ValueError):self.check()
  def test_unchanged_requires_equal_original_price(self):
   self.review.update(status='unchanged',americanOdds=-136);self.check();self.review['americanOdds']=-150
   with self.assertRaises(ValueError):self.check()

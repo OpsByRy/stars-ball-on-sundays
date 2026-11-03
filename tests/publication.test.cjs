@@ -248,8 +248,10 @@ test('Cup amendment is dated supplemental context without changing the saved boa
 });
 
 test('odds refresh label uses actual source observations without changing forecast time',()=>{
-  const body={props:[{capturedAt:'2026-10-31T16:00:15Z',estimate:{asOf:'2026-10-31T15:01:57Z'},priceCheck:{sourceAsOf:'2026-10-31T17:52:42Z'}},{bookPrices:{quotes:[{capturedAt:'2026-10-31T17:00:18Z'}]}}]};
-  assert.match(publication.oddsRefreshLabel(body),/1:52 PM ET/);
+  const body={props:[{book:'fanduel',americanOdds:-150,capturedAt:'2026-10-31T16:00:15Z',estimate:{asOf:'2026-10-31T15:01:57Z'},priceCheck:{status:'returned',americanOdds:-120,sourceAsOf:'2026-10-31T17:52:42Z'},priceReview:{status:'moved',book:'fanduel',americanOdds:-120,providerAsOf:'2026-10-31T17:52:42Z',collectorObservedAt:'2026-10-31T17:55:00Z',checkedAt:'2026-10-31T18:01:00Z',sourceMatch:'exact_saved_contract'}},{bookPrices:{quotes:[{book:'draftkings',americanOdds:-160,capturedAt:'2026-10-31T17:00:18Z'}]}}]};
+  assert.match(publication.oddsRefreshLabel(body),/Odds refreshed at[^·]*1:00 PM ET/);
+  assert.match(publication.oddsRefreshLabel(body),/Price-check feed captured.*1:55 PM ET/);
+  assert.equal(publication.pricedPick(body.props[0]).americanOdds,-150);
   assert.equal(body.props[0].estimate.asOf,'2026-10-31T15:01:57Z');
   assert.equal(publication.oddsRefreshLabel({props:[]}),'');
 });

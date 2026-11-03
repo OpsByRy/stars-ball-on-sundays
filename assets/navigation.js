@@ -183,3 +183,14 @@
   document.fonts?.ready.then(() => { schedule(); revealSelectedTabs(); });
   position();
 })();
+
+/* Election Day notice: additive, date-bound and independent of board/history data. */
+(() => {
+  const now=Date.now();
+  if(now<Date.parse('2026-11-03T05:00:00Z')||now>=Date.parse('2026-11-04T05:00:00Z'))return;
+  const source=document.querySelector('script[data-sbos-navigation]');
+  if(!source||!document.head||document.querySelector('script[data-sbos-election-day]'))return;
+  const notice=document.createElement('script');
+  notice.src=new URL('./election-day.js?v=20261103-1',source.src).href;
+  notice.defer=true;notice.dataset.sbosElectionDay='';document.head.append(notice);
+})();

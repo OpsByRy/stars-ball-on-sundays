@@ -191,6 +191,6 @@
   const source=document.querySelector('script[data-sbos-navigation]');
   if(!source||!document.head||document.querySelector('script[data-sbos-election-day]'))return;
   const notice=document.createElement('script');
-  notice.src=new URL('./election-day.js?v=20261103-2',source.src).href;
+  notice.src=new URL('./election-day.js?v=20261103-3',source.src).href;
   notice.defer=true;notice.dataset.sbosElectionDay='';document.head.append(notice);
 })();

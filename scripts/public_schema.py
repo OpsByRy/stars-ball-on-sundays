@@ -4,7 +4,7 @@ import math
 import re
 
 EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds','personalSlips','personalPublication'}
-PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected','confidenceUpdate','bookPrices'}
+PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected','confidenceUpdate','bookPrices','priceReview'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
 RESULT_FIELDS={'actual','minutesPlayed','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
 SOURCE_FIELDS={'eventId','athleteId','expectedTeam','provider'}
@@ -99,6 +99,25 @@ def validate_estimate(estimate):
         if not probabilities<=set(estimate) or any(not number(estimate[k]) or not 0<=estimate[k]<=1 for k in probabilities) or abs(sum(estimate[k] for k in probabilities)-1)>1e-7:raise ValueError('Invalid outcome probabilities')
     stamp(estimate.get('asOf'))
 
+
+def validate_price_review(review,row):
+    fields={'status','book','americanOdds','providerAsOf','collectorObservedAt','checkedAt','sourceMatch'}
+    keys(review,fields,fields)
+    if review['book'] not in {'fanduel','draftkings'} or review['book']!=row.get('book'):raise ValueError('Price review book mismatch')
+    if review['status'] not in {'moved','unchanged','not_found'}:raise ValueError('Invalid factual price review')
+    if review['sourceMatch'] not in {'exact_saved_contract','not_found','identity_unresolved'}:raise ValueError('Invalid price review source match')
+    for k in ('providerAsOf','collectorObservedAt','checkedAt'):stamp(review[k])
+    if not review['collectorObservedAt'] or not review['checkedAt']:raise ValueError('Missing price review clocks')
+    clock=lambda s:datetime.fromisoformat(s.replace('Z','+00:00'))
+    if clock(review['collectorObservedAt'])>clock(review['checkedAt']):raise ValueError('Review precedes saved feed')
+    if review['providerAsOf'] and clock(review['providerAsOf'])>clock(review['collectorObservedAt']):raise ValueError('Provider clock after capture')
+    if row.get('capturedAt') and clock(row['capturedAt'])>clock(review['collectorObservedAt']):raise ValueError('Review predates original quote')
+    price=review['americanOdds']
+    if review['status']=='not_found':
+        if price is not None or review['providerAsOf'] is not None or review['sourceMatch']=='exact_saved_contract':raise ValueError('Missing quote cannot carry a price or clock')
+    else:
+        if not number(price) or abs(price)<100 or review['sourceMatch']!='exact_saved_contract':raise ValueError('Invalid observed price')
+        if not number(row.get('americanOdds')) or (price==row['americanOdds'])!=(review['status']=='unchanged'):raise ValueError('Price comparison mismatch')
 
 def validate_confidence_update(update,row):
     keys(update,{'status','checkedAt','estimate','americanOdds','capturedAt','summary','qualification'},
@@ -203,7 +222,7 @@ def validate_personal_slips(body):
             keys(leg,{'pickId','americanOdds','priceEvidence'},{'pickId','americanOdds'})
             if leg['pickId'] not in rows or leg['pickId'] in legs:raise ValueError('Missing or duplicate personal slip pick')
             legs.add(leg['pickId']);referenced.add(leg['pickId'])
-            if snapshot and (rows[leg['pickId']].get('sourceType')!='user_supplied_parlay_snapshot' or rows[leg['pickId']].get('ryFavorite') is not False or rows[leg['pickId']].get('selected') is not False or any(rows[leg['pickId']].get(k) is not None for k in ['estimate','confidenceUpdate','bookPrices','priceCheck']) or leg.get('americanOdds') is not None or leg.get('priceEvidence') is not None):
+            if snapshot and (rows[leg['pickId']].get('sourceType')!='user_supplied_parlay_snapshot' or rows[leg['pickId']].get('ryFavorite') is not False or rows[leg['pickId']].get('selected') is not False or any(rows[leg['pickId']].get(k) is not None for k in ['estimate','confidenceUpdate','bookPrices','priceCheck','priceReview']) or leg.get('americanOdds') is not None or leg.get('priceEvidence') is not None):
                 raise ValueError('Snapshot membership is not an individual favorite or component quote')
             if leg['americanOdds'] is not None and (not number(leg['americanOdds']) or abs(leg['americanOdds'])<100):raise ValueError('Invalid personal leg quote')
             validate_personal_price_evidence(leg,slip,publication)
@@ -247,7 +266,8 @@ def validate_edition(body):
         if 'selected' in row and type(row['selected']) is not bool: raise ValueError('Invalid selected status')
         for key in ('capturedAt','startTime','postedAt'): stamp(row.get(key))
         for key,value in row.items():
-            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite','selected','confidenceUpdate','bookPrices'} and value is not None: text(value)
+            if key not in {'line','americanOdds','overtime','result','resultSource','estimate','priceCheck','ryFavorite','selected','confidenceUpdate','bookPrices','priceReview'} and value is not None: text(value)
+        if 'priceReview' in row:validate_price_review(row['priceReview'],row)
         if 'confidenceUpdate' in row:validate_confidence_update(row['confidenceUpdate'],row)
         if 'bookPrices' in row:validate_book_prices(row['bookPrices'],row)
         if 'priceCheck' in row:

@@ -12,10 +12,13 @@
   const dateLabel=day=>validDate(day)?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'long',day:'numeric',year:'numeric'}).format(new Date(day+'T12:00:00Z')):'Date unavailable';
   const stamp=value=>value&&Number.isFinite(Date.parse(value))?new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',dateStyle:'medium',timeStyle:'short'}).format(new Date(value))+' ET':'Unavailable';
   function oddsRefreshLabel(body){
-    const clocks=(body.props||[]).flatMap(row=>[row.priceCheck?.sourceAsOf,...(row.bookPrices?.quotes||[]).map(q=>q.capturedAt),row.capturedAt]).filter(value=>value&&Number.isFinite(Date.parse(value)));
+    const books=typeof window==='undefined'?require('./book-prices.js'):window.SBOS_BOOK_PRICES;
+    const clocks=(body.props||[]).flatMap(row=>books?books.quotes(row).map(q=>q.capturedAt):[...(row.bookPrices?.quotes||[]).map(q=>q.capturedAt),row.capturedAt]).filter(value=>value&&Number.isFinite(Date.parse(value)));
     if(!clocks.length)return '';
     const latest=clocks.reduce((a,b)=>Date.parse(a)>=Date.parse(b)?a:b);
-    return `Odds refreshed at ${stamp(latest)}`;
+    const checks=(body.props||[]).map(row=>row.priceReview?.collectorObservedAt).filter(value=>value&&Number.isFinite(Date.parse(value)));
+    const compared=checks.length?checks.reduce((a,b)=>Date.parse(a)>=Date.parse(b)?a:b):null;
+    return `Odds refreshed at ${stamp(latest)}`+(compared?` · Price-check feed captured ${stamp(compared)}`:'');
   }
   function etDay(now=new Date()){const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now).map(p=>[p.type,p.value]));return `${p.year}-${p.month}-${p.day}`;}
   function nextSunday(now=new Date()){const d=new Date(etDay(now)+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+((7-d.getUTCDay())%7||7));return d.toISOString().slice(0,10);}

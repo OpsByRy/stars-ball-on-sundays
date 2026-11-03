@@ -26,10 +26,23 @@
   }
   function coverage(ticket){const has=book=>ticket.legs.every(r=>quotes(r).some(q=>q.book===book&&valid(q.americanOdds)));const fd=has('fanduel'),dk=has('draftkings');return fd&&dk?'both':fd?'fanduel':dk?'draftkings':'mixed';}
   function controlHTML(preferred=getPreferredBook()){return `<div class="book-preference" role="group" aria-label="Preferred sportsbook"><span>Preferred sportsbook</span><div>${books.map(book=>`<button type="button" data-preferred-book="${book}" aria-pressed="${book===preferred}">${names[book]}</button>`).join('')}</div><small>Same picks. Your book’s saved price first; another book only when yours is missing.</small></div>`;}
+  function priceReviewSummary(row){
+    const r=row.priceReview;if(!r||!books.includes(r.book)||!['moved','unchanged','not_found'].includes(r.status))return '';
+    const price=n=>valid(n)?(n>0?'+':'')+n:'unavailable';
+    if(r.status==='not_found')return names[r.book]+': exact contract not found in the saved feed'+(r.sourceMatch==='identity_unresolved'?' with unresolved player identity':'')+'. Availability and closure are unknown; original price retained.';
+    if(!valid(r.americanOdds)||r.sourceMatch!=='exact_saved_contract')return '';
+    return names[r.book]+': later saved observation '+price(r.americanOdds)+(r.status==='moved'?' differs from the original saved price.':' matches the original saved price.')+(r.americanOdds < -500?' Observed price is beyond the original −500 selection limit.':'')+' Displayed price and selection are retained; no new qualification or live availability claim.';
+  }
+  function priceReviewBadge(row){const r=row.priceReview,text=priceReviewSummary(row);return text&&r.status!=='unchanged'?'<span class="pick-warning-badge" title="'+escape(text)+'">Price check</span>':'';}
+  function priceReviewDetails(row){
+    const r=row.priceReview,text=priceReviewSummary(row);if(!text)return '';
+    const stamp=v=>v&&Number.isFinite(Date.parse(v))?new Date(v).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}):'unavailable';
+    return '<section class="saved-price-review" aria-label="Separate saved price check"><p><strong>Separate saved price check</strong></p><p>'+escape(text)+'</p><p>Provider observation: '+escape(stamp(r.providerAsOf))+' · feed captured '+escape(stamp(r.collectorObservedAt))+' · comparison reviewed '+escape(stamp(r.checkedAt))+'. These clocks do not refresh the displayed saved quote.</p></section>';
+  }
   function quoteDetails(row,preferred=getPreferredBook()){
     const available=quotes(row),chosen=selectedQuote(row,preferred);
     const stamp=value=>value?new Date(value).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}):'capture time unavailable';
-    return `<div class="saved-book-prices"><p><strong>Saved prices for this exact pick</strong></p>${books.map(book=>{const q=available.find(q=>q.book===book);return `<p>${names[book]}: <strong>${q?escape((q.americanOdds>0?'+':'')+q.americanOdds):'No matching saved price'}</strong>${q?' · Odds last refreshed at '+escape(stamp(q.capturedAt)):''}${chosen?.book===book?' · shown':''}${q&&q.operator!==row.operator||q&&q.line!==row.line?' · matching '+escape(q.operator==='>'?'O'+q.line:q.operator==='>='?q.line+'+':q.operator+' '+q.line):''}</p>`;}).join('')}<p>Switching books keeps this pick and its win estimate. Odds are subject to change; check your sportsbook for its latest price and availability.</p></div>`;
+    return `<div class="saved-book-prices"><p><strong>Saved prices for this exact pick</strong></p>${books.map(book=>{const q=available.find(q=>q.book===book);return `<p>${names[book]}: <strong>${q?escape((q.americanOdds>0?'+':'')+q.americanOdds):'No matching saved price'}</strong>${q?' · Odds last refreshed at '+escape(stamp(q.capturedAt)):''}${chosen?.book===book?' · shown':''}${q&&q.operator!==row.operator||q&&q.line!==row.line?' · matching '+escape(q.operator==='>'?'O'+q.line:q.operator==='>='?q.line+'+':q.operator+' '+q.line):''}</p>`;}).join('')}<p>Switching books keeps this pick and its win estimate. Odds are subject to change; check your sportsbook for its latest price and availability.</p></div>`+priceReviewDetails(row);
   }
-  return {getPreferredBook,setPreferredBook,quotes,selectedQuote,pricedPick,coverage,controlHTML,quoteDetails};
+  return {getPreferredBook,setPreferredBook,quotes,selectedQuote,pricedPick,coverage,controlHTML,quoteDetails,priceReviewSummary,priceReviewBadge,priceReviewDetails};
 });

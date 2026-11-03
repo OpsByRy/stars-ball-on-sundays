@@ -13,6 +13,7 @@ import shutil
 import subprocess
 from datetime import datetime,timezone,timedelta
 import build
+from coordinated_release import verify as verify_coordinated_release
 from pending_additions import verify_pending_additions
 from pending_parlays import verify_pending_parlays
 
@@ -169,6 +170,7 @@ def assemble(baseline,cf,github,policy,source_sha):
             original=hashlib.sha256(compacted[name]).hexdigest() if name in compacted else sha256(file)
             if sha256(cf/name)!=original or sha256(github/name)!=original:raise ValueError('Public data/assets changed: '+name)
         checks['/'+name]=sha256(cf/name)
+    checks={'/'+p.relative_to(cf).as_posix():sha256(p) for p in cf.rglob('*') if p.is_file()}
     receipt={'schemaVersion':'sbos-public-release-1','sourceSHA':source_sha,'canonicalOrigin':ORIGIN,
              'githubMode':policy['githubMode'],'editionManifestSHA256':sha256(baseline/'data/editions/manifest.json'),
              'files':checks}
@@ -186,9 +188,15 @@ def main():
     root=Path(__file__).resolve().parents[1]
     policy=validate_policy(json.loads((root/'hosting-policy.json').read_text()))
     source_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
+    if args.publish: verify_coordinated_release(root)
     build.build(root,publish=args.publish)
     receipt=assemble(root/'dist',root/'dist-cloudflare',root/'dist-github',policy,source_sha)
     if args.publish:
+        verdict=verify_coordinated_release(root)
+        release_path=root/'dist-cloudflare/_sbos-release.json'
+        release=json.loads(release_path.read_text());release['coordinatedRelease']=verdict
+        release_path.write_text(json.dumps(release,sort_keys=True,separators=(',',':'))+'\n')
+        receipt['coordinatedRelease']=verdict
         receipt['publicationWindow']=publication_window(root)
         receipt['pendingAdditions']=verify_pending_additions(root)
         receipt['pendingParlays']=verify_pending_parlays(root)

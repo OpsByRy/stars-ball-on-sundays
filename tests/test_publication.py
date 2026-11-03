@@ -6,6 +6,7 @@ import shutil
 import sys
 import tempfile
 import unittest
+from source_copy import copy_public_source
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
@@ -165,7 +166,7 @@ class PublicationBoundary(unittest.TestCase):
 
     def test_arbitrary_files_and_raw_csv_are_never_copied(self):
         with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp)/'site';shutil.copytree(ROOT,root,ignore=shutil.ignore_patterns('dist','__pycache__'))
+            root=Path(temp)/'site';copy_public_source(ROOT,root)
             for name in ('assets/private-canary.js','data/slates/private.json','data/raw.csv','pipeline/model.py','.env','docs/internal.md','server/private-canary.js','private-lab/research.json'):
                 p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('NEVER_PUBLISH')
             build.build(root)
@@ -178,7 +179,7 @@ class PublicationBoundary(unittest.TestCase):
 
     def test_modified_records_and_unpublished_identities_fail(self):
         with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp)/'site';shutil.copytree(ROOT,root,ignore=shutil.ignore_patterns('dist','__pycache__'))
+            root=Path(temp)/'site';copy_public_source(ROOT,root)
             target=root/'data/stat-targets.json';body=json.loads(target.read_text());body['targets'].append({'date':'2026-10-25','eventId':'private-candidate','playerId':'private-candidate','espnEventId':'123','espnAthleteId':'456'});target.write_text(json.dumps(body))
             with self.assertRaisesRegex(ValueError,'Unpublished'): build.build(root)
             shutil.copyfile(ROOT/'data/stat-targets.json',target)

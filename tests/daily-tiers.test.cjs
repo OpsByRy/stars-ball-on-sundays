@@ -16,5 +16,5 @@ test('Daily saved-price preference overlays cannot move a pick between tiers or 
 test('Daily aliases retain filters and old boards retain original category membership and stake defaults',()=>{
  const future=pub.readPickState('?date=2026-10-30&type=layups&min=80&favorites=1');assert.equal(future.type,'free_throws');assert.equal(future.minimum,80);assert.equal(future.favoritesOnly,true);
  const search=new URLSearchParams(pub.pickSearch('2026-10-30',{...future,type:'floaters'}));assert.equal(search.get('type'),'floaters');assert.equal(search.get('min'),'80');assert.equal(search.get('favorites'),'1');
- const old=pick('old',-150,'2026-10-29');assert.equal(pub.publishedCategory(old),'high_probability_aggressive');assert.equal(units.propType(old),'lob');assert.equal(units.payoutHTML(-150,'lob').includes('1u wins'),true);
+ const old=pick('old',-150,'2026-10-29');assert.equal(pub.publishedCategory(old),'high_probability_aggressive');assert.equal(units.propType(old),'lob');assert.equal(units.payoutHTML(-150,'lob'),'');
 });

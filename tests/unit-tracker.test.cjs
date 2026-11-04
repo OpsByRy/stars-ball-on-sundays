@@ -2,15 +2,10 @@
 const test=require('node:test'),assert=require('node:assert/strict'),units=require('../assets/unit-tracker.js');
 const prop=(id,{category='value_safe',odds=-200,outcome='win',live=false,group='research'}={})=>({id,category,group,americanOdds:odds,date:'2026-10-28',playerId:'nba:'+id,market:'PTS',operator:'>=',line:10,result:{eventStatus:live?'live':'final',statisticalOutcome:live&&outcome==='win'?'reached':outcome,actual:outcome==='win'?15:8}});
 const approx=(x,y)=>assert.ok(Math.abs(x-y)<1e-9,`${x} != ${y}`);
-test('shared pick returns use category stakes and dollars, with personal singles separate from tracking',()=>{
- const settings={unitDollars:100};
- const layup=units.pickPayoutHTML(prop('a'),{settings});assert.match(layup,/2u wins \$100/);assert.match(layup,/\$300 Payout/);
- const lob=units.pickPayoutHTML(prop('b',{category:'high_probability_aggressive',odds:150}),{settings});assert.match(lob,/1u wins \$150/);assert.match(lob,/\$250 Payout/);
- const personal=prop('c',{group:'ry'}),original=JSON.stringify(personal),html=units.pickPayoutHTML(personal,{settings});assert.match(html,/Single return/);assert.match(html,/0.5u wins \$25/);assert.match(html,/\$75 Payout/);assert.equal(units.summarize([personal]).decided,0);assert.equal(JSON.stringify(personal),original);
- assert.equal(units.pickPayoutHTML(prop('bench',{category:'honorable_mention'}),{settings}),'');
- const custom=units.pickPayoutHTML(prop('d'),{settings:{unitDollars:25,sizes:{layup:3}}});assert.match(custom,/3u wins \$37.50/);assert.match(custom,/\$112.50 Payout/);
- const refund=units.pickPayoutHTML(prop('e',{outcome:'dnp'}),{settings});assert.match(refund,/2u refunded/);assert.match(refund,/\$200 Refund/);
- const fallback=units.pickPayoutHTML(prop('f'),{settings:{unitDollars:null}});assert.match(fallback,/2u wins 1u/);assert.match(fallback,/3u Payout/);assert.match(fallback,/Set your unit/);
+test('public cards omit personal stake and payout illustrations',()=>{
+ for(const row of [prop('a'),prop('b',{group:'ry'}),prop('c',{outcome:'dnp'})]){
+  assert.equal(units.pickPayoutHTML(row,{settings:{unitDollars:100}}),'');assert.equal(units.stakeHTML(row),'');
+ }
 });
 test('the October 26 test slate stays visible on its date but cannot enter cumulative P/L or win rates',()=>{
  const results=require('../assets/result-utils.js'),publication=require('../assets/publication.js');
@@ -24,7 +19,7 @@ test('the October 26 test slate stays visible on its date but cannot enter cumul
  const testTicket={id:'test-ticket',legs:[testLoss]},laterTicket={id:'later-ticket',legs:[laterWin]};
  assert.equal(results.parlaySummary([testTicket,laterTicket]).misses,0);assert.equal(results.parlaySummary([testTicket,laterTicket]).hits,1);
  assert.equal(units.summarize([testTicket,laterTicket],{kind:'parlays'}).netUnits,.5);
- assert.match(units.recordHTML([testLoss,testWin]),/Test-run net/);assert.match(units.recordHTML([testLoss,testWin]),/Excluded from cumulative/);
+ assert.match(units.recordHTML([testLoss,testWin]),/Test-run hypothetical flat-1u return/);assert.match(units.recordHTML([testLoss,testWin]),/Excluded from cumulative/);
  assert.match(results.testSlateNotice('2026-10-26'),/first day using the algorithm/);assert.match(results.testSlateNotice('2026-10-26'),/added October 29, 2026/);
  assert.equal(results.testSlateNotice('2026-10-27'),'');assert.equal(JSON.stringify(rows),saved);
 });
@@ -77,27 +72,16 @@ test('invalid preferences cannot become stakes or dollars; zero stake is an inte
  assert.equal(p.unitDollars,null);assert.equal(p.sizes.layup,2);assert.equal(p.sizes.lob,1);assert.equal(p.sizes.longshot,0);assert.equal(p.sizes.plus_money,1);
  assert.equal(units.units(-2.5),'−2.50u');assert.equal(units.dollars(25),'+$25.00');
 });
-test('parlay row return uses the displayed American price and visitor-sized stake',()=>{
- const settings={unitDollars:100},plus=units.payout(101,{settings});
- assert.equal(plus.available,true);assert.equal(plus.stakeUnits,1);approx(plus.profitUnits,1.01);approx(plus.payoutUnits,2.01);approx(plus.profitDollars,101);approx(plus.payoutDollars,201);
- const html=units.payoutHTML(101,{settings});assert.match(html,/1u wins \$101/);assert.match(html,/\$201 Payout/);assert.doesNotMatch(html,/1u · \$100/);
- const long=units.payout(400,{type:'longshot',settings});assert.equal(long.profitDollars,100);assert.equal(long.payoutDollars,125);assert.equal(long.stakeUnits,.25);
- const custom=units.payout(-200,{settings:{unitDollars:25,sizes:{plus_money:2}}});assert.equal(custom.profitDollars,25);assert.equal(custom.payoutDollars,75);
- const missing=units.payoutHTML(101,{settings:{unitDollars:null}});assert.match(missing,/1u wins 1.01u/);assert.match(missing,/2.01u Payout/);assert.match(missing,/Set your unit \$/);assert.doesNotMatch(missing,/wins \$/);
- const refund=units.payout(null,{voided:true,settings});assert.equal(refund.profitDollars,0);assert.equal(refund.payoutDollars,100);
- assert.match(units.payoutHTML(null,{voided:true,settings}),/1u refunded/);assert.equal(units.payout(null).available,false);
+test('legacy payout arithmetic remains available but public parlay payout UI is removed',()=>{
+ const p=units.payout(101,{settings:{unitDollars:100}});approx(p.profitDollars,101);approx(p.payoutDollars,201);
+ assert.equal(units.payoutHTML(101,{settings:{unitDollars:100}}),'');assert.equal(units.payoutHTML(null,{voided:true}),'');
 });
-
 
 test('new Daily tiers use separate stake keys while historical defaults and visitor overrides stay intact',()=>{
  const current=(id,odds,category='value_safe')=>({...prop(id,{odds,category}),date:'2026-10-30'});
  const free=current('free',-300),floater=current('floater',-200),lob=current('lob',120,'high_probability_aggressive');
  const settings={unitDollars:100,sizes:{layup:4,lob:2,free_throw:3}};
  assert.equal(units.propType(free),'free_throw');assert.equal(units.propType(floater),'floater');assert.equal(units.propType(lob),'daily_lob');
- assert.match(units.pickPayoutHTML(free,{settings}),/3u wins \$100/);
- assert.match(units.pickPayoutHTML(floater,{settings}),/1u wins \$50/);
- assert.match(units.pickPayoutHTML(lob,{settings}),/0.75u wins \$90/);
- assert.match(units.pickPayoutHTML(prop('old'),{settings}),/4u wins \$200/);
  assert.equal(units.summarize([free,floater,lob]).netUnits,2/3+.5+.9);
  const frozen=require('../assets/slate-policy.js').freezeDaily(free);
  assert.equal(units.propType({...frozen,americanOdds:150}),'free_throw');
@@ -108,7 +92,7 @@ test('Bench hypothetical research is opt-in, uses price tiers, and never recomme
  assert.equal(units.pickPayoutHTML(bench),'');assert.equal(units.stakeHTML(bench),'');
  assert.equal(units.summarize([bench]).decided,0);assert.equal(units.recordHTML([bench]),'');
  const tracked=units.summarize([bench],{bench:true});assert.equal(tracked.decided,1);assert.equal(tracked.netUnits,1.125);
- const html=units.recordHTML([bench],{bench:true});assert.match(html,/Bench hypothetical net/);assert.match(html,/excluded from official pick records/);assert.match(html,/No stake recommendation/);
+ const html=units.recordHTML([bench],{bench:true});assert.match(html,/Bench hypothetical flat-1u return/);assert.match(html,/excluded from official pick records/);assert.match(html,/No stake recommendation/);
 });
 test('new parlay stakes follow original tier after voids and omit model targets entirely',()=>{
  const leg=(id,odds,outcome='win')=>({...prop(id,{odds,outcome}),date:'2026-10-30'});
@@ -129,7 +113,7 @@ test('new visitors start at $10 per unit while saved dollar and units-only choic
   assert.deepEqual(units.preferences(JSON.parse(JSON.stringify(next))),next);
  }
  const payout=units.payout(100);assert.equal(payout.profitDollars,10);assert.equal(payout.payoutDollars,20);
- assert.match(units.recordHTML([prop('default')]),/Set your units · \$10/);
+ assert.doesNotMatch(units.recordHTML([prop('default')]),/Set your units|\$/);
 });
 
 test('all basketball panel and seam button palettes meet normal-text contrast',()=>{

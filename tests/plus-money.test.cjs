@@ -71,7 +71,7 @@ test('parlay hashes select the correct internal tab while preserving legacy filt
 test('parlay game summaries deduplicate exact date/event identities and keep chronological tip order',()=>{
  const first={...leg('a'),canonicalEventId:'nba:0000000001',startTime:'2026-10-29T23:00:00Z'},later={...leg('b'),canonicalEventId:'nba:0000000002',startTime:'2026-10-30T00:00:00Z'};
  assert.deepEqual(pm.ticketGames(ticket('games',{legs:[later,first,{...first,id:'another-player',player:'Other'}]})).map(p=>p.canonicalEventId),['nba:0000000001','nba:0000000002']);
- const html=pm.ticketRow(ticket('games',{legs:[first,later]}),0);assert.match(html,/<summary><span class="pm-row-chevron"/);assert.match(html,/class="pm-row-games"/);assert.equal((html.match(/data-compact-matchup=/g)||[]).length,2);assert.match(html,/data-parlay-payout/);
+ const html=pm.ticketRow(ticket('games',{legs:[first,later]}),0);assert.match(html,/<summary><span class="pm-row-chevron"/);assert.match(html,/class="pm-row-games"/);assert.equal((html.match(/data-compact-matchup=/g)||[]).length,2);assert.doesNotMatch(html,/data-parlay-payout/);
 });
 test('every dropdown starts with leg-specific compatibility even without useful saved reasons; pricing follows the legs',()=>{
  const legs=[{...leg('Allen'),player:'Jarrett Allen',line:10},{...leg('Morant'),player:'Ja Morant',market:'AST',line:6}];

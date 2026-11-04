@@ -1,0 +1,20 @@
+{
+  "context": {
+    "dataKind": "synthetic",
+    "binding": {"recordId":"synthetic-pick","editionVersion":"aaaaaaaaaaaaaaaa","slateDate":"2026-11-01","eventId":"nba:9999999999","playerId":"nba:9999999","book":"draftkings","market":"AST","operator":">","line":3.5,"period":"full_game","product":"sportsbook","overtime":null,"settlementRules":null,"jurisdiction":null,"startTime":"2026-11-02T00:00:00Z"},
+    "originalSelection": {"americanOdds":140,"capturedAt":"2026-11-01T19:50:00Z","selectedAt":"2026-11-01T19:55:00Z"},
+    "publication": {"kind":"actual_first_row_publication","at":"2026-11-01T20:00:00Z"},
+    "eventStatus":"scheduled",
+    "participation":"unverified"
+  },
+  "record": {
+    "schemaVersion":"sbos-public-pick-designation-1",
+    "dataKind":"synthetic",
+    "binding": {"recordId":"synthetic-pick","editionVersion":"aaaaaaaaaaaaaaaa","slateDate":"2026-11-01","eventId":"nba:9999999999","playerId":"nba:9999999","book":"draftkings","market":"AST","operator":">","line":3.5,"period":"full_game","product":"sportsbook","overtime":null,"settlementRules":null,"jurisdiction":null,"startTime":"2026-11-02T00:00:00Z"},
+    "asOf":"2026-11-01T21:05:00Z",
+    "state":"current",
+    "designation":"questionable",
+    "source":{"name":"Synthetic status source","effectiveAt":"2026-11-01T21:00:00Z","reportedAt":"2026-11-01T21:01:00Z","observedAt":"2026-11-01T21:02:00Z","validUntil":"2026-11-01T23:00:00Z"},
+    "lastVerified":null
+  }
+}

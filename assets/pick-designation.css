@@ -1,0 +1,17 @@
+/* Scoped, inactive until a separately reviewed consumer loads this renderer. */
+.pick-designation{font:inherit;color:inherit;min-width:0}
+.designation-compact{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
+.designation-status,.designation-price{display:flex;flex-direction:column;gap:.25rem;min-width:0}
+.designation-status small,.designation-price small{font-size:.75rem;line-height:1.4}
+.designation-tag{display:inline-block;align-self:flex-start;border:1px solid currentColor;border-radius:.3rem;padding:.2rem .4rem;font-size:.75rem;letter-spacing:.025em}
+.designation-historical{font-size:.6875rem;letter-spacing:0}
+.designation-warning{color:#f4cd73;background:#30280f}
+.designation-danger,.designation-price-void{color:#ffb4b4;background:#4d1616}
+.designation-price-void{padding:.15rem .35rem;border-radius:.25rem}
+.designation-details{margin-top:.65rem;font-size:.8125rem;line-height:1.5}
+.designation-details summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;text-decoration:underline;text-underline-offset:.2em}
+.designation-details summary:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.designation-details dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.3rem .7rem;margin:.65rem 0}
+.designation-details dt{font-weight:700}.designation-details dd{margin:0;overflow-wrap:anywhere}
+.designation-details p{overflow-wrap:anywhere}
+@media(max-width:400px){.designation-compact{gap:.4rem}.designation-details dl{grid-template-columns:1fr;gap:.15rem}.designation-details dd{margin-bottom:.4rem}}

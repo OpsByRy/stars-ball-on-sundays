@@ -77,15 +77,44 @@
     const ids=(ticket.legs||[]).map(r=>r.id).sort(),quote=records.find(r=>r.ticketId===ticket.id&&JSON.stringify(r.legIds)===JSON.stringify(ids));
     return {...ticket,priceKind:'posted',americanOdds:quote?.americanOdds??null};
   }
+  // Public accounting is always flat 1u, independent of stored visitor settings.
+  // Never manufacture a full-ticket quote by multiplying leg prices.
+  function publicSummary(rows,{kind='props',personal=false,scope,bench=false}={}){
+    const eligible=results.trackingRows(rows,{scope}).filter(row=>row.priceKind!=='model_target'&&row.recordKind!=='selection_snapshot'&&(kind==='parlays'||row.group==='research'&&(bench?row.category==='honorable_mention':['value_safe','high_probability_aggressive'].includes(row.category))));
+    const unique=[...new Map(eligible.map(row=>[row.id||JSON.stringify(row),row])).values()];
+    const s={total:unique.length,wins:0,losses:0,pushes:0,voids:0,pending:0,unpriced:0,priced:0,netUnits:0,roi:null};
+    for(const row of unique){
+      let outcome,price;
+      if(kind==='parlays'){
+        const legs=row.legs||[];
+        if(!legs.length||legs.some(leg=>!results.isVoidedLeg(leg)&&leg.result?.eventStatus!=='final')){s.pending++;continue;}
+        outcome=results.parlayOutcome(row).outcome;
+        price=row.priceKind==='posted'&&!results.parlayLegs(row).voided.length?decimal(row.americanOdds):null;
+      }else{
+        const r=row.result||{};
+        outcome=['out','dnp','canceled'].includes(r.statisticalOutcome)?'void':r.eventStatus==='final'?({win:'win',loss:'loss',push:'push'}[r.statisticalOutcome]||'pending'):'pending';
+        price=decimal(policy.originalDailyOdds(row));
+      }
+      if(outcome==='void'||outcome==='excluded'){s.voids++;continue;}
+      if(outcome==='push'){s.pushes++;continue;}
+      if(!['win','loss'].includes(outcome)){s.pending++;continue;}
+      s[outcome==='win'?'wins':'losses']++;
+      // Exclude both unpriced wins and losses, so missing prices cannot bias ROI.
+      if(price===null){s.unpriced++;continue;}
+      s.priced++;s.netUnits+=outcome==='win'?price-1:-1;
+    }
+    if(Math.abs(s.netUnits)<1e-10)s.netUnits=0;
+    s.roi=s.priced?s.netUnits/s.priced:null;return s;
+  }
   function contents(rows,options){
     const testSlate=rows.length>0&&rows.every(results.isTestSlate)&&options.scope!=='cumulative';
     if(options.personal)rows=rows.map(t=>firstPersonalPrice(t));
-    const s=summarize(rows,{...options,settings:prefs}),policy=Object.entries(s.stakes).map(([type,stake])=>size(stake)+' / '+titles[type].replace(/parlays$/,'parlay')).join(' · ');
-    return '<div class="unit-record-top"><span class="unit-net '+(s.netUnits>0?'positive':s.netUnits<0?'negative':'')+'">'+(testSlate?'Test-run net ':options.bench?'Bench hypothetical net ':s.unpriced?'Partial net ':s.indicative?'Estimated net ':'Tracked net ')+'<strong>'+units(s.netUnits)+'</strong>'+(s.netDollars===null?'':'<span> · '+dollars(s.netDollars)+'</span>')+'</span><button type="button" data-unit-settings-open>'+('Set your units'+(prefs.unitDollars===null?'':' · $'+Number(prefs.unitDollars.toFixed(2)).toLocaleString('en-US')))+'</button></div><p class="unit-record-note">'+esc(policy)+(s.pending?' · '+size(s.openUnits)+' pending':'')+(s.liveHits?' · includes '+s.liveHits+' live '+(s.liveHits===1?'hit':'hits'):'')+(s.liveMisses?' · includes '+s.liveMisses+' live '+(s.liveMisses===1?'miss':'misses'):'')+((s.liveHits||s.liveMisses)?' · live results remain subject to stat corrections':'')+(s.review?' · '+s.review+' ticket'+(s.review===1?'':'s')+' awaiting settlement review':'')+(s.unpriced?' · '+s.unpriced+' winning '+(s.unpriced===1?'return':'returns')+' excluded: price unavailable':'')+'.</p><p class="unit-record-basis">'+(options.bench?'Hypothetical Bench research only; excluded from official pick records. No stake recommendation. ':testSlate?'Hypothetical test-run return at your current stake settings. Excluded from cumulative win-rate and unit P/L totals. ':s.indicative?'Combined estimates use saved leg prices; offered SGP payouts can differ. ':options.personal?'Calculated at the first saved full-ticket quote. ':'Calculated at original saved pick prices. ')+'Statistical P/L; no bets or account balances recorded.</p>';
+    const s=publicSummary(rows,options),label=testSlate?'Test-run hypothetical':options.bench?'Bench hypothetical':'Hypothetical';
+    return '<div class="unit-record-top"><span class="unit-net '+(s.netUnits>0?'positive':s.netUnits<0?'negative':'')+'">'+label+' flat-1u return <strong>'+(s.priced?units(s.netUnits):'Unavailable')+'</strong></span><span>'+(s.roi===null?'ROI unavailable':(s.roi*100).toFixed(1)+'% ROI')+'</span></div><p class="unit-record-note">'+s.priced+' priced, finalized decisions · 1u risked per pick or ticket · original posted odds. '+s.unpriced+' finalized decisions excluded from return: original full price unavailable or void-adjusted ticket price unverified.</p><p class="unit-record-basis">Wins and losses only in the ROI stake denominator; pushes and voids return the stake and are excluded. Pending and live outcomes do not enter returns. '+(options.bench?'Bench research is excluded from official pick records. No stake recommendation. ':testSlate?'Excluded from cumulative records. ':'')+'Hypothetical performance, not actual bets, personal profit or an account balance. Stat corrections can change results. Personal stakes and dollar tracking belong in Bankroll Breakdown.</p>';
   }
   function recordHTML(rows,options={}){
     rows=rows.filter(row=>row.recordKind!=='selection_snapshot');
-    if(!rows.length||options.kind!=='parlays'&&!rows.some(options.bench?benchType:propType))return '';
+    if(!rows.length||options.kind!=='parlays'&&!rows.some(row=>row.group==='research'&&(options.bench?row.category==='honorable_mention':['value_safe','high_probability_aggressive'].includes(row.category))))return '';
     const token=String(++serial);summaries.set(token,{rows,options});
     return '<div class="unit-record" data-unit-summary="'+token+'" aria-live="polite">'+contents(rows,options)+'</div>';
   }
@@ -95,43 +124,19 @@
     for(const node of document.querySelectorAll('[data-parlay-payout]'))node.innerHTML=payoutContents(Number(node.dataset.parlayOdds),node.dataset.parlayPayoutType,node.dataset.parlayRefund==='true');
   }
   function stakeText(type){const stake=prefs.sizes[type];return finite(stake)?size(stake)+(prefs.unitDollars===null?'':' · $'+Number((stake*prefs.unitDollars).toFixed(2)).toLocaleString('en-US')):'';}
-  function stakeHTML(row,{type=propType(row)}={}){return type?'<small class="row-unit-size" data-pick-unit-type="'+esc(type)+'">'+stakeText(type)+'</small>':'';}
-  // A personal leg's single-bet illustration does not create a tracked wager.
-  function pickPayoutHTML(row,{type=propType(row)||(row.group==='ry'?'personal':null),settings=prefs}={}){
-    if(!type)return '';
-    return (row.group==='ry'?'<small class="pick-return-kind">Single return</small>':'')+payoutHTML(row.americanOdds,{type,voided:results.isVoidedLeg(row),settings});
-  }
+  function stakeHTML(){return '';}
+  function pickPayoutHTML(){return '';}
   const amount=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:Number.isInteger(Math.round(v*100)/100)?0:2,maximumFractionDigits:2}).format(v);
   function payoutContents(americanOdds,type,voided,settings=prefs){
     const p=payout(americanOdds,{type,settings,voided});if(!p.available)return '<small>Payout unavailable</small>';
     const stake=size(p.stakeUnits),profit=p.profitDollars===null?size(p.profitUnits):amount(p.profitDollars),total=p.payoutDollars===null?size(p.payoutUnits):amount(p.payoutDollars);
     return '<small class="pm-win-amount">'+esc(stake)+(voided?' refunded': ' wins '+esc(profit))+'</small><small class="pm-total-payout">'+esc(total)+' '+(voided?'Refund':'Payout')+'</small>'+(p.profitDollars===null?'<button type="button" class="pm-set-unit" data-unit-settings-open>Set your unit $</button>':'');
   }
-  function payoutHTML(americanOdds,{type='plus_money',voided=false,settings=prefs}={}){
-    return '<span class="pm-payout" data-parlay-payout data-parlay-odds="'+(finite(americanOdds)?americanOdds:'')+'" data-parlay-payout-type="'+esc(type)+'" data-parlay-refund="'+voided+'">'+payoutContents(americanOdds,type,voided,settings)+'</span>';
-  }
-  function dialogHTML(){
-    return '<dialog id="unit-settings" class="unit-settings" aria-labelledby="unit-settings-title"><form method="dialog"><div class="unit-settings-title"><h2 id="unit-settings-title">Your units</h2><button type="submit" formnovalidate aria-label="Close unit settings">×</button></div><p>Choose your dollar value per unit and the stake sizes used in the trackers. These settings apply to past and upcoming selections in each view.</p><label class="unit-dollar-label">1 unit = $<input type="number" inputmode="decimal" min="0.01" max="1000000" step="0.01" data-unit-dollars placeholder="Enter an amount"></label><fieldset><legend>Stake size in units</legend>'+Object.entries(titles).map(([key,title])=>'<label>'+esc(title)+'<span><input type="number" inputmode="decimal" min="0" max="10000" step="any" data-unit-size="'+key+'" aria-label="'+esc(title)+' stake in units">u</span></label>').join('')+'</fieldset><p class="unit-settings-status" role="status">Saved on this device. No account required.</p><div class="unit-settings-actions"><button type="button" data-unit-reset>Reset stake sizes</button><button type="submit" class="unit-done">Done</button></div></form></dialog>';
-  }
-  function fillDialog(){const dialog=document.getElementById('unit-settings');dialog.querySelector('[data-unit-dollars]').value=prefs.unitDollars??'';for(const input of dialog.querySelectorAll('[data-unit-size]'))input.value=prefs.sizes[input.dataset.unitSize];}
-  function save(){
-    try{localStorage.setItem(STORAGE,JSON.stringify(prefs));}catch{document.querySelector('.unit-settings-status').textContent='Settings apply for this visit; this browser is not saving them.';}
-    refresh();
-  }
+  function payoutHTML(){return '';}
   function init(){
     if(initialized)return;initialized=true;
-    try{prefs=preferences(JSON.parse(localStorage.getItem(STORAGE)||'null'));}catch{}
-    document.body.insertAdjacentHTML('beforeend',dialogHTML());refresh();
     const script=document.querySelector('script[data-unit-tracker]');
     if(script)fetch(new URL('../data/personal-tracking-prices.json',script.src),{credentials:'omit',cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Price record unavailable');return r.json();}).then(body=>{if(body.schemaVersion!=='public-personal-tracking-prices-1'||!Array.isArray(body.tickets))return;personalPrices=body.tickets;refresh();}).catch(()=>{});
-    document.addEventListener('click',event=>{if(event.target.closest('[data-unit-settings-open]')){event.preventDefault();event.stopPropagation();fillDialog();document.getElementById('unit-settings').showModal();}if(event.target.closest('[data-unit-reset]')){prefs.sizes={...defaults};fillDialog();save();}});
-    document.getElementById('unit-settings').addEventListener('input',event=>{
-      const input=event.target;if(!input.matches('[data-unit-dollars],[data-unit-size]'))return;
-      const value=input.value===''?null:Number(input.value),isDollar=input.hasAttribute('data-unit-dollars'),valid=isDollar?value===null||finite(value)&&value>0&&value<=1000000:finite(value)&&value>=0&&value<=10000;
-      input.setAttribute('aria-invalid',String(!valid));if(!valid)return;
-      if(isDollar)prefs.unitDollars=value;else prefs.sizes[input.dataset.unitSize]=value;save();
-    });
-    window.addEventListener('storage',event=>{if(event.key===STORAGE){try{prefs=preferences(JSON.parse(event.newValue));refresh();}catch{}}});
   }
-  return {defaults,preferences,summarize,recordHTML,stakeHTML,pickPayoutHTML,payout,payoutHTML,refresh,init,decimal,ticketDecimal,propType,benchType,ticketType,units,dollars,firstPersonalPrice};
+  return {publicSummary,defaults,preferences,summarize,recordHTML,stakeHTML,pickPayoutHTML,payout,payoutHTML,refresh,init,decimal,ticketDecimal,propType,benchType,ticketType,units,dollars,firstPersonalPrice};
 });

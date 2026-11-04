@@ -73,7 +73,7 @@ test('live misses and corrected results keep original ticket prices, separate wa
  row.result.actual=3;assert.equal(results.parlayOutcome(results.personalParlays(body)[0]).outcome,'pending');
  row.result={eventStatus:'final',statisticalOutcome:'dnp'};html=publication.personalSlipsHTML(body);assert.match(html,/Revised full-ticket quote required after voids/);assert.match(html,/>\+630<\/strong>/);
  for(const r of body.props.filter(r=>r.group==='ry'))r.result={eventStatus:'final',statisticalOutcome:'dnp'};
- html=publication.personalSlipsHTML(body);assert.match(html,/Fully voided/);assert.match(html,/Refund/);assert.equal(results.parlayOutcome(results.personalParlays(body)[0]).outcome,'void');
+ html=publication.personalSlipsHTML(body);assert.match(html,/Fully voided/);assert.doesNotMatch(html,/data-parlay-payout/);assert.equal(results.parlayOutcome(results.personalParlays(body)[0]).outcome,'void');
 });
 
 test('every personal entry point loads the shared tab controller/card styles and all immutable source files stay out of this UI contract',()=>{

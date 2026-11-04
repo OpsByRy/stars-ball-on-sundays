@@ -1,0 +1,100 @@
+{
+  "notice": "STRICTLY SYNTHETIC fixture. Invented player, IDs, prices and times; never an accepted public history feed.",
+  "context": {
+    "dataKind": "synthetic",
+    "recordType": "pick",
+    "binding": {
+      "recordId": "synthetic-pick-1",
+      "editionVersion": "aaaaaaaaaaaaaaaa",
+      "slateDate": "2026-10-31",
+      "eventId": "nba:9999999999",
+      "playerId": "nba:9999999",
+      "book": "fanduel",
+      "market": "PTS",
+      "operator": ">=",
+      "line": 20,
+      "period": "full_game",
+      "product": "sportsbook",
+      "overtime": true,
+      "settlementRules": "Synthetic full-game counting-stat test rules",
+      "jurisdiction": "synthetic-test-region",
+      "startTime": "2026-10-31T23:00:00Z"
+    },
+    "originalSelection": {
+      "americanOdds": -150,
+      "capturedAt": "2026-10-31T14:00:00Z",
+      "selectedAt": null
+    },
+    "publication": {
+      "kind": "actual_first_row_publication",
+      "at": "2026-10-31T14:05:00Z"
+    }
+  },
+  "record": {
+    "schemaVersion": "sbos-public-odds-timeline-1",
+    "dataKind": "synthetic",
+    "status": "available",
+    "asOf": "2026-10-31T22:00:00Z",
+    "binding": {
+      "recordId": "synthetic-pick-1",
+      "editionVersion": "aaaaaaaaaaaaaaaa",
+      "slateDate": "2026-10-31",
+      "eventId": "nba:9999999999",
+      "playerId": "nba:9999999",
+      "book": "fanduel",
+      "market": "PTS",
+      "operator": ">=",
+      "line": 20,
+      "period": "full_game",
+      "product": "sportsbook",
+      "overtime": true,
+      "settlementRules": "Synthetic full-game counting-stat test rules",
+      "jurisdiction": "synthetic-test-region",
+      "startTime": "2026-10-31T23:00:00Z"
+    },
+    "events": [
+      {
+        "id": "synthetic-first",
+        "capturedAt": "2026-10-31T13:30:00Z",
+        "americanOdds": -180,
+        "status": "usable",
+        "retractedAt": null
+      },
+      {
+        "id": "synthetic-shortest",
+        "capturedAt": "2026-10-31T13:55:00Z",
+        "americanOdds": -190,
+        "status": "usable",
+        "retractedAt": null
+      },
+      {
+        "id": "synthetic-selection-quote",
+        "capturedAt": "2026-10-31T14:00:00Z",
+        "americanOdds": -150,
+        "status": "usable",
+        "retractedAt": null
+      },
+      {
+        "id": "synthetic-longest",
+        "capturedAt": "2026-10-31T16:15:00Z",
+        "americanOdds": -110,
+        "status": "usable",
+        "retractedAt": null
+      },
+      {
+        "id": "synthetic-latest",
+        "capturedAt": "2026-10-31T21:50:00Z",
+        "americanOdds": -120,
+        "status": "usable",
+        "retractedAt": null
+      },
+      {
+        "id": "synthetic-missing",
+        "capturedAt": "2026-10-31T22:00:00Z",
+        "americanOdds": null,
+        "status": "missing",
+        "retractedAt": null
+      }
+    ]
+  }
+}

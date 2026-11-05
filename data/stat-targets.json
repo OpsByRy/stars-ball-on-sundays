@@ -6248,6 +6248,78 @@
       "espnEventId": "401909922",
       "espnAthleteId": "4351851",
       "expectedTeam": "PHI"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600187",
+      "playerId": "nba:1641710",
+      "espnEventId": "401909936",
+      "espnAthleteId": "4712849",
+      "expectedTeam": "ORL"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600188",
+      "playerId": "nba:1628389",
+      "espnEventId": "401909937",
+      "espnAthleteId": "4066261",
+      "expectedTeam": "MIA"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600188",
+      "playerId": "nba:1630558",
+      "espnEventId": "401909937",
+      "espnAthleteId": "4278053",
+      "expectedTeam": "MIA"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600188",
+      "playerId": "nba:202691",
+      "espnEventId": "401909937",
+      "espnAthleteId": "6475",
+      "expectedTeam": "MIA"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600187",
+      "playerId": "nba:1628970",
+      "espnEventId": "401909936",
+      "espnAthleteId": "4066383",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600187",
+      "playerId": "nba:1626164",
+      "espnEventId": "401909936",
+      "espnAthleteId": "3136193",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600188",
+      "playerId": "nba:1626171",
+      "espnEventId": "401909937",
+      "espnAthleteId": "3064482",
+      "expectedTeam": "MIA"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600187",
+      "playerId": "nba:1628415",
+      "espnEventId": "401909936",
+      "espnAthleteId": "3155526",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-05",
+      "eventId": "nba:0022600188",
+      "playerId": "nba:1641764",
+      "espnEventId": "401909937",
+      "espnAthleteId": "4709138",
+      "expectedTeam": "GSW"
     }
   ]
 }

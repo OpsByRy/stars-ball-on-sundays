@@ -3,6 +3,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      preview_artifact:
+        description: Deploy sealed output to a preview only
+        type: boolean
+        default: false
   workflow_run:
     workflows: [Refresh public results]
     types: [completed]
@@ -15,6 +20,9 @@ concurrency:
 jobs:
   build:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
+    outputs:
+      source_sha: ${{ steps.seal.outputs.source_sha }}
+      manifest_sha: ${{ steps.seal.outputs.manifest_sha }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -49,14 +57,124 @@ jobs:
       - run: python -m unittest discover -s tests
       - run: node --test tests/*.test.cjs
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - run: git diff --exit-code
       - run: python scripts/build_hosts.py --publish
+      - run: git diff --exit-code
+      - name: Seal the complete validated outputs
+        id: seal
+        run: |
+          SOURCE_SHA=$(git rev-parse HEAD)
+          python scripts/release_artifact.py seal --output .release/sealed --source-sha "$SOURCE_SHA" > .release/seal.json
+          python - <<'PYTHON'
+          import json, os
+          receipt = json.load(open('.release/seal.json'))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('source_sha=' + receipt['sourceSHA'] + '\n')
+              output.write('manifest_sha=' + receipt['manifestSHA256'] + '\n')
+          PYTHON
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: sbos-sealed-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .release/sealed
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+  cloudflare:
+    needs: build
+    if: vars.SBOS_ARTIFACT_DEPLOY == 'enabled' || inputs.preview_artifact == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ needs.build.outputs.source_sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: sbos-sealed-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .release/sealed
+      - name: Verify every file against the trusted build digest
+        env:
+          SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+          MANIFEST_SHA: ${{ needs.build.outputs.manifest_sha }}
+        run: python scripts/release_artifact.py verify --artifact .release/sealed --source-sha "$SOURCE_SHA" --manifest-sha "$MANIFEST_SHA"
+      - name: Require the explicitly provisioned deployment credential
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.SBOS_CLOUDFLARE_PAGES_TOKEN }}
+        run: test -n "$CLOUDFLARE_API_TOKEN"
+      - name: Refuse competing builds or an obsolete production source
+        if: inputs.preview_artifact != true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.SBOS_CLOUDFLARE_PAGES_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+        run: |
+          test "$(gh api repos/OpsByRy/stars-ball-on-sundays/commits/main --jq .sha)" = "$SOURCE_SHA"
+          python - <<'PYTHON'
+          import json, os, urllib.request
+          url = 'https://api.cloudflare.com/client/v4/accounts/fbdf495767bb144edfcbb7f1609e2629/pages/projects/sbos-public'
+          request = urllib.request.Request(url, headers={'Authorization': 'Bearer ' + os.environ['CLOUDFLARE_API_TOKEN']})
+          with urllib.request.urlopen(request, timeout=30) as response:
+              body = json.load(response)
+          if not body.get('success'):
+              raise SystemExit('Could not verify Cloudflare project state')
+          project = body['result']
+          config = project['source']['config']
+          if config.get('production_deployments_enabled') is not False:
+              raise SystemExit('Disable duplicate Cloudflare Git production builds before artifact cutover')
+          if project['name'] != 'sbos-public' or 'starsballonsundays.com' not in project['domains']:
+              raise SystemExit('Production destination differs from the reviewed project')
+          PYTHON
+      - name: Upload the verified bytes without a build
+        id: upload
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        with:
+          workingDirectory: .release/sealed
+          wranglerVersion: '4.157.0'
+          apiToken: ${{ secrets.SBOS_CLOUDFLARE_PAGES_TOKEN }}
+          accountId: fbdf495767bb144edfcbb7f1609e2629
+          command: pages deploy dist-cloudflare --project-name=sbos-public --branch=${{ inputs.preview_artifact == true && 'artifact-preview' || 'main' }} --commit-hash=${{ needs.build.outputs.source_sha }} --commit-dirty=false
+      - name: Verify the immutable preview deployment
+        if: inputs.preview_artifact == true
+        env:
+          PREVIEW_URL: ${{ steps.upload.outputs.deployment-url }}
+        run: python scripts/verify_cloudflare_release.py --origin "$PREVIEW_URL" --artifact .release/sealed/dist-cloudflare --attempts 6
+  handoff:
+    needs: [build, cloudflare]
+    if: always() && needs.build.result == 'success' && inputs.preview_artifact != true && (needs.cloudflare.result == 'success' || (vars.SBOS_ARTIFACT_DEPLOY != 'enabled' && needs.cloudflare.result == 'skipped'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ needs.build.outputs.source_sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: sbos-sealed-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .release/sealed
+      - name: Verify the sealed GitHub handoff and Cloudflare bytes
+        env:
+          SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+          MANIFEST_SHA: ${{ needs.build.outputs.manifest_sha }}
+        run: python scripts/release_artifact.py verify --artifact .release/sealed --source-sha "$SOURCE_SHA" --manifest-sha "$MANIFEST_SHA"
       - name: Require the exact healthy Cloudflare release before GitHub handoffs
-        run: python scripts/verify_cloudflare_release.py
+        run: python scripts/verify_cloudflare_release.py --artifact .release/sealed/dist-cloudflare
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
-          path: dist-github
+          path: .release/sealed/dist-github
+
   deploy:
-    needs: build
+    needs: handoff
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

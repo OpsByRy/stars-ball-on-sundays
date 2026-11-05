@@ -37,17 +37,23 @@ def main():
     root=Path(__file__).resolve().parents[1]
     if json.loads((root/'hosting-policy.json').read_text())['githubMode']!='redirect':
         print('GitHub remains the full site; domain gate is inactive.');return
-    parser=argparse.ArgumentParser();parser.add_argument('--attempts',type=int,default=120);parser.add_argument('--interval',type=int,default=10);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--attempts',type=int,default=120);parser.add_argument('--interval',type=int,default=10);parser.add_argument('--origin',default=ORIGIN);parser.add_argument('--artifact',type=Path);args=parser.parse_args()
+    if args.origin != ORIGIN and not re.fullmatch(r'https://[0-9a-f]{8}\.sbos-public\.pages\.dev',args.origin):
+        raise ValueError('Unapproved verification origin')
+    local_receipt=json.loads((args.artifact/'_sbos-release.json').read_text()) if args.artifact else None
     expected=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
     def fetch(path):
-        request=urllib.request.Request(ORIGIN+path,headers={'Cache-Control':'no-cache','User-Agent':'SBOS-public-release-verification'})
+        request=urllib.request.Request(args.origin+path,headers={'Cache-Control':'no-cache','User-Agent':'SBOS-public-release-verification'})
         with urllib.request.urlopen(request,timeout=20) as response:
             if response.status!=200:raise ValueError('Unhealthy Cloudflare response')
-            if not response.url.startswith(ORIGIN+'/'):raise ValueError('Unexpected host redirect')
+            if not response.url.startswith(args.origin+'/'):raise ValueError('Unexpected host redirect')
             return response.read()
     for attempt in range(args.attempts):
         try:
-            count=verify(json.loads(fetch('/_sbos-release.json')),expected,fetch)
+            receipt=json.loads(fetch('/_sbos-release.json'))
+            if local_receipt is not None and receipt != local_receipt:
+                raise ValueError('Hosted receipt differs from the sealed artifact')
+            count=verify(receipt,expected,fetch)
             print(f'Cloudflare exact source {expected}: {count} public page/index checks passed.');return
         except Exception as error:
             if attempt+1==args.attempts:raise

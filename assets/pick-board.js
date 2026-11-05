@@ -94,9 +94,9 @@
     if(!/^\d+$/.test(source.eventId)||!/^\d+$/.test(source.athleteId)||String(body.header?.id)!==source.eventId||body.header?.competitions?.length!==1)throw Error('Box score identity mismatch');
     const status=body.header.competitions[0].status?.type||{},name=String(status.name||'');
     const eventStatus=/CANCEL/i.test(name)?'canceled':/POSTPON/i.test(name)?'postponed':status.completed?'final':status.state==='in'?'live':'scheduled';
-    const matches=[];
+    const matches=[],teamCode=value=>({NO:'NOP',NY:'NYK',GS:'GSW',SA:'SAS',UTAH:'UTA',WSH:'WAS'}[value]||value);
     for(const team of body.boxscore?.players||[]){
-      if(source.expectedTeam&&team.team?.displayName!==source.expectedTeam)continue;
+      if(source.expectedTeam&&team.team?.displayName!==source.expectedTeam&&teamCode(team.team?.abbreviation)!==teamCode(source.expectedTeam))continue;
       for(const group of team.statistics||[])for(const athlete of group.athletes||[])if(String(athlete.athlete?.id)===source.athleteId)matches.push({athlete,raw:Object.fromEntries((group.labels||[]).map((label,i)=>[label,athlete.stats?.[i]]))});
     }
     const stats={};

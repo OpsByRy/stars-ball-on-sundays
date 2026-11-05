@@ -63,6 +63,7 @@ jobs:
       - name: Seal the complete validated outputs
         id: seal
         run: |
+          mkdir -p .release
           SOURCE_SHA=$(git rev-parse HEAD)
           python scripts/release_artifact.py seal --output .release/sealed --source-sha "$SOURCE_SHA" > .release/seal.json
           python - <<'PYTHON'

@@ -1,0 +1,13 @@
+.sgpr-section{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--line);color:var(--text);font-size:13px;line-height:1.6}
+.sgpr-heading{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem}
+.sgpr-heading h2{margin:0}.sgpr-heading>span,.sgpr-note{color:var(--muted)}
+.sgpr-record{padding:1rem;border:1px solid var(--line);border-radius:.7rem;background:var(--surface)}
+.sgpr-card{margin:.8rem 0;border:1px solid var(--line);border-radius:.8rem;background:var(--surface);overflow:hidden}
+.sgpr-card>summary{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem;cursor:pointer;min-height:3rem}
+.sgpr-card>summary small,.sgpr-card li span,.sgpr-card li small{display:block}
+.sgpr-card>summary small,.sgpr-card li small{color:var(--muted);margin-top:.25rem}
+.sgpr-card>p,.sgpr-card>ol{margin:1rem;overflow-wrap:anywhere}.sgpr-card li{margin:.8rem 0;padding-left:.2rem}
+.sgpr-state{text-transform:capitalize;white-space:nowrap;color:var(--muted)}
+.sgpr-warning,.sgpr-benchmark{padding:.8rem;border:1px solid var(--line);border-radius:.5rem}
+.sgpr-card summary:focus-visible{outline:3px solid var(--focus-ring);outline-offset:-4px}
+@media(max-width:480px){.sgpr-card>summary{align-items:flex-start}.sgpr-heading{display:block}.sgpr-heading>span{display:block;margin-top:.3rem}.sgpr-card>p,.sgpr-card>ol{margin:.8rem}}

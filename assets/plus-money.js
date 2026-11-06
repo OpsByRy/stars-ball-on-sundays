@@ -7,6 +7,7 @@
   const routes=typeof window==='undefined'?require('./routes.js'):window.SBOS_ROUTES;
   const policy=typeof window==='undefined'?require('./slate-policy.js'):window.SBOS_SLATE_POLICY;
   const units=typeof window==='undefined'?require('./unit-tracker.js'):window.SBOS_UNITS;
+  const sgpResearch=typeof window==='undefined'?null:window.SBOS_SGP_RESEARCH;
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const finite=value=>typeof value==='number'&&Number.isFinite(value);
   const odds=value=>finite(value)?(value>0?'+':'')+value:'—';
@@ -214,9 +215,34 @@
     const base=new URL('../',script.src),dataRoot=new URL('data/plus-money/',base),$=id=>document.getElementById(id);
     const target=$('parlay-list'),dateSelect=$('parlay-date'),context=$('parlay-context');
     let editions=[],body=null,serial=0,state=readState(location.search,location.hash);const opened=new Set();
+    let researchBody=null,researchRows=[],researchMessage=null,researchHTML='';const researchOpened=new Set();
     const tracker=window.SBOS_PICK_BOARD.watchResults({base,onResults:()=>render()});
     $('parlay-book-preference').innerHTML=prices.controlHTML();
     async function json(url,immutable=false){const r=await fetch(url,{cache:immutable?'force-cache':'no-store',credentials:'omit'});if(!r.ok)throw Error('Publication unavailable');return r.json();}
+    function renderResearch(){
+      const panel=$('sgp-research');if(!panel||!sgpResearch)return;
+      panel.hidden=!researchBody&&!researchMessage;
+      const html=researchBody?sgpResearch.renderHTML(researchBody,researchRows,Date.now(),researchOpened):researchMessage?'<h2 id="sgp-research-title">SGP research suggestions</h2><p role="status">'+escape(researchMessage)+'</p>':'';
+      if(html!==researchHTML){
+        const focused=document.activeElement?.closest?.('[data-sgp-research-id]')?.dataset.sgpResearchId;
+        panel.innerHTML=html;researchHTML=html;
+        if(focused)panel.querySelector?.('[data-sgp-research-id="'+focused+'"] > summary')?.focus({preventScroll:true});
+      }
+    }
+    async function loadResearch(day,n){
+      if(!sgpResearch||!$('sgp-research'))return;
+      researchMessage='Loading the saved research suggestions…';renderResearch();
+      try{
+        const saved=await sgpResearch.load(base,day);
+        if(n!==serial||body?.date!==day)return;
+        researchBody=saved;researchRows=sgpResearch.runtimeRows(saved);researchMessage=null;
+        render();tracker.setRows([...boardRows(body).flatMap(t=>t.legs),...researchRows]);
+      }catch{
+        if(n!==serial||body?.date!==day)return;
+        researchBody=null;researchRows=[];researchMessage='The saved SGP research record is unavailable. Priced references remain separate.';
+        renderResearch();
+      }
+    }
     function syncURL(push=false){const url=routes.canonicalURL(location.href,base);const target=routes.parlayLocation('?'+stateQuery(state,body.date),state.type,{date:body.date,sameGame:state.sameGame});url.search=target.search;url.hash=target.hash;if(url.href!==location.href)history[push?'pushState':'replaceState'](null,'',url);}
     function render(push=false){
       if(!body)return;
@@ -229,9 +255,11 @@
       const tickets=boardRows(body).map(t=>pricedTicket(t)),counts=tabCounts(tickets,body.date),rows=filterTickets(tickets,state);
       if(modern)rows.sort((a,b)=>Number(isModelTarget(a))-Number(isModelTarget(b)));
       $('parlay-tabs').classList.toggle('pm-current-tabs',modern);
-      $('parlay-same-game').hidden=!modern;$('parlay-same-game').setAttribute('aria-pressed',String(state.sameGame));$('parlay-same-game-count').textContent=counts.same_game;
+      const researchCount=researchBody?.suggestions.length||0;
+      $('parlay-same-game').hidden=!modern;$('parlay-same-game').setAttribute('aria-pressed',String(state.sameGame));$('parlay-same-game-count').textContent=counts.same_game+researchCount;
       $('parlay-policy-note').textContent=modern?'Layups: -110 through +200, 1u. Mid-Range: above +200 and below +500, 0.5u. Longshots: +500 through below +1000, 0.25u. Logo Lottos: +1000 or better, 0.05u. Tiers use original saved ticket prices; same-game is an independent filter. Confirm the actual ticket quote.':'This historical slate keeps its original Plus Money / Longshots categories and stake settings. Switching sportsbooks keeps the exact picks and can change the displayed price.';
       const columnHead=document.querySelector('.pm-columns');
+      if(state.sameGame&&researchCount)$('parlay-policy-note').textContent='Same-game research suggestions have their own statistical hit record. Straight-odds benchmarks do not set a price tier or payout; combined sportsbook quotes remain unverified.';
       if(columnHead&&modelTargets(body).length){if(columnHead.children[3])columnHead.children[3].textContent='Model / saved pricing';if(columnHead.children[4])columnHead.children[4].textContent='Win estimates';}
       // Search, price and probability filters never hide losses from the category record.
       const tracked=categoryTickets(body.tickets,state.type).filter(t=>!state.sameGame||isSameGame(t));
@@ -240,10 +268,12 @@
       $('parlay-tabs').innerHTML=Object.entries(activeTitles).map(([key,title])=>`<button type="button" role="tab" id="parlay-tab-${key}" aria-controls="parlay-panel" aria-selected="${state.type===key}" tabindex="${state.type===key?0:-1}" data-parlay-tab="${key}"><span>${title}</span><strong>${counts[key]}</strong></button>`).join('');
       $('parlay-panel').setAttribute('aria-labelledby','parlay-tab-'+state.type);
       $('combinations-heading').textContent=activeTitles[state.type]+(state.sameGame?' · Same game':'');$('parlay-count').textContent=`${rows.length} of ${counts[state.type]} ${targetCount?'parlays / model targets':'parlays'}`;
+      if(state.sameGame&&researchCount)$('parlay-count').textContent+=' · '+researchCount+' research suggestions below';
       $('parlay-favorites').setAttribute('aria-pressed',String(state.favorite));$('parlay-favorite-count').textContent=counts.favorites;
       for(const el of document.querySelectorAll('[data-parlay-filter]'))el.value=state[el.dataset.parlayFilter]||'';
       let ideasHeading=false;target.innerHTML=withdrawalNoticeHTML(body.date)+(rows.length?rows.map(t=>{const heading=modern&&isModelTarget(t)&&!ideasHeading?(ideasHeading=true,'<div class="pm-ideas-heading"><h3>Unquoted model ideas</h3><p>Conditional research targets, not priced picks. No payout, stake or official record.</p></div>'):'';return heading+ticketRow(t,ticketOrdinal(tickets,t)-1,{open:opened.has(t.id)});}).join(''):emptyStateHTML(counts,state));
-      syncURL(push);window.SBOS_PICK_RESEARCH?.hydrate(target);
+      if(state.sameGame&&researchCount&&!rows.length)target.innerHTML=withdrawalNoticeHTML(body.date)+'<p class="pick-empty">No priced same-game references in this category. See the saved research suggestions below.</p>';
+      renderResearch();syncURL(push);window.SBOS_PICK_RESEARCH?.hydrate(target);
     }
     function options(){
       const tickets=boardRows(body),legs=tickets.flatMap(t=>t.legs),games=new Map(legs.map(r=>[eventId(r),[r.team,r.opponent].sort().join(' vs ')]));
@@ -254,6 +284,7 @@
     }
     async function loadDate(){
       const n=++serial,entry=editions.find(e=>e.date===dateSelect.value);target.textContent='Loading the published parlay board…';
+      researchBody=null;researchRows=[];researchMessage=null;researchOpened.clear();renderResearch();tracker.setRows([]);
       const saved=await json(new URL(safePath(entry),dataRoot),true);if(n!==serial)return;
       if(!['public-plus-money-1','public-plus-money-2'].includes(saved.schemaVersion)||saved.version!==entry.version||saved.date!==entry.date||!Array.isArray(saved.tickets))throw Error('Publication mismatch');
       if(saved.modelTargets!==undefined&&(!Array.isArray(saved.modelTargets)||saved.modelTargets.some(t=>!isModelTarget(t))))throw Error('Invalid model-target publication');
@@ -261,6 +292,7 @@
       context.textContent=`Odds refreshed at ${stamp(body.quoteObservedAt)} · Board updated ${stamp(body.updatedAt)}.`;
       $('parlay-price-note').textContent=body.priceNote;render();
       tracker.setRows(boardRows(body).flatMap(t=>t.legs));
+      void loadResearch(body.date,n);
     }
     function filterChange(event){const key=event.target.dataset?.parlayFilter;if(!key)return;state=readState('?'+new URLSearchParams({...state,[key]:event.target.value,favorite:state.favorite?'1':'0',sameGame:state.sameGame?'1':'0'}));render();}
     $('parlay-filters').addEventListener('input',event=>{if(event.target.tagName==='INPUT')filterChange(event);});
@@ -271,6 +303,7 @@
     $('parlay-tabs').addEventListener('click',event=>{const tab=event.target.closest('[data-parlay-tab]');if(!tab)return;state.type=tab.dataset.parlayTab;render(true);$('parlay-tab-'+state.type).focus({preventScroll:true});});
     $('parlay-tabs').addEventListener('keydown',event=>{const tab=event.target.closest('[data-parlay-tab]');if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const keys=Object.keys(titlesForDate(body?.date)),i=keys.indexOf(tab.dataset.parlayTab),next=event.key==='Home'?0:event.key==='End'?keys.length-1:(i+(event.key==='ArrowRight'?1:-1)+keys.length)%keys.length;state.type=keys[next];render(true);$('parlay-tab-'+state.type).focus({preventScroll:true});});
     target.addEventListener('toggle',event=>{const row=event.target;if(row.matches('details[data-parlay-id]'))row.open?opened.add(row.dataset.parlayId):opened.delete(row.dataset.parlayId);},true);
+    $('sgp-research')?.addEventListener('toggle',event=>{const row=event.target;if(row.matches('details[data-sgp-research-id]'))row.open?researchOpened.add(row.dataset.sgpResearchId):researchOpened.delete(row.dataset.sgpResearchId);},true);
     window.addEventListener('popstate',()=>{state=readState(location.search,location.hash);const date=new URL(location.href).searchParams.get('date');if(date&&date!==body?.date&&editions.some(e=>e.date===date)){dateSelect.value=date;loadDate().catch(showError);}else render();});
     try{
       withdrawals=await json(new URL('assets/parlay-withdrawals.json',base));

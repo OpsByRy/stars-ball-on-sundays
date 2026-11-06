@@ -10,6 +10,7 @@ import shutil
 from urllib.parse import unquote, urlsplit
 from public_schema import validate_edition, validate_manifest, validate_targets, validate_game_log_index, validate_game_log, validate_game_log_catalog
 from plus_money_schema import publication_files as plus_money_files
+from sgp_research_schema import publication_files as sgp_research_files
 
 from profile_schema import validate_profile,validate_profile_index
 from career_schema import validate_career_history,validate_career_index,validate_defender_games,validate_defender_index
@@ -237,7 +238,7 @@ def build(root, publish=False, now=None):
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
     manifest=json.loads(safe_file(root,'site-manifest.json').read_text())
     if set(manifest)!={'files'} or not isinstance(manifest['files'],list): raise ValueError('Invalid site file list')
-    files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)+game_log_files(root)+profile_files(root)+career_files(root)+defender_files(root)+matchup_files(root)+availability_files(root)
+    files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)+sgp_research_files(root,safe_file)+game_log_files(root)+profile_files(root)+career_files(root)+defender_files(root)+matchup_files(root)+availability_files(root)
     if publish:
         entries=json.loads((root/'data/editions/manifest.json').read_text())['editions'];assert_publication_time(entries,now)
         today=(now or datetime.now(timezone.utc)).astimezone(ZoneInfo('America/New_York')).date().isoformat()

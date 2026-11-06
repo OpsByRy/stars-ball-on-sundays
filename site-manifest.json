@@ -119,6 +119,8 @@
     "assets/election-day.css",
     "assets/fonts/SBOSAngular-Logo.woff2",
     "assets/fonts/SBOSAngular-Slim.woff2",
-    "assets/fonts/SBOSAngular-LICENSE.txt"
+    "assets/fonts/SBOSAngular-LICENSE.txt",
+    "assets/sgp-research.js",
+    "assets/sgp-research.css"
   ]
 }

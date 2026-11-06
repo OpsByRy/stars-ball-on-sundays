@@ -4,12 +4,12 @@
   "date": "2026-11-06",
   "timezone": "America/New_York",
   "firstPublishedAt": null,
-  "recordedAt": "2026-11-06T16:51:30.960763+00:00",
-  "updatedAt": "2026-11-06T16:51:30.960763+00:00",
-  "priceNote": "F5 + Team Lobs. Odds Nov 6 11:43 AM ET; status 11:43 AM ET; selection 11:48 AM ET; original forecast completed 10:29 AM ET. Provisional, conditional on appearance; role/availability and book rules unverified. Threes shared the pool. All nine game mappings reviewed; official game starts and provider event times retained separately. Cup labels reviewed without a Cup-specific adjustment. Assembly is separate from posting.",
+  "recordedAt": "2026-11-06T17:58:56.680865+00:00",
+  "updatedAt": "2026-11-06T17:58:56.680865+00:00",
+  "priceNote": "F5 + Team Lobs. Odds Nov 6 12:53 PM ET; status 12:53 PM ET; selection 12:57 PM ET; original forecast completed 10:29 AM ET. Provisional, conditional on appearance; role/availability and book rules unverified. Threes shared the pool. All nine game mappings reviewed; official game starts and provider event times retained separately. Cup labels reviewed without a Cup-specific adjustment. Assembly is separate from posting.",
   "props": [
     {
-      "id": "research-2026-11-06-1be57a4631e2d3e9",
+      "id": "research-2026-11-06-9572b1db0f7508bb",
       "date": "2026-11-06",
       "player": "Kyshawn George",
       "playerId": "nba:1642273",
@@ -26,11 +26,11 @@
       "operator": ">=",
       "line": 4,
       "lineType": "milestone",
-      "americanOdds": -143,
+      "americanOdds": -145,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -59,7 +59,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-dd1d3f4f4cc8431d",
+      "id": "research-2026-11-06-fba077ab8a1a9d5f",
       "date": "2026-11-06",
       "player": "Trae Young",
       "playerId": "nba:1629027",
@@ -76,11 +76,11 @@
       "operator": ">=",
       "line": 9,
       "lineType": "milestone",
-      "americanOdds": -168,
+      "americanOdds": -173,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -109,7 +109,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-a9b429f1ebc304c3",
+      "id": "research-2026-11-06-e95525a2ad4c0b8e",
       "date": "2026-11-06",
       "player": "Dyson Daniels",
       "playerId": "nba:1630700",
@@ -130,7 +130,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -159,7 +159,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-e9692e8db9a96afb",
+      "id": "research-2026-11-06-6d98311ad939b89f",
       "date": "2026-11-06",
       "player": "Onyeka Okongwu",
       "playerId": "nba:1630168",
@@ -176,11 +176,11 @@
       "operator": "<",
       "line": 15.5,
       "lineType": "main",
-      "americanOdds": -114,
+      "americanOdds": -120,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -209,7 +209,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-77c7611188111f02",
+      "id": "research-2026-11-06-49eab2db9c42355a",
       "date": "2026-11-06",
       "player": "Dyson Daniels",
       "playerId": "nba:1630700",
@@ -226,11 +226,11 @@
       "operator": "<",
       "line": 5.5,
       "lineType": "main",
-      "americanOdds": -130,
+      "americanOdds": -125,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -259,7 +259,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-3efc480d6625ea96",
+      "id": "research-2026-11-06-69d78a7d0e5a27dc",
       "date": "2026-11-06",
       "player": "Nickeil Alexander-Walker",
       "playerId": "nba:1629638",
@@ -276,11 +276,11 @@
       "operator": "<",
       "line": 3.5,
       "lineType": "main",
-      "americanOdds": -169,
+      "americanOdds": -157,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -309,7 +309,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-c6248991ccf344a2",
+      "id": "research-2026-11-06-79a6d9e948967376",
       "date": "2026-11-06",
       "player": "Onyeka Okongwu",
       "playerId": "nba:1630168",
@@ -326,11 +326,11 @@
       "operator": "<",
       "line": 3.5,
       "lineType": "main",
-      "americanOdds": -154,
+      "americanOdds": -164,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -359,57 +359,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-382454fa6dc55c8d",
-      "date": "2026-11-06",
-      "player": "CJ McCollum",
-      "playerId": "nba:203468",
-      "eventId": "nba:0022600025",
-      "canonicalEventId": "nba:0022600025",
-      "team": "ATL",
-      "opponent": "WAS",
-      "matchup": "ATL vs WAS",
-      "startTime": "2026-11-07T00:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "AST",
-      "side": "over",
-      "operator": ">=",
-      "line": 4,
-      "lineType": "milestone",
-      "americanOdds": -132,
-      "book": "fanduel",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909287",
-        "athleteId": "2490149",
-        "expectedTeam": "ATL",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.601055610695197,
-        "pushProbability": 0,
-        "lossProbability": 0.39894438930480297,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 4.154575072714005
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-f123693a74703890",
+      "id": "research-2026-11-06-278eb6c7bca222ff",
       "date": "2026-11-06",
       "player": "CJ McCollum",
       "playerId": "nba:203468",
@@ -430,7 +380,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -459,7 +409,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-3950b758034c3e60",
+      "id": "research-2026-11-06-7f0168a9132aebc0",
       "date": "2026-11-06",
       "player": "Luguentz Dort",
       "playerId": "nba:1629652",
@@ -476,11 +426,11 @@
       "operator": "<",
       "line": 9.5,
       "lineType": "main",
-      "americanOdds": -117,
+      "americanOdds": -116,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -509,7 +459,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-e5bb6597a76ce04a",
+      "id": "research-2026-11-06-ff9d13bf267ee0df",
       "date": "2026-11-06",
       "player": "Luguentz Dort",
       "playerId": "nba:1629652",
@@ -526,11 +476,11 @@
       "operator": ">=",
       "line": 1,
       "lineType": "milestone",
-      "americanOdds": -401,
+      "americanOdds": -402,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -559,7 +509,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-b00a1d6ab1499ce5",
+      "id": "research-2026-11-06-de697d973bc5de86",
       "date": "2026-11-06",
       "player": "Bilal Coulibaly",
       "playerId": "nba:1641731",
@@ -576,11 +526,11 @@
       "operator": ">=",
       "line": 8,
       "lineType": "milestone",
-      "americanOdds": -124,
+      "americanOdds": -125,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -609,7 +559,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-665134fa80724947",
+      "id": "research-2026-11-06-35c58f7a4f572c41",
       "date": "2026-11-06",
       "player": "Alex Sarr",
       "playerId": "nba:1642259",
@@ -626,11 +576,11 @@
       "operator": ">=",
       "line": 2,
       "lineType": "milestone",
-      "americanOdds": -138,
+      "americanOdds": -140,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -659,7 +609,57 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-359747b179832b58",
+      "id": "research-2026-11-06-7360247f30febbe8",
+      "date": "2026-11-06",
+      "player": "CJ McCollum",
+      "playerId": "nba:203468",
+      "eventId": "nba:0022600025",
+      "canonicalEventId": "nba:0022600025",
+      "team": "ATL",
+      "opponent": "WAS",
+      "matchup": "ATL vs WAS",
+      "startTime": "2026-11-07T00:00:00+00:00",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "AST",
+      "side": "over",
+      "operator": ">=",
+      "line": 4,
+      "lineType": "milestone",
+      "americanOdds": -136,
+      "book": "fanduel",
+      "overtime": null,
+      "group": "research",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
+      "sourceType": "saved_sportsbook_quote_statistical_comparison",
+      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
+      "result": {
+        "eventStatus": "scheduled",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified"
+      },
+      "resultSource": {
+        "eventId": "401909287",
+        "athleteId": "2490149",
+        "expectedTeam": "ATL",
+        "provider": "espn"
+      },
+      "estimate": {
+        "winProbability": 0.601055610695197,
+        "pushProbability": 0,
+        "lossProbability": 0.39894438930480297,
+        "asOf": "2026-11-06T15:49:54.796694+00:00",
+        "status": "provisional",
+        "projection": 4.154575072714005
+      },
+      "category": "high_probability_aggressive",
+      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "postedAt": null,
+      "ryFavorite": false,
+      "selected": true
+    },
+    {
+      "id": "research-2026-11-06-ed2b11e4d1211d77",
       "date": "2026-11-06",
       "player": "Alex Sarr",
       "playerId": "nba:1642259",
@@ -680,7 +680,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -709,7 +709,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-4da706494df57a66",
+      "id": "research-2026-11-06-2374b42f306d3b36",
       "date": "2026-11-06",
       "player": "Derrick White",
       "playerId": "nba:1628401",
@@ -724,13 +724,13 @@
       "market": "PTS",
       "side": "under",
       "operator": "<",
-      "line": 13.5,
+      "line": 12.5,
       "lineType": "main",
-      "americanOdds": -108,
-      "book": "fanduel",
+      "americanOdds": -101,
+      "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -745,9 +745,9 @@
         "provider": "espn"
       },
       "estimate": {
-        "winProbability": 0.6712326139088729,
+        "winProbability": 0.6512038369304556,
         "pushProbability": 0,
-        "lossProbability": 0.3287673860911271,
+        "lossProbability": 0.3487961630695444,
         "asOf": "2026-11-06T15:49:54.796694+00:00",
         "status": "provisional",
         "projection": 11.34367386091127
@@ -759,7 +759,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-298a9136604ed484",
+      "id": "research-2026-11-06-9907a4aabc5efd6e",
       "date": "2026-11-06",
       "player": "Paul George",
       "playerId": "nba:202331",
@@ -776,11 +776,11 @@
       "operator": ">",
       "line": 17.5,
       "lineType": "main",
-      "americanOdds": -112,
+      "americanOdds": -106,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -809,7 +809,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-f5f1293604a0ba48",
+      "id": "research-2026-11-06-000fa98ce2764ae4",
       "date": "2026-11-06",
       "player": "Coby White",
       "playerId": "nba:1629632",
@@ -826,11 +826,11 @@
       "operator": "<",
       "line": 12.5,
       "lineType": "main",
-      "americanOdds": -114,
+      "americanOdds": -118,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -859,7 +859,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-bc112ecd32f4c191",
+      "id": "research-2026-11-06-f8feef9e7d078ae6",
       "date": "2026-11-06",
       "player": "Brandon Miller",
       "playerId": "nba:1641706",
@@ -876,11 +876,11 @@
       "operator": "<",
       "line": 3.5,
       "lineType": "main",
-      "americanOdds": -128,
+      "americanOdds": -134,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -909,7 +909,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-97e0a7436fd34a63",
+      "id": "research-2026-11-06-4f78e8aff6c9b464",
       "date": "2026-11-06",
       "player": "Naz Reid",
       "playerId": "nba:1629675",
@@ -926,11 +926,11 @@
       "operator": "<",
       "line": 2.5,
       "lineType": "main",
-      "americanOdds": -161,
+      "americanOdds": -156,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -959,7 +959,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-b126f895ea424a97",
+      "id": "research-2026-11-06-fcacfaea2444dcc1",
       "date": "2026-11-06",
       "player": "Paul George",
       "playerId": "nba:202331",
@@ -976,11 +976,11 @@
       "operator": ">",
       "line": 3.5,
       "lineType": "main",
-      "americanOdds": -116,
+      "americanOdds": -103,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1009,57 +1009,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-8617f46f281056ca",
-      "date": "2026-11-06",
-      "player": "Brandon Miller",
-      "playerId": "nba:1641706",
-      "eventId": "nba:0022600026",
-      "canonicalEventId": "nba:0022600026",
-      "team": "CHA",
-      "opponent": "BOS",
-      "matchup": "CHA vs BOS",
-      "startTime": "2026-11-07T00:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "AST",
-      "side": "under",
-      "operator": "<",
-      "line": 3.5,
-      "lineType": "main",
-      "americanOdds": -164,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909288",
-        "athleteId": "4433287",
-        "expectedTeam": "CHA",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.7567806957637466,
-        "pushProbability": 0,
-        "lossProbability": 0.24321930423625338,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 2.4889732167409115
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-c533fcbf2e4c9a3b",
+      "id": "research-2026-11-06-f867c4ae27103fe1",
       "date": "2026-11-06",
       "player": "Coby White",
       "playerId": "nba:1629632",
@@ -1076,11 +1026,11 @@
       "operator": "<",
       "line": 3.5,
       "lineType": "main",
-      "americanOdds": -173,
+      "americanOdds": -169,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1109,7 +1059,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-48e7d581b487f4e7",
+      "id": "research-2026-11-06-49ec55e9779c6679",
       "date": "2026-11-06",
       "player": "Jayson Tatum",
       "playerId": "nba:1628369",
@@ -1130,7 +1080,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1159,19 +1109,19 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-227fff7c14ac58e7",
+      "id": "research-2026-11-06-be077d29103bb29d",
       "date": "2026-11-06",
-      "player": "Naz Reid",
-      "playerId": "nba:1629675",
+      "player": "Derrick White",
+      "playerId": "nba:1628401",
       "eventId": "nba:0022600026",
       "canonicalEventId": "nba:0022600026",
-      "team": "CHA",
-      "opponent": "BOS",
-      "matchup": "CHA vs BOS",
+      "team": "BOS",
+      "opponent": "CHA",
+      "matchup": "BOS vs CHA",
       "startTime": "2026-11-07T00:00:00+00:00",
       "period": "full_game",
       "product": "sportsbook",
-      "market": "AST",
+      "market": "3PM",
       "side": "under",
       "operator": "<",
       "line": 2.5,
@@ -1180,7 +1130,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1190,26 +1140,26 @@
       },
       "resultSource": {
         "eventId": "401909288",
-        "athleteId": "4396971",
-        "expectedTeam": "CHA",
+        "athleteId": "3078576",
+        "expectedTeam": "BOS",
         "provider": "espn"
       },
       "estimate": {
-        "winProbability": 0.7313207875936574,
+        "winProbability": 0.7629263359492496,
         "pushProbability": 0,
-        "lossProbability": 0.2686792124063426,
+        "lossProbability": 0.23707366405075037,
         "asOf": "2026-11-06T15:49:54.796694+00:00",
         "status": "provisional",
-        "projection": 1.7998982964658026
+        "projection": 1.6418525681325973
       },
       "category": "value_safe",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "assessment": "Provisional threes estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
       "postedAt": null,
       "ryFavorite": false,
       "selected": true
     },
     {
-      "id": "research-2026-11-06-56384f9db4990c90",
+      "id": "research-2026-11-06-e0b504740c48b0d7",
       "date": "2026-11-06",
       "player": "Donovan Mitchell",
       "playerId": "nba:1628378",
@@ -1224,13 +1174,13 @@
       "market": "PTS",
       "side": "under",
       "operator": "<",
-      "line": 25.5,
+      "line": 24.5,
       "lineType": "main",
-      "americanOdds": -124,
+      "americanOdds": -104,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1245,9 +1195,9 @@
         "provider": "espn"
       },
       "estimate": {
-        "winProbability": 0.6295370483274397,
+        "winProbability": 0.6019591106775596,
         "pushProbability": 0,
-        "lossProbability": 0.37046295167256027,
+        "lossProbability": 0.3980408893224404,
         "asOf": "2026-11-06T15:49:54.796694+00:00",
         "status": "provisional",
         "projection": 23.204853066699183
@@ -1259,7 +1209,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-58360935431ed14e",
+      "id": "research-2026-11-06-b5c20dc7394a6c8e",
       "date": "2026-11-06",
       "player": "James Harden",
       "playerId": "nba:201935",
@@ -1280,7 +1230,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1309,7 +1259,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-9f15097fa8495f76",
+      "id": "research-2026-11-06-ffcff2d316a20a1b",
       "date": "2026-11-06",
       "player": "Donovan Mitchell",
       "playerId": "nba:1628378",
@@ -1330,7 +1280,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1359,7 +1309,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-00ee6c5d17b1c79e",
+      "id": "research-2026-11-06-586d3dabc4969147",
       "date": "2026-11-06",
       "player": "Evan Mobley",
       "playerId": "nba:1630596",
@@ -1380,7 +1330,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1409,7 +1359,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-8d9c645d9c3b2b34",
+      "id": "research-2026-11-06-0bbf881e4fbabaa5",
       "date": "2026-11-06",
       "player": "James Harden",
       "playerId": "nba:201935",
@@ -1426,11 +1376,11 @@
       "operator": ">=",
       "line": 2,
       "lineType": "milestone",
-      "americanOdds": -224,
+      "americanOdds": -221,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1459,7 +1409,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-bebd01fbc6302e70",
+      "id": "research-2026-11-06-3e536bf10460d003",
       "date": "2026-11-06",
       "player": "Jaylen Brown",
       "playerId": "nba:1627759",
@@ -1480,7 +1430,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1509,7 +1459,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-3e9938e6bf2035b1",
+      "id": "research-2026-11-06-f89f31f383ec199c",
       "date": "2026-11-06",
       "player": "Jaylen Brown",
       "playerId": "nba:1627759",
@@ -1526,11 +1476,11 @@
       "operator": ">=",
       "line": 1,
       "lineType": "milestone",
-      "americanOdds": -381,
+      "americanOdds": -384,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1559,7 +1509,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-1bcd9dfa5367f746",
+      "id": "research-2026-11-06-f62b255f149a9067",
       "date": "2026-11-06",
       "player": "Joel Embiid",
       "playerId": "nba:203954",
@@ -1580,7 +1530,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1609,7 +1559,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-3840a460d09f4211",
+      "id": "research-2026-11-06-752dc28975525865",
       "date": "2026-11-06",
       "player": "LeBron James",
       "playerId": "nba:2544",
@@ -1630,7 +1580,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1659,7 +1609,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-7bb5f59fc34b8c94",
+      "id": "research-2026-11-06-29c9a25428c43bc1",
       "date": "2026-11-06",
       "player": "Tyrese Maxey",
       "playerId": "nba:1630178",
@@ -1680,7 +1630,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1709,7 +1659,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-1ba90ffaa612580c",
+      "id": "research-2026-11-06-ba3e71f45b5681ee",
       "date": "2026-11-06",
       "player": "VJ Edgecombe",
       "playerId": "nba:1642845",
@@ -1726,11 +1676,11 @@
       "operator": ">=",
       "line": 1,
       "lineType": "milestone",
-      "americanOdds": -358,
+      "americanOdds": -372,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1759,7 +1709,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-70c72fcfa59dbe50",
+      "id": "research-2026-11-06-fa40f860bea6b9cd",
       "date": "2026-11-06",
       "player": "Jaylen Brown",
       "playerId": "nba:1627759",
@@ -1776,11 +1726,11 @@
       "operator": ">=",
       "line": 3,
       "lineType": "milestone",
-      "americanOdds": -270,
+      "americanOdds": -264,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1809,7 +1759,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-4581286e1aa7b53c",
+      "id": "research-2026-11-06-e5bc5ed91f38bb56",
       "date": "2026-11-06",
       "player": "Joel Embiid",
       "playerId": "nba:203954",
@@ -1823,14 +1773,14 @@
       "product": "sportsbook",
       "market": "AST",
       "side": "over",
-      "operator": ">",
-      "line": 3.5,
-      "lineType": "main",
+      "operator": ">=",
+      "line": 4,
+      "lineType": "milestone",
       "americanOdds": -104,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1859,7 +1809,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-22700a68a8725b7c",
+      "id": "research-2026-11-06-2269fa7d3be44490",
       "date": "2026-11-06",
       "player": "LeBron James",
       "playerId": "nba:2544",
@@ -1876,11 +1826,11 @@
       "operator": ">",
       "line": 6.5,
       "lineType": "main",
-      "americanOdds": -125,
+      "americanOdds": -136,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1909,7 +1859,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-ba74763c97ca4355",
+      "id": "research-2026-11-06-9851b0eb2c266086",
       "date": "2026-11-06",
       "player": "Tyrese Maxey",
       "playerId": "nba:1630178",
@@ -1930,7 +1880,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -1959,7 +1909,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-981653344d593052",
+      "id": "research-2026-11-06-068a3dd1d7ce335e",
       "date": "2026-11-06",
       "player": "VJ Edgecombe",
       "playerId": "nba:1642845",
@@ -1980,7 +1930,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2009,7 +1959,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-8d965fc7b65575ad",
+      "id": "research-2026-11-06-d1f8a678e85547eb",
       "date": "2026-11-06",
       "player": "Kentavious Caldwell-Pope",
       "playerId": "nba:203484",
@@ -2026,11 +1976,11 @@
       "operator": "<",
       "line": 1.5,
       "lineType": "main",
-      "americanOdds": -228,
+      "americanOdds": -229,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2059,7 +2009,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-d6b1b412f1234d61",
+      "id": "research-2026-11-06-02fec2301a3846d5",
       "date": "2026-11-06",
       "player": "Cam Spencer",
       "playerId": "nba:1642285",
@@ -2076,11 +2026,11 @@
       "operator": ">=",
       "line": 1,
       "lineType": "milestone",
-      "americanOdds": -266,
+      "americanOdds": -268,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2109,7 +2059,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-e729e8e5280e792e",
+      "id": "research-2026-11-06-4c902e5657d3fb82",
       "date": "2026-11-06",
       "player": "Ajay Mitchell",
       "playerId": "nba:1642349",
@@ -2127,10 +2077,10 @@
       "line": 1.5,
       "lineType": "main",
       "americanOdds": -205,
-      "book": "draftkings",
+      "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2159,7 +2109,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-2815d722767c2579",
+      "id": "research-2026-11-06-65d90bb46b837d15",
       "date": "2026-11-06",
       "player": "Alex Caruso",
       "playerId": "nba:1627936",
@@ -2176,11 +2126,11 @@
       "operator": "<",
       "line": 1.5,
       "lineType": "main",
-      "americanOdds": -118,
+      "americanOdds": -120,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2209,7 +2159,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-fe39258dae87316e",
+      "id": "research-2026-11-06-2a0d3be0bb117cf9",
       "date": "2026-11-06",
       "player": "Jared McCain",
       "playerId": "nba:1642272",
@@ -2230,7 +2180,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2259,7 +2209,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-1d69b5a6253d1e34",
+      "id": "research-2026-11-06-e51f9158d525dbcf",
       "date": "2026-11-06",
       "player": "Shai Gilgeous-Alexander",
       "playerId": "nba:1628983",
@@ -2280,7 +2230,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2309,7 +2259,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-07f0e5972e9b14dd",
+      "id": "research-2026-11-06-b534a92e20680814",
       "date": "2026-11-06",
       "player": "Ajay Mitchell",
       "playerId": "nba:1642349",
@@ -2324,13 +2274,13 @@
       "market": "PTS",
       "side": "under",
       "operator": "<",
-      "line": 19.5,
+      "line": 18.5,
       "lineType": "main",
-      "americanOdds": -124,
-      "book": "draftkings",
+      "americanOdds": -102,
+      "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2345,9 +2295,9 @@
         "provider": "espn"
       },
       "estimate": {
-        "winProbability": 0.7032182903742537,
+        "winProbability": 0.6620940731032474,
         "pushProbability": 0,
-        "lossProbability": 0.29678170962574635,
+        "lossProbability": 0.3379059268967526,
         "asOf": "2026-11-06T15:49:54.796694+00:00",
         "status": "provisional",
         "projection": 16.45079365079365
@@ -2359,7 +2309,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-860b307cd4b67fc9",
+      "id": "research-2026-11-06-028cbfc0ff1e4451",
       "date": "2026-11-06",
       "player": "Alex Caruso",
       "playerId": "nba:1627936",
@@ -2376,11 +2326,11 @@
       "operator": "<",
       "line": 8.5,
       "lineType": "main",
-      "americanOdds": -111,
+      "americanOdds": -115,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2409,7 +2359,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-bcf20e3327beb75b",
+      "id": "research-2026-11-06-d95251e326682ba7",
       "date": "2026-11-06",
       "player": "Isaiah Hartenstein",
       "playerId": "nba:1628392",
@@ -2424,13 +2374,13 @@
       "market": "PTS",
       "side": "under",
       "operator": "<",
-      "line": 8.5,
+      "line": 9.5,
       "lineType": "main",
-      "americanOdds": -102,
-      "book": "fanduel",
+      "americanOdds": -121,
+      "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2445,9 +2395,9 @@
         "provider": "espn"
       },
       "estimate": {
-        "winProbability": 0.6447126991791404,
+        "winProbability": 0.7139868018670529,
         "pushProbability": 0,
-        "lossProbability": 0.3552873008208596,
+        "lossProbability": 0.2860131981329471,
         "asOf": "2026-11-06T15:49:54.796694+00:00",
         "status": "provisional",
         "projection": 7.474521165298567
@@ -2459,7 +2409,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-5815c5e4bac8b622",
+      "id": "research-2026-11-06-9477a0f646830d81",
       "date": "2026-11-06",
       "player": "Jared McCain",
       "playerId": "nba:1642272",
@@ -2476,11 +2426,11 @@
       "operator": "<",
       "line": 12.5,
       "lineType": "main",
-      "americanOdds": -114,
+      "americanOdds": -119,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2509,7 +2459,57 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-db4d54a5aef13974",
+      "id": "research-2026-11-06-ec67e8450da4cb1a",
+      "date": "2026-11-06",
+      "player": "Kenrich Williams",
+      "playerId": "nba:1629026",
+      "eventId": "nba:0022600029",
+      "canonicalEventId": "nba:0022600029",
+      "team": "OKC",
+      "opponent": "MEM",
+      "matchup": "OKC vs MEM",
+      "startTime": "2026-11-07T01:00:00+00:00",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "PTS",
+      "side": "under",
+      "operator": "<",
+      "line": 9.5,
+      "lineType": "main",
+      "americanOdds": -125,
+      "book": "draftkings",
+      "overtime": null,
+      "group": "research",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
+      "sourceType": "saved_sportsbook_quote_statistical_comparison",
+      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
+      "result": {
+        "eventStatus": "scheduled",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified"
+      },
+      "resultSource": {
+        "eventId": "401909291",
+        "athleteId": "3133626",
+        "expectedTeam": "OKC",
+        "provider": "espn"
+      },
+      "estimate": {
+        "winProbability": 0.6851841284333866,
+        "pushProbability": 0,
+        "lossProbability": 0.3148158715666134,
+        "asOf": "2026-11-06T15:49:54.796694+00:00",
+        "status": "provisional",
+        "projection": 7.861237921326942
+      },
+      "category": "high_probability_aggressive",
+      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "postedAt": null,
+      "ryFavorite": false,
+      "selected": true
+    },
+    {
+      "id": "research-2026-11-06-e825ad6528d783b9",
       "date": "2026-11-06",
       "player": "Shai Gilgeous-Alexander",
       "playerId": "nba:1628983",
@@ -2524,13 +2524,13 @@
       "market": "PTS",
       "side": "under",
       "operator": "<",
-      "line": 31.5,
+      "line": 32.5,
       "lineType": "main",
-      "americanOdds": -106,
+      "americanOdds": -117,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2545,9 +2545,9 @@
         "provider": "espn"
       },
       "estimate": {
-        "winProbability": 0.6037790457289341,
+        "winProbability": 0.6311089059786653,
         "pushProbability": 0,
-        "lossProbability": 0.39622095427106585,
+        "lossProbability": 0.3688910940213347,
         "asOf": "2026-11-06T15:49:54.796694+00:00",
         "status": "provisional",
         "projection": 29.661415695030186
@@ -2559,7 +2559,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-dbfbc44a5d60d593",
+      "id": "research-2026-11-06-9879e1d38257bbb9",
       "date": "2026-11-06",
       "player": "Isaiah Hartenstein",
       "playerId": "nba:1628392",
@@ -2576,11 +2576,11 @@
       "operator": "<",
       "line": 3.5,
       "lineType": "main",
-      "americanOdds": -144,
+      "americanOdds": -138,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2609,57 +2609,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-a747ec39e806277e",
-      "date": "2026-11-06",
-      "player": "Shai Gilgeous-Alexander",
-      "playerId": "nba:1628983",
-      "eventId": "nba:0022600029",
-      "canonicalEventId": "nba:0022600029",
-      "team": "OKC",
-      "opponent": "MEM",
-      "matchup": "OKC vs MEM",
-      "startTime": "2026-11-07T01:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "AST",
-      "side": "under",
-      "operator": "<",
-      "line": 6.5,
-      "lineType": "main",
-      "americanOdds": -156,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909291",
-        "athleteId": "4278073",
-        "expectedTeam": "OKC",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.7431093623890234,
-        "pushProbability": 0,
-        "lossProbability": 0.25689063761097664,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 5.149075500770416
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-ccb87fae5d18f6f3",
+      "id": "research-2026-11-06-71e63799ee5c5d19",
       "date": "2026-11-06",
       "player": "Kenrich Williams",
       "playerId": "nba:1629026",
@@ -2680,7 +2630,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2709,7 +2659,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-0c231b7df9ef2624",
+      "id": "research-2026-11-06-ecf2c4a237c62589",
       "date": "2026-11-06",
       "player": "Cedric Coward",
       "playerId": "nba:1642907",
@@ -2730,7 +2680,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2759,7 +2709,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-9f581c5e845500d4",
+      "id": "research-2026-11-06-34d295d1892baa49",
       "date": "2026-11-06",
       "player": "Cam Spencer",
       "playerId": "nba:1642285",
@@ -2780,7 +2730,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2809,57 +2759,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-945b497d40b08a20",
-      "date": "2026-11-06",
-      "player": "Kenrich Williams",
-      "playerId": "nba:1629026",
-      "eventId": "nba:0022600029",
-      "canonicalEventId": "nba:0022600029",
-      "team": "OKC",
-      "opponent": "MEM",
-      "matchup": "OKC vs MEM",
-      "startTime": "2026-11-07T01:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "PTS",
-      "side": "under",
-      "operator": "<",
-      "line": 9.5,
-      "lineType": "main",
-      "americanOdds": -102,
-      "book": "fanduel",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909291",
-        "athleteId": "3133626",
-        "expectedTeam": "OKC",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.6851841284333866,
-        "pushProbability": 0,
-        "lossProbability": 0.3148158715666134,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 7.861237921326942
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-3450e35b45e8674e",
+      "id": "research-2026-11-06-4559a6dfc8c2be53",
       "date": "2026-11-06",
       "player": "Lauri Markkanen",
       "playerId": "nba:1628374",
@@ -2876,11 +2776,11 @@
       "operator": "<",
       "line": 21.5,
       "lineType": "main",
-      "americanOdds": -114,
+      "americanOdds": -120,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2909,7 +2809,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-327bc513e961246d",
+      "id": "research-2026-11-06-8ec9c1a1e63e5ea1",
       "date": "2026-11-06",
       "player": "Ace Bailey",
       "playerId": "nba:1642846",
@@ -2923,14 +2823,14 @@
       "product": "sportsbook",
       "market": "3PM",
       "side": "over",
-      "operator": ">",
-      "line": 1.5,
-      "lineType": "main",
-      "americanOdds": -138,
+      "operator": ">=",
+      "line": 2,
+      "lineType": "milestone",
+      "americanOdds": -132,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -2959,7 +2859,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-360c89f63644466c",
+      "id": "research-2026-11-06-12bf463d84c0e2d8",
       "date": "2026-11-06",
       "player": "Lauri Markkanen",
       "playerId": "nba:1628374",
@@ -2980,7 +2880,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3009,107 +2909,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-f69c7bed9038dbb6",
-      "date": "2026-11-06",
-      "player": "Naji Marshall",
-      "playerId": "nba:1630230",
-      "eventId": "nba:0022600028",
-      "canonicalEventId": "nba:0022600028",
-      "team": "DAL",
-      "opponent": "UTA",
-      "matchup": "DAL vs UTA",
-      "startTime": "2026-11-07T01:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "AST",
-      "side": "over",
-      "operator": ">=",
-      "line": 4,
-      "lineType": "milestone",
-      "americanOdds": -101,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909290",
-        "athleteId": "4278594",
-        "expectedTeam": "DAL",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.6315448505725558,
-        "pushProbability": 0,
-        "lossProbability": 0.36845514942744423,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 4.4725768321513
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-8319395f14cc4445",
-      "date": "2026-11-06",
-      "player": "Zaccharie Risacher",
-      "playerId": "nba:1642258",
-      "eventId": "nba:0022600028",
-      "canonicalEventId": "nba:0022600028",
-      "team": "DAL",
-      "opponent": "UTA",
-      "matchup": "DAL vs UTA",
-      "startTime": "2026-11-07T01:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "REB",
-      "side": "over",
-      "operator": ">=",
-      "line": 4,
-      "lineType": "milestone",
-      "americanOdds": -138,
-      "book": "fanduel",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909290",
-        "athleteId": "5211175",
-        "expectedTeam": "DAL",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.7392392607853386,
-        "pushProbability": 0,
-        "lossProbability": 0.2607607392146613,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 5.412536637356782
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-fc6f97bb32bad290",
+      "id": "research-2026-11-06-53f2b89eda8d5cd1",
       "date": "2026-11-06",
       "player": "Keyonte George",
       "playerId": "nba:1641718",
@@ -3126,11 +2926,11 @@
       "operator": "<",
       "line": 6.5,
       "lineType": "main",
-      "americanOdds": -160,
-      "book": "fanduel",
+      "americanOdds": -147,
+      "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3159,7 +2959,107 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-41d82bcc4eba535c",
+      "id": "research-2026-11-06-63349140c191c170",
+      "date": "2026-11-06",
+      "player": "Naji Marshall",
+      "playerId": "nba:1630230",
+      "eventId": "nba:0022600028",
+      "canonicalEventId": "nba:0022600028",
+      "team": "DAL",
+      "opponent": "UTA",
+      "matchup": "DAL vs UTA",
+      "startTime": "2026-11-07T01:00:00+00:00",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "AST",
+      "side": "over",
+      "operator": ">=",
+      "line": 3,
+      "lineType": "milestone",
+      "americanOdds": -221,
+      "book": "draftkings",
+      "overtime": null,
+      "group": "research",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
+      "sourceType": "saved_sportsbook_quote_statistical_comparison",
+      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
+      "result": {
+        "eventStatus": "scheduled",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified"
+      },
+      "resultSource": {
+        "eventId": "401909290",
+        "athleteId": "4278594",
+        "expectedTeam": "DAL",
+        "provider": "espn"
+      },
+      "estimate": {
+        "winProbability": 0.7906519048704098,
+        "pushProbability": 0,
+        "lossProbability": 0.20934809512959018,
+        "asOf": "2026-11-06T15:49:54.796694+00:00",
+        "status": "provisional",
+        "projection": 4.4725768321513
+      },
+      "category": "value_safe",
+      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "postedAt": null,
+      "ryFavorite": false,
+      "selected": true
+    },
+    {
+      "id": "research-2026-11-06-08082a392d514fcb",
+      "date": "2026-11-06",
+      "player": "Zaccharie Risacher",
+      "playerId": "nba:1642258",
+      "eventId": "nba:0022600028",
+      "canonicalEventId": "nba:0022600028",
+      "team": "DAL",
+      "opponent": "UTA",
+      "matchup": "DAL vs UTA",
+      "startTime": "2026-11-07T01:00:00+00:00",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "REB",
+      "side": "over",
+      "operator": ">",
+      "line": 3.5,
+      "lineType": "main",
+      "americanOdds": -123,
+      "book": "draftkings",
+      "overtime": null,
+      "group": "research",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
+      "sourceType": "saved_sportsbook_quote_statistical_comparison",
+      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
+      "result": {
+        "eventStatus": "scheduled",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified"
+      },
+      "resultSource": {
+        "eventId": "401909290",
+        "athleteId": "5211175",
+        "expectedTeam": "DAL",
+        "provider": "espn"
+      },
+      "estimate": {
+        "winProbability": 0.7392392607853386,
+        "pushProbability": 0,
+        "lossProbability": 0.26076073921466136,
+        "asOf": "2026-11-06T15:49:54.796694+00:00",
+        "status": "provisional",
+        "projection": 5.412536637356782
+      },
+      "category": "high_probability_aggressive",
+      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "postedAt": null,
+      "ryFavorite": false,
+      "selected": true
+    },
+    {
+      "id": "research-2026-11-06-f4eba02e65af45bb",
       "date": "2026-11-06",
       "player": "Cooper Flagg",
       "playerId": "nba:1642843",
@@ -3180,7 +3080,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3209,7 +3109,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-a7e2cad86a18f39a",
+      "id": "research-2026-11-06-ab2280aaa65210c2",
       "date": "2026-11-06",
       "player": "Collin Murray-Boyles",
       "playerId": "nba:1642867",
@@ -3226,11 +3126,11 @@
       "operator": "<",
       "line": 12.5,
       "lineType": "main",
-      "americanOdds": -122,
+      "americanOdds": -129,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3259,7 +3159,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-8f3a826ffd1d00ff",
+      "id": "research-2026-11-06-344bc4f988dfa5e8",
       "date": "2026-11-06",
       "player": "Immanuel Quickley",
       "playerId": "nba:1630193",
@@ -3276,11 +3176,11 @@
       "operator": "<",
       "line": 18.5,
       "lineType": "main",
-      "americanOdds": -110,
-      "book": "fanduel",
+      "americanOdds": -112,
+      "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3309,7 +3209,57 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-cdf51be1afa79c3e",
+      "id": "research-2026-11-06-709ea0966d888fbe",
+      "date": "2026-11-06",
+      "player": "Ja'Kobe Walter",
+      "playerId": "nba:1642266",
+      "eventId": "nba:0022600030",
+      "canonicalEventId": "nba:0022600030",
+      "team": "TOR",
+      "opponent": "MIL",
+      "matchup": "TOR vs MIL",
+      "startTime": "2026-11-07T01:00:00+00:00",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "PTS",
+      "side": "under",
+      "operator": "<",
+      "line": 12.5,
+      "lineType": "main",
+      "americanOdds": -115,
+      "book": "draftkings",
+      "overtime": null,
+      "group": "research",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
+      "sourceType": "saved_sportsbook_quote_statistical_comparison",
+      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
+      "result": {
+        "eventStatus": "scheduled",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified"
+      },
+      "resultSource": {
+        "eventId": "401909292",
+        "athleteId": "4684272",
+        "expectedTeam": "TOR",
+        "provider": "espn"
+      },
+      "estimate": {
+        "winProbability": 0.6160295616717635,
+        "pushProbability": 0,
+        "lossProbability": 0.3839704383282365,
+        "asOf": "2026-11-06T15:49:54.796694+00:00",
+        "status": "provisional",
+        "projection": 12.335703363914373
+      },
+      "category": "high_probability_aggressive",
+      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "postedAt": null,
+      "ryFavorite": false,
+      "selected": true
+    },
+    {
+      "id": "research-2026-11-06-87a7ac5693a153c5",
       "date": "2026-11-06",
       "player": "Myles Turner",
       "playerId": "nba:1626167",
@@ -3330,7 +3280,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3359,7 +3309,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-ea8d1ab9f4448807",
+      "id": "research-2026-11-06-cca92a1965bd56d4",
       "date": "2026-11-06",
       "player": "RJ Barrett",
       "playerId": "nba:1629628",
@@ -3380,7 +3330,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3409,7 +3359,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-683eba49a2dc4079",
+      "id": "research-2026-11-06-b2459df236296d27",
       "date": "2026-11-06",
       "player": "Jaime Jaquez Jr.",
       "playerId": "nba:1631170",
@@ -3426,11 +3376,11 @@
       "operator": ">=",
       "line": 1,
       "lineType": "milestone",
-      "americanOdds": -273,
+      "americanOdds": -271,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3459,7 +3409,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-b6687291480d10e7",
+      "id": "research-2026-11-06-55f587b0e711b343",
       "date": "2026-11-06",
       "player": "RJ Barrett",
       "playerId": "nba:1629628",
@@ -3476,11 +3426,11 @@
       "operator": "<",
       "line": 2.5,
       "lineType": "main",
-      "americanOdds": -189,
+      "americanOdds": -182,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3509,57 +3459,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-b8d5a1cd65b4504c",
-      "date": "2026-11-06",
-      "player": "Ryan Rollins",
-      "playerId": "nba:1631157",
-      "eventId": "nba:0022600030",
-      "canonicalEventId": "nba:0022600030",
-      "team": "MIL",
-      "opponent": "TOR",
-      "matchup": "MIL vs TOR",
-      "startTime": "2026-11-07T01:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "3PM",
-      "side": "over",
-      "operator": ">=",
-      "line": 1,
-      "lineType": "milestone",
-      "americanOdds": -310,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909292",
-        "athleteId": "4591725",
-        "expectedTeam": "MIL",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.7874631810568521,
-        "pushProbability": 0,
-        "lossProbability": 0.21253681894314794,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 1.8039172591293693
-      },
-      "category": "value_safe",
-      "assessment": "Provisional threes estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-daf91890e340b834",
+      "id": "research-2026-11-06-c5ab44a9d0ce067e",
       "date": "2026-11-06",
       "player": "Immanuel Quickley",
       "playerId": "nba:1630193",
@@ -3576,11 +3476,11 @@
       "operator": "<",
       "line": 6.5,
       "lineType": "main",
-      "americanOdds": -138,
+      "americanOdds": -127,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3609,7 +3509,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-5ffff59b0d517e38",
+      "id": "research-2026-11-06-60ef5201fab25e0e",
       "date": "2026-11-06",
       "player": "RJ Barrett",
       "playerId": "nba:1629628",
@@ -3627,10 +3527,10 @@
       "line": 4.5,
       "lineType": "main",
       "americanOdds": -144,
-      "book": "fanduel",
+      "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3659,7 +3559,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-50c1ddda498a608f",
+      "id": "research-2026-11-06-3f9b20fa5178a477",
       "date": "2026-11-06",
       "player": "Myles Turner",
       "playerId": "nba:1626167",
@@ -3680,7 +3580,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3709,7 +3609,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-1054da4a00a38fac",
+      "id": "research-2026-11-06-161fdc1a01338010",
       "date": "2026-11-06",
       "player": "Ryan Rollins",
       "playerId": "nba:1631157",
@@ -3726,11 +3626,11 @@
       "operator": ">=",
       "line": 4,
       "lineType": "milestone",
-      "americanOdds": -169,
+      "americanOdds": -188,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3759,7 +3659,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-f38cabb305cd7d80",
+      "id": "research-2026-11-06-8446957018f61863",
       "date": "2026-11-06",
       "player": "Jamal Shead",
       "playerId": "nba:1642347",
@@ -3776,11 +3676,11 @@
       "operator": "<",
       "line": 7.5,
       "lineType": "main",
-      "americanOdds": -109,
+      "americanOdds": -111,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3809,57 +3709,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-e5ba3fb8cbb8923b",
-      "date": "2026-11-06",
-      "player": "Ja'Kobe Walter",
-      "playerId": "nba:1642266",
-      "eventId": "nba:0022600030",
-      "canonicalEventId": "nba:0022600030",
-      "team": "TOR",
-      "opponent": "MIL",
-      "matchup": "TOR vs MIL",
-      "startTime": "2026-11-07T01:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "AST",
-      "side": "over",
-      "operator": ">=",
-      "line": 2,
-      "lineType": "milestone",
-      "americanOdds": -188,
-      "book": "fanduel",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909292",
-        "athleteId": "4684272",
-        "expectedTeam": "TOR",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.670739675901725,
-        "pushProbability": 0,
-        "lossProbability": 0.32926032409827494,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 2.320334124159747
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-1ad56a3efb952ece",
+      "id": "research-2026-11-06-d6e7cc3ef67a5a54",
       "date": "2026-11-06",
       "player": "Rudy Gobert",
       "playerId": "nba:203497",
@@ -3876,11 +3726,11 @@
       "operator": "<",
       "line": 9.5,
       "lineType": "main",
-      "americanOdds": -104,
+      "americanOdds": -110,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -3909,57 +3759,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-26008c0595d5a071",
-      "date": "2026-11-06",
-      "player": "Derik Queen",
-      "playerId": "nba:1642852",
-      "eventId": "nba:0022600031",
-      "canonicalEventId": "nba:0022600031",
-      "team": "NOP",
-      "opponent": "MIN",
-      "matchup": "NOP vs MIN",
-      "startTime": "2026-11-07T01:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "PTS",
-      "side": "over",
-      "operator": ">=",
-      "line": 10,
-      "lineType": "milestone",
-      "americanOdds": -145,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909293",
-        "athleteId": "4869780",
-        "expectedTeam": "NOP",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.6043823471649412,
-        "pushProbability": 0,
-        "lossProbability": 0.3956176528350588,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 12.95477372836181
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-1cb03bd877c615d6",
+      "id": "research-2026-11-06-350db97829dbab1b",
       "date": "2026-11-06",
       "player": "Jonathan Kuminga",
       "playerId": "nba:1630228",
@@ -3976,11 +3776,11 @@
       "operator": "<",
       "line": 14.5,
       "lineType": "main",
-      "americanOdds": -109,
-      "book": "draftkings",
+      "americanOdds": -112,
+      "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4009,7 +3809,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-c6d2f90f11fe4354",
+      "id": "research-2026-11-06-9623d3f84b7ae4ff",
       "date": "2026-11-06",
       "player": "Karlo Matkovic",
       "playerId": "nba:1631255",
@@ -4023,14 +3823,14 @@
       "product": "sportsbook",
       "market": "PTS",
       "side": "over",
-      "operator": ">",
-      "line": 6.5,
-      "lineType": "main",
-      "americanOdds": -102,
+      "operator": ">=",
+      "line": 7,
+      "lineType": "milestone",
+      "americanOdds": -101,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4059,7 +3859,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-12c9912a122691e1",
+      "id": "research-2026-11-06-949219f50ddb0cb2",
       "date": "2026-11-06",
       "player": "LaMelo Ball",
       "playerId": "nba:1630163",
@@ -4080,7 +3880,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4109,7 +3909,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-de5664ac74faf201",
+      "id": "research-2026-11-06-ba31edb433ec663d",
       "date": "2026-11-06",
       "player": "Saddiq Bey",
       "playerId": "nba:1630180",
@@ -4123,14 +3923,14 @@
       "product": "sportsbook",
       "market": "PTS",
       "side": "over",
-      "operator": ">",
-      "line": 12.5,
-      "lineType": "main",
-      "americanOdds": -103,
+      "operator": ">=",
+      "line": 12,
+      "lineType": "milestone",
+      "americanOdds": -126,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4145,9 +3945,9 @@
         "provider": "espn"
       },
       "estimate": {
-        "winProbability": 0.6291539245667686,
+        "winProbability": 0.6688583078491335,
         "pushProbability": 0,
-        "lossProbability": 0.37084607543323145,
+        "lossProbability": 0.3311416921508665,
         "asOf": "2026-11-06T15:49:54.796694+00:00",
         "status": "provisional",
         "projection": 16.724515800203875
@@ -4159,7 +3959,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-bd53725e9a832a3d",
+      "id": "research-2026-11-06-dfff3de76ac1f0cb",
       "date": "2026-11-06",
       "player": "Saddiq Bey",
       "playerId": "nba:1630180",
@@ -4176,11 +3976,11 @@
       "operator": ">=",
       "line": 1,
       "lineType": "milestone",
-      "americanOdds": -478,
+      "americanOdds": -450,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4209,7 +4009,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-cdc18d445d014686",
+      "id": "research-2026-11-06-03a12520b90f5425",
       "date": "2026-11-06",
       "player": "Dejounte Murray",
       "playerId": "nba:1627749",
@@ -4223,14 +4023,14 @@
       "product": "sportsbook",
       "market": "AST",
       "side": "over",
-      "operator": ">",
-      "line": 5.5,
-      "lineType": "main",
-      "americanOdds": -124,
-      "book": "draftkings",
+      "operator": ">=",
+      "line": 6,
+      "lineType": "milestone",
+      "americanOdds": -128,
+      "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4259,7 +4059,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-416ade5ca4c64519",
+      "id": "research-2026-11-06-877064c102d014ce",
       "date": "2026-11-06",
       "player": "Jeremiah Fears",
       "playerId": "nba:1642847",
@@ -4274,13 +4074,13 @@
       "market": "AST",
       "side": "over",
       "operator": ">=",
-      "line": 4,
+      "line": 3,
       "lineType": "milestone",
-      "americanOdds": -120,
-      "book": "fanduel",
+      "americanOdds": -199,
+      "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4295,9 +4095,9 @@
         "provider": "espn"
       },
       "estimate": {
-        "winProbability": 0.6737489901629996,
+        "winProbability": 0.7877916646865941,
         "pushProbability": 0,
-        "lossProbability": 0.3262510098370004,
+        "lossProbability": 0.21220833531340585,
         "asOf": "2026-11-06T15:49:54.796694+00:00",
         "status": "provisional",
         "projection": 4.36253318164581
@@ -4309,7 +4109,57 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-fab2e43eb9dcd326",
+      "id": "research-2026-11-06-67fd47e81d89701d",
+      "date": "2026-11-06",
+      "player": "Derik Queen",
+      "playerId": "nba:1642852",
+      "eventId": "nba:0022600031",
+      "canonicalEventId": "nba:0022600031",
+      "team": "NOP",
+      "opponent": "MIN",
+      "matchup": "NOP vs MIN",
+      "startTime": "2026-11-07T01:00:00+00:00",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "REB",
+      "side": "over",
+      "operator": ">=",
+      "line": 6,
+      "lineType": "milestone",
+      "americanOdds": -218,
+      "book": "draftkings",
+      "overtime": null,
+      "group": "research",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
+      "sourceType": "saved_sportsbook_quote_statistical_comparison",
+      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
+      "result": {
+        "eventStatus": "scheduled",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified"
+      },
+      "resultSource": {
+        "eventId": "401909293",
+        "athleteId": "4869780",
+        "expectedTeam": "NOP",
+        "provider": "espn"
+      },
+      "estimate": {
+        "winProbability": 0.785010334888762,
+        "pushProbability": 0,
+        "lossProbability": 0.21498966511123793,
+        "asOf": "2026-11-06T15:49:54.796694+00:00",
+        "status": "provisional",
+        "projection": 7.753576180971391
+      },
+      "category": "value_safe",
+      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "postedAt": null,
+      "ryFavorite": false,
+      "selected": true
+    },
+    {
+      "id": "research-2026-11-06-e43aa6282739b2ad",
       "date": "2026-11-06",
       "player": "Jaden McDaniels",
       "playerId": "nba:1630183",
@@ -4326,11 +4176,11 @@
       "operator": ">",
       "line": 2.5,
       "lineType": "main",
-      "americanOdds": -134,
+      "americanOdds": -137,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4359,7 +4209,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-2804ade25c778771",
+      "id": "research-2026-11-06-dd8802568cb916e8",
       "date": "2026-11-06",
       "player": "Ayo Dosunmu",
       "playerId": "nba:1630245",
@@ -4376,11 +4226,11 @@
       "operator": ">=",
       "line": 4,
       "lineType": "milestone",
-      "americanOdds": -205,
+      "americanOdds": -194,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4402,14 +4252,14 @@
         "status": "provisional",
         "projection": 5.525625086337892
       },
-      "category": "value_safe",
+      "category": "high_probability_aggressive",
       "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
       "postedAt": null,
       "ryFavorite": false,
       "selected": true
     },
     {
-      "id": "research-2026-11-06-7b091114fce1f2ee",
+      "id": "research-2026-11-06-4f8d4746114fe7f2",
       "date": "2026-11-06",
       "player": "Jonathan Kuminga",
       "playerId": "nba:1630228",
@@ -4426,11 +4276,11 @@
       "operator": ">=",
       "line": 2,
       "lineType": "milestone",
-      "americanOdds": -295,
+      "americanOdds": -310,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4459,7 +4309,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-27b0f25630af6979",
+      "id": "research-2026-11-06-7f06e6d0d48d5c8e",
       "date": "2026-11-06",
       "player": "Precious Achiuwa",
       "playerId": "nba:1630173",
@@ -4476,11 +4326,11 @@
       "operator": ">=",
       "line": 8,
       "lineType": "milestone",
-      "americanOdds": -169,
+      "americanOdds": -163,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4509,7 +4359,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-6a735ee0d5def046",
+      "id": "research-2026-11-06-fa0a926a237f1e5b",
       "date": "2026-11-06",
       "player": "Domantas Sabonis",
       "playerId": "nba:1627734",
@@ -4530,7 +4380,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4559,7 +4409,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-d34afe7045e1207a",
+      "id": "research-2026-11-06-0ad1b8d9a6df8caf",
       "date": "2026-11-06",
       "player": "Dylan Harper",
       "playerId": "nba:1642844",
@@ -4580,7 +4430,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4609,7 +4459,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-57fb3b7e7f9c2d9b",
+      "id": "research-2026-11-06-a6fd40d250c48822",
       "date": "2026-11-06",
       "player": "Julian Champagnie",
       "playerId": "nba:1630577",
@@ -4630,7 +4480,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4659,7 +4509,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-1d5d8a7b8df64a62",
+      "id": "research-2026-11-06-16c8338954a6cc60",
       "date": "2026-11-06",
       "player": "Devin Vassell",
       "playerId": "nba:1630170",
@@ -4680,7 +4530,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4709,7 +4559,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-98ad109b7e6133ab",
+      "id": "research-2026-11-06-16b85daa22c41965",
       "date": "2026-11-06",
       "player": "Victor Wembanyama",
       "playerId": "nba:1641705",
@@ -4730,7 +4580,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4759,7 +4609,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-1f39a27e1fc203a5",
+      "id": "research-2026-11-06-b088325279034e5f",
       "date": "2026-11-06",
       "player": "Malik Monk",
       "playerId": "nba:1628370",
@@ -4780,7 +4630,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4809,7 +4659,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-dd079dded4b9361f",
+      "id": "research-2026-11-06-45fb78a3fb8cc80d",
       "date": "2026-11-06",
       "player": "Malik Monk",
       "playerId": "nba:1628370",
@@ -4826,11 +4676,11 @@
       "operator": "<",
       "line": 1.5,
       "lineType": "main",
-      "americanOdds": -106,
+      "americanOdds": -104,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4859,7 +4709,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-0484e2fa1a331c80",
+      "id": "research-2026-11-06-88329e3b751145a2",
       "date": "2026-11-06",
       "player": "Malik Monk",
       "playerId": "nba:1628370",
@@ -4880,7 +4730,7 @@
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -4909,57 +4759,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-e1baec0b50328738",
-      "date": "2026-11-06",
-      "player": "De'Aaron Fox",
-      "playerId": "nba:1628368",
-      "eventId": "nba:0022600033",
-      "canonicalEventId": "nba:0022600033",
-      "team": "SAS",
-      "opponent": "SAC",
-      "matchup": "SAS vs SAC",
-      "startTime": "2026-11-07T03:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "3PM",
-      "side": "under",
-      "operator": "<",
-      "line": 1.5,
-      "lineType": "main",
-      "americanOdds": -166,
-      "book": "fanduel",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909295",
-        "athleteId": "4066259",
-        "expectedTeam": "SAS",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.6416667593411414,
-        "pushProbability": 0,
-        "lossProbability": 0.35833324065885863,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 1.2901766239036243
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional threes estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-084a9250fe3f29bc",
+      "id": "research-2026-11-06-e233534de0e0a6cc",
       "date": "2026-11-06",
       "player": "Malik Monk",
       "playerId": "nba:1628370",
@@ -4980,7 +4780,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5009,7 +4809,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-a44ca6d6b96b2054",
+      "id": "research-2026-11-06-186843ab427c6aff",
       "date": "2026-11-06",
       "player": "Ziaire Williams",
       "playerId": "nba:1630533",
@@ -5026,11 +4826,11 @@
       "operator": ">",
       "line": 7.5,
       "lineType": "main",
-      "americanOdds": -105,
-      "book": "draftkings",
+      "americanOdds": -118,
+      "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5059,7 +4859,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-a4c38edf8c8d4da9",
+      "id": "research-2026-11-06-d0701bdc9e1165e5",
       "date": "2026-11-06",
       "player": "Austin Reaves",
       "playerId": "nba:1630559",
@@ -5076,11 +4876,11 @@
       "operator": "<",
       "line": 2.5,
       "lineType": "main",
-      "americanOdds": -182,
-      "book": "fanduel",
+      "americanOdds": -179,
+      "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5109,57 +4909,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-bfbf5f57a37bcd1d",
-      "date": "2026-11-06",
-      "player": "Ziaire Williams",
-      "playerId": "nba:1630533",
-      "eventId": "nba:0022600032",
-      "canonicalEventId": "nba:0022600032",
-      "team": "LAL",
-      "opponent": "POR",
-      "matchup": "LAL vs POR",
-      "startTime": "2026-11-07T03:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "3PM",
-      "side": "over",
-      "operator": ">=",
-      "line": 1,
-      "lineType": "milestone",
-      "americanOdds": -303,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909294",
-        "athleteId": "4433137",
-        "expectedTeam": "LAL",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.7735652884865308,
-        "pushProbability": 0,
-        "lossProbability": 0.22643471151346917,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 1.7337675617741601
-      },
-      "category": "value_safe",
-      "assessment": "Provisional threes estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-659cc2548c3243f9",
+      "id": "research-2026-11-06-2ff66e9c9cd2c388",
       "date": "2026-11-06",
       "player": "Sidy Cissoko",
       "playerId": "nba:1631321",
@@ -5176,11 +4926,11 @@
       "operator": "<",
       "line": 5.5,
       "lineType": "main",
-      "americanOdds": -122,
+      "americanOdds": -119,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5209,7 +4959,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-79611de5a37165c5",
+      "id": "research-2026-11-06-0f69d1798dad81bc",
       "date": "2026-11-06",
       "player": "Toumani Camara",
       "playerId": "nba:1641739",
@@ -5226,11 +4976,11 @@
       "operator": ">",
       "line": 11.5,
       "lineType": "main",
-      "americanOdds": -114,
+      "americanOdds": -113,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5259,7 +5009,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-364c102140221ac3",
+      "id": "research-2026-11-06-5c2e97142ed3fd05",
       "date": "2026-11-06",
       "player": "Damian Lillard",
       "playerId": "nba:203081",
@@ -5276,11 +5026,11 @@
       "operator": "<",
       "line": 3.5,
       "lineType": "main",
-      "americanOdds": -174,
+      "americanOdds": -173,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5309,57 +5059,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-97e734ac864e8e2d",
-      "date": "2026-11-06",
-      "player": "Jrue Holiday",
-      "playerId": "nba:201950",
-      "eventId": "nba:0022600032",
-      "canonicalEventId": "nba:0022600032",
-      "team": "POR",
-      "opponent": "LAL",
-      "matchup": "POR vs LAL",
-      "startTime": "2026-11-07T03:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "3PM",
-      "side": "over",
-      "operator": ">",
-      "line": 1.5,
-      "lineType": "main",
-      "americanOdds": -181,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909294",
-        "athleteId": "3995",
-        "expectedTeam": "POR",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.6670441646145039,
-        "pushProbability": 0,
-        "lossProbability": 0.3329558353854961,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 2.508497007080614
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Provisional threes estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-75b7e36f69011126",
+      "id": "research-2026-11-06-46bef2723c4063df",
       "date": "2026-11-06",
       "player": "Scoot Henderson",
       "playerId": "nba:1630703",
@@ -5376,11 +5076,11 @@
       "operator": "<",
       "line": 1.5,
       "lineType": "main",
-      "americanOdds": -117,
+      "americanOdds": -114,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5409,57 +5109,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-ecfaad37a3668261",
-      "date": "2026-11-06",
-      "player": "Luka Doncic",
-      "playerId": "nba:1629029",
-      "eventId": "nba:0022600032",
-      "canonicalEventId": "nba:0022600032",
-      "team": "LAL",
-      "opponent": "POR",
-      "matchup": "LAL vs POR",
-      "startTime": "2026-11-07T03:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "AST",
-      "side": "over",
-      "operator": ">=",
-      "line": 6,
-      "lineType": "milestone",
-      "americanOdds": -293,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909294",
-        "athleteId": "3945274",
-        "expectedTeam": "LAL",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.7721800904563936,
-        "pushProbability": 0,
-        "lossProbability": 0.22781990954360637,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 7.725727153650022
-      },
-      "category": "value_safe",
-      "assessment": "Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-74d77052443067f9",
+      "id": "research-2026-11-06-f1ad79b9b82f0ac4",
       "date": "2026-11-06",
       "player": "Scoot Henderson",
       "playerId": "nba:1630703",
@@ -5476,11 +5126,11 @@
       "operator": "<",
       "line": 2.5,
       "lineType": "main",
-      "americanOdds": -134,
-      "book": "draftkings",
+      "americanOdds": -136,
+      "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5509,7 +5159,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-86179e8202dbdf24",
+      "id": "research-2026-11-06-db27c5bb230b138d",
       "date": "2026-11-06",
       "player": "Sidy Cissoko",
       "playerId": "nba:1631321",
@@ -5526,11 +5176,11 @@
       "operator": ">=",
       "line": 2,
       "lineType": "milestone",
-      "americanOdds": -111,
-      "book": "fanduel",
+      "americanOdds": -108,
+      "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5559,7 +5209,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-1ea3ba7b0d0f3cf1",
+      "id": "research-2026-11-06-bd041253961e6751",
       "date": "2026-11-06",
       "player": "Toumani Camara",
       "playerId": "nba:1641739",
@@ -5576,11 +5226,11 @@
       "operator": "<",
       "line": 1.5,
       "lineType": "main",
-      "americanOdds": -132,
+      "americanOdds": -133,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5609,7 +5259,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-b8f8d8a0cc085a7a",
+      "id": "research-2026-11-06-a44195747848db85",
       "date": "2026-11-06",
       "player": "Sidy Cissoko",
       "playerId": "nba:1631321",
@@ -5623,14 +5273,14 @@
       "product": "sportsbook",
       "market": "REB",
       "side": "over",
-      "operator": ">",
-      "line": 2.5,
-      "lineType": "main",
-      "americanOdds": -116,
+      "operator": ">=",
+      "line": 3,
+      "lineType": "milestone",
+      "americanOdds": -113,
       "book": "draftkings",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5659,7 +5309,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-814474df2ce1570b",
+      "id": "research-2026-11-06-9178fea987e41a5f",
       "date": "2026-11-06",
       "player": "Robert Williams III",
       "playerId": "nba:1629057",
@@ -5680,7 +5330,7 @@
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5709,57 +5359,7 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-e45df9cffdf857ad",
-      "date": "2026-11-06",
-      "player": "Kenrich Williams",
-      "playerId": "nba:1629026",
-      "eventId": "nba:0022600029",
-      "canonicalEventId": "nba:0022600029",
-      "team": "OKC",
-      "opponent": "MEM",
-      "matchup": "OKC vs MEM",
-      "startTime": "2026-11-07T01:00:00+00:00",
-      "period": "full_game",
-      "product": "sportsbook",
-      "market": "PTS",
-      "side": "under",
-      "operator": "<",
-      "line": 9.5,
-      "lineType": "main",
-      "americanOdds": 101,
-      "book": "draftkings",
-      "overtime": null,
-      "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
-      "sourceType": "saved_sportsbook_quote_statistical_comparison",
-      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
-      "result": {
-        "eventStatus": "scheduled",
-        "statisticalOutcome": "pending",
-        "sportsbookSettlement": "unverified"
-      },
-      "resultSource": {
-        "eventId": "401909291",
-        "athleteId": "3133626",
-        "expectedTeam": "OKC",
-        "provider": "espn"
-      },
-      "estimate": {
-        "winProbability": 0.6851841284333866,
-        "pushProbability": 0,
-        "lossProbability": 0.3148158715666134,
-        "asOf": "2026-11-06T15:49:54.796694+00:00",
-        "status": "provisional",
-        "projection": 7.861237921326942
-      },
-      "category": "high_probability_aggressive",
-      "assessment": "Team Lobs selection. Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
-      "postedAt": null,
-      "ryFavorite": false,
-      "selected": true
-    },
-    {
-      "id": "research-2026-11-06-d273e8f6d8568563",
+      "id": "research-2026-11-06-8a31f281ee2d2cb7",
       "date": "2026-11-06",
       "player": "Naji Marshall",
       "playerId": "nba:1630230",
@@ -5776,11 +5376,11 @@
       "operator": ">=",
       "line": 4,
       "lineType": "milestone",
-      "americanOdds": 112,
+      "americanOdds": 106,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5809,7 +5409,57 @@
       "selected": true
     },
     {
-      "id": "research-2026-11-06-0fc6fb21e4fb4216",
+      "id": "research-2026-11-06-fa68181035b24f7b",
+      "date": "2026-11-06",
+      "player": "Jeremiah Fears",
+      "playerId": "nba:1642847",
+      "eventId": "nba:0022600031",
+      "canonicalEventId": "nba:0022600031",
+      "team": "NOP",
+      "opponent": "MIN",
+      "matchup": "NOP vs MIN",
+      "startTime": "2026-11-07T01:00:00+00:00",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "AST",
+      "side": "over",
+      "operator": ">=",
+      "line": 4,
+      "lineType": "milestone",
+      "americanOdds": 122,
+      "book": "fanduel",
+      "overtime": null,
+      "group": "research",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
+      "sourceType": "saved_sportsbook_quote_statistical_comparison",
+      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
+      "result": {
+        "eventStatus": "scheduled",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified"
+      },
+      "resultSource": {
+        "eventId": "401909293",
+        "athleteId": "5144091",
+        "expectedTeam": "NOP",
+        "provider": "espn"
+      },
+      "estimate": {
+        "winProbability": 0.6737489901629996,
+        "pushProbability": 0,
+        "lossProbability": 0.3262510098370004,
+        "asOf": "2026-11-06T15:49:54.796694+00:00",
+        "status": "provisional",
+        "projection": 4.36253318164581
+      },
+      "category": "high_probability_aggressive",
+      "assessment": "Team Lobs selection. Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "postedAt": null,
+      "ryFavorite": false,
+      "selected": true
+    },
+    {
+      "id": "research-2026-11-06-181fea17761c19c0",
       "date": "2026-11-06",
       "player": "Rudy Gobert",
       "playerId": "nba:203497",
@@ -5826,11 +5476,11 @@
       "operator": "<",
       "line": 9.5,
       "lineType": "main",
-      "americanOdds": 100,
+      "americanOdds": 102,
       "book": "fanduel",
       "overtime": null,
       "group": "research",
-      "capturedAt": "2026-11-06T16:43:24.203965+00:00",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
       "sourceType": "saved_sportsbook_quote_statistical_comparison",
       "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
       "result": {
@@ -5857,7 +5507,57 @@
       "postedAt": null,
       "ryFavorite": false,
       "selected": true
+    },
+    {
+      "id": "research-2026-11-06-eddd17978a89d2bb",
+      "date": "2026-11-06",
+      "player": "Ziaire Williams",
+      "playerId": "nba:1630533",
+      "eventId": "nba:0022600032",
+      "canonicalEventId": "nba:0022600032",
+      "team": "LAL",
+      "opponent": "POR",
+      "matchup": "LAL vs POR",
+      "startTime": "2026-11-07T03:00:00+00:00",
+      "period": "full_game",
+      "product": "sportsbook",
+      "market": "PTS",
+      "side": "over",
+      "operator": ">=",
+      "line": 10,
+      "lineType": "milestone",
+      "americanOdds": 155,
+      "book": "draftkings",
+      "overtime": null,
+      "group": "research",
+      "capturedAt": "2026-11-06T17:53:58.663600+00:00",
+      "sourceType": "saved_sportsbook_quote_statistical_comparison",
+      "evidence": "Provisional full-game statistical estimate including overtime, conditional on appearance. Saved individual sportsbook price; rules, settlement and acceptance are unverified.",
+      "result": {
+        "eventStatus": "scheduled",
+        "statisticalOutcome": "pending",
+        "sportsbookSettlement": "unverified"
+      },
+      "resultSource": {
+        "eventId": "401909294",
+        "athleteId": "4433137",
+        "expectedTeam": "LAL",
+        "provider": "espn"
+      },
+      "estimate": {
+        "winProbability": 0.6060442525634107,
+        "pushProbability": 0,
+        "lossProbability": 0.3939557474365893,
+        "asOf": "2026-11-06T15:49:54.796694+00:00",
+        "status": "provisional",
+        "projection": 12.909695988487137
+      },
+      "category": "high_probability_aggressive",
+      "assessment": "Team Lobs selection. Provisional estimate. Calibration is not validated. Conditional on appearance; current role/availability may be unknown. No verified sportsbook EV or acceptance is asserted.",
+      "postedAt": null,
+      "ryFavorite": false,
+      "selected": true
     }
   ],
-  "version": "cc4b99a12a127439"
+  "version": "529d4b15e3184f3e"
 }

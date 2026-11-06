@@ -822,11 +822,11 @@
     {
       "channel": "daily",
       "date": "2026-11-06",
-      "version": "cc4b99a12a127439",
-      "path": "daily/2026-11-06/cc4b99a12a127439.json",
+      "version": "529d4b15e3184f3e",
+      "path": "daily/2026-11-06/529d4b15e3184f3e.json",
       "count": 0,
-      "researchCount": 117,
-      "updatedAt": "2026-11-06T16:51:30.960763+00:00"
+      "researchCount": 111,
+      "updatedAt": "2026-11-06T17:58:56.680865+00:00"
     }
   ],
   "schemaVersion": "public-1"

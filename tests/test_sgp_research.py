@@ -43,7 +43,9 @@ class SGPResearchContract(unittest.TestCase):
 
     def test_manifest_is_the_only_build_entry_and_both_new_files_are_packaged(self):
         names = schema.publication_files(ROOT,build.safe_file)
-        self.assertEqual(names,['data/sgp-research/manifest.json','data/sgp-research/'+self.entry['path']])
+        entries=read(ROOT/'data/sgp-research/manifest.json')['editions']
+        self.assertEqual(names,['data/sgp-research/manifest.json']+['data/sgp-research/'+e['path'] for e in entries])
+        self.assertIn('data/sgp-research/'+self.entry['path'],names)
         self.assertEqual(hashlib.sha256((ROOT/names[1]).read_bytes()).hexdigest(),self.entry['sha256'])
 
     def test_rejects_financial_private_quote_probability_and_score_fields(self):

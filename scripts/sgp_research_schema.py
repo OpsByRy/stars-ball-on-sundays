@@ -1,7 +1,7 @@
 """Narrow public SGP research observations; no qualification or financial data."""
 from datetime import datetime, timezone
 from pathlib import Path
-from math import prod, floor, isclose
+from math import prod, floor, isclose, isfinite
 import hashlib
 import json
 import re
@@ -39,6 +39,34 @@ def clock(value, now, physical=True):
     require(stamp.tzinfo is not None and (not physical or stamp <= now), 'Future research observation')
     return stamp
 
+JOINT = {'status','reason','modelVersion','estimatedAt','inputCutoff','winProbability','pushProbability','lossProbability','fairAmericanOdds','sampleGames','limitations'}
+def safe_text(value):
+    return type(value) is str and 0 < len(value) <= 1200 and not re.search(r'[<>\x00-\x1f]', value)
+
+def validate_joint(model, body, legs, now):
+    keys(model, JOINT)
+    require(model['status'] in ('experimental','unavailable'), 'Invalid joint model status')
+    require(model['reason'] is None or safe_text(model['reason']), 'Invalid joint model reason')
+    require(model['modelVersion'] is None or safe_text(model['modelVersion']), 'Invalid joint model version')
+    cutoff, estimated = clock(model['inputCutoff'],now), clock(model['estimatedAt'],now)
+    require(cutoff <= estimated <= clock(body['assembledAt'],now) and cutoff < min(clock(l['pick']['startTime'],now,False) for l in legs), 'Invalid joint model clock order')
+    require(type(model['limitations']) is list and 1 <= len(model['limitations']) <= 32 and all(safe_text(x) for x in model['limitations']), 'Explicit joint model limitations required')
+    numbers = ('winProbability','pushProbability','lossProbability','fairAmericanOdds','sampleGames')
+    if model['status'] == 'unavailable':
+        require(safe_text(model['reason']) and all(model[k] is None for k in numbers), 'Unavailable model requires reason and null numbers')
+        return
+    require(safe_text(model['modelVersion']) and model['reason'] is None, 'Experimental model version required')
+    probabilities = [model[k] for k in numbers[:3]]
+    require(all(type(x) in (int,float) and isfinite(x) and 0 <= x <= 1 for x in probabilities) and abs(sum(probabilities)-1) < 1e-7, 'Invalid joint model probabilities')
+    require(type(model['sampleGames']) is int and 1 <= model['sampleGames'] <= 2**53-1, 'Invalid joint model sample count')
+    win, push, loss = probabilities
+    if push > 0 or win in (0,1):
+        require(model['fairAmericanOdds'] is None, 'No finite fair price with pushes or boundary probability')
+    else:
+        decimal = 1/win
+        fair = (decimal-1)*100 if decimal >= 2 else -100/(decimal-1)
+        require(type(model['fairAmericanOdds']) is int and abs(model['fairAmericanOdds']) <= 2**53-1 and abs(model['fairAmericanOdds'] - fair) <= .500000001, 'Joint fair price does not reproduce')
+
 def validate(body, *, source=None, calculator_sha=None, now=None):
     now = now or datetime.now(timezone.utc)
     keys(body, BODY)
@@ -62,7 +90,9 @@ def validate(body, *, source=None, calculator_sha=None, now=None):
     ids, memberships, copies = set(), set(), {}
     from zoneinfo import ZoneInfo
     for a in body['suggestions']:
-        keys(a, IDEA)
+        keys(a, IDEA | ({'jointModel'} if 'jointModel' in a else set()))
+        if 'jointModel' in a:
+            validate_joint(a['jointModel'], body, a['legs'], now)
         require(type(a['id']) is str and re.fullmatch('sgp-research-'+re.escape(body['date'])+'-[0-9a-f]{16}',a['id']) and a['id'] not in ids, 'Unique research ID required')
         ids.add(a['id'])
         require(a['recordKind'] == 'sgp_research_suggestion' and type(a['legs']) is list and 2 <= len(a['legs']) <= 6, 'Invalid research record')

@@ -1,27 +1,16 @@
 {
-  "brand": "Stars Ball On Sundays",
-  "files": [
-    "sbos-primary-compact-classic-720.webp",
-    "sbos-primary-compact-classic.png",
-    "sbos-primary-compact-forest-720.webp",
-    "sbos-primary-compact-forest.png",
-    "sbos-primary-compact-violet-720.webp",
-    "sbos-primary-compact-violet.png",
-    "sbos-primary-compact-volt-720.webp",
-    "sbos-primary-compact-volt.png",
-    "sbos-primary-full-classic-720.webp",
-    "sbos-primary-full-classic.png",
-    "sbos-primary-full-forest-720.webp",
-    "sbos-primary-full-forest.png",
-    "sbos-primary-full-violet-720.webp",
-    "sbos-primary-full-violet.png",
-    "sbos-primary-full-volt-720.webp",
-    "sbos-primary-full-volt.png",
-    "sbos-secondary-full-classic-720.webp",
-    "sbos-secondary-full-classic.png",
-    "sbos-share-classic.png",
-    "sbos-share-forest.png",
-    "sbos-share-violet.png",
-    "sbos-share-volt.png"
-  ]
+  "version": "v19",
+  "source": "SBOS_Brand_Kit_2026-11-05_v19",
+  "colorways": {
+    "classic": "Classic",
+    "volt": "Volt",
+    "violet": "Violet Ice",
+    "forest": "Forest Fire",
+    "hardwood": "Hardwood",
+    "primetime": "Prime Time",
+    "tealera": "Teal Era",
+    "varsity": "Varsity",
+    "sunset": "Valley Sunset"
+  },
+  "favicon": "v19 Heritage favicon and Sunday Calendar app icon explicitly selected by owner on 2026-11-06"
 }

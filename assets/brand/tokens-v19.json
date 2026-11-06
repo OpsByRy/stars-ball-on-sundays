@@ -1,0 +1,954 @@
+{
+ "name": "SBOS website theme tokens",
+ "version": "v19 \u00b7 2026-11-05",
+ "howToUse": "Set data-sbos-colorway=\"<id>\" (and optionally data-sbos-scheme=\"dark\") on <html>, then use the --sbos-* variables. Roles match the logo palette.",
+ "elements": {
+  "bg": {
+   "light": {
+    "value": "@highlight",
+    "use": "Page background"
+   },
+   "dark": {
+    "value": "@ink",
+    "use": "Page background"
+   }
+  },
+  "surface": {
+   "light": {
+    "value": "mix(@highlight,@trim,0.16)",
+    "use": "Cards, panels, table rows"
+   },
+   "dark": {
+    "value": "mix(@ink,@trim,0.08)",
+    "use": "Cards, panels, table rows"
+   }
+  },
+  "surface-alt": {
+   "light": {
+    "value": "mix(@highlight,@trim,0.34)",
+    "use": "Raised or striped areas, selected rows"
+   },
+   "dark": {
+    "value": "mix(@ink,@trim,0.16)",
+    "use": "Raised or striped areas, selected rows"
+   }
+  },
+  "border": {
+   "light": {
+    "value": "mix(@trim,@ink,0.22)",
+    "use": "Dividers, card and input borders"
+   },
+   "dark": {
+    "value": "mix(@ink,@trim,0.32)",
+    "use": "Dividers, card and input borders"
+   }
+  },
+  "text": {
+   "light": {
+    "value": "@ink",
+    "against": "bg",
+    "min": 7,
+    "fixToward": "#000000",
+    "use": "Body text"
+   },
+   "dark": {
+    "value": "@highlight",
+    "against": "bg",
+    "min": 7,
+    "fixToward": "#FFFFFF",
+    "use": "Body text"
+   }
+  },
+  "text-muted": {
+   "light": {
+    "value": "mix(@ink,@highlight,0.3)",
+    "against": "bg",
+    "min": 4.5,
+    "fixToward": "@ink",
+    "use": "Captions, timestamps, secondary text"
+   },
+   "dark": {
+    "value": "mix(@highlight,@ink,0.3)",
+    "against": "bg",
+    "min": 4.5,
+    "fixToward": "@highlight",
+    "use": "Captions, timestamps, secondary text"
+   }
+  },
+  "heading": {
+   "light": {
+    "value": "@ink",
+    "against": "bg",
+    "min": 4.5,
+    "fixToward": "#000000",
+    "use": "Headings"
+   },
+   "dark": {
+    "value": "@trim",
+    "against": "bg",
+    "min": 4.5,
+    "fixToward": "@highlight",
+    "use": "Headings"
+   }
+  },
+  "link": {
+   "light": {
+    "value": "@accent",
+    "against": "bg",
+    "min": 4.5,
+    "fixToward": "@ink",
+    "use": "Text links"
+   },
+   "dark": {
+    "value": "@accent",
+    "against": "bg",
+    "min": 4.5,
+    "fixToward": "@highlight",
+    "use": "Text links"
+   }
+  },
+  "link-hover": {
+   "light": {
+    "value": "@ink",
+    "use": "Link hover and pressed"
+   },
+   "dark": {
+    "value": "@trim",
+    "use": "Link hover and pressed"
+   }
+  },
+  "accent": {
+   "light": {
+    "value": "@accent",
+    "use": "Badges, highlights, active tabs, rules (not small text)"
+   },
+   "dark": {
+    "value": "@accent",
+    "use": "Badges, highlights, active tabs, rules (not small text)"
+   }
+  },
+  "on-accent": {
+   "light": {
+    "value": "best(@highlight,@ink,#FFFFFF,#000000)",
+    "against": "accent",
+    "min": 4.5,
+    "fixToward": "@ink",
+    "use": "Text on an accent fill"
+   },
+   "dark": {
+    "value": "best(@highlight,@ink,#FFFFFF,#000000)",
+    "against": "accent",
+    "min": 4.5,
+    "fixToward": "@ink",
+    "use": "Text on an accent fill"
+   }
+  },
+  "button-bg": {
+   "light": {
+    "value": "@ink",
+    "use": "Primary button fill"
+   },
+   "dark": {
+    "value": "@trim",
+    "use": "Primary button fill"
+   }
+  },
+  "button-text": {
+   "light": {
+    "value": "best(@highlight,@trim,#FFFFFF)",
+    "against": "button-bg",
+    "min": 4.5,
+    "fixToward": "#FFFFFF",
+    "use": "Primary button label"
+   },
+   "dark": {
+    "value": "best(@ink,@highlight,#000000)",
+    "against": "button-bg",
+    "min": 4.5,
+    "fixToward": "@ink",
+    "use": "Primary button label"
+   }
+  },
+  "star": {
+   "light": {
+    "value": "@star",
+    "use": "Star icons, picks of the day"
+   },
+   "dark": {
+    "value": "@star",
+    "use": "Star icons, picks of the day"
+   }
+  },
+  "focus": {
+   "light": {
+    "value": "@accent",
+    "against": "bg",
+    "min": 3,
+    "fixToward": "@ink",
+    "use": "Keyboard focus ring"
+   },
+   "dark": {
+    "value": "@accent",
+    "against": "bg",
+    "min": 3,
+    "fixToward": "@highlight",
+    "use": "Keyboard focus ring"
+   }
+  }
+ },
+ "colorways": {
+  "classic": {
+   "name": "Classic",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFFFFF",
+    "court-line": "#1C4170",
+    "text-outline": "#1C4170",
+    "paint": "#DBE1E8",
+    "ink": "#002A60",
+    "trim": "#C6CFD4",
+    "highlight": "#FFFFFF",
+    "accent": "#CD1041",
+    "star": "#CD1041",
+    "sweep": "#CD1041",
+    "hoop": "#CD1041",
+    "ball-light": "#C6CFD4",
+    "ball-dark": "#002A60",
+    "ball-seam": "#CD1041"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFFFFF",
+      "surface": "#F6F7F8",
+      "surface-alt": "#ECEFF0",
+      "border": "#9AABBA",
+      "text": "#002A60",
+      "text-muted": "#4C6A90",
+      "heading": "#002A60",
+      "link": "#CD1041",
+      "link-hover": "#002A60",
+      "accent": "#CD1041",
+      "on-accent": "#FFFFFF",
+      "button-bg": "#002A60",
+      "button-text": "#FFFFFF",
+      "star": "#CD1041",
+      "focus": "#CD1041"
+     },
+     "contrast": {
+      "text": 14.0,
+      "text-muted": 5.57,
+      "heading": 14.0,
+      "link": 5.61,
+      "on-accent": 5.61,
+      "button-text": 14.0,
+      "focus": 5.61
+     },
+     "adjusted": {}
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#002A60",
+      "surface": "#103769",
+      "surface-alt": "#204473",
+      "border": "#3F5F85",
+      "text": "#FFFFFF",
+      "text-muted": "#B2BFCF",
+      "heading": "#C6CFD4",
+      "link": "#E1708D",
+      "link-hover": "#C6CFD4",
+      "accent": "#CD1041",
+      "on-accent": "#FFFFFF",
+      "button-bg": "#C6CFD4",
+      "button-text": "#002A60",
+      "star": "#CD1041",
+      "focus": "#D5365F"
+     },
+     "contrast": {
+      "text": 14.0,
+      "text-muted": 7.5,
+      "heading": 8.85,
+      "link": 4.6,
+      "on-accent": 5.61,
+      "button-text": 8.85,
+      "focus": 3.01
+     },
+     "adjusted": {
+      "link": "moved 40% toward @highlight to reach 4.5:1 contrast (was 2.50:1)",
+      "focus": "moved 16% toward @highlight to reach 3.0:1 contrast (was 2.50:1)"
+     }
+    }
+   }
+  },
+  "volt": {
+   "name": "Volt",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFFFFF",
+    "court-line": "#30351E",
+    "text-outline": "#30351E",
+    "paint": "#DEDFDB",
+    "ink": "#16181A",
+    "trim": "#CFE53A",
+    "highlight": "#FFFFFF",
+    "accent": "#F05A5E",
+    "star": "#CFE53A",
+    "sweep": "#CFE53A",
+    "hoop": "#F05A5E",
+    "ball-light": "#CBD79A",
+    "ball-dark": "#62C4C0",
+    "ball-seam": "#F05A5E"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFFFFF",
+      "surface": "#F7FBDF",
+      "surface-alt": "#EFF6BC",
+      "border": "#A6B833",
+      "text": "#16181A",
+      "text-muted": "#5C5D5F",
+      "heading": "#16181A",
+      "link": "#C44D50",
+      "link-hover": "#16181A",
+      "accent": "#F05A5E",
+      "on-accent": "#16181A",
+      "button-bg": "#16181A",
+      "button-text": "#FFFFFF",
+      "star": "#CFE53A",
+      "focus": "#F05A5E"
+     },
+     "contrast": {
+      "text": 17.8,
+      "text-muted": 6.59,
+      "heading": 17.8,
+      "link": 4.64,
+      "on-accent": 5.37,
+      "button-text": 17.8,
+      "focus": 3.32
+     },
+     "adjusted": {
+      "link": "moved 20% toward @ink to reach 4.5:1 contrast (was 3.32:1)"
+     }
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#16181A",
+      "surface": "#25281D",
+      "surface-alt": "#34391F",
+      "border": "#515A24",
+      "text": "#FFFFFF",
+      "text-muted": "#B9BABA",
+      "heading": "#CFE53A",
+      "link": "#F05A5E",
+      "link-hover": "#CFE53A",
+      "accent": "#F05A5E",
+      "on-accent": "#16181A",
+      "button-bg": "#CFE53A",
+      "button-text": "#16181A",
+      "star": "#CFE53A",
+      "focus": "#F05A5E"
+     },
+     "contrast": {
+      "text": 17.8,
+      "text-muted": 9.15,
+      "heading": 12.65,
+      "link": 5.37,
+      "on-accent": 5.37,
+      "button-text": 12.65,
+      "focus": 5.37
+     },
+     "adjusted": {}
+    }
+   }
+  },
+  "violet": {
+   "name": "Violet Ice",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFFFFF",
+    "court-line": "#362E52",
+    "text-outline": "#362E52",
+    "paint": "#DFDEE3",
+    "ink": "#1B1038",
+    "trim": "#DDE6F3",
+    "highlight": "#FFFFFF",
+    "accent": "#8A4DFF",
+    "star": "#8A4DFF",
+    "sweep": "#A9DCFF",
+    "hoop": "#8A4DFF",
+    "ball-light": "#A9DCFF",
+    "ball-dark": "#1B1038",
+    "ball-seam": "#8A4DFF"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFFFFF",
+      "surface": "#FAFBFD",
+      "surface-alt": "#F3F6FB",
+      "border": "#B2B7CA",
+      "text": "#1B1038",
+      "text-muted": "#5F5874",
+      "heading": "#1B1038",
+      "link": "#8A4DFF",
+      "link-hover": "#1B1038",
+      "accent": "#8A4DFF",
+      "on-accent": "#FFFFFF",
+      "button-bg": "#1B1038",
+      "button-text": "#FFFFFF",
+      "star": "#8A4DFF",
+      "focus": "#8A4DFF"
+     },
+     "contrast": {
+      "text": 17.83,
+      "text-muted": 6.7,
+      "heading": 17.83,
+      "link": 4.58,
+      "on-accent": 4.58,
+      "button-text": 17.83,
+      "focus": 4.58
+     },
+     "adjusted": {}
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#1B1038",
+      "surface": "#2B2147",
+      "surface-alt": "#3A3256",
+      "border": "#595474",
+      "text": "#FFFFFF",
+      "text-muted": "#BBB7C3",
+      "heading": "#DDE6F3",
+      "link": "#965FFF",
+      "link-hover": "#DDE6F3",
+      "accent": "#8A4DFF",
+      "on-accent": "#FFFFFF",
+      "button-bg": "#DDE6F3",
+      "button-text": "#1B1038",
+      "star": "#8A4DFF",
+      "focus": "#8A4DFF"
+     },
+     "contrast": {
+      "text": 17.83,
+      "text-muted": 9.06,
+      "heading": 14.17,
+      "link": 4.57,
+      "on-accent": 4.58,
+      "button-text": 14.17,
+      "focus": 3.89
+     },
+     "adjusted": {
+      "link": "moved 10% toward @highlight to reach 4.5:1 contrast (was 3.89:1)"
+     }
+    }
+   }
+  },
+  "forest": {
+   "name": "Forest Fire",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFF9EE",
+    "court-line": "#2E5241",
+    "text-outline": "#2E5241",
+    "paint": "#DEDED2",
+    "ink": "#0E3B2C",
+    "trim": "#EFDFBF",
+    "highlight": "#FFF9EE",
+    "accent": "#FF5B14",
+    "star": "#FF5B14",
+    "sweep": "#FF5B14",
+    "hoop": "#FF5B14",
+    "ball-light": "#EFDFBF",
+    "ball-dark": "#0E3B2C",
+    "ball-seam": "#FF5B14"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFF9EE",
+      "surface": "#FCF5E6",
+      "surface-alt": "#FAF0DE",
+      "border": "#BEBB9F",
+      "text": "#0E3B2C",
+      "text-muted": "#567466",
+      "heading": "#0E3B2C",
+      "link": "#BC521B",
+      "link-hover": "#0E3B2C",
+      "accent": "#FF5B14",
+      "on-accent": "#000000",
+      "button-bg": "#0E3B2C",
+      "button-text": "#FFF9EE",
+      "star": "#FF5B14",
+      "focus": "#FA5A14"
+     },
+     "contrast": {
+      "text": 11.92,
+      "text-muted": 4.9,
+      "heading": 11.92,
+      "link": 4.59,
+      "on-accent": 6.76,
+      "button-text": 11.92,
+      "focus": 3.06
+     },
+     "adjusted": {
+      "link": "moved 28% toward @ink to reach 4.5:1 contrast (was 2.96:1)",
+      "focus": "moved 2% toward @ink to reach 3.0:1 contrast (was 2.96:1)"
+     }
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#0E3B2C",
+      "surface": "#204838",
+      "surface-alt": "#325544",
+      "border": "#566F5B",
+      "text": "#FFF9EE",
+      "text-muted": "#B7C0B4",
+      "heading": "#EFDFBF",
+      "link": "#FF7133",
+      "link-hover": "#EFDFBF",
+      "accent": "#FF5B14",
+      "on-accent": "#000000",
+      "button-bg": "#EFDFBF",
+      "button-text": "#0E3B2C",
+      "star": "#FF5B14",
+      "focus": "#FF5B14"
+     },
+     "contrast": {
+      "text": 11.92,
+      "text-muted": 6.67,
+      "heading": 9.51,
+      "link": 4.56,
+      "on-accent": 6.76,
+      "button-text": 9.51,
+      "focus": 4.02
+     },
+     "adjusted": {
+      "link": "moved 14% toward @highlight to reach 4.5:1 contrast (was 4.02:1)"
+     }
+    }
+   }
+  },
+  "hardwood": {
+   "name": "Hardwood",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFF7EA",
+    "court-line": "#443222",
+    "text-outline": "#443222",
+    "paint": "#E1D7CA",
+    "ink": "#2A1A10",
+    "trim": "#E6C48E",
+    "highlight": "#FFF7EA",
+    "accent": "#C8471B",
+    "star": "#C8471B",
+    "sweep": "#C8471B",
+    "hoop": "#C8471B",
+    "ball-light": "#9A5A33",
+    "ball-dark": "#5A2D16",
+    "ball-seam": "#E6C48E"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFF7EA",
+      "surface": "#FBEFDB",
+      "surface-alt": "#F6E6CB",
+      "border": "#BD9F72",
+      "text": "#2A1A10",
+      "text-muted": "#6A5C51",
+      "heading": "#2A1A10",
+      "link": "#C8471B",
+      "link-hover": "#2A1A10",
+      "accent": "#C8471B",
+      "on-accent": "#FFF7EA",
+      "button-bg": "#2A1A10",
+      "button-text": "#FFF7EA",
+      "star": "#C8471B",
+      "focus": "#C8471B"
+     },
+     "contrast": {
+      "text": 15.75,
+      "text-muted": 6.05,
+      "heading": 15.75,
+      "link": 4.52,
+      "on-accent": 4.52,
+      "button-text": 15.75,
+      "focus": 4.52
+     },
+     "adjusted": {}
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#2A1A10",
+      "surface": "#39281A",
+      "surface-alt": "#483524",
+      "border": "#665038",
+      "text": "#FFF7EA",
+      "text-muted": "#BFB5A9",
+      "heading": "#E6C48E",
+      "link": "#D26740",
+      "link-hover": "#E6C48E",
+      "accent": "#C8471B",
+      "on-accent": "#FFF7EA",
+      "button-bg": "#E6C48E",
+      "button-text": "#2A1A10",
+      "star": "#C8471B",
+      "focus": "#C8471B"
+     },
+     "contrast": {
+      "text": 15.75,
+      "text-muted": 8.29,
+      "heading": 10.09,
+      "link": 4.59,
+      "on-accent": 4.52,
+      "button-text": 10.09,
+      "focus": 3.49
+     },
+     "adjusted": {
+      "link": "moved 18% toward @highlight to reach 4.5:1 contrast (was 3.49:1)"
+     }
+    }
+   }
+  },
+  "primetime": {
+   "name": "Prime Time",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFFFFF",
+    "court-line": "#24221F",
+    "text-outline": "#24221F",
+    "paint": "#DCDCDB",
+    "ink": "#0C0E13",
+    "trim": "#B9A06A",
+    "highlight": "#FFFFFF",
+    "accent": "#F2C14E",
+    "star": "#F2C14E",
+    "sweep": "#F2C14E",
+    "hoop": "#F2C14E",
+    "ball-light": "#3A3F4A",
+    "ball-dark": "#0C0E13",
+    "ball-seam": "#F2C14E"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFFFFF",
+      "surface": "#F4F0E7",
+      "surface-alt": "#E7DFCC",
+      "border": "#938057",
+      "text": "#0C0E13",
+      "text-muted": "#55565A",
+      "heading": "#0C0E13",
+      "link": "#8D7234",
+      "link-hover": "#0C0E13",
+      "accent": "#F2C14E",
+      "on-accent": "#0C0E13",
+      "button-bg": "#0C0E13",
+      "button-text": "#FFFFFF",
+      "star": "#F2C14E",
+      "focus": "#B28F3D"
+     },
+     "contrast": {
+      "text": 19.3,
+      "text-muted": 7.33,
+      "heading": 19.3,
+      "link": 4.58,
+      "on-accent": 11.5,
+      "button-text": 19.3,
+      "focus": 3.05
+     },
+     "adjusted": {
+      "link": "moved 44% toward @ink to reach 4.5:1 contrast (was 1.68:1)",
+      "focus": "moved 28% toward @ink to reach 3.0:1 contrast (was 1.68:1)"
+     }
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#0C0E13",
+      "surface": "#1A1A1A",
+      "surface-alt": "#282521",
+      "border": "#433D2F",
+      "text": "#FFFFFF",
+      "text-muted": "#B6B7B8",
+      "heading": "#B9A06A",
+      "link": "#F2C14E",
+      "link-hover": "#B9A06A",
+      "accent": "#F2C14E",
+      "on-accent": "#0C0E13",
+      "button-bg": "#B9A06A",
+      "button-text": "#0C0E13",
+      "star": "#F2C14E",
+      "focus": "#F2C14E"
+     },
+     "contrast": {
+      "text": 19.3,
+      "text-muted": 9.61,
+      "heading": 7.63,
+      "link": 11.5,
+      "on-accent": 11.5,
+      "button-text": 7.63,
+      "focus": 11.5
+     },
+     "adjusted": {}
+    }
+   }
+  },
+  "tealera": {
+   "name": "Teal Era",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFFFFF",
+    "court-line": "#34306D",
+    "text-outline": "#34306D",
+    "paint": "#DFDEE8",
+    "ink": "#22145A",
+    "trim": "#A6DDE2",
+    "highlight": "#FFFFFF",
+    "accent": "#00A3AF",
+    "star": "#00A3AF",
+    "sweep": "#00A3AF",
+    "hoop": "#00A3AF",
+    "ball-light": "#A6DDE2",
+    "ball-dark": "#22145A",
+    "ball-seam": "#00A3AF"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFFFFF",
+      "surface": "#F1FAFA",
+      "surface-alt": "#E1F3F5",
+      "border": "#89B1C4",
+      "text": "#22145A",
+      "text-muted": "#645A8C",
+      "heading": "#22145A",
+      "link": "#08819B",
+      "link-hover": "#22145A",
+      "accent": "#00A3AF",
+      "on-accent": "#22145A",
+      "button-bg": "#22145A",
+      "button-text": "#FFFFFF",
+      "star": "#00A3AF",
+      "focus": "#00A3AF"
+     },
+     "contrast": {
+      "text": 15.96,
+      "text-muted": 6.21,
+      "heading": 15.96,
+      "link": 4.54,
+      "on-accent": 5.21,
+      "button-text": 15.96,
+      "focus": 3.06
+     },
+     "adjusted": {
+      "link": "moved 24% toward @ink to reach 4.5:1 contrast (was 3.06:1)"
+     }
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#22145A",
+      "surface": "#2D2465",
+      "surface-alt": "#373470",
+      "border": "#4C5486",
+      "text": "#FFFFFF",
+      "text-muted": "#BDB8CE",
+      "heading": "#A6DDE2",
+      "link": "#00A3AF",
+      "link-hover": "#A6DDE2",
+      "accent": "#00A3AF",
+      "on-accent": "#22145A",
+      "button-bg": "#A6DDE2",
+      "button-text": "#22145A",
+      "star": "#00A3AF",
+      "focus": "#00A3AF"
+     },
+     "contrast": {
+      "text": 15.96,
+      "text-muted": 8.29,
+      "heading": 10.69,
+      "link": 5.21,
+      "on-accent": 5.21,
+      "button-text": 10.69,
+      "focus": 5.21
+     },
+     "adjusted": {}
+    }
+   }
+  },
+  "varsity": {
+   "name": "Varsity",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFFFFF",
+    "court-line": "#8B2C36",
+    "text-outline": "#8B2C36",
+    "paint": "#ECDDDF",
+    "ink": "#7A0E1E",
+    "trim": "#F1E4C8",
+    "highlight": "#FFFFFF",
+    "accent": "#C9A227",
+    "star": "#C9A227",
+    "sweep": "#C9A227",
+    "hoop": "#C9A227",
+    "ball-light": "#F1E4C8",
+    "ball-dark": "#7A0E1E",
+    "ball-seam": "#C9A227"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFFFFF",
+      "surface": "#FDFBF6",
+      "surface-alt": "#FAF6EC",
+      "border": "#D7B5A3",
+      "text": "#7A0E1E",
+      "text-muted": "#A25662",
+      "heading": "#7A0E1E",
+      "link": "#A96723",
+      "link-hover": "#7A0E1E",
+      "accent": "#C9A227",
+      "on-accent": "#7A0E1E",
+      "button-bg": "#7A0E1E",
+      "button-text": "#FFFFFF",
+      "star": "#C9A227",
+      "focus": "#BC8A26"
+     },
+     "contrast": {
+      "text": 11.0,
+      "text-muted": 5.19,
+      "heading": 11.0,
+      "link": 4.51,
+      "on-accent": 4.55,
+      "button-text": 11.0,
+      "focus": 3.09
+     },
+     "adjusted": {
+      "link": "moved 40% toward @ink to reach 4.5:1 contrast (was 2.42:1)",
+      "focus": "moved 16% toward @ink to reach 3.0:1 contrast (was 2.42:1)"
+     }
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#7A0E1E",
+      "surface": "#841F2C",
+      "surface-alt": "#8D3039",
+      "border": "#A05254",
+      "text": "#FFFFFF",
+      "text-muted": "#D7B7BC",
+      "heading": "#F1E4C8",
+      "link": "#C9A227",
+      "link-hover": "#F1E4C8",
+      "accent": "#C9A227",
+      "on-accent": "#7A0E1E",
+      "button-bg": "#F1E4C8",
+      "button-text": "#7A0E1E",
+      "star": "#C9A227",
+      "focus": "#C9A227"
+     },
+     "contrast": {
+      "text": 11.0,
+      "text-muted": 5.97,
+      "heading": 8.73,
+      "link": 4.55,
+      "on-accent": 4.55,
+      "button-text": 8.73,
+      "focus": 4.55
+     },
+     "adjusted": {}
+    }
+   }
+  },
+  "sunset": {
+   "name": "Valley Sunset",
+   "roles": {
+    "center-trim": "#FFFFFF",
+    "glass": "#FFFFFF",
+    "field": "#FFFFFF",
+    "court-line": "#482A53",
+    "text-outline": "#482A53",
+    "paint": "#E2DDE3",
+    "ink": "#2A1052",
+    "trim": "#FFCB5C",
+    "highlight": "#FFFFFF",
+    "accent": "#EF6224",
+    "star": "#EF6224",
+    "sweep": "#EF6224",
+    "hoop": "#EF6224",
+    "ball-light": "#FFCB5C",
+    "ball-dark": "#2A1052",
+    "ball-seam": "#EF6224"
+   },
+   "schemes": {
+    "light": {
+     "tokens": {
+      "bg": "#FFFFFF",
+      "surface": "#FFF7E5",
+      "surface-alt": "#FFEDC8",
+      "border": "#D0A25A",
+      "text": "#2A1052",
+      "text-muted": "#6A5886",
+      "heading": "#2A1052",
+      "link": "#C4502E",
+      "link-hover": "#2A1052",
+      "accent": "#EF6224",
+      "on-accent": "#2A1052",
+      "button-bg": "#2A1052",
+      "button-text": "#FFFFFF",
+      "star": "#EF6224",
+      "focus": "#EF6224"
+     },
+     "contrast": {
+      "text": 16.22,
+      "text-muted": 6.26,
+      "heading": 16.22,
+      "link": 4.63,
+      "on-accent": 4.98,
+      "button-text": 16.22,
+      "focus": 3.26
+     },
+     "adjusted": {
+      "link": "moved 22% toward @ink to reach 4.5:1 contrast (was 3.26:1)"
+     }
+    },
+    "dark": {
+     "tokens": {
+      "bg": "#2A1052",
+      "surface": "#3B1F53",
+      "surface-alt": "#4C2E54",
+      "border": "#6E4C55",
+      "text": "#FFFFFF",
+      "text-muted": "#BFB7CB",
+      "heading": "#FFCB5C",
+      "link": "#EF6224",
+      "link-hover": "#FFCB5C",
+      "accent": "#EF6224",
+      "on-accent": "#2A1052",
+      "button-bg": "#FFCB5C",
+      "button-text": "#2A1052",
+      "star": "#EF6224",
+      "focus": "#EF6224"
+     },
+     "contrast": {
+      "text": 16.22,
+      "text-muted": 8.38,
+      "heading": 10.78,
+      "link": 4.98,
+      "on-accent": 4.98,
+      "button-text": 10.78,
+      "focus": 4.98
+     },
+     "adjusted": {}
+    }
+   }
+  }
+ }
+}

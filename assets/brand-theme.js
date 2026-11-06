@@ -8,7 +8,7 @@
 })(typeof window !== 'undefined' ? window : this, function () {
   'use strict';
   const KEY = 'sbos.appearance.v1';
-  const BRANDS = { classic: 'Classic', violet: 'Violet Ice', forest: 'Forest Fire', volt: 'Volt' };
+  const BRANDS = {"classic": "Classic", "volt": "Volt", "violet": "Violet Ice", "forest": "Forest Fire", "hardwood": "Hardwood", "primetime": "Prime Time", "tealera": "Teal Era", "varsity": "Varsity", "sunset": "Valley Sunset"};
   const MODES = ['system', 'light', 'dark'];
   function normalize(value) {
     return { brand: Object.hasOwn(BRANDS, value?.brand) ? value.brand : 'classic',
@@ -25,9 +25,9 @@
   }
   function iconURLs(brand, base) {
     const name=Object.hasOwn(BRANDS,brand)?brand:'classic';
-    return {manifest:new URL(`assets/icons/manifest-${name}.webmanifest?v=2`,base).href,
-      touch:new URL(`assets/icons/calendar-${name}-180.png?v=2`,base).href,
-      preview:new URL(`assets/icons/calendar-${name}-192.png?v=2`,base).href,
+    return {manifest:new URL(`assets/icons/manifest-${name}.webmanifest?v=19`,base).href,
+      touch:new URL(`assets/icons/calendar-${name}-180.png?v=19`,base).href,
+      preview:new URL(`assets/icons/calendar-${name}-192.png?v=19`,base).href,
       install:new URL(`app/${name}/`,base).href};
   }
   function init(win, doc) {
@@ -47,11 +47,13 @@
     function apply() {
       const mode = resolveMode(preference.appearance, system ? system.matches : true);
       doc.documentElement.dataset.brand = preference.brand;
+      doc.documentElement.dataset.sbosColorway = preference.brand;
+      doc.documentElement.dataset.sbosScheme = mode;
       doc.documentElement.dataset.mode = mode;
       doc.documentElement.dataset.appearance = preference.appearance;
       doc.querySelectorAll('[data-brand-logo]').forEach(img => {
         const kind=img.dataset.logoKind==='compact'?'compact':'full';
-        img.src = new URL(`sbos-primary-${kind}-${preference.brand}-720.webp`, assetBase).href;
+        img.src = new URL(`sbos-angular-${preference.brand}.svg`, assetBase).href;
       });
       const icons=iconURLs(preference.brand,siteBase);
       doc.querySelectorAll('[data-app-manifest]').forEach(link=>{link.href=icons.manifest;});

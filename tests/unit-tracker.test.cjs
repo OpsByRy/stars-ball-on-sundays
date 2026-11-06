@@ -121,9 +121,9 @@ test('all basketball panel and seam button palettes meet normal-text contrast',(
  const luminance=hex=>{const c=hex.match(/[a-f\d]{2}/gi).map(c=>parseInt(c,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;};
  const contrast=(a,b)=>{const values=[luminance(a),luminance(b)].sort((a,b)=>a-b);return (values[1]+.05)/(values[0]+.05);};
  const positive=css.match(/\.unit-net\.positive\{color:(#[a-f\d]{6})\}/i)[1],negative=css.match(/\.unit-net\.negative\{color:(#[a-f\d]{6})\}/i)[1];
- for(const brand of ['classic','violet','forest','volt']){
-  const declarations=tokens.match(new RegExp('\\[data-brand='+brand+'\\]\\{([^}]+)\\}'))[1];
-  const color=name=>declarations.match(new RegExp('--'+name+':(#[a-f\\d]{6})','i'))[1];
+ const v19=JSON.parse(fs.readFileSync(path.join(__dirname,'../assets/brand/tokens-v19.json'),'utf8'));
+ for(const [brand,palette] of Object.entries(v19.colorways)){
+  const color=name=>name==='unit-button-text'?palette.schemes.light.tokens['on-accent']:palette.roles[name.replace('brand-','')];
   for(const text of [color('brand-ink'),positive,negative])assert.ok(contrast(color('brand-trim'),text)>=4.5,brand+' panel contrast');
   assert.ok(contrast(color('brand-accent'),color('unit-button-text'))>=4.5,brand+' button contrast');
  }

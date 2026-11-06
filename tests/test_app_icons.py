@@ -6,7 +6,7 @@ import unittest
 from urllib.parse import urljoin, urlsplit
 
 ROOT=Path(__file__).resolve().parents[1]
-BRANDS=('classic','violet','forest','volt')
+BRANDS=('classic','volt','violet','forest','hardwood','primetime','tealera','varsity','sunset')
 
 class Head(HTMLParser):
     def __init__(self):super().__init__();self.links=[];self.scripts=[]

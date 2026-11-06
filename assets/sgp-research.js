@@ -55,6 +55,23 @@
     fail(/^\d+$/.test(p.resultSource.eventId)&&/^\d+$/.test(p.resultSource.athleteId)&&
       p.resultSource.expectedTeam===p.team&&p.resultSource.provider==='espn','Exact result target required');
   }
+  function validateJoint(m,body,legs,now){
+    keys(m,['status','reason','modelVersion','estimatedAt','inputCutoff','winProbability','pushProbability','lossProbability','fairAmericanOdds','sampleGames','limitations']);
+    fail(['experimental','unavailable'].includes(m.status)&&(m.reason===null||text(m.reason))&&(m.modelVersion===null||text(m.modelVersion)),'Invalid joint model metadata');
+    const cutoff=clock(m.inputCutoff,now),estimated=clock(m.estimatedAt,now);
+    fail(cutoff<=estimated&&estimated<=clock(body.assembledAt,now)&&cutoff<Math.min(...legs.map(l=>clock(l.pick.startTime,now,false))),'Invalid joint model clock order');
+    fail(Array.isArray(m.limitations)&&m.limitations.length>=1&&m.limitations.length<=32&&m.limitations.every(text),'Explicit joint model limitations required');
+    if(m.status==='unavailable'){
+      fail(text(m.reason)&&['winProbability','pushProbability','lossProbability','fairAmericanOdds','sampleGames'].every(k=>m[k]===null),'Unavailable model requires reason and null numbers');return;
+    }
+    fail(text(m.modelVersion)&&m.reason===null,'Experimental model version required');
+    const ps=[m.winProbability,m.pushProbability,m.lossProbability];
+    fail(ps.every(x=>finite(x)&&x>=0&&x<=1)&&Math.abs(ps.reduce((a,b)=>a+b,0)-1)<1e-7,'Invalid joint model probabilities');
+    fail(Number.isSafeInteger(m.sampleGames)&&m.sampleGames>=1,'Invalid joint model sample count');
+    if(m.pushProbability>0||m.winProbability===0||m.winProbability===1)fail(m.fairAmericanOdds===null,'No finite fair price with pushes or boundary probability');
+    else{const d=1/m.winProbability, fair=d>=2?(d-1)*100:-100/(d-1);
+      fail(Number.isSafeInteger(m.fairAmericanOdds)&&Math.abs(m.fairAmericanOdds-fair)<=.500000001,'Joint fair price does not reproduce');}
+  }
   function validate(body,now=Date.now()){
     keys(body,['schemaVersion','date','version','sourceDaily','sourceSelectionAt','nominatedAt','assembledAt','postedAt','suggestions']);
     fail(body.schemaVersion==='public-sgp-research-1'&&date(body.date)&&hex(body.version,16),'Invalid research publication');
@@ -66,7 +83,8 @@
     fail(Array.isArray(body.suggestions)&&body.suggestions.length<=64,'Bounded suggestions required');
     const ids=new Set(),memberships=new Set(),copies=new Map();
     for(const a of body.suggestions){
-      keys(a,['id','recordKind','kind','priceSources','legs','combinedQuote','straightOddsBenchmark','compatibility','jointWinProbability','ticketEV','betReady','tracking']);
+      keys(a,['id','recordKind','kind','priceSources','legs','combinedQuote','straightOddsBenchmark','compatibility','jointWinProbability','ticketEV','betReady','tracking',...(own(a,'jointModel')?['jointModel']:[])]);
+      if(own(a,'jointModel'))validateJoint(a.jointModel,body,a.legs,now);
       fail(typeof a.id==='string'&&new RegExp('^sgp-research-'+body.date+'-[0-9a-f]{16}$').test(a.id)&&!ids.has(a.id)&&a.recordKind==='sgp_research_suggestion','Unique research identity required');ids.add(a.id);
       fail(Array.isArray(a.legs)&&a.legs.length>=2&&a.legs.length<=6,'Two to six original legs required');
       for(const leg of a.legs){
@@ -163,6 +181,15 @@
   const stamp=x=>new Date(x).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+' ET';
   const names={PTS:'points',AST:'assists',REB:'rebounds','3PM':'made threes',PRA:'points + rebounds + assists',PA:'points + assists',PR:'points + rebounds',RA:'rebounds + assists',BLK:'blocks',STL:'steals'};
   const label=p=>p.player+' · '+(p.operator==='>='?p.line+'+':p.operator==='<='?'At most '+p.line:(p.operator==='>'?'Over ':'Under ')+p.line)+' '+names[p.market];
+  function jointHTML(a){
+    const m=a.jointModel;
+    if(!m)return '<p class="sgpr-model">Experimental joint model: unavailable for this saved edition.</p>';
+    const pct=x=>(x*100).toFixed(1)+'%';
+    return '<section class="sgpr-model" aria-label="Experimental joint model"><p><strong>Experimental joint model'+(m.status==='unavailable'?': unavailable.':'.')+'</strong> '+
+      (m.status==='unavailable'?esc(m.reason):'Estimated joint win probability: <strong>'+pct(m.winProbability)+'</strong> · push '+pct(m.pushProbability)+' · loss '+pct(m.lossProbability)+'. Fair model odds: <strong>'+(m.fairAmericanOdds===null?'Unavailable':odds(m.fairAmericanOdds))+'</strong>.'+(m.pushProbability>0?' No fair price: reduced-ticket settlement after a push is unknown.':m.fairAmericanOdds===null?' No finite fair price at a boundary probability.':''))+
+      '</p><p>'+(m.status==='unavailable'?'No supported joint estimate is available for this exact ticket.':'This is a model estimate, not an observed sportsbook quote or evidence of ticket acceptance.')+' It does not establish ticket EV or betting readiness.</p>'+
+      '<small>Model '+esc(m.modelVersion||'unavailable')+' · estimated '+esc(stamp(m.estimatedAt))+' · input cutoff '+esc(stamp(m.inputCutoff))+(m.sampleGames===null?'':' · '+m.sampleGames+' sample games')+'</small><ul>'+m.limitations.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></section>';
+  }
   function renderHTML(body,rows=[],now=Date.now(),opened=new Set()){
     validate(body,now);
     const resolved=new Map(rows.map(r=>[r.id,r.result])),s=summary(body,resolved,now);
@@ -174,8 +201,9 @@
         '<p class="sgpr-quote"><strong>Combined sportsbook quote: unverified / not observed.</strong></p>'+
         (a.priceSources==='mixed'?'<p class="sgpr-warning">Mixed-book combination: the saved prices come from FanDuel and DraftKings. No single-book ticket price or acceptance is established.</p>':'')+
         '<ol>'+a.legs.map(l=>'<li><strong>'+esc(label(l.pick))+'</strong><span>'+book(l.pick.book)+' '+odds(l.pick.americanOdds)+'</span><small>'+esc(l.pick.team+' vs '+l.pick.opponent)+' · '+esc(stamp(l.pick.startTime))+'</small><small>Provider observation '+esc(stamp(l.providerAsOf))+' · captured '+esc(stamp(l.pick.capturedAt))+'</small><small>Forecast input cutoff '+esc(stamp(l.forecastCutoff))+' · forecast saved '+esc(stamp(l.pick.estimate.asOf))+'</small></li>').join('')+'</ol>'+
+        jointHTML(a)+
         '<p class="sgpr-benchmark">Straight-odds benchmark: <strong>'+(a.straightOddsBenchmark?odds(a.straightOddsBenchmark.americanOdds):'Unavailable')+'</strong>. Calculator multiplication of saved straight-leg prices, unadjusted for same-game dependence. This is not an SGP quote, correlation-adjusted estimate, fair price or win probability.</p>'+
-        '<p>Current availability and role: unknown. Overtime and settlement terms: unverified. Statistical compatibility score, joint win probability and ticket EV: unavailable. Basic logical checks recorded no conflicts; compatibility is informational only.</p>'+
+        '<p>Current availability and role: unknown. Overtime and settlement terms: unverified. '+(a.jointModel?'Statistical compatibility score and ticket EV: unavailable.':'Statistical compatibility score, joint win probability and ticket EV: unavailable.')+' Basic logical checks recorded no conflicts; compatibility is informational only.</p>'+
         '<p class="sgpr-note">Original selections '+esc(stamp(body.sourceSelectionAt))+' · nominated '+esc(stamp(body.nominatedAt))+' · '+(body.postedAt?'posting verified '+esc(stamp(body.postedAt)):'public posting time awaiting verification')+'. Original membership is retained; no leg is removed after a push or DNP.</p></details>').join('');
   }
   return {validate,validateIndex,open,load,runtimeRows,outcome,summary,renderHTML};

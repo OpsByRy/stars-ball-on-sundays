@@ -3,7 +3,7 @@ from datetime import date, datetime, timezone
 import math
 import re
 
-EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds','personalSlips','personalPublication'}
+EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds','personalSlips','personalPublication','selectionPolicy'}
 PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected','confidenceUpdate','bookPrices','priceReview'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
 RESULT_FIELDS={'actual','minutesPlayed','checkedAt','eventStatus','statisticalOutcome','sportsbookSettlement','source'}
@@ -153,7 +153,11 @@ def validate_book_prices(prices,row):
         if quote['operator'] not in {'>','<','>=','<=','gt','lt','gte','lte'} or not number(quote['line']) or quote['line']<0 or price_outcome(quote)!=price_outcome(row):raise ValueError('Book price changes pick outcome or push')
 
 
-def validate_honorable_mentions(rows):
+TIERED_SELECTION_POLICY = 'team-lobs-70-65-60-v1'
+TIERED_SELECTION_EFFECTIVE_FROM = '2026-11-07'
+
+
+def validate_honorable_mentions(rows, selection_policy=None):
     def family(row):
         return (row.get('date'),row.get('canonicalEventId') or row.get('eventId'),row.get('playerId'),row.get('market'),row.get('period','full_game'),row.get('product','sportsbook'))
     selected={family(r) for r in rows if r.get('group')=='research' and r.get('category') in {'value_safe','high_probability_aggressive'}}
@@ -166,7 +170,46 @@ def validate_honorable_mentions(rows):
         if not row.get('playerId') or not (row.get('canonicalEventId') or row.get('eventId')):raise ValueError('Honorable mention identity unavailable')
         seen.add(key)
         price=row.get('americanOdds');prob=row.get('estimate',{}).get('winProbability')
-        if not number(price) or price < -500 or abs(price)<100 or not number(prob) or prob<.7:raise ValueError('Honorable mention price or probability outside published bounds')
+        floor = .60 if selection_policy == TIERED_SELECTION_POLICY else .70
+        if not number(price) or price < -500 or abs(price)<100 or not number(prob) or prob<floor:raise ValueError('Honorable mention price or probability outside published bounds')
+
+def validate_tiered_selection(body):
+    """Validate the explicit new selector contract without reclassifying history."""
+    selection_policy = body.get('selectionPolicy')
+    if selection_policy is None:
+        return
+    if (selection_policy != TIERED_SELECTION_POLICY or body['channel'] != 'daily'
+            or body['date'] < TIERED_SELECTION_EFFECTIVE_FROM):
+        raise ValueError('Invalid selection policy or effective date')
+    for row in body['props']:
+        if row.get('group') != 'research' or row.get('category') not in {'value_safe','high_probability_aggressive','honorable_mention'}:
+            continue
+        price = row.get('americanOdds')
+        estimate = row.get('estimate', {})
+        if not number(price) or abs(price) < 100 or price < -500:
+            raise ValueError('Tiered selection requires an eligible saved price')
+        bench = row['category'] == 'honorable_mention'
+        if bench:
+            floor = .60
+            if row.get('selected') is not False:
+                raise ValueError('Bench must remain non-selected')
+        else:
+            if row.get('selected') is not True:
+                raise ValueError('Tiered Board row must be selected')
+            if -500 <= price <= -101:
+                floor = .70
+            elif 100 <= price <= 160:
+                floor = .65
+            else:
+                raise ValueError('Price outside the existing Board tracks')
+        win, push, loss = (estimate.get(k) for k in ('winProbability','pushProbability','lossProbability'))
+        if (not all(number(v) and 0 <= v <= 1 for v in (win,push,loss))
+                or abs(win+push+loss-1) > 1e-7 or win < floor):
+            raise ValueError('Tiered selection probability floor failed')
+        decimal = 1 + (price/100 if price > 0 else 100/abs(price))
+        if win*(decimal-1)-loss < .02-1e-12:
+            raise ValueError('Tiered selection minimum modeled net EV failed')
+    # Stress probabilities remain private and are checked by the source selector.
 
 def validate_personal_price_evidence(record,slip,publication,*,required=False,original_only=False):
     evidence=record.get('priceEvidence')
@@ -299,7 +342,8 @@ def validate_edition(body):
             stamp(result.get('checkedAt'))
             if result.get('source') and not re.fullmatch(r'https://(?:www\.espn\.com/nba/boxscore/_/gameId/\d+|stats\.nba\.com/stats/boxscoresummaryv3\?GameID=\d{10}|site\.api\.espn\.com/apis/site/v2/sports/basketball/nba/injuries)',result['source']): raise ValueError('Unsupported result URL')
             if (result.get('source') or '').startswith('https://stats.nba.com/') and result['source']!='https://stats.nba.com/stats/boxscoresummaryv3?GameID='+(row.get('canonicalEventId') or row['eventId']).removeprefix('nba:'): raise ValueError('Inactive result requires exact official NBA game')
-    validate_honorable_mentions(body['props'])
+    validate_honorable_mentions(body['props'], body.get('selectionPolicy'))
+    validate_tiered_selection(body)
     validate_personal_slips(body)
     return body
 

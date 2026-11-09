@@ -46,15 +46,16 @@ test('Sunday and dated Sunday pages share Daily layout controls and preserve rou
  assert.doesNotMatch(fs.readFileSync(path.join(__dirname,'../daily/index.html'),'utf8'),/data-board-channel="sunday"/);
 });
 
-async function mountedSunday(day='2026-11-01'){
- const script=fs.readFileSync(path.join(__dirname,'../assets/publication.js'),'utf8'),elements={},listeners={},watch={};let address=new URL('https://example.com/project/sundays/?date='+day);
- const element=id=>elements[id]||(elements[id]={innerHTML:'',textContent:'',value:'',disabled:false,addEventListener(){},setAttribute(){},removeAttribute(){}});
- for(const id of ['daily-content','slate-date','slate-context','reload-data'])element(id);
+async function mountedSunday(day='2026-11-01',researchOnly=false,kind='daily'){
+ const script=fs.readFileSync(path.join(__dirname,'../assets/publication.js'),'utf8'),elements={},listeners={},watch={};let address=new URL('https://example.com/project/sundays/'+(day?'?date='+day:''));
+ const element=id=>elements[id]||(elements[id]={innerHTML:'',textContent:'',value:'',disabled:false,handlers:{},addEventListener(name,fn){this.handlers[name]=fn;},setAttribute(){},removeAttribute(){}});
+ for(const id of ['daily-content','slate-date','slate-context','reload-data','home-current','sunday-archive','daily-archive'])element(id);
  const slot={dataset:{personalSource:'sunday'},innerHTML:'',querySelectorAll(){return [];}};
- const document={body:{dataset:{page:'daily',boardChannel:'sunday'}},activeElement:null,getElementById:id=>elements[id]||null,addEventListener(name,fn){(listeners[name]||=[]).push(fn);},querySelector(selector){return selector==='script[data-publication]'?{src:'https://example.com/project/assets/publication.js'}:selector==='[data-sunday-stars-record]'?element('stars-record'):null;},querySelectorAll(selector){return selector==='[data-personal-slips]'?[slot]:[];}};
+ const document={body:{dataset:{page:kind,boardChannel:'sunday'}},activeElement:null,getElementById:id=>elements[id]||null,addEventListener(name,fn){(listeners[name]||=[]).push(fn);},querySelector(selector){return selector==='script[data-publication]'?{src:'https://example.com/project/assets/publication.js'}:selector==='[data-sunday-stars-record]'?element('stars-record'):null;},querySelectorAll(selector){return selector==='[data-personal-slips]'?[slot]:[];}};
  const board={...require('../assets/pick-board.js'),create(){return {beginDate(){},renderRow(row){return '<article data-test-pick="'+row.id+'"></article>';},refresh(){return Promise.resolve();}};},watchResults(options){watch.callback=options.onResults;return {setRows(rows){watch.rows=rows;},stop(){}};}};
  const window={SBOS_SLATE_POLICY:require('../assets/slate-policy.js'),STARS_RESULT_UTILS:results,SBOS_ROUTES:require('../assets/routes.js'),SBOS_FAVORITES:require('../assets/favorites.js'),SBOS_PICK_BOARD:board,SBOS_PLUS_MONEY:require('../assets/plus-money.js'),SBOS_UNITS:require('../assets/unit-tracker.js'),addEventListener(){}};
  const all=read('data/editions/manifest.json'),historicalEntry=pub.sundaySourceEntries(all.editions,'2026-10-25').personalEntry,historical=read('data/editions/'+historicalEntry.path),bodies=new Map([[daily().version,daily()],[sunday().version,sunday()],[historical.version,historical]]),requests=[];
+ if(researchOnly){const b={...daily(),date:'2026-11-08',version:'a'.repeat(16),personalSlips:[],props:daily().props.filter(p=>p.group!=='ry')};all.editions.push({channel:'daily',date:b.date,version:b.version,path:'daily/'+b.date+'/'+b.version+'.json'});bodies.set(b.version,b);}
  const fetch=async input=>{const url=new URL(input);requests.push(url.pathname);let value;if(url.pathname.endsWith('/manifest.json'))value=all;else {const version=path.basename(url.pathname,'.json'),b=bodies.get(version);assert.ok(b,'Unexpected source '+url.pathname);value=url.pathname.includes('/data/boards/')?{schemaVersion:'public-board-1',sourceVersion:version,edition:{...b,props:b.props.filter(r=>r.category!=='not_a_pick')}}:b;}return {ok:true,json:async()=>JSON.parse(JSON.stringify(value))};};
  const location={get href(){return address.href;},get search(){return address.search;},get hash(){return address.hash;}};
  const history={replaceState(_a,_b,url){address=new URL(url,address);},pushState(_a,_b,url){address=new URL(url,address);}};
@@ -93,4 +94,52 @@ test('an archived Sunday with no Daily source retains local saved research and p
  const mounted=await mountedSunday('2026-10-25'),html=mounted.elements['daily-content'].innerHTML;
  assert.match(html,/data-board-source="sunday:/);assert.match(html,/href="#sunday-saved-research"/);assert.match(html,/id="sunday-saved-research"/);
  assert.ok(!mounted.requests.some(p=>p.includes('/data/boards/sunday/')));assert.ok(mounted.requests.some(p=>p.includes('/data/editions/sunday/2026-10-25/')));
+});
+
+// Release regression: a Sunday research publication must work without owner input.
+test('Sunday research dates are discovered without creating personal editions',()=>{
+ const entries=[{channel:'daily',date:'2026-11-08',version:'a'.repeat(16)},{channel:'daily',date:'2026-11-09',version:'b'.repeat(16)}],before=JSON.stringify(entries);
+ assert.deepEqual(pub.sundayBoardEntries(entries),[entries[0]]);
+ assert.deepEqual(pub.sundaySourceEntries(entries,'2026-11-08'),{personalEntry:null,boardEntry:entries[0]});
+ assert.equal(pub.sundaySourceEntries(entries,'2026-11-09'),null);
+ assert.equal(pub.isSundayDate('2026-02-30'),false);
+ assert.equal(JSON.stringify(entries),before);
+});
+test('Sunday release validation: every published Sunday Daily board is discoverable',()=>{
+ const entries=read('data/editions/manifest.json').editions,boards=pub.sundayBoardEntries(entries);
+ for(const entry of pub.latestEntries(entries).filter(e=>e.channel==='daily'&&pub.isSundayDate(e.date))){
+  assert.equal(boards.find(e=>e.date===entry.date),entry);
+  assert.equal(pub.sundaySourceEntries(entries,entry.date).boardEntry,entry);
+ }
+ assert.equal(new Set(boards.map(e=>e.date)).size,boards.length);
+});
+for(const day of ['2026-11-08',''])test('Sunday research-only initialization '+(day||'latest')+' keeps favorites optional',async()=>{
+ const mounted=await mountedSunday(day,true),html=mounted.elements['daily-content'].innerHTML;
+ assert.equal(mounted.elements['slate-date'].value,'2026-11-08');
+ assert.match(html,/data-board-source="daily:aaaaaaaaaaaaaaaa"/);
+ assert.match(html,/No saved Sunday parlay for this date/);
+ assert.equal(mounted.watch.rows.length,0);
+ assert.ok(!mounted.requests.some(p=>p.includes('/sunday/2026-11-08/')));
+ assert.equal((html.match(/data-test-pick=/g)||[]).length,10);
+ mounted.watch.callback();
+});
+
+test('home and Sunday archive discover research-only Sunday without relabeling Daily archive',async()=>{
+ const home=await mountedSunday('',true,'home');assert.match(home.elements['home-current'].innerHTML,/SUNDAY EDITION \/ November 8, 2026/);
+ const archive=await mountedSunday('',true,'archives');
+ assert.match(archive.elements['sunday-archive'].innerHTML,/sundays\/week.html\?date=2026-11-08/);
+ assert.match(archive.elements['daily-archive'].innerHTML,/daily\/\?date=2026-11-08/);
+ assert.doesNotMatch(archive.elements['daily-archive'].innerHTML,/SUNDAY EDITION/);
+ assert.match(archive.elements['sunday-archive'].innerHTML.split('<a ').find(card=>card.includes('date=2026-11-01')),/5 of Ry’s picks/);
+});
+
+test('switching between personal and research-only Sundays clears stale personal polling',async()=>{
+ const mounted=await mountedSunday('2026-11-01',true),select=mounted.elements['slate-date'];
+ assert.equal(mounted.watch.rows.length,5);
+ select.value='2026-11-08';select.handlers.change();await new Promise(resolve=>setTimeout(resolve,10));
+ assert.equal(mounted.watch.rows.length,0);assert.match(mounted.elements['daily-content'].innerHTML,/No saved Sunday parlay/);
+ mounted.watch.callback();
+ select.value='2026-11-01';select.handlers.change();await new Promise(resolve=>setTimeout(resolve,10));
+ assert.equal(mounted.watch.rows.length,5);assert.match(mounted.elements['daily-content'].innerHTML,/Ry’s Sunday Pick/);
+ assert.match(mounted.location.search,/date=2026-11-01/);
 });

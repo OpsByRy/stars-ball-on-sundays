@@ -26,7 +26,7 @@ test('render separates unverified quotes, benchmarks, unknown context and pendin
  assert.equal((html.match(/unadjusted for same-game dependence/g)||[]).length,8);
  assert.match(html,/Statistical hit rate: <strong>Unavailable<\/strong> · 0 hits · 0 misses · 8 pending/);
  assert.match(html,/not an SGP quote, correlation-adjusted estimate, fair price or win probability/);
- assert.match(html,/Current availability and role: unknown/);
+ assert.match(html,/Original recorded availability and role: unknown/);
  assert.match(html,/Statistical compatibility score, joint win probability and ticket EV: unavailable/);
  assert.doesNotMatch(html,/unit-record|pm-win-amount|data-unit|<input|<button|ROI|profit|stake|payout/i);
  assert.equal(JSON.stringify(b),before);
@@ -169,4 +169,14 @@ test('existing consumers without the optional research module retain their origi
 test('a missing exact-date research entry never falls back to November 6',async()=>{
  const requests=[],b=await api.load(new URL('https://example.com/project/'),'2026-11-05',async u=>{requests.push(u.href);return {ok:true,json:async()=>index()};});
  assert.equal(b,null);assert.equal(requests.length,1);
+});
+
+
+test('unavailable-model injury review is visible in the collapsed summary without changing saved legs or tracking',()=>{
+ const b=body(),a=b.suggestions[0],before=JSON.stringify(a.legs);
+ a.jointModel={status:'unavailable',reason:'A saved leg is Out; current review hold.',modelVersion:null,estimatedAt:b.nominatedAt,inputCutoff:a.legs[0].forecastCutoff,winProbability:null,pushProbability:null,lossProbability:null,fairAmericanOdds:null,sampleGames:null,limitations:['Saved legs and clocks remain original; no replacement estimate.']};
+ const html=api.renderHTML(b),summary=html.split('</summary>')[0];
+ assert.match(summary,/Review: A saved leg is Out; current review hold/);
+ assert.match(html,/Original recorded availability and role: unknown/);
+ assert.equal(JSON.stringify(a.legs),before);assert.equal(a.betReady,false);assert.equal(a.ticketEV,null);assert.equal(a.jointWinProbability,null);assert.equal(api.summary(b).pending,8);
 });

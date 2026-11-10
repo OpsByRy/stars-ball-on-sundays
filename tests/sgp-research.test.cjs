@@ -180,3 +180,13 @@ test('unavailable-model injury review is visible in the collapsed summary withou
  assert.match(html,/Original recorded availability and role: unknown/);
  assert.equal(JSON.stringify(a.legs),before);assert.equal(a.betReady,false);assert.equal(a.ticketEV,null);assert.equal(a.jointWinProbability,null);assert.equal(api.summary(b).pending,8);
 });
+
+test('same player twice: different stats allowed, overlapping stats refused (matches the Python schema)',()=>{
+  const legs=(...markets)=>markets.map(m=>({playerId:'nba:1',market:m}));
+  assert.equal(api.overlappingSamePlayer(legs('PTS','3PM')),false);
+  assert.equal(api.overlappingSamePlayer(legs('PA','REB')),false);
+  assert.equal(api.overlappingSamePlayer([...legs('PTS'),{playerId:'nba:2',market:'PTS'}]),false);
+  assert.equal(api.overlappingSamePlayer(legs('PTS','PTS')),true);
+  assert.equal(api.overlappingSamePlayer(legs('PTS','PA')),true);
+  assert.equal(api.overlappingSamePlayer(legs('PR','RA')),true);
+});

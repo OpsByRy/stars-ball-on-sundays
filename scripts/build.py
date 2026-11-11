@@ -109,6 +109,52 @@ def portrait_view(root):
     games=json.loads((root/'data/matchups.json').read_text())['games'] if (root/'data/matchups.json').exists() else []
     return {'data/player-portraits.json':{'schemaVersion':'public-player-portraits-1','players':players,'teams':list(teams.values()),'games':games}}
 
+POSITION_FAMILY={'Guard':'G','Forward':'F','Center':'C','G':'G','F':'F','C':'C','G-F':'G-F','F-G':'G-F','F-C':'F-C','C-F':'F-C'}
+TEAM_ALIASES={'WSH':'WAS','GS':'GSW','SA':'SAS','NO':'NOP','NY':'NYK','UTAH':'UTA','PHO':'PHX','BRK':'BKN','CHO':'CHA'}
+TEAM_NAMES={'Atlanta Hawks':'ATL','Boston Celtics':'BOS','Brooklyn Nets':'BKN','Charlotte Hornets':'CHA','Chicago Bulls':'CHI','Cleveland Cavaliers':'CLE','Dallas Mavericks':'DAL','Denver Nuggets':'DEN','Detroit Pistons':'DET','Golden State Warriors':'GSW','Houston Rockets':'HOU','Indiana Pacers':'IND','LA Clippers':'LAC','Los Angeles Clippers':'LAC','Los Angeles Lakers':'LAL','Memphis Grizzlies':'MEM','Miami Heat':'MIA','Milwaukee Bucks':'MIL','Minnesota Timberwolves':'MIN','New Orleans Pelicans':'NOP','New York Knicks':'NYK','Oklahoma City Thunder':'OKC','Orlando Magic':'ORL','Philadelphia 76ers':'PHI','Phoenix Suns':'PHX','Portland Trail Blazers':'POR','Sacramento Kings':'SAC','San Antonio Spurs':'SAS','Toronto Raptors':'TOR','Utah Jazz':'UTA','Washington Wizards':'WAS'}
+def canonical_team(value):
+    """Abbreviation, alias or full team name -> canonical abbreviation (None when it is not an NBA team)."""
+    from profile_schema import NBA_TEAMS
+    value=TEAM_ALIASES.get(value,value)
+    return value if value in NBA_TEAMS else TEAM_NAMES.get(value)
+
+def board_teams(root,limit=3):
+    """Current team per player from the newest published daily boards (each pick row carries its team). The bios are
+    only as fresh as the last profile refresh; the boards are posted every day."""
+    from profile_schema import NBA_TEAMS
+    manifest=root/'data/editions/manifest.json'
+    if not manifest.exists():return {}
+    entries=[e for e in json.loads(manifest.read_text())['editions'] if e.get('channel')=='daily']
+    entries.sort(key=lambda e:(e['date'],e['updatedAt']),reverse=True);teams={}
+    for entry in entries[:limit]:
+        path=root/'data/editions'/entry['path']
+        if not path.exists():continue
+        for prop in json.loads(path.read_text()).get('props',[]):
+            player=prop.get('playerId');team=canonical_team(prop.get('team'))
+            if isinstance(player,str) and re.fullmatch(r'nba:\d{1,12}',player) and team and player not in teams:teams[player]=team
+    return teams
+
+def identity_view(root):
+    """Small derived directory for the icon system: current team, jersey number and ESPN position family per player.
+    Jersey and position come only from already-validated public bios; the team prefers the newest published boards
+    (fresher than the bios). Missing facts are left out, never guessed."""
+    if not (root/'data/player-profiles/index.json').exists():return {}
+    from profile_schema import validate_player_identity,NBA_TEAMS
+    index=json.loads((root/'data/player-profiles/index.json').read_text());by_id={}
+    for entry in index['players']:
+        body=json.loads((root/'data/player-profiles'/entry['path']).read_text());bio=body.get('bio',{});player={'id':body['playerId']}
+        team=canonical_team(bio.get('teamAbbreviation')) or canonical_team(entry.get('team'))
+        if team:player['team']=team
+        jersey=str(bio.get('jersey','')).strip().lstrip('#')
+        if re.fullmatch(r'\d{1,2}',jersey):player['jersey']=jersey
+        position=POSITION_FAMILY.get(bio.get('position')) or POSITION_FAMILY.get(body.get('basicPosition'))
+        if position:player['pos']=position
+        by_id[player['id']]=player
+    for player_id,team in board_teams(root).items():by_id.setdefault(player_id,{'id':player_id})['team']=team
+    players=[p for p in by_id.values() if len(p)>1]
+    view={'schemaVersion':'public-player-identity-1','asOfDate':index['asOfDate'],'players':sorted(players,key=lambda p:p['id'])}
+    validate_player_identity(view);return {'data/player-identity.json':view}
+
 def matchup_files(root):
     name='data/matchups.json'
     if not (root/name).exists():return []
@@ -254,7 +300,7 @@ def build(root, publish=False, now=None):
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')
     # Validate everything before replacing the previous build.
     paths=[safe_file(root,name) for name in files]
-    views={**board_views(root),**profile_views(root),**portrait_view(root),**personal_price_view(root)}
+    views={**board_views(root),**profile_views(root),**portrait_view(root),**identity_view(root),**personal_price_view(root)}
     if destination.exists(): shutil.rmtree(destination)
     destination.mkdir()
     for source in paths:

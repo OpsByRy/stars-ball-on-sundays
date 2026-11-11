@@ -12,6 +12,20 @@ BODY = {'schemaVersion','date','version','sourceDaily','sourceSelectionAt','nomi
 PICK = {'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','postedAt','ryFavorite','selected'}
 IDEA = {'id','recordKind','kind','priceSources','legs','combinedQuote','straightOddsBenchmark','compatibility','jointWinProbability','ticketEV','betReady','tracking'}
 LEG = {'pick','providerAsOf','forecastCutoff','availability','role','settlementTerms'}
+# Stats inside each market (same table as assets/sgp-math.js). One player may appear more than
+# once on a ticket only with stats that do not overlap: 25+ points with 2+ made threes is fine;
+# 15+ points with 20+ points, or points with points + assists, is not (Ry, 2026-11-10).
+COMPONENTS = {'PTS':{'PTS'},'AST':{'AST'},'REB':{'REB'},'3PM':{'3PM'},'BLK':{'BLK'},'STL':{'STL'},
+              'PRA':{'PTS','REB','AST'},'PA':{'PTS','AST'},'PR':{'PTS','REB'},'RA':{'REB','AST'}}
+
+
+def overlapping_same_player(picks):
+    """True when one player has two legs whose stats overlap (same stat, or a combo containing it)."""
+    for i, a in enumerate(picks):
+        for b in picks[i + 1:]:
+            if a['playerId'] == b['playerId'] and COMPONENTS.get(a['market'], {a['market']}) & COMPONENTS.get(b['market'], {b['market']}):
+                return True
+    return False
 
 def require(ok, message):
     if not ok:
@@ -117,7 +131,7 @@ def validate(body, *, source=None, calculator_sha=None, now=None):
         require(len(set(members)) == len(members) and members not in memberships, 'Duplicate research membership')
         memberships.add(members)
         games = [p['eventId'] for p in picks]
-        require(len(set(p['playerId'] for p in picks)) == len(picks), 'This format requires distinct exact players')
+        require(not overlapping_same_player(picks), 'The same player cannot repeat an overlapping stat')
         kind = 'sgp' if len(set(games)) == 1 else 'sgp_plus' if len(set(games)) < len(games) else None
         require(kind is not None and a['kind'] == kind, 'Research SGP grouping mismatch')
         books = {p['book'] for p in picks}

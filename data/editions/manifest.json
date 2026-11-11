@@ -944,6 +944,78 @@
       "count": 0,
       "researchCount": 5196,
       "updatedAt": "2026-11-09T17:35:24.162778+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-07",
+      "version": "3bb6ec1cf0d1ec0f",
+      "path": "daily/2026-11-07/3bb6ec1cf0d1ec0f.json",
+      "count": 0,
+      "researchCount": 6011,
+      "updatedAt": "2026-11-09T20:50:27.522Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-09",
+      "version": "0be39e47be9fdd59",
+      "path": "daily/2026-11-09/0be39e47be9fdd59.json",
+      "count": 0,
+      "researchCount": 5196,
+      "updatedAt": "2026-11-09T22:58:34.535924+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-09",
+      "version": "3920a39044a650a8",
+      "path": "daily/2026-11-09/3920a39044a650a8.json",
+      "count": 0,
+      "researchCount": 5196,
+      "updatedAt": "2026-11-10T03:38:33.635Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-09",
+      "version": "2a316f8cac0c6c46",
+      "path": "daily/2026-11-09/2a316f8cac0c6c46.json",
+      "count": 0,
+      "researchCount": 5196,
+      "updatedAt": "2026-11-10T11:51:08.583Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-10",
+      "version": "8f948618f9ebe72d",
+      "path": "daily/2026-11-10/8f948618f9ebe72d.json",
+      "count": 0,
+      "researchCount": 4695,
+      "updatedAt": "2026-11-10T18:19:16.853738+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-10",
+      "version": "fb7de7535debc3ed",
+      "path": "daily/2026-11-10/fb7de7535debc3ed.json",
+      "count": 0,
+      "researchCount": 4695,
+      "updatedAt": "2026-11-10T18:25:25.082693+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-10",
+      "version": "3bf7ebea4e228a2d",
+      "path": "daily/2026-11-10/3bf7ebea4e228a2d.json",
+      "count": 0,
+      "researchCount": 4695,
+      "updatedAt": "2026-11-10T21:52:36.334946+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-10",
+      "version": "f30fbbf0ad78d464",
+      "path": "daily/2026-11-10/f30fbbf0ad78d464.json",
+      "count": 0,
+      "researchCount": 4695,
+      "updatedAt": "2026-11-10T23:47:42.176457+00:00"
     }
   ],
   "schemaVersion": "public-1"

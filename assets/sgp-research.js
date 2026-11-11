@@ -72,6 +72,17 @@
     else{const d=1/m.winProbability, fair=d>=2?(d-1)*100:-100/(d-1);
       fail(Number.isSafeInteger(m.fairAmericanOdds)&&Math.abs(m.fairAmericanOdds-fair)<=.500000001,'Joint fair price does not reproduce');}
   }
+  // One player may appear more than once only with stats that do not overlap (same table as
+  // sgp-math.js): 25+ points with 2+ made threes is fine; points with points + assists is not.
+  const statParts={PTS:['PTS'],AST:['AST'],REB:['REB'],'3PM':['3PM'],BLK:['BLK'],STL:['STL'],PRA:['PTS','REB','AST'],PA:['PTS','AST'],PR:['PTS','REB'],RA:['REB','AST']};
+  function overlappingSamePlayer(legs){
+    for(let i=0;i<legs.length;i++)for(let j=i+1;j<legs.length;j++){
+      const a=legs[i],b=legs[j];if(a.playerId!==b.playerId)continue;
+      const x=statParts[a.market]||[a.market],y=statParts[b.market]||[b.market];
+      if(x.some(k=>y.includes(k)))return true;
+    }
+    return false;
+  }
   function validate(body,now=Date.now()){
     keys(body,['schemaVersion','date','version','sourceDaily','sourceSelectionAt','nominatedAt','assembledAt','postedAt','suggestions']);
     fail(body.schemaVersion==='public-sgp-research-1'&&date(body.date)&&hex(body.version,16),'Invalid research publication');
@@ -98,7 +109,7 @@
       }
       const legs=a.legs.map(l=>l.pick),classification=math.classify(legs),check=math.contractIssues(legs);
       const membership=JSON.stringify(legs.map(l=>l.id).sort());
-      fail(!memberships.has(membership)&&new Set(legs.map(l=>l.playerId)).size===legs.length,'Duplicate or unsupported research membership');memberships.add(membership);
+      fail(!memberships.has(membership)&&!overlappingSamePlayer(legs),'Duplicate or unsupported research membership');memberships.add(membership);
       fail(!check.error&&['sgp','sgp_plus'].includes(classification.type)&&a.kind===classification.type,'Invalid or impossible SGP grouping');
       const books=new Set(legs.map(l=>l.book));
       fail(a.priceSources===(books.size===1?legs[0].book:'mixed'),'Incorrect sportsbook attribution');
@@ -197,14 +208,14 @@
       '<p>Unquoted research suggestions, not executable sportsbook tickets. Individual prices retain their original books and clocks. The filters and price tiers above apply to priced references, not these suggestions.</p>'+
       '<p class="sgpr-record" role="status">Statistical hit rate: <strong>'+(s.hitRate===null?'Unavailable':(s.hitRate*100).toFixed(1)+'%')+'</strong> · '+s.hit+' hits · '+s.miss+' misses · '+s.pending+' pending · '+s.push+' pushes · '+s.dnp+' DNP · '+s.unknown+' unknown.</p>'+
       '<p class="sgpr-note">All original legs must have final, played results for a hit or miss. Pushes, DNP, unknown and pending cohorts stay separate. Repeated legs and games are correlated; this is descriptive hit-rate tracking only.</p>'+
-      body.suggestions.map((a,i)=>'<details class="sgpr-card" data-sgp-research-id="'+esc(a.id)+'"'+(opened.has(a.id)?' open':'')+'><summary><span><strong>'+esc(a.kind==='sgp'?'SGP':'SGP+')+' research '+(i+1)+'</strong><small>'+a.legs.length+' original legs · '+book(a.priceSources)+'</small></span><span class="sgpr-state">'+outcome(a,resolved,now)+'</span></summary>'+
+      body.suggestions.map((a,i)=>'<details class="sgpr-card" data-sgp-research-id="'+esc(a.id)+'"'+(opened.has(a.id)?' open':'')+'><summary><span><strong>'+esc(a.kind==='sgp'?'SGP':'SGP+')+' research '+(i+1)+'</strong><small>'+a.legs.length+' original legs · '+book(a.priceSources)+'</small>'+(a.jointModel?.status==='unavailable'?'<small class="sgpr-warning">Review: '+esc(a.jointModel.reason)+'</small>':'')+'</span><span class="sgpr-state">'+outcome(a,resolved,now)+'</span></summary>'+
         '<p class="sgpr-quote"><strong>Combined sportsbook quote: unverified / not observed.</strong></p>'+
         (a.priceSources==='mixed'?'<p class="sgpr-warning">Mixed-book combination: the saved prices come from FanDuel and DraftKings. No single-book ticket price or acceptance is established.</p>':'')+
         '<ol>'+a.legs.map(l=>'<li><strong>'+esc(label(l.pick))+'</strong><span>'+book(l.pick.book)+' '+odds(l.pick.americanOdds)+'</span><small>'+esc(l.pick.team+' vs '+l.pick.opponent)+' · '+esc(stamp(l.pick.startTime))+'</small><small>Provider observation '+esc(stamp(l.providerAsOf))+' · captured '+esc(stamp(l.pick.capturedAt))+'</small><small>Forecast input cutoff '+esc(stamp(l.forecastCutoff))+' · forecast saved '+esc(stamp(l.pick.estimate.asOf))+'</small></li>').join('')+'</ol>'+
         jointHTML(a)+
         '<p class="sgpr-benchmark">Straight-odds benchmark: <strong>'+(a.straightOddsBenchmark?odds(a.straightOddsBenchmark.americanOdds):'Unavailable')+'</strong>. Calculator multiplication of saved straight-leg prices, unadjusted for same-game dependence. This is not an SGP quote, correlation-adjusted estimate, fair price or win probability.</p>'+
-        '<p>Current availability and role: unknown. Overtime and settlement terms: unverified. '+(a.jointModel?'Statistical compatibility score and ticket EV: unavailable.':'Statistical compatibility score, joint win probability and ticket EV: unavailable.')+' Basic logical checks recorded no conflicts; compatibility is informational only.</p>'+
+        '<p>Original recorded availability and role: unknown. Later review notices above remain separate. Overtime and settlement terms: unverified. '+(a.jointModel?'Statistical compatibility score and ticket EV: unavailable.':'Statistical compatibility score, joint win probability and ticket EV: unavailable.')+' Basic logical checks recorded no conflicts; compatibility is informational only.</p>'+
         '<p class="sgpr-note">Original selections '+esc(stamp(body.sourceSelectionAt))+' · nominated '+esc(stamp(body.nominatedAt))+' · '+(body.postedAt?'posting verified '+esc(stamp(body.postedAt)):'public posting time awaiting verification')+'. Original membership is retained; no leg is removed after a push or DNP.</p></details>').join('');
   }
-  return {validate,validateIndex,open,load,runtimeRows,outcome,summary,renderHTML};
+  return {validate,validateIndex,open,load,runtimeRows,outcome,summary,renderHTML,overlappingSamePlayer};
 });

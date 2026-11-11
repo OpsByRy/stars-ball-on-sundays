@@ -143,3 +143,21 @@ class SGPResearchContract(unittest.TestCase):
 
 if __name__=='__main__':
     unittest.main()
+
+
+class SamePlayerStats(unittest.TestCase):
+    """Ry (2026-11-10): one player twice is fine with different stats, never with overlapping ones."""
+    def legs(self, *markets, player='nba:1'):
+        return [{'playerId': player, 'market': m} for m in markets]
+
+    def test_different_stats_allowed(self):
+        self.assertFalse(schema.overlapping_same_player(self.legs('PTS', '3PM')))   # 25+ points and 2+ threes
+        self.assertFalse(schema.overlapping_same_player(self.legs('PTS', 'REB', 'AST')))
+        self.assertFalse(schema.overlapping_same_player(self.legs('PA', 'REB')))
+        self.assertFalse(schema.overlapping_same_player(self.legs('PTS') + self.legs('PTS', player='nba:2')))
+
+    def test_overlapping_stats_refused(self):
+        self.assertTrue(schema.overlapping_same_player(self.legs('PTS', 'PTS')))     # 15+ and 20+ points
+        self.assertTrue(schema.overlapping_same_player(self.legs('PTS', 'PA')))      # points and points + assists
+        self.assertTrue(schema.overlapping_same_player(self.legs('REB', 'PRA')))
+        self.assertTrue(schema.overlapping_same_player(self.legs('PR', 'RA')))       # both contain rebounds

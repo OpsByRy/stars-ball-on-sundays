@@ -1,13 +1,13 @@
 /* Approved hybrid Story treatment: Logo 2.300 display, Slim labels, Inter copy. */
-@font-face{font-family:'SBOS Angular Logo';src:url('./fonts/SBOSAngular-Logo.woff2') format('woff2');font-style:normal;font-weight:800;font-display:swap}
-@font-face{font-family:'SBOS Angular Slim';src:url('./fonts/SBOSAngular-Slim.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'SBOS Angular Logo';src:url('./fonts/SBOSAngular-Logo.woff2?v=3.100') format('woff2');font-style:normal;font-weight:800;font-display:swap}
+@font-face{font-family:'SBOS Oxanium';src:url('./fonts/SBOSOxanium-VF.woff2?v=3.000') format('woff2');font-style:normal;font-weight:200 800;font-display:swap}
 .sbos-election-is-open{overflow:hidden}
 .sbos-election-dialog{box-sizing:border-box;width:min(700px,calc(100% - 24px));max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);margin:auto;padding:32px clamp(20px,5vw,48px) 24px;border:1px solid #71849b;border-top:5px solid #f2032c;border-radius:16px;background:#08111e;color:#f4f7fb;overflow-y:auto;overscroll-behavior:contain;font-family:Inter,system-ui,sans-serif;box-shadow:0 24px 100px #0008;text-align:center}
 .sbos-election-dialog::backdrop{background:rgb(2 15 31 / .82)}
 .sbos-election-art{display:grid;justify-items:center;background:linear-gradient(135deg,transparent 48.8%,rgb(242 3 44 / .10) 49%,rgb(242 3 44 / .10) 49.3%,transparent 49.5%)}
 .sbos-election-close{position:sticky;float:none;top:0;z-index:1;display:grid;place-items:center;width:44px;height:44px;min-height:44px;margin:-16px auto 24px;padding:0;border:1px solid #71849b;border-radius:50%;background:#111f31;color:#fff;font:400 28px/1 Inter,system-ui,sans-serif;cursor:pointer}
 .sbos-election-logo{display:block;max-width:140px;height:auto;margin:0 auto 16px;object-fit:contain}
-.sbos-election-date{margin:0 0 18px;font:400 16px/1.4 'SBOS Angular Slim',Inter,sans-serif;font-synthesis:none;letter-spacing:.08em;color:#c6cdd7}
+.sbos-election-date{margin:0 0 18px;font:400 16px/1.4 'SBOS Oxanium',Inter,sans-serif;font-synthesis:none;letter-spacing:.08em;color:#c6cdd7}
 #sbos-election-title{margin:0;font-family:'SBOS Angular Logo',Impact,sans-serif;font-size:clamp(32px,8.5vw,76px);font-weight:800;font-style:normal;font-synthesis:none;line-height:1.08;letter-spacing:0;text-transform:none}
 #sbos-election-title>span{display:block}#sbos-election-title .sbos-election-happy{font-size:.58em;line-height:1.35;color:#c6cdd7}#sbos-election-title>span:nth-child(2){color:#ff526d}
 #sbos-election-message{margin:22px auto 0;max-width:28ch;font:700 clamp(18px,4vw,23px)/1.4 Inter,system-ui,sans-serif;letter-spacing:.01em;color:#f4f7fb}#sbos-election-message strong{display:block;color:#f4f7fb;font-weight:700}

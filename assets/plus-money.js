@@ -276,7 +276,7 @@
       renderResearch();syncURL(push);window.SBOS_PICK_RESEARCH?.hydrate(target);
     }
     function options(){
-      const tickets=boardRows(body),legs=tickets.flatMap(t=>t.legs),games=new Map(legs.map(r=>[eventId(r),[r.team,r.opponent].sort().join(' vs ')]));
+      const tickets=boardRows(body),legs=tickets.flatMap(t=>t.legs),games=new Map(legs.map(r=>[eventId(r),/ @ /.test(r.matchup||'')?r.matchup:[r.team,r.opponent].sort().join(' vs ')]));
       for(const [id,values] of [['parlay-legs',[...new Set(tickets.map(t=>String(t.legs.length)))].sort().map(n=>[n,n+' legs'])],['parlay-market',[...new Set(legs.map(r=>r.market))].sort().map(m=>[m,markets[m]||m])],['parlay-game',[...games].sort((a,b)=>a[1].localeCompare(b[1]))],['parlay-team',[...new Set(legs.map(r=>r.team))].sort().map(t=>[t,t])]]){
         $(id).innerHTML='<option value="all">All '+({ 'parlay-legs':'leg counts','parlay-market':'stats','parlay-game':'games','parlay-team':'teams'}[id])+'</option>'+values.map(([value,name])=>`<option value="${escape(value)}">${escape(name)}</option>`).join('');
       }

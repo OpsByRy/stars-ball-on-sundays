@@ -84,3 +84,18 @@ def validate_profile(body):
             if type(t['applied']) is not bool or t['direction'] not in {'up','down','unchanged','uncertain'} or not t['applied'] and t['direction']!='uncertain' or t['source']!='https://www.espn.com/nba/injuries' or not isinstance(t['teammates'],list) or len(t['teammates'])>20:raise ValueError('Invalid injury impact')
             for x in t['teammates']:
                 keys(x,{'playerId','player','status'},{'playerId','player','status'});identity(x['playerId']);text(x['player'],120);text(x['status'],50)
+
+
+IDENTITY_POSITIONS={'G','F','C','G-F','F-C'}
+def validate_player_identity(body):
+    """Derived icon directory: current team, jersey number and ESPN position family only. No selections, models or archetypes."""
+    keys(body,{'schemaVersion','asOfDate','players'},{'schemaVersion','asOfDate','players'})
+    if body['schemaVersion']!='public-player-identity-1' or not isinstance(body['players'],list) or len(body['players'])>2000:raise ValueError('Invalid player identity directory')
+    day(body['asOfDate']);seen=set()
+    for p in body['players']:
+        keys(p,{'id','team','jersey','pos'},{'id'});identity(p['id'])
+        if p['id'] in seen:raise ValueError('Duplicate player identity')
+        seen.add(p['id'])
+        if 'team' in p and p['team'] not in NBA_TEAMS:raise ValueError('Invalid identity team')
+        if 'jersey' in p and (not isinstance(p['jersey'],str) or not re.fullmatch(r'\d{1,2}',p['jersey'])):raise ValueError('Invalid identity jersey number')
+        if 'pos' in p and p['pos'] not in IDENTITY_POSITIONS:raise ValueError('Invalid identity position family')

@@ -109,6 +109,26 @@ def portrait_view(root):
     games=json.loads((root/'data/matchups.json').read_text())['games'] if (root/'data/matchups.json').exists() else []
     return {'data/player-portraits.json':{'schemaVersion':'public-player-portraits-1','players':players,'teams':list(teams.values()),'games':games}}
 
+POSITION_FAMILY={'Guard':'G','Forward':'F','Center':'C','G':'G','F':'F','C':'C','G-F':'G-F','F-G':'G-F','F-C':'F-C','C-F':'F-C'}
+TEAM_ALIASES={'WSH':'WAS','GS':'GSW','SA':'SAS','NO':'NOP','NY':'NYK','UTAH':'UTA','PHO':'PHX','BRK':'BKN','CHO':'CHA'}
+def identity_view(root):
+    """Small derived directory for the icon system: current team, jersey number and ESPN position family per player,
+    taken only from already-validated public bios. Missing facts are left out, never guessed."""
+    if not (root/'data/player-profiles/index.json').exists():return {}
+    from profile_schema import validate_player_identity,NBA_TEAMS
+    index=json.loads((root/'data/player-profiles/index.json').read_text());players=[]
+    for entry in index['players']:
+        body=json.loads((root/'data/player-profiles'/entry['path']).read_text());bio=body.get('bio',{});player={'id':body['playerId']}
+        team=TEAM_ALIASES.get(bio.get('teamAbbreviation'),bio.get('teamAbbreviation')) or entry.get('team')
+        if team in NBA_TEAMS:player['team']=team
+        jersey=str(bio.get('jersey','')).strip().lstrip('#')
+        if re.fullmatch(r'\d{1,2}',jersey):player['jersey']=jersey
+        position=POSITION_FAMILY.get(bio.get('position')) or POSITION_FAMILY.get(body.get('basicPosition'))
+        if position:player['pos']=position
+        if len(player)>1:players.append(player)
+    view={'schemaVersion':'public-player-identity-1','asOfDate':index['asOfDate'],'players':sorted(players,key=lambda p:p['id'])}
+    validate_player_identity(view);return {'data/player-identity.json':view}
+
 def matchup_files(root):
     name='data/matchups.json'
     if not (root/name).exists():return []
@@ -254,7 +274,7 @@ def build(root, publish=False, now=None):
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')
     # Validate everything before replacing the previous build.
     paths=[safe_file(root,name) for name in files]
-    views={**board_views(root),**profile_views(root),**portrait_view(root),**personal_price_view(root)}
+    views={**board_views(root),**profile_views(root),**portrait_view(root),**identity_view(root),**personal_price_view(root)}
     if destination.exists(): shutil.rmtree(destination)
     destination.mkdir()
     for source in paths:

@@ -68,6 +68,31 @@ class PlayerIdentityDirectory(unittest.TestCase):
         self.assertNotIn('nba:3',got)
         self.assertEqual(got['nba:4'],{'id':'nba:4','team':'BOS','pos':'C'})
 
+    def test_newest_board_team_beats_a_stale_bio_and_adds_missing_players(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);(root/'data/player-profiles/1').mkdir(parents=True);(root/'data/editions/daily').mkdir(parents=True)
+            (root/'data/player-profiles/1/f1.json').write_text(json.dumps({'playerId':'nba:1','player':'P1','bio':{'teamAbbreviation':'BOS','jersey':'7','position':'Guard'}}))
+            (root/'data/player-profiles/index.json').write_text(json.dumps({'schemaVersion':'public-player-profiles-1','asOfDate':'2026-10-30','players':[{'id':'nba:1','name':'P1','path':'1/f1.json','version':'f'*16}]}))
+            def edition(day,props):
+                (root/f'data/editions/daily/{day}.json').write_text(json.dumps({'props':props}))
+                return {'channel':'daily','date':day,'path':f'daily/{day}.json','updatedAt':day+'T20:00:00Z'}
+            old=edition('2026-11-09',[{'playerId':'nba:1','team':'NY'},{'playerId':'nba:3','team':'Phoenix Suns'}])
+            new=edition('2026-11-11',[{'playerId':'nba:1','team':'LAL'},{'playerId':'nba:2','team':'Golden State Warriors'},{'playerId':'nba:bad','team':'LAL'},{'playerId':'nba:4','team':'ZZZ'}])
+            (root/'data/editions/manifest.json').write_text(json.dumps({'editions':[old,new]}))
+            got={p['id']:p for p in view(root)['players']}
+        self.assertEqual(got['nba:1'],{'id':'nba:1','team':'LAL','jersey':'7','pos':'G'})   # newest board wins, bio facts kept
+        self.assertEqual(got['nba:2'],{'id':'nba:2','team':'GSW'})                         # not in the bios: added from the board, full name -> abbreviation
+        self.assertEqual(got['nba:3'],{'id':'nba:3','team':'PHX'})                         # only on an older board, full name normalised: still the best known team
+        self.assertNotIn('nba:4',got);self.assertNotIn('nba:bad',got)                       # unknown team / bad id are dropped
+
+    def test_every_player_whose_board_props_carry_a_team_gets_it(self):
+        manifest=json.loads((ROOT/'data/editions/manifest.json').read_text())['editions']
+        latest=sorted([e for e in manifest if e['channel']=='daily'],key=lambda e:(e['date'],e['updatedAt']))[-1]
+        props=json.loads((ROOT/'data/editions'/latest['path']).read_text())['props'];directory={p['id']:p for p in view()['players']}
+        self.assertGreater(len(props),10)
+        for prop in props:
+            if build.canonical_team(prop.get('team')):self.assertEqual(directory[prop['playerId']].get('team'),build.canonical_team(prop['team']),prop['playerId'])
+
     def test_build_writes_the_file_into_dist_views(self):
         self.assertIn('data/player-identity.json',build.identity_view(ROOT))
 

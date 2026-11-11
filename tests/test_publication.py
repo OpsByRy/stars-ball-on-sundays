@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 import shutil
 import sys
-import tempfile
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -13,8 +12,20 @@ import build
 import public_schema as schema
 import profile_schema
 import career_schema
+from publication_fixture import PublicationFixture
 
 class PublicationBoundary(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        index=json.loads((ROOT/'data/editions/manifest.json').read_text())
+        mutable=['site-manifest.json','data/stat-targets.json',
+                 'data/editions/'+index['editions'][0]['path']]
+        cls.source_fixture=PublicationFixture(ROOT,mutable)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.source_fixture.close()
+
     def edition(self):
         index=json.loads((ROOT/'data/editions/manifest.json').read_text())
         return json.loads((ROOT/'data/editions'/index['editions'][0]['path']).read_text())
@@ -164,8 +175,7 @@ class PublicationBoundary(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'projection'):schema.validate_edition(body)
 
     def test_arbitrary_files_and_raw_csv_are_never_copied(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp)/'site';shutil.copytree(ROOT,root,ignore=shutil.ignore_patterns('dist','__pycache__'))
+        with self.source_fixture.session() as root:
             for name in ('assets/private-canary.js','data/slates/private.json','data/raw.csv','pipeline/model.py','.env','docs/internal.md','server/private-canary.js','private-lab/research.json'):
                 p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('NEVER_PUBLISH')
             build.build(root)
@@ -177,8 +187,7 @@ class PublicationBoundary(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Protected Lab'):build.build(root)
 
     def test_modified_records_and_unpublished_identities_fail(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp)/'site';shutil.copytree(ROOT,root,ignore=shutil.ignore_patterns('dist','__pycache__'))
+        with self.source_fixture.session() as root:
             target=root/'data/stat-targets.json';body=json.loads(target.read_text());body['targets'].append({'date':'2026-10-25','eventId':'private-candidate','playerId':'private-candidate','espnEventId':'123','espnAthleteId':'456'});target.write_text(json.dumps(body))
             with self.assertRaisesRegex(ValueError,'Unpublished'): build.build(root)
             shutil.copyfile(ROOT/'data/stat-targets.json',target)

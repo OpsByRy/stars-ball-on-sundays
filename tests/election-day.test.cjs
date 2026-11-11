@@ -70,11 +70,11 @@ test('shared loader is date-bound, duplicate-safe and keeps hosted-subpath asset
 });
 test('manifest adds only the reviewed overlay/font assets without exposing source kits',()=>{
  const names=JSON.parse(fs.readFileSync(path.join(__dirname,'../site-manifest.json'),'utf8')).files;
- for(const n of ['assets/election-day.js','assets/election-day.css','assets/fonts/SBOSAngular-Logo.woff2','assets/fonts/SBOSAngular-Slim.woff2','assets/fonts/SBOSAngular-LICENSE.txt'])assert.equal(names.filter(x=>x===n).length,1);
+ for(const n of ['assets/election-day.js','assets/election-day.css','assets/fonts/SBOSAngular-Logo.woff2','assets/fonts/SBOSOxanium-VF.woff2','assets/fonts/SBOSOxanium-OFL.txt','assets/fonts/SBOSAngular-LICENSE.txt'])assert.equal(names.filter(x=>x===n).length,1);
  assert.ok(!names.some(x=>/\.ufo|\.zip$|source\/|private|model/i.test(x)));
 });
 test('approved font binaries are unchanged, web-licensed and loaded without synthetic styling',()=>{
- const fonts={'SBOSAngular-Logo.woff2':'a3ddcfa1fa2b425fe81df0e96bc8e060f62783bab91a4c4f570c22aa2f8d2514','SBOSAngular-Slim.woff2':'83643ead175b9d4a6e782bf4392645352d764627a9cf652a82070a8b2d2f8e7f'};
+ const fonts={'SBOSAngular-Logo.woff2':'dbe9256624e596338f22fa34acde0823462e8a68860152cf2db38835a36e8072','SBOSOxanium-VF.woff2':'e0426a2e556fa7af826d4e117591f99cd8d5b425ba720b4c2bf0c5cd9a4ebfea','SBOSAngular-Solid.woff2':'c3eb52ff1bb2e243f64eca20a3330a4fe0edfeb94150fad5714ec88724a749b8'};
  for(const[n,hash]of Object.entries(fonts)){const b=fs.readFileSync(path.join(__dirname,'../assets/fonts',n));assert.equal(b.subarray(0,4).toString(),'wOF2');assert.equal(crypto.createHash('sha256').update(b).digest('hex'),hash);}
  assert.match(fs.readFileSync(path.join(__dirname,'../assets/fonts/SBOSAngular-LICENSE.txt'),'utf8'),/web embedding/);const css=fs.readFileSync(path.join(__dirname,'../assets/election-day.css'),'utf8');assert.match(css,/font-synthesis:none/);assert.doesNotMatch(css,/sbos-election-punctuation/);
 });

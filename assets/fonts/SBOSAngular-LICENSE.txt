@@ -1,9 +1,9 @@
-SBOS CUSTOM FONT PACKAGE — OWNER USE
+SBOS TYPOGRAPHY 3.0 — LICENSES
 
-Created for Ryan McKenzie / Stars Ball On Sundays, 2026.
+1. SBOS Angular Solid, SBOS Angular Logo and SBOS Angular Logo Outline — owner use
 
-SBOS Angular Solid, SBOS Angular Slim, SBOS Angular Logo and SBOS Angular Logo Outline are supplied for the owner's personal and commercial brand use, including installation, graphic creation, print output, video, web embedding, application embedding, modification, and sharing with collaborators or production vendors working on the owner's behalf. No separate font subscription or usage fee is imposed by this delivery.
+Created for Ryan McKenzie / Stars Ball On Sundays, 2026. Supplied for the owner's personal and commercial brand use, including installation, graphic creation, print output, video, web embedding, application embedding, modification, and sharing with collaborators or production vendors working on the owner's behalf. No separate font subscription or usage fee is imposed by this delivery. The package is delivered as custom brand artwork and editable font source; it makes no representation about trademark registration or exclusivity.
 
-This is the official 2.0 organization of the previously supplied custom SBOS fonts and owner-approved refinements. The Logo cuts preserve the capital and numeral artwork from the original 1.3 package. Solid uses the approved Study 03 construction. Slim uses the approved refined Slim with its corrected 4. Existing SBOS artwork remains the owner's supplied brand artwork; the package does not change ownership of it or claim to recover an unavailable original font.
+2. SBOS Oxanium — SIL Open Font License 1.1
 
-Build-tool libraries are not distributed in the font files. Their own licenses apply if separately installed. The package is delivered as custom brand artwork and editable font source; it makes no representation about trademark registration or exclusivity. No third-party specimen font is included in this release.
+SBOS Oxanium is a modified version of Oxanium 2.000, Copyright 2019 The Oxanium Project Authors (https://github.com/sevmeyer/oxanium). It is licensed under the SIL Open Font License, Version 1.1; the full license is in OFL-SBOSOxanium.txt and must travel with the SBOS Oxanium font files. Oxanium declares no Reserved Font Name. Modifications (2026, Stars Ball On Sundays): slashed zero as the default 0 (plain zero via ss01), 30 added accented letters, renamed.

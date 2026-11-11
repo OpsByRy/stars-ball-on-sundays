@@ -16,6 +16,7 @@ from profile_schema import validate_profile,validate_profile_index
 from career_schema import validate_career_history,validate_career_index,validate_defender_games,validate_defender_index
 from matchup_schema import validate_matchups
 from availability_schema import validate_availability
+ROOT_ICONS={'favicon.ico','apple-touch-icon.png'}
 
 class Links(HTMLParser):
     def __init__(self): super().__init__();self.links=[]
@@ -247,6 +248,9 @@ def build(root, publish=False, now=None):
     if len(set(files))!=len(files): raise ValueError('Duplicate public file')
     for name in manifest['files']:
         if name.startswith(('server/','private-lab/')): raise ValueError('Protected Lab code and data cannot enter the static artifact')
+        # Root favicon.ico / apple-touch-icon.png: the conventional paths browsers, link previews and the private
+        # redesign request when a page gives no icon tags. Copies of assets/icons/heritage-*.png and calendar-classic-180.png.
+        if name in ROOT_ICONS: continue
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')
     # Validate everything before replacing the previous build.
     paths=[safe_file(root,name) for name in files]

@@ -87,5 +87,22 @@ test('all immutable editions retain matchup labels and logo hooks, including unc
    if(directory.resolve(row)){covered++;assert.match(html,/>@<\/span>/);}else{uncovered++;assert.match(html,/>vs<\/span>/);}
   }
  }
- assert.ok(covered>0);assert.ok(uncovered>0);
+ // Every day through 2026-11-10 is in the directory (Away @ Home); a later day published before its
+ // directory entry still renders, with vs, so this does not require coverage of new days.
+ assert.ok(covered>0);assert.ok(uncovered>=0);
+});
+
+test('every published day through 2026-11-10 has its games in the home/away directory',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(path.join(root,name))),directory=research.createMatchupDirectory(read('data/matchups.json'));
+ for(const entry of read('data/editions/manifest.json').editions.filter(e=>e.date<='2026-11-10')){
+  for(const row of read('data/editions/'+entry.path).props)if(row.team&&row.opponent)assert.ok(directory.resolve(row),entry.date+' '+(row.canonicalEventId||row.eventId));
+ }
+});
+
+test('SGP research legs and the parlay game filter read Away @ Home when the board has it',()=>{
+ const sgp=require('../assets/sgp-research.js');
+ assert.equal(sgp.gameText({team:'Atlanta Hawks',opponent:'Los Angeles Lakers',matchup:'Los Angeles Lakers @ Atlanta Hawks'}),'Los Angeles Lakers @ Atlanta Hawks');
+ assert.equal(sgp.gameText({team:'Atlanta Hawks',opponent:'Los Angeles Lakers',matchup:'Atlanta Hawks vs Los Angeles Lakers'}),'Atlanta Hawks vs Los Angeles Lakers');
+ const source=fs.readFileSync(path.join(root,'assets/plus-money.js'),'utf8');
+ assert.match(source,/\/ @ \/\.test\(r\.matchup\|\|''\)\?r\.matchup:/);
 });

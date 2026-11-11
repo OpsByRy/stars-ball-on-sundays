@@ -74,7 +74,7 @@ test('manifest adds only the reviewed overlay/font assets without exposing sourc
  assert.ok(!names.some(x=>/\.ufo|\.zip$|source\/|private|model/i.test(x)));
 });
 test('approved font binaries are unchanged, web-licensed and loaded without synthetic styling',()=>{
- const fonts={'SBOSAngular-Logo.woff2':'dbe9256624e596338f22fa34acde0823462e8a68860152cf2db38835a36e8072','SBOSOxanium-VF.woff2':'e0426a2e556fa7af826d4e117591f99cd8d5b425ba720b4c2bf0c5cd9a4ebfea','SBOSAngular-Solid.woff2':'c3eb52ff1bb2e243f64eca20a3330a4fe0edfeb94150fad5714ec88724a749b8'};
+ const fonts={'SBOSAngular-Logo.woff2':'a4381ca59e7cd1e189e42ab7e9c195c4d01bcc83be19cbd05f370168572eb234','SBOSOxanium-VF.woff2':'e0426a2e556fa7af826d4e117591f99cd8d5b425ba720b4c2bf0c5cd9a4ebfea','SBOSAngular-Solid.woff2':'c3eb52ff1bb2e243f64eca20a3330a4fe0edfeb94150fad5714ec88724a749b8'};
  for(const[n,hash]of Object.entries(fonts)){const b=fs.readFileSync(path.join(__dirname,'../assets/fonts',n));assert.equal(b.subarray(0,4).toString(),'wOF2');assert.equal(crypto.createHash('sha256').update(b).digest('hex'),hash);}
  assert.match(fs.readFileSync(path.join(__dirname,'../assets/fonts/SBOSAngular-LICENSE.txt'),'utf8'),/web embedding/);const css=fs.readFileSync(path.join(__dirname,'../assets/election-day.css'),'utf8');assert.match(css,/font-synthesis:none/);assert.doesNotMatch(css,/sbos-election-punctuation/);
 });

@@ -12,6 +12,9 @@ import time
 import urllib.request
 
 ORIGIN='https://starsballonsundays.com'
+# Since the Nov 12 2026 cutover the apex is served by the redesign Worker, which
+# reads board data from this Pages project; verify the Pages bytes here.
+PAGES_ORIGIN='https://sbos-public.pages.dev'
 # The owned zone adds this public Cloudflare Web Analytics beacon at the edge.
 # Accept only its known token, vendor URL/SRI format and final-body position.
 # Every other byte remains covered by the publication hash.
@@ -69,8 +72,8 @@ def main():
     root=Path(__file__).resolve().parents[1]
     if json.loads((root/'hosting-policy.json').read_text())['githubMode']!='redirect':
         print('GitHub remains the full site; domain gate is inactive.');return
-    parser=argparse.ArgumentParser();parser.add_argument('--attempts',type=int,default=120);parser.add_argument('--interval',type=int,default=10);parser.add_argument('--origin',default=ORIGIN);parser.add_argument('--artifact',type=Path);args=parser.parse_args()
-    if args.origin != ORIGIN and not re.fullmatch(r'https://[0-9a-f]{8}\.sbos-public\.pages\.dev',args.origin):
+    parser=argparse.ArgumentParser();parser.add_argument('--attempts',type=int,default=120);parser.add_argument('--interval',type=int,default=10);parser.add_argument('--origin',default=PAGES_ORIGIN);parser.add_argument('--artifact',type=Path);args=parser.parse_args()
+    if args.origin != PAGES_ORIGIN and not re.fullmatch(r'https://[0-9a-f]{8}\.sbos-public\.pages\.dev',args.origin):
         raise ValueError('Unapproved verification origin')
     local_receipt=json.loads((args.artifact/'_sbos-release.json').read_text()) if args.artifact else None
     expected=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()

@@ -126,7 +126,8 @@ jobs:
           config = project['source']['config']
           if config.get('production_deployments_enabled') is not False:
               raise SystemExit('Disable duplicate Cloudflare Git production builds before artifact cutover')
-          if project['name'] != 'sbos-public' or 'starsballonsundays.com' not in project['domains']:
+          # starsballonsundays.com moved to the redesign Worker on 2026-11-12; this project is its data store.
+          if project['name'] != 'sbos-public' or project.get('subdomain') != 'sbos-public.pages.dev':
               raise SystemExit('Production destination differs from the reviewed project')
           PYTHON
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6

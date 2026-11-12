@@ -10744,6 +10744,422 @@
       "espnEventId": "401909975",
       "espnAthleteId": "3133626",
       "expectedTeam": "OKC"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:1627759",
+      "espnEventId": "401909976",
+      "espnAthleteId": "3917376",
+      "expectedTeam": "PHI"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:1642845",
+      "espnEventId": "401909976",
+      "espnAthleteId": "5124612",
+      "expectedTeam": "PHI"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:203954",
+      "espnEventId": "401909976",
+      "espnAthleteId": "3059318",
+      "expectedTeam": "PHI"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:2544",
+      "espnEventId": "401909976",
+      "espnAthleteId": "1966",
+      "expectedTeam": "PHI"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:1630178",
+      "espnEventId": "401909976",
+      "espnAthleteId": "4431678",
+      "expectedTeam": "PHI"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:1629628",
+      "espnEventId": "401909976",
+      "espnAthleteId": "4395625",
+      "expectedTeam": "TOR"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:1642867",
+      "espnEventId": "401909976",
+      "espnAthleteId": "5093267",
+      "expectedTeam": "TOR"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:1627751",
+      "espnEventId": "401909976",
+      "espnAthleteId": "3134908",
+      "expectedTeam": "TOR"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:1630193",
+      "espnEventId": "401909976",
+      "espnAthleteId": "4395724",
+      "expectedTeam": "TOR"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600227",
+      "playerId": "nba:1642266",
+      "espnEventId": "401909976",
+      "espnAthleteId": "4684272",
+      "expectedTeam": "TOR"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1641731",
+      "espnEventId": "401909977",
+      "espnAthleteId": "5104155",
+      "expectedTeam": "WAS"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:203076",
+      "espnEventId": "401909977",
+      "espnAthleteId": "6583",
+      "expectedTeam": "WAS"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1643407",
+      "espnEventId": "401909977",
+      "espnAthleteId": "5142718",
+      "expectedTeam": "WAS"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1642273",
+      "espnEventId": "401909977",
+      "espnAthleteId": "5174563",
+      "expectedTeam": "WAS"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1642848",
+      "espnEventId": "401909977",
+      "espnAthleteId": "5238230",
+      "expectedTeam": "WAS"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1642259",
+      "espnEventId": "401909977",
+      "espnAthleteId": "5160992",
+      "expectedTeam": "WAS"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1629027",
+      "espnEventId": "401909977",
+      "espnAthleteId": "4277905",
+      "expectedTeam": "WAS"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1628381",
+      "espnEventId": "401909977",
+      "espnAthleteId": "3908845",
+      "expectedTeam": "DET"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1630595",
+      "espnEventId": "401909977",
+      "espnAthleteId": "4432166",
+      "expectedTeam": "DET"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1628989",
+      "espnEventId": "401909977",
+      "espnAthleteId": "4066372",
+      "expectedTeam": "DET"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1642450",
+      "espnEventId": "401909977",
+      "espnAthleteId": "5107199",
+      "expectedTeam": "DET"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1630194",
+      "espnEventId": "401909977",
+      "espnAthleteId": "4278562",
+      "expectedTeam": "DET"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1629130",
+      "espnEventId": "401909977",
+      "espnAthleteId": "3157465",
+      "expectedTeam": "DET"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600228",
+      "playerId": "nba:1641709",
+      "espnEventId": "401909977",
+      "espnAthleteId": "4684742",
+      "expectedTeam": "DET"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1630163",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4432816",
+      "expectedTeam": "MIN"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1630245",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4397002",
+      "expectedTeam": "MIN"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:203497",
+      "espnEventId": "401909978",
+      "espnAthleteId": "3032976",
+      "expectedTeam": "MIN"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1630228",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4433247",
+      "expectedTeam": "MIN"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1630183",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4431671",
+      "expectedTeam": "MIN"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1630545",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4432847",
+      "expectedTeam": "MIN"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1630583",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4593125",
+      "expectedTeam": "DAL"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1642843",
+      "espnEventId": "401909978",
+      "espnAthleteId": "5041939",
+      "expectedTeam": "DAL"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1629655",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4278049",
+      "expectedTeam": "DAL"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:202681",
+      "espnEventId": "401909978",
+      "espnAthleteId": "6442",
+      "expectedTeam": "DAL"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1630230",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4278594",
+      "expectedTeam": "DAL"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1628997",
+      "espnEventId": "401909978",
+      "espnAthleteId": "3138160",
+      "expectedTeam": "DAL"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600229",
+      "playerId": "nba:1629023",
+      "espnEventId": "401909978",
+      "espnAthleteId": "4278078",
+      "expectedTeam": "DAL"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1626164",
+      "espnEventId": "401909979",
+      "espnAthleteId": "3136193",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1628970",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4066383",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1628415",
+      "espnEventId": "401909979",
+      "espnAthleteId": "3155526",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1631221",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4278585",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1630692",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4278402",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1630224",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4437244",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1642345",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4601023",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1642863",
+      "espnEventId": "401909979",
+      "espnAthleteId": "5203685",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1628960",
+      "espnEventId": "401909979",
+      "espnAthleteId": "3135045",
+      "expectedTeam": "CHA"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1631217",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4433249",
+      "expectedTeam": "CHA"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1642883",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4602025",
+      "expectedTeam": "CHA"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1641750",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4576060",
+      "expectedTeam": "CHA"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1626220",
+      "espnEventId": "401909979",
+      "espnAthleteId": "2583632",
+      "expectedTeam": "CHA"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1629675",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4396971",
+      "expectedTeam": "CHA"
+    },
+    {
+      "date": "2026-11-12",
+      "eventId": "nba:0022600230",
+      "playerId": "nba:1629632",
+      "espnEventId": "401909979",
+      "espnAthleteId": "4395651",
+      "expectedTeam": "CHA"
     }
   ]
 }

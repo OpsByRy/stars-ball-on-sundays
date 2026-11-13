@@ -198,6 +198,17 @@ def game_log_files(root):
             if max(g['date'] for g in body['games'])!=entry['lastGameDate'] or sorted({g['team'] for g in body['games']})!=entry['teams']:raise ValueError('Game-log coverage mismatch')
             events.update(g['eventId'] for g in body['games']);files.append(name)
         if len(events)!=index['games']:raise ValueError('League game count mismatch')
+    # Previously referenced log bodies remain valid immutable URLs after an index refresh.
+    # Admit only schema-validated, correctly addressed public box scores into the artifact.
+    known=set(files)
+    for archived in sorted((root/'data/player-logs').glob('*/*/*.json')):
+        name=archived.relative_to(root).as_posix()
+        if name in known:continue
+        body=json.loads(safe_file(root,name).read_text());validate_game_log(body)
+        expected=f"data/player-logs/{body['season']}/{body['playerId'].split(':',1)[1]}/{body['version']}.json"
+        if name!=expected or hashlib.sha256(canonical({k:v for k,v in body.items() if k!='version'})).hexdigest()[:16]!=body['version']:
+            raise ValueError('Archived game-log identity/digest mismatch')
+        files.append(name)
     newest=max(catalog['seasons'],key=lambda e:e['season'])
     if safe_file(root,'data/player-logs/index.json').read_bytes()!=safe_file(root,'data/player-logs/'+newest['path']).read_bytes():raise ValueError('Latest season alias mismatch')
     return files

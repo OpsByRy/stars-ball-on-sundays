@@ -123,7 +123,7 @@
   function personalSlipsHTML(body){
     const tickets=results.personalParlays(body),parlays=typeof window==='undefined'?require('./plus-money.js'):window.SBOS_PLUS_MONEY;
     const base=typeof window==='undefined'?undefined:new URL('../',document.querySelector('script[data-publication]').src);
-    return tickets.length?`<div class="pm-list personal-parlay-list">${tickets.map((ticket,index)=>parlays.personalTicketRow(ticket,index,{base})).join('')}</div><p class="personal-return-note">${tickets.every(t=>t.recordKind==='selection_snapshot')?'Selection snapshots have no unit or P/L record. Outcomes are statistical and do not verify sportsbook settlement.':'Hypothetical returns use flat 1u at the original full-ticket quote; Ry’s wager amounts are not published. Results are statistical, not verified sportsbook settlement.'}</p>`:'<p class="pick-empty">No favorite parlays were posted for this date. Individual favorites appear under Picks.</p>';
+    return tickets.length?`<div class="pm-list personal-parlay-list">${tickets.map((ticket,index)=>parlays.personalTicketRow(ticket,index,{base})).join('')}</div><p class="personal-return-note">${tickets.every(t=>t.recordKind==='selection_snapshot')?'Selection snapshots have no unit or P/L record. Outcomes are statistical and do not verify sportsbook settlement.':'Results are statistical, not verified sportsbook settlement.'}</p>`:'<p class="pick-empty">No favorite parlays were posted for this date. Individual favorites appear under Picks.</p>';
   }
   // Edition dates are New York calendar dates, not game-start UTC dates.
   const isSundayDate=day=>validDate(day)&&new Date(day+'T12:00:00Z').getUTCDay()===0;

@@ -1403,6 +1403,15 @@
       "count": 0,
       "researchCount": 11271,
       "updatedAt": "2026-11-13T22:43:20.253552+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-13",
+      "version": "77f3bd5b76b9a814",
+      "path": "daily/2026-11-13/77f3bd5b76b9a814.json",
+      "count": 0,
+      "researchCount": 11271,
+      "updatedAt": "2026-11-13T22:52:40.172962+00:00"
     }
   ],
   "schemaVersion": "public-1"

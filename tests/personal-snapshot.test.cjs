@@ -37,5 +37,5 @@ test('statistical personal ticket outcomes remain while snapshot unit accounting
  const [ticket]=results.personalParlays(body);assert.equal(results.parlaySummary([ticket]).total,1);
  const summary=units.summarize([ticket],{kind:'parlays',personal:true});assert.equal(summary.netUnits,0);assert.equal(summary.decided,0);assert.equal(summary.pending,0);assert.deepEqual(summary.stakes,{});
  assert.equal(units.recordHTML([ticket],{kind:'parlays',personal:true}),'');
- const old=read('data/editions/sunday/2026-11-01/d4f152ee753c9df6.json');assert.equal(results.personalParlays(old)[0].americanOdds,530);assert.ok(units.recordHTML(results.personalParlays(old),{kind:'parlays',personal:true}));
+ const old=read('data/editions/sunday/2026-11-01/d4f152ee753c9df6.json');assert.equal(results.personalParlays(old)[0].americanOdds,530);assert.equal(units.recordHTML(results.personalParlays(old),{kind:'parlays',personal:true}),'');
 });

@@ -219,11 +219,64 @@
   }
   const columns=()=>'<div class="pick-columns" aria-hidden="true"><span>Player / pick</span><span>Price</span><span>Our win est.</span><span title="Minutes played">MP</span><span>Live / result</span><span>Add</span></div>';
   // Ticket boards use the same exact-identity box-score grader without registering hidden pick rows.
+  // Published final results are the baseline; live source polling is optional.
+  // Match the settled counting-stat outcome, not a transient quote/pick ID or book.
+  function savedResultKey(row){
+    const c=contracts.normalizeContract(row),event=row?.canonicalEventId||row?.eventId;
+    if(!c||!/^\d{4}-\d{2}-\d{2}$/.test(row.date||'')||!event||!row.playerId)return null;
+    const lower=c.operator==='>='?Math.ceil(c.line):c.operator==='>'?Math.floor(c.line)+1:0;
+    const upper=c.operator==='<='?Math.floor(c.line):c.operator==='<'?Math.ceil(c.line)-1:null;
+    return JSON.stringify([row.date,event,row.playerId,c.market,lower,upper,row.product||'sportsbook',row.overtime??null]);
+  }
+  function mergeSavedFinalResults(rows,published,now=Date.now()){
+    const index=new Map(),ambiguous=new Set(),resolved=new Set(['win','loss','push','dnp','canceled']);
+    for(const saved of published){
+      const key=savedResultKey(saved),r=saved.result,time=Date.parse(r?.checkedAt||'');
+      if(!key||r?.eventStatus!=='final'||!resolved.has(r.statisticalOutcome)||!Number.isFinite(time)||time>now||(['win','loss','push'].includes(r.statisticalOutcome)&&(!finite(r.actual)||r.actual<0)))continue;
+      const old=index.get(key),oldTime=Date.parse(old?.result.checkedAt||'');
+      if(!old||time>oldTime){index.set(key,saved);ambiguous.delete(key);}
+      else if(time===oldTime&&(r.statisticalOutcome!==old.result.statisticalOutcome||r.actual!==old.result.actual))ambiguous.add(key);
+    }
+    let changed=false;
+    for(const row of rows){
+      const key=savedResultKey(row),saved=index.get(key);if(!saved||ambiguous.has(key))continue;
+      const a=row.resultSource,b=saved.resultSource;
+      if(a&&b&&(['eventId','athleteId'].some(k=>a[k]&&b[k]&&String(a[k])!==String(b[k]))))continue;
+      const previous=row.result,next=saved.result;
+      if(previous?.eventStatus==='final'&&resolved.has(previous.statisticalOutcome)&&Date.parse(previous.checkedAt||'')>=Date.parse(next.checkedAt))continue;
+      const merged=mergeResult(previous,{...next});
+      if(JSON.stringify(previous)!==JSON.stringify(merged)){row.result=merged;changed=true;}
+    }
+    return changed;
+  }
+  async function loadSavedFinalResults(rows,base,read=fetch,now=Date.now()){
+    const days=[...new Set(rows.map(r=>r.date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d||'')))];
+    if(!days.length)return false;
+    try{
+      const get=async path=>{const response=await read(new URL(path,base),{cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(12000)});if(!response.ok)throw Error('Saved results unavailable');return response.json();};
+      const manifest=await get('data/editions/manifest.json');
+      if(manifest.schemaVersion!=='public-1'||!Array.isArray(manifest.editions))return false;
+      const final=[];
+      await Promise.all(days.map(async day=>{
+        const e=manifest.editions.filter(e=>e.channel==='daily'&&e.date===day).at(-1);
+        if(!e||!/^[a-f0-9]{16}$/.test(e.version)||e.path!==`daily/${day}/${e.version}.json`)return;
+        try{
+          const body=await get('data/editions/'+e.path);
+          if(body.schemaVersion!=='public-1'||body.channel!=='daily'||body.date!==day||body.version!==e.version||!Array.isArray(body.props)||body.props.some(r=>r.date!==day))return;
+          final.push(...body.props);
+        }catch{}
+      }));
+      return mergeSavedFinalResults(rows,final,now);
+    }catch{return false;}
+  }
+
   function watchResults({base,onResults=()=>{}}){
     let rows=[],targets=new Map(),cache=new Map(),busy=false,generation=0,stopped=false;
     const ready=fetch(new URL('data/stat-targets.json',base),{cache:'no-store',credentials:'omit'}).then(r=>r.ok?r.json():null).then(body=>{if(body?.schemaVersion==='public-1')for(const t of body.targets||[])if(/^\d+$/.test(t.espnEventId)&&/^\d+$/.test(t.espnAthleteId))targets.set(identity(t),{eventId:t.espnEventId,athleteId:t.espnAthleteId,expectedTeam:t.expectedTeam});}).catch(()=>{});
     async function poll(){
       if(busy||stopped||document.hidden)return;busy=true;const current=rows,n=generation;await ready;
+      const savedChanged=await loadSavedFinalResults(current,base);
+      if(savedChanged&&n===generation&&!stopped)onResults(current);
       const sourceFor=row=>row.resultSource||targets.get(identity(row)),events=new Set();
       await window.SBOS_AVAILABILITY?.apply(current,sourceFor,base);
       for(const row of current){const source=sourceFor(row);if(source&&/^\d+$/.test(source.eventId)&&/^\d+$/.test(source.athleteId)&&!(Date.parse(row.startTime)>Date.now()+300000))events.add(source.eventId);}
@@ -239,5 +292,5 @@
     window.addEventListener('pagehide',stop,{once:true});
     return {setRows(next){rows=next;generation++;poll();},stop};
   }
-  return {researchProbability,researchFreshnessHTML,researchAnalysis,savedResearchHTML,create,watchResults,playerProfileURL,playerNameHTML,columns,rowStatus,parseSummary,mergeResult,addLeg,calculate,identity,slot,estimateDisplay,parseMinutes,minutesLabel,confidenceDecreased};
+  return {savedResultKey,mergeSavedFinalResults,loadSavedFinalResults,researchProbability,researchFreshnessHTML,researchAnalysis,savedResearchHTML,create,watchResults,playerProfileURL,playerNameHTML,columns,rowStatus,parseSummary,mergeResult,addLeg,calculate,identity,slot,estimateDisplay,parseMinutes,minutesLabel,confidenceDecreased};
 });

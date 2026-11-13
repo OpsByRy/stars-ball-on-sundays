@@ -1,8 +1,9 @@
 name: Refresh public results
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '17,47 * * * *'
+# The Cloudflare sbos-pollers Worker dispatches private results.yml every half hour.
+# That workflow grades this repo and pushes with SITE_PUSH_TOKEN, triggering pages.yml.
+# Manual public refreshes retain their exact-source artifact handoff below.
 permissions:
   contents: write
 concurrency:

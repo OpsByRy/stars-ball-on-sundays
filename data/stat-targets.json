@@ -12144,6 +12144,22 @@
       "espnEventId": "401909302",
       "espnAthleteId": "4997536",
       "expectedTeam": "GSW"
+    },
+    {
+      "date": "2026-11-13",
+      "eventId": "nba:0022600034",
+      "playerId": "nba:1630174",
+      "espnEventId": "401909296",
+      "espnAthleteId": "4396909",
+      "expectedTeam": "IND"
+    },
+    {
+      "date": "2026-11-13",
+      "eventId": "nba:0022600035",
+      "playerId": "nba:1641783",
+      "espnEventId": "401909297",
+      "espnAthleteId": "4702382",
+      "expectedTeam": "ORL"
     }
   ]
 }

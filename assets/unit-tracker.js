@@ -113,6 +113,7 @@
     return '<div class="unit-record-top"><span class="unit-net '+(s.netUnits>0?'positive':s.netUnits<0?'negative':'')+'">'+label+' flat-1u return <strong>'+(s.priced?units(s.netUnits):'Unavailable')+'</strong></span><span>'+(s.roi===null?'ROI unavailable':(s.roi*100).toFixed(1)+'% ROI')+'</span></div><p class="unit-record-note">'+s.priced+' priced, finalized decisions · 1u risked per pick or ticket · original posted odds. '+s.unpriced+' finalized decisions excluded from return: original full price unavailable or void-adjusted ticket price unverified.</p><p class="unit-record-basis">Wins and losses only in the ROI stake denominator; pushes and voids return the stake and are excluded. Pending and live outcomes do not enter returns. '+(options.bench?'Bench research is excluded from official pick records. No stake recommendation. ':testSlate?'Excluded from cumulative records. ':'')+'Hypothetical performance, not actual bets, personal profit or an account balance. Stat corrections can change results. Personal stakes and dollar tracking belong in Bankroll Breakdown.</p>';
   }
   function recordHTML(rows,options={}){
+    if(options.kind==='parlays')return '';
     rows=rows.filter(row=>row.recordKind!=='selection_snapshot');
     if(!rows.length||options.kind!=='parlays'&&!rows.some(row=>row.group==='research'&&(options.bench?row.category==='honorable_mention':['value_safe','high_probability_aggressive'].includes(row.category))))return '';
     const token=String(++serial);summaries.set(token,{rows,options});

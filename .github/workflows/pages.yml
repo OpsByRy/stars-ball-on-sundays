@@ -113,7 +113,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
         run: |
-          test "$(gh api repos/OpsByRy/stars-ball-on-sundays/commits/main --jq .sha)" = "$SOURCE_SHA"
+          # The source must be main or an earlier commit of main. During games the results workflow
+          # commits every ~10 min and a deploy takes ~12 min to get here, so requiring main's exact
+          # tip refused every deploy (Nov 13, 6:43-9:12 PM ET: no board, lineup or result update went
+          # live). Runs are serialized (concurrency sbos-pages, only the newest waits), so the newer
+          # main is already queued behind this one; a source not on main is still refused.
+          status="$(gh api "repos/OpsByRy/stars-ball-on-sundays/compare/${SOURCE_SHA}...main" --jq .status)"
+          echo "main compared with this source: $status"
+          test "$status" = identical || test "$status" = ahead
           python - <<'PYTHON'
           import json, os, urllib.request
           url = 'https://api.cloudflare.com/client/v4/accounts/fbdf495767bb144edfcbb7f1609e2629/pages/projects/sbos-public'

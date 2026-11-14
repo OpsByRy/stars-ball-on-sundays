@@ -1853,6 +1853,15 @@
       "count": 0,
       "researchCount": 5194,
       "updatedAt": "2026-11-14T19:11:45.089000+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-14",
+      "version": "2f3f2cdbe10ef8ff",
+      "path": "daily/2026-11-14/2f3f2cdbe10ef8ff.json",
+      "count": 0,
+      "researchCount": 5194,
+      "updatedAt": "2026-11-14T19:26:50.461916+00:00"
     }
   ],
   "schemaVersion": "public-1"

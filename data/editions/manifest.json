@@ -1515,11 +1515,29 @@
     {
       "channel": "daily",
       "date": "2026-11-13",
+      "version": "b2524bcf5f67cd4b",
+      "path": "daily/2026-11-13/b2524bcf5f67cd4b.json",
+      "count": 0,
+      "researchCount": 16670,
+      "updatedAt": "2026-11-14T01:18:20.225238+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-13",
       "version": "b1c7007aa6ceb1b9",
       "path": "daily/2026-11-13/b1c7007aa6ceb1b9.json",
       "count": 0,
       "researchCount": 15980,
       "updatedAt": "2026-11-14T01:24:36.371646+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-13",
+      "version": "c5e381dba3d0740d",
+      "path": "daily/2026-11-13/c5e381dba3d0740d.json",
+      "count": 0,
+      "researchCount": 16670,
+      "updatedAt": "2026-11-14T01:29:51.322303+00:00"
     }
   ],
   "schemaVersion": "public-1"

@@ -12712,6 +12712,22 @@
       "espnEventId": "401909984",
       "espnAthleteId": "2595516",
       "expectedTeam": "CHI"
+    },
+    {
+      "date": "2026-11-14",
+      "eventId": "nba:0022600234",
+      "playerId": "nba:1643414",
+      "espnEventId": "401909983",
+      "espnAthleteId": "5101761",
+      "expectedTeam": "BKN"
+    },
+    {
+      "date": "2026-11-14",
+      "eventId": "nba:0022600235",
+      "playerId": "nba:1630188",
+      "espnEventId": "401909984",
+      "espnAthleteId": "4397189",
+      "expectedTeam": "CHI"
     }
   ]
 }

@@ -1943,6 +1943,15 @@
       "count": 0,
       "researchCount": 6450,
       "updatedAt": "2026-11-14T21:14:37.333387+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-14",
+      "version": "b6d02b14784fd99d",
+      "path": "daily/2026-11-14/b6d02b14784fd99d.json",
+      "count": 0,
+      "researchCount": 6450,
+      "updatedAt": "2026-11-14T21:26:45.185924+00:00"
     }
   ],
   "schemaVersion": "public-1"

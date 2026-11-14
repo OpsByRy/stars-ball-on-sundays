@@ -43,7 +43,12 @@ test('public notice distinguishes actual posting from placement and labels every
  assert.doesNotMatch(html,/BET ID|115\.53|\$25|136\.93|98\.73|52\.38|56\.32|cash.out|100 PTS|location verified|libfile_/i);
 });
 test('legacy single-slip editions and first-saved full-ticket quote tracking remain compatible',()=>{
- const entries=read('data/editions/manifest.json').editions,legacy=entries.map(e=>read('data/editions/'+e.path)).find(b=>b.sharedBetslipOdds&&b.props.some(r=>r.group==='ry'));
+ const entries=read('data/editions/manifest.json').editions;
+ let legacy;
+ for(const entry of entries){
+  const candidate=read('data/editions/'+entry.path);
+  if(candidate.sharedBetslipOdds&&candidate.props.some(r=>r.group==='ry')){legacy=candidate;break;}
+ }
  assert.equal(results.personalParlays(legacy).length,1);assert.match(publication.favoritesNotice(legacy),/Full-slip screenshot price/);
  const t=results.personalParlays(body)[3],record={ticketId:t.id,legIds:t.legs.map(r=>r.id).sort(),americanOdds:109};
  assert.equal(units.firstPersonalPrice({...t,americanOdds:999},[record]).americanOdds,109);

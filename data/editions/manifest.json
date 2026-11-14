@@ -1979,6 +1979,24 @@
       "count": 0,
       "researchCount": 6450,
       "updatedAt": "2026-11-14T22:13:26.143545+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-14",
+      "version": "3a86c92b66c47dac",
+      "path": "daily/2026-11-14/3a86c92b66c47dac.json",
+      "count": 0,
+      "researchCount": 7582,
+      "updatedAt": "2026-11-14T22:20:13.714694+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-14",
+      "version": "875e16fb0e986e0a",
+      "path": "daily/2026-11-14/875e16fb0e986e0a.json",
+      "count": 0,
+      "researchCount": 7582,
+      "updatedAt": "2026-11-14T22:24:35.037670+00:00"
     }
   ],
   "schemaVersion": "public-1"

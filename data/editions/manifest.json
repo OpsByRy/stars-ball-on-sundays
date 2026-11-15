@@ -2213,6 +2213,15 @@
       "count": 0,
       "researchCount": 8180,
       "updatedAt": "2026-11-15T02:46:38.701Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-14",
+      "version": "7611e3ac750e1358",
+      "path": "daily/2026-11-14/7611e3ac750e1358.json",
+      "count": 0,
+      "researchCount": 8180,
+      "updatedAt": "2026-11-15T02:56:20.671Z"
     }
   ],
   "schemaVersion": "public-1"

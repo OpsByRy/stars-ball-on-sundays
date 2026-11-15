@@ -3,6 +3,8 @@ from datetime import date, datetime, timezone
 import math
 import re
 
+CONTROL_CHARACTERS = re.compile(r'[\x00-\x1f]')
+
 EDITION_FIELDS={'schemaVersion','channel','date','timezone','firstPublishedAt','recordedAt','updatedAt','priceNote','props','version','sharedBetslipUrl','favoritesPostedAt','sharedBetslipOdds','personalSlips','personalPublication','selectionPolicy'}
 PICK_FIELDS={'id','date','player','playerId','eventId','canonicalEventId','team','opponent','matchup','startTime','period','product','market','side','operator','line','lineType','americanOdds','book','overtime','group','capturedAt','sourceType','evidence','result','resultSource','estimate','category','assessment','priceCheck','postedAt','ryFavorite','selected','confidenceUpdate','bookPrices','priceReview'}
 ESTIMATE_FIELDS={'projection','winProbability','pushProbability','lossProbability','asOf','status'}
@@ -85,7 +87,7 @@ def number(value):
     return type(value) in (int,float) and math.isfinite(value)
 
 def text(value, maximum=500):
-    if not isinstance(value,str) or len(value)>maximum or any(ord(c)<32 for c in value):
+    if not isinstance(value,str) or len(value)>maximum or CONTROL_CHARACTERS.search(value):
         raise ValueError('Invalid public text')
 
 

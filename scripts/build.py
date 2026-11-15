@@ -16,6 +16,7 @@ from profile_schema import validate_profile,validate_profile_index
 from career_schema import validate_career_history,validate_career_index,validate_defender_games,validate_defender_index
 from matchup_schema import validate_matchups
 from availability_schema import validate_availability
+from edition_validation import read_edition
 ROOT_ICONS={'favicon.ico','apple-touch-icon.png'}
 
 class Links(HTMLParser):
@@ -49,13 +50,12 @@ def publication_files(root):
     index=json.loads(safe_file(root,'data/editions/manifest.json').read_text());validate_manifest(index)
     files=['data/editions/manifest.json','data/stat-targets.json'];published=set();personal_state={}
     for entry in index['editions']:
-        name='data/editions/'+entry['path'];body=json.loads(safe_file(root,name).read_text());validate_edition(body)
-        preserve_personal_slips(body,personal_state)
-        if any(body[k]!=entry[k] for k in ('channel','date','version')): raise ValueError('Edition identity mismatch')
-        unhashed={k:v for k,v in body.items() if k!='version'}
-        if hashlib.sha256(canonical(unhashed)).hexdigest()[:16]!=entry['version']: raise ValueError('Edition digest mismatch')
-        if sum(p['group']=='ry' for p in body['props'])!=entry['count'] or sum(p['group']=='research' for p in body['props'])!=entry['researchCount']: raise ValueError('Edition count mismatch')
-        published.update((p['date'],p.get('canonicalEventId') or p.get('eventId'),p.get('playerId')) for p in body['props']);files.append(name)
+        name='data/editions/'+entry['path']
+        checked=read_edition(root,name,safe_file=safe_file,validate=validate_edition,canonical=canonical)
+        preserve_personal_slips(checked.personal_body(),personal_state)
+        if (checked.channel,checked.date,checked.version)!=(entry['channel'],entry['date'],entry['version']): raise ValueError('Edition identity mismatch')
+        if checked.count!=entry['count'] or checked.research_count!=entry['researchCount']: raise ValueError('Edition count mismatch')
+        published.update(checked.targets);files.append(name)
     targets=json.loads(safe_file(root,'data/stat-targets.json').read_text());validate_targets(targets)
     if any((t['date'],t['eventId'],t['playerId']) not in published for t in targets['targets']): raise ValueError('Unpublished candidate identity in public targets')
     return files
@@ -169,7 +169,8 @@ def personal_price_view(root):
     """First saved quote for each exact posted personal slip, independent of later odds views."""
     manifest=json.loads((root/'data/editions/manifest.json').read_text());saved={}
     for entry in sorted(manifest['editions'],key=lambda e:e['updatedAt']):
-        body=json.loads((root/'data/editions'/entry['path']).read_text())
+        checked=read_edition(root,'data/editions/'+entry['path'],safe_file=safe_file,validate=validate_edition,canonical=canonical)
+        body=checked.personal_body()
         if 'personalSlips' in body:
             for slip in body['personalSlips']:
                 if slip.get('recordKind')=='selection_snapshot':continue

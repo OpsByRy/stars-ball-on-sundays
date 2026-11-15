@@ -41,6 +41,16 @@ class TieredSelectionTests(unittest.TestCase):
     def test_ev_all_tracks(self):
         for r in [row(.7,-300),row(.6,-200,"honorable_mention")]:
             with self.assertRaises(ValueError):schema.validate_edition(edition(r))
+    def test_sunday_archive_retains_daily_policy_and_all_selection_gates(self):
+        for r in [row(),row(.65,100),row(.6,-110,"honorable_mention")]:
+            r['date']='2026-11-08';b=edition(r);b['channel']='sunday';before=copy.deepcopy(b)
+            schema.validate_edition(b);self.assertEqual(b,before)
+        for r in [row(.69),row(.64,100),row(.59,-110,"honorable_mention"),row(.7,-300),row(.8,161)]:
+            r['date']='2026-11-08';b=edition(r);b['channel']='sunday'
+            with self.assertRaises(ValueError):schema.validate_edition(b)
+        for day in ['2026-11-06','2026-11-09']:
+            b=edition(row(day=day));b['channel']='sunday'
+            with self.assertRaises(ValueError):schema.validate_edition(b)
     def test_push_probability_is_not_a_win(self):
         r=row(.7,-300);r["estimate"].update(pushProbability=.1,lossProbability=.2)
         schema.validate_edition(edition(r))

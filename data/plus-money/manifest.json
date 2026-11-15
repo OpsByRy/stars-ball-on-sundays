@@ -706,6 +706,13 @@
       "path": "2026-11-14/29e9f29a621d95dc.json",
       "updatedAt": "2026-11-14T23:37:51.288781+00:00",
       "count": 1
+    },
+    {
+      "date": "2026-11-14",
+      "version": "08816286d03f0e02",
+      "path": "2026-11-14/08816286d03f0e02.json",
+      "updatedAt": "2026-11-15T00:06:37.255147+00:00",
+      "count": 1
     }
   ],
   "schemaVersion": "public-plus-money-manifest-1"

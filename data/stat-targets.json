@@ -13768,6 +13768,14 @@
       "espnEventId": "401909993",
       "espnAthleteId": "3133626",
       "expectedTeam": "OKC"
+    },
+    {
+      "date": "2026-11-15",
+      "eventId": "nba:0022600240",
+      "playerId": "nba:1629655",
+      "espnEventId": "401909989",
+      "espnAthleteId": "4278049",
+      "expectedTeam": "DAL"
     }
   ]
 }

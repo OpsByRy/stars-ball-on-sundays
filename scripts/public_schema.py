@@ -178,8 +178,10 @@ def validate_tiered_selection(body):
     selection_policy = body.get('selectionPolicy')
     if selection_policy is None:
         return
-    if (selection_policy != TIERED_SELECTION_POLICY or body['channel'] != 'daily'
-            or body['date'] < TIERED_SELECTION_EFFECTIVE_FROM):
+    # Sunday archive copies retain the exact Daily selector contract and its gates.
+    if (selection_policy != TIERED_SELECTION_POLICY or body['channel'] not in {'daily','sunday'}
+            or body['date'] < TIERED_SELECTION_EFFECTIVE_FROM
+            or body['channel'] == 'sunday' and date.fromisoformat(body['date']).weekday() != 6):
         raise ValueError('Invalid selection policy or effective date')
     for row in body['props']:
         if row.get('group') != 'research' or row.get('category') not in {'value_safe','high_probability_aggressive','honorable_mention'}:

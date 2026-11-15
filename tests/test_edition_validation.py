@@ -67,6 +67,19 @@ class EditionValidationCache(unittest.TestCase):
                 self.read()
         self.assertEqual(self.validate.call_count, 2)
 
+    def test_non_utf8_and_bom_inputs_keep_the_original_text_reader_rejection(self):
+        self.read()
+        p = self.root / 'edition.json'; original = p.read_bytes()
+        for raw in [b'\xef\xbb\xbf' + original, original.decode('utf-8').encode('utf-16'),
+                    original.decode('utf-8').encode('utf-32')]:
+            with self.subTest(prefix=raw[:4]):
+                p.write_bytes(raw)
+                with self.assertRaises((ValueError, UnicodeError)):
+                    json.loads(raw.decode('utf-8'))
+                with self.assertRaises((ValueError, UnicodeError)):
+                    self.read()
+        self.assertEqual(self.validate.call_count, 1)
+
     def test_validator_and_canonicalizer_changes_cannot_reuse_prior_checks(self):
         self.read()
         other = Mock(wraps=public_schema.validate_edition)

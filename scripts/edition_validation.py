@@ -35,7 +35,8 @@ def read_edition(root, name, *, safe_file, validate, canonical):
     if key in _checked:
         _checked.move_to_end(key)
         return _checked[key]
-    body = json.loads(raw)
+    # Match the original UTF-8 text reader; bytes-mode JSON also admits UTF-16/32.
+    body = json.loads(raw.decode('utf-8'))
     validate(body)
     if hashlib.sha256(canonical({k: v for k, v in body.items() if k != 'version'})).hexdigest()[:16] != body['version']:
         raise ValueError('Edition digest mismatch')

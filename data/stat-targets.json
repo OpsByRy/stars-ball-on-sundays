@@ -14696,6 +14696,22 @@
       "espnEventId": "401909995",
       "espnAthleteId": "4431687",
       "expectedTeam": "CHI"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600245",
+      "playerId": "nba:1628975",
+      "espnEventId": "401909994",
+      "espnAthleteId": "3133635",
+      "expectedTeam": "ORL"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600246",
+      "playerId": "nba:1626209",
+      "espnEventId": "401909995",
+      "espnAthleteId": "2995706",
+      "expectedTeam": "CLE"
     }
   ]
 }

@@ -72,6 +72,16 @@ class SGPResearchContract(unittest.TestCase):
                 b=copy.deepcopy(self.body);b['suggestions'][0]['legs'][0][key]=value;seal(b)
                 with self.assertRaises(ValueError):self.check(b)
 
+    def test_known_role_and_available_pair_preserves_original_picks_and_joint_holds(self):
+        b = copy.deepcopy(self.body)
+        for suggestion in b['suggestions']:
+            for leg in suggestion['legs']:
+                leg.update(availability='available', role='known')
+        seal(b)
+        self.check(b)
+        self.assertTrue(all(not a['betReady'] and a['jointWinProbability'] is None for a in b['suggestions']))
+        self.assertEqual(self.body['suggestions'][0]['legs'][0]['availability'], 'unknown')
+
     def test_original_provider_and_forecast_clocks_are_required(self):
         for change in [
             lambda l:l.update(providerAsOf=None),

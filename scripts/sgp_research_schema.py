@@ -123,7 +123,8 @@ def validate(body, *, source=None, calculator_sha=None, now=None):
             require(clock(leg['forecastCutoff'],now) <= clock(p['estimate']['asOf'],now) <= selection, 'Original forecast clock changed')
             start = clock(p['startTime'], now, False)
             require(start.astimezone(ZoneInfo('America/New_York')).date().isoformat() == body['date'] and nomination < start, 'Exact original pregame identity required')
-            require(leg['availability'] == 'unknown' and leg['role'] == 'unknown' and leg['settlementTerms'] == 'unverified', 'Unknown context changed')
+            require((leg['availability'], leg['role']) in {('unknown', 'unknown'), ('available', 'known')}
+                    and leg['settlementTerms'] == 'unverified', 'Invalid role/availability context')
             require(originals is None or originals.get(p['id']) == p, 'Research leg differs from immutable Daily source')
             require(p['id'] not in copies or copies[p['id']] == leg, 'Repeated leg has conflicting facts')
             copies[p['id']] = leg; picks.append(p)

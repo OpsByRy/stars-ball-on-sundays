@@ -152,6 +152,54 @@
       "status": "out",
       "asOf": "2026-10-30T22:41:17Z",
       "source": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"
+    },
+    {
+      "date": "2026-10-29",
+      "eventId": "nba:0022600146",
+      "playerId": "nba:1629057",
+      "status": "dnp",
+      "asOf": "2026-11-16T15:44:54.545Z",
+      "source": "https://stats.nba.com/stats/boxscoresummaryv3?GameID=0022600146"
+    },
+    {
+      "date": "2026-11-09",
+      "eventId": "nba:0022600206",
+      "playerId": "nba:1642867",
+      "status": "dnp",
+      "asOf": "2026-11-16T15:44:54.545Z",
+      "source": "https://stats.nba.com/stats/boxscoresummaryv3?GameID=0022600206"
+    },
+    {
+      "date": "2026-11-09",
+      "eventId": "nba:0022600210",
+      "playerId": "nba:1630530",
+      "status": "dnp",
+      "asOf": "2026-11-16T15:44:54.545Z",
+      "source": "https://stats.nba.com/stats/boxscoresummaryv3?GameID=0022600210"
+    },
+    {
+      "date": "2026-11-14",
+      "eventId": "nba:0022600234",
+      "playerId": "nba:203924",
+      "status": "dnp",
+      "asOf": "2026-11-16T15:44:54.545Z",
+      "source": "https://stats.nba.com/stats/boxscoresummaryv3?GameID=0022600234"
+    },
+    {
+      "date": "2026-11-14",
+      "eventId": "nba:0022600234",
+      "playerId": "nba:1629660",
+      "status": "dnp",
+      "asOf": "2026-11-16T15:44:54.545Z",
+      "source": "https://stats.nba.com/stats/boxscoresummaryv3?GameID=0022600234"
+    },
+    {
+      "date": "2026-11-15",
+      "eventId": "nba:0022600239",
+      "playerId": "nba:1628368",
+      "status": "dnp",
+      "asOf": "2026-11-16T15:44:54.545Z",
+      "source": "https://stats.nba.com/stats/boxscoresummaryv3?GameID=0022600239"
     }
   ]
 }

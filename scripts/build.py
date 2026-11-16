@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 import re
 import shutil
+import subprocess
+from collections import OrderedDict
 from urllib.parse import unquote, urlsplit
 from public_schema import validate_edition, validate_manifest, validate_targets, validate_game_log_index, validate_game_log, validate_game_log_catalog
 from plus_money_schema import publication_files as plus_money_files
@@ -46,12 +48,13 @@ def preserve_personal_slips(body,state):
         if publication['recordedAt']!=saved['recordedAt'] or saved['publishedAt'] is not None and publication['publishedAt']!=saved['publishedAt']:raise ValueError('Verified personal publication clock must remain unchanged')
     state[key]={'slips':slips,'rows':rows,'publication':publication}
 
-def publication_files(root):
+def publication_files(root, source_hashes=None):
     index=json.loads(safe_file(root,'data/editions/manifest.json').read_text());validate_manifest(index)
     files=['data/editions/manifest.json','data/stat-targets.json'];published=set();personal_state={}
     for entry in index['editions']:
         name='data/editions/'+entry['path']
         checked=read_edition(root,name,safe_file=safe_file,validate=validate_edition,canonical=canonical)
+        if source_hashes is not None:source_hashes[name]=checked.byte_sha256
         preserve_personal_slips(checked.personal_body(),personal_state)
         if (checked.channel,checked.date,checked.version)!=(entry['channel'],entry['date'],entry['version']): raise ValueError('Edition identity mismatch')
         if checked.count!=entry['count'] or checked.research_count!=entry['researchCount']: raise ValueError('Edition count mismatch')
@@ -77,6 +80,35 @@ def board_views(root):
         edition['props']=[p for p in body['props'] if p['group']=='ry' or p.get('category')!='not_a_pick']
         views['data/boards/'+entry['path']]={'schemaVersion':'public-board-1','sourceVersion':entry['version'],'edition':edition}
     return views
+
+_published_views_cache=OrderedDict()
+
+def published_pick_views(root, source_hashes=None):
+    """Reuse only immutable derived bytes after the normal archive validation."""
+    node=shutil.which('node')
+    if not node:raise ValueError('Node is required for published-pick history')
+    inputs=['scripts/published-picks.cjs','scripts/refresh-results.cjs','assets/published-picks.js','assets/published-parlays.js',
+            'data/editions/manifest.json','data/plus-money/manifest.json','data/sgp-research/manifest.json','assets/parlay-withdrawals.json']
+    optional='data/published-selection-results.json'
+    if (root/optional).exists() or (root/optional).is_symlink():inputs.append(optional)
+    pin=hashlib.sha256(canonical(source_hashes)).hexdigest() if source_hashes is not None else None
+    key=(pin,tuple((name,hashlib.sha256(safe_file(root,name).read_bytes()).hexdigest()) for name in inputs if (root/name).exists() or (root/name).is_symlink()))
+    if pin is not None and key in _published_views_cache:
+        _published_views_cache.move_to_end(key)
+        return json.loads(_published_views_cache[key])
+    command=[node,str(root/'scripts/published-picks.cjs'),str(root)]
+    if source_hashes is not None:command.append('--verified-source-hashes')
+    output=subprocess.run(command,input=json.dumps(source_hashes) if source_hashes is not None else None,check=True,capture_output=True,text=True)
+    if pin is not None:
+        _published_views_cache[key]=output.stdout
+        while len(_published_views_cache)>2:_published_views_cache.popitem(last=False)
+    return json.loads(output.stdout)
+
+def history_script(html):
+    """Load history before whichever board client a page uses first."""
+    if re.search(r'\bsrc=["\'][^"\']*assets/published-picks\.js',html):return html
+    return re.sub(r'(<script\b[^>]*\bsrc=["\'])([^"\']*assets/)(?:publication|plus-money)\.js(?:\?[^"\']*)?(["\'][^>]*></script>)',
+        lambda m: '<link rel="stylesheet" href="'+m[2]+'published-history.css"><script defer src="'+m[2]+'published-picks.js"></script><script defer src="'+m[2]+'published-parlays.js"></script>'+m[0],html,count=1)
 
 def profile_views(root):
     # Reuse only exact, already-reviewed proposition records; no research execution.
@@ -297,7 +329,8 @@ def build(root, publish=False, now=None):
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
     manifest=json.loads(safe_file(root,'site-manifest.json').read_text())
     if set(manifest)!={'files'} or not isinstance(manifest['files'],list): raise ValueError('Invalid site file list')
-    files=manifest['files']+publication_files(root)+plus_money_files(root,safe_file)+sgp_research_files(root,safe_file)+game_log_files(root)+profile_files(root)+career_files(root)+defender_files(root)+matchup_files(root)+availability_files(root)
+    source_hashes={}
+    files=manifest['files']+publication_files(root,source_hashes)+plus_money_files(root,safe_file)+sgp_research_files(root,safe_file)+game_log_files(root)+profile_files(root)+career_files(root)+defender_files(root)+matchup_files(root)+availability_files(root)
     if publish:
         entries=json.loads((root/'data/editions/manifest.json').read_text())['editions'];assert_publication_time(entries,now)
         today=(now or datetime.now(timezone.utc)).astimezone(ZoneInfo('America/New_York')).date().isoformat()
@@ -312,7 +345,7 @@ def build(root, publish=False, now=None):
         if name.startswith('data/') or not (name.endswith('.html') or name.startswith('assets/')): raise ValueError('Only reviewed pages and assets belong in site-manifest')
     # Validate everything before replacing the previous build.
     paths=[safe_file(root,name) for name in files]
-    views={**board_views(root),**profile_views(root),**portrait_view(root),**identity_view(root),**personal_price_view(root)}
+    views={**board_views(root),**profile_views(root),**portrait_view(root),**identity_view(root),**personal_price_view(root),**published_pick_views(root,source_hashes)}
     if destination.exists(): shutil.rmtree(destination)
     destination.mkdir()
     for source in paths:
@@ -325,7 +358,7 @@ def build(root, publish=False, now=None):
             url=urlsplit(match['path']);asset=(page.parent/unquote(url.path)).resolve()
             if url.scheme or url.netloc or destination not in asset.parents or not asset.is_file(): return match[0]
             return match['prefix']+match['path']+'?v='+hashlib.sha256(asset.read_bytes()).hexdigest()[:12]+match['end']
-        html=re.sub(r'''(?P<prefix>\b(?:src|href)=["'])(?P<path>[^"'?]+\.(?:js|css))(?:\?[^"']*)?(?P<end>["'])''',version_asset,page.read_text());page.write_text(html)
+        html=re.sub(r'''(?P<prefix>\b(?:src|href)=["'])(?P<path>[^"'?]+\.(?:js|css))(?:\?[^"']*)?(?P<end>["'])''',version_asset,history_script(page.read_text()));page.write_text(html)
         parser=Links();parser.feed(html)
         for value in parser.links:
             url=urlsplit(value)

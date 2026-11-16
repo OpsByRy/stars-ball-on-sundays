@@ -216,6 +216,25 @@
     const target=$('parlay-list'),dateSelect=$('parlay-date'),context=$('parlay-context');
     let editions=[],body=null,serial=0,state=readState(location.search,location.hash);const opened=new Set();
     let researchBody=null,researchRows=[],researchMessage=null,researchHTML='';const researchOpened=new Set();
+    let publicationBody=null,publicationRows=[],publicationMessage='Loading all published combinations…';
+    let publicationPanel=$('parlay-publication-history');if(!publicationPanel){publicationPanel=document.createElement('div');publicationPanel.id='parlay-publication-history';target.after(publicationPanel);}
+    function historyRows(){return [...boardRows(body).flatMap(t=>t.legs),...researchRows,...publicationRows];}
+    function renderPublication(){
+      const api=window.SBOS_PUBLISHED_PARLAYS;
+      if(publicationBody&&api){
+        const facts=new Map(publicationRows.map(row=>[window.SBOS_PUBLISHED_PICKS.key(row),row.result]));
+        for(const record of publicationBody.records)for(const leg of record.legs)leg.result=facts.get(window.SBOS_PUBLISHED_PICKS.key(leg.original))||leg.result;
+        publicationPanel.innerHTML=api.html(publicationBody,{lineLabel:label,base});
+      }else publicationPanel.innerHTML='<section class="pick-group published-pick-history"><h2>Every published parlay &amp; combination</h2><p role="status">'+escape(publicationMessage||'Complete history unavailable; current-board totals may omit earlier combinations. Refresh to try again.')+'</p></section>';
+    }
+    async function loadPublication(day,n){
+      try{const saved=await json(new URL('data/published-parlays/'+day+'.json',base));
+        if(n!==serial||body?.date!==day)return;
+        if(saved.schemaVersion!=='public-published-parlays-1'||saved.date!==day||(saved.sourceVersions?.['plus-money']||null)!==(body.version||null))throw Error('Parlay history mismatch');
+        publicationBody=saved;publicationRows=saved.records.flatMap(record=>record.legs.map(leg=>({...leg.original,result:leg.result})));publicationMessage=null;
+      }catch{if(n!==serial)return;publicationBody=null;publicationRows=[];publicationMessage='Complete history unavailable; current-board totals may omit earlier combinations. Refresh to try again.';}
+      renderPublication();tracker.setRows(historyRows());
+    }
     const tracker=window.SBOS_PICK_BOARD.watchResults({base,onResults:()=>render()});
     $('parlay-book-preference').innerHTML=prices.controlHTML();
     async function json(url,immutable=false){const r=await fetch(url,{cache:immutable?'force-cache':'no-store',credentials:'omit'});if(!r.ok)throw Error('Publication unavailable');return r.json();}
@@ -236,7 +255,7 @@
         const saved=await sgpResearch.load(base,day);
         if(n!==serial||body?.date!==day)return;
         researchBody=saved;researchRows=sgpResearch.runtimeRows(saved);researchMessage=null;
-        render();tracker.setRows([...boardRows(body).flatMap(t=>t.legs),...researchRows]);
+        render();tracker.setRows(historyRows());
       }catch{
         if(n!==serial||body?.date!==day)return;
         researchBody=null;researchRows=[];researchMessage='The saved SGP research record is unavailable. Priced references remain separate.';
@@ -264,7 +283,7 @@
       // Search, price and probability filters never hide losses from the category record.
       const tracked=categoryTickets(body.tickets,state.type).filter(t=>!state.sameGame||isSameGame(t));
       const targetCount=categoryTickets(modelTargets(body),state.type).filter(t=>!state.sameGame||isSameGame(t)).length;
-      $('parlay-record').innerHTML=results.parlayRecordHTML(tracked,{label:activeTitles[state.type]+(state.sameGame?' · same game':'')+' · posted-parlay record'})+(targetCount?`<p class="pm-model-record-note">${targetCount} provisional model target${targetCount===1?' is':'s are'} unquoted and excluded from this statistical record.</p>`:'');
+      $('parlay-record').innerHTML=results.parlayRecordHTML(tracked,{label:activeTitles[state.type]+(state.sameGame?' · same game':'')+' · current-board record'})+(targetCount?`<p class="pm-model-record-note">${targetCount} provisional model target${targetCount===1?' is':'s are'} unquoted and excluded from this statistical record.</p>`:'');
       $('parlay-tabs').innerHTML=Object.entries(activeTitles).map(([key,title])=>`<button type="button" role="tab" id="parlay-tab-${key}" aria-controls="parlay-panel" aria-selected="${state.type===key}" tabindex="${state.type===key?0:-1}" data-parlay-tab="${key}"><span>${title}</span><strong>${counts[key]}</strong></button>`).join('');
       $('parlay-panel').setAttribute('aria-labelledby','parlay-tab-'+state.type);
       $('combinations-heading').textContent=activeTitles[state.type]+(state.sameGame?' · Same game':'');$('parlay-count').textContent=`${rows.length} of ${counts[state.type]} ${targetCount?'parlays / model targets':'parlays'}`;
@@ -273,7 +292,7 @@
       for(const el of document.querySelectorAll('[data-parlay-filter]'))el.value=state[el.dataset.parlayFilter]||'';
       let ideasHeading=false;target.innerHTML=withdrawalNoticeHTML(body.date)+(rows.length?rows.map(t=>{const heading=modern&&isModelTarget(t)&&!ideasHeading?(ideasHeading=true,'<div class="pm-ideas-heading"><h3>Unquoted model ideas</h3><p>Conditional research targets, not priced picks. No payout, stake or official record.</p></div>'):'';return heading+ticketRow(t,ticketOrdinal(tickets,t)-1,{open:opened.has(t.id)});}).join(''):emptyStateHTML(counts,state));
       if(state.sameGame&&researchCount&&!rows.length)target.innerHTML=withdrawalNoticeHTML(body.date)+'<p class="pick-empty">No priced same-game references in this category. See the saved research suggestions below.</p>';
-      renderResearch();syncURL(push);window.SBOS_PICK_RESEARCH?.hydrate(target);
+      renderResearch();renderPublication();syncURL(push);window.SBOS_PICK_RESEARCH?.hydrate(target);
     }
     function options(){
       const tickets=boardRows(body),legs=tickets.flatMap(t=>t.legs),games=new Map(legs.map(r=>[eventId(r),/ @ /.test(r.matchup||'')?r.matchup:[r.team,r.opponent].sort().join(' vs ')]));
@@ -284,15 +303,15 @@
     }
     async function loadDate(){
       const n=++serial,entry=editions.find(e=>e.date===dateSelect.value);target.textContent='Loading the published parlay board…';
-      researchBody=null;researchRows=[];researchMessage=null;researchOpened.clear();renderResearch();tracker.setRows([]);
-      const saved=await json(new URL(safePath(entry),dataRoot),true);if(n!==serial)return;
+      researchBody=null;researchRows=[];researchMessage=null;researchOpened.clear();publicationBody=null;publicationRows=[];publicationMessage='Loading all published combinations…';renderResearch();renderPublication();tracker.setRows([]);
+      const saved=entry.historyOnly?{schemaVersion:'public-plus-money-2',date:entry.date,version:null,tickets:[],priceNote:'Historical research combinations; no current priced ticket set is available.'}:await json(new URL(safePath(entry),dataRoot),true);if(n!==serial)return;
       if(!['public-plus-money-1','public-plus-money-2'].includes(saved.schemaVersion)||saved.version!==entry.version||saved.date!==entry.date||!Array.isArray(saved.tickets))throw Error('Publication mismatch');
       if(saved.modelTargets!==undefined&&(!Array.isArray(saved.modelTargets)||saved.modelTargets.some(t=>!isModelTarget(t))))throw Error('Invalid model-target publication');
       if(body?.date!==saved.date)opened.clear();body=applyWithdrawals(saved);options();
       context.textContent=`Odds refreshed at ${stamp(body.quoteObservedAt)} · Board updated ${stamp(body.updatedAt)}.`;
       $('parlay-price-note').textContent=body.priceNote;render();
       tracker.setRows(boardRows(body).flatMap(t=>t.legs));
-      void loadResearch(body.date,n);
+      void loadResearch(body.date,n);void loadPublication(body.date,n);
     }
     function filterChange(event){const key=event.target.dataset?.parlayFilter;if(!key)return;state=readState('?'+new URLSearchParams({...state,[key]:event.target.value,favorite:state.favorite?'1':'0',sameGame:state.sameGame?'1':'0'}));render();}
     $('parlay-filters').addEventListener('input',event=>{if(event.target.tagName==='INPUT')filterChange(event);});
@@ -309,7 +328,12 @@
       withdrawals=await json(new URL('assets/parlay-withdrawals.json',base));
       if(withdrawals.schemaVersion!=='sbos-parlay-withdrawals-1'||!Array.isArray(withdrawals.withdrawals))throw Error('Invalid withdrawal register');
       const index=await json(new URL('manifest.json',dataRoot));if(index.schemaVersion!=='public-plus-money-manifest-1')throw Error('Invalid publication');
-      const latest=new Map();for(const e of index.editions){safePath(e);latest.set(e.date,e);}editions=[...latest.values()].sort((a,b)=>b.date.localeCompare(a.date));
+      const latest=new Map();for(const e of index.editions){safePath(e);latest.set(e.date,e);}
+      try{const censusIndex=await json(new URL('data/published-parlays/manifest.json',base));
+        if(censusIndex.schemaVersion!=='public-published-parlays-index-1'||!Array.isArray(censusIndex.editions))throw Error('Invalid history date index');
+        for(const e of censusIndex.editions)if(/^\d{4}-\d{2}-\d{2}$/.test(e.date)&&!latest.has(e.date))latest.set(e.date,{date:e.date,historyOnly:true,version:null});
+      }catch{publicationMessage='Complete history date index unavailable; choose a saved board date.';}
+      editions=[...latest.values()].sort((a,b)=>b.date.localeCompare(a.date));
       if(!editions.length){target.textContent='No parlays have been published yet.';return;}
       dateSelect.innerHTML=editions.map(e=>`<option value="${escape(e.date)}">${escape(e.date)}</option>`).join('');
       const requested=new URL(location.href).searchParams.get('date');if(editions.some(e=>e.date===requested))dateSelect.value=requested;

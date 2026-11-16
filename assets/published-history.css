@@ -1,0 +1,8 @@
+.published-pick-history{margin-top:24px;padding:16px;border:1px solid var(--border-subtle);border-radius:12px}
+.published-pick-history>p,.published-pick-history-row p{font-size:12px;line-height:1.65;overflow-wrap:anywhere}
+.published-pick-history>ol{padding-left:22px}
+.published-pick-history-row{padding:12px 4px;border-top:1px solid var(--border-subtle)}
+.published-pick-history-row[data-published-status="withdrawn"]{border-left:3px solid var(--accent,#c68f49);padding-left:10px}
+.published-pick-history-row summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:12px;color:inherit}
+
+#published-single-picks,#parlay-publication-history{scroll-margin-top:6rem}

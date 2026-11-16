@@ -23,6 +23,7 @@ class CheckedEdition:
     research_count: int
     targets: frozenset
     personal_json: bytes
+    byte_sha256: str
 
     def personal_body(self):
         # Give each caller its own mutable copy of the small personal-record view.
@@ -46,7 +47,7 @@ def read_edition(root, name, *, safe_file, validate, canonical):
         body['channel'], body['date'], body['version'], len(personal['props']),
         sum(p['group'] == 'research' for p in body['props']),
         frozenset((p['date'], p.get('canonicalEventId') or p.get('eventId'), p.get('playerId'))
-                  for p in body['props']), canonical(personal))
+                  for p in body['props']), canonical(personal), key[2].hex())
     _checked[key] = checked
     if len(_checked) > MAX_ENTRIES:
         _checked.popitem(last=False)

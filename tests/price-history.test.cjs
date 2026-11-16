@@ -6,3 +6,5 @@ test('a conflicting observation never renders a guessed chart',()=>a.deepEqual(p
 test('queries bind the displayed book and literal alternate contract',()=>{const row={group:'research',product:'sportsbook',date:'2026-11-16',playerId:'nba:1',startTime:'2026-11-17T00:00:00Z',market:'AST',operator:'>=',line:3};const quote={...q,book:'draftkings',operator:'>',line:2.5};a.deepEqual(p.queryFor(row,quote),{date:row.date,player:row.playerId,market:'AST',op:'>',line:2.5,book:'draftkings',start:row.startTime});a.equal(p.queryFor({...row,overtime:false},quote),null);a.equal(p.queryFor({...row,product:'pickem'},quote),null);});
 
 test('an ambiguous quote at the card clock never draws a direction',()=>a.equal(p.content([['2026-11-16T15:00:00Z',-150]],q,[q.capturedAt]).tone,'unavailable'));
+
+test('equivalent clock formats are one observation and cannot mask conflicting prices',()=>{a.deepEqual(p.pointsFor([['2026-11-16T16:00:00.000Z',-130]],q),[]);a.equal(p.pointsFor([['2026-11-16T16:00:00.000Z',-120]],q).length,1);});

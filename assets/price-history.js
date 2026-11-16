@@ -11,11 +11,11 @@ function direction(first,last){const delta=decimal(last)-decimal(first);return M
 function pointsFor(points,current){
  if(!Array.isArray(points)||!valid(current.americanOdds)||!Number.isFinite(Date.parse(current.capturedAt)))return [];
  const end=Date.parse(current.capturedAt),map=new Map();
- for(const p of points)if(Array.isArray(p)&&valid(p[1])&&Number.isFinite(Date.parse(p[0]))&&Date.parse(p[0])<=end){if(map.has(p[0])&&map.get(p[0])!==p[1])return [];map.set(p[0],p[1]);}
+ for(const p of points)if(Array.isArray(p)&&valid(p[1])&&Number.isFinite(Date.parse(p[0]))&&Date.parse(p[0])<=end){const clock=Date.parse(p[0]);if(map.has(clock)&&map.get(clock)[1]!==p[1])return [];map.set(clock,p);}
  if(!map.size)return [];
- if(map.has(current.capturedAt)&&map.get(current.capturedAt)!==current.americanOdds)return [];
- map.set(current.capturedAt,current.americanOdds);
- return [...map].sort((a,b)=>Date.parse(a[0])-Date.parse(b[0]));
+ if(map.has(end)&&map.get(end)[1]!==current.americanOdds)return [];
+ if(!map.has(end))map.set(end,[current.capturedAt,current.americanOdds]);
+ return [...map.values()].sort((a,b)=>Date.parse(a[0])-Date.parse(b[0]));
 }
 function spark(points){
  const values=points.map(p=>decimal(p[1])),base=values[0],lo=Math.min(...values,base),hi=Math.max(...values,base),span=Math.max(hi-lo,.04),min=lo-span*.18,max=hi+span*.18;

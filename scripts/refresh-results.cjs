@@ -18,7 +18,7 @@ function savedVersion(raw){
 }
 function write(file,body){fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(body,null,2)+'\n');}
 function equivalent(a,b){const strip=r=>{const {checkedAt,...rest}=r||{};return rest;};return JSON.stringify(sorted(strip(a)))===JSON.stringify(sorted(strip(b)));}
-async function refresh({fetchJSON,fetchNBAJSON,fetchInjuriesJSON,now=new Date(),directory=root,eventIds=null}={}){
+async function refresh({fetchJSON,fetchNBAJSON,fetchInjuriesJSON,now=new Date(),directory=root,eventIds=null,historyOnly=false,allHistory=false}={}){
   const siteRoot=path.resolve(directory);
   const indexPath=path.join(siteRoot,'data/editions/manifest.json'),index=JSON.parse(fs.readFileSync(indexPath));
   if(index.schemaVersion!=='public-1')throw Error('Unsupported publication index');
@@ -58,7 +58,7 @@ async function refresh({fetchJSON,fetchNBAJSON,fetchInjuriesJSON,now=new Date(),
   const latest=new Map();for(const e of index.editions)latest.set(e.channel+':'+e.date,e);
   const cache=new Map();let editions=0,failures=0;
   fetchJSON ||= async id=>{if(!/^\d+$/.test(id))throw Error('Invalid result game');const r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${id}`,{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('Result source unavailable');return r.json();};
-  for(const e of latest.values()){
+  for(const e of historyOnly?[]:latest.values()){
     const age=now.getTime()-Date.parse(e.date+'T12:00:00Z');if(age<0||age>7*86400000)continue;
     if(e.path!==`${e.channel}/${e.date}/${e.version}.json`||!/^\d{4}-\d{2}-\d{2}$/.test(e.date)||!/^[0-9a-f]{16}$/.test(e.version)||!['daily','sunday'].includes(e.channel))throw Error('Invalid publication path');
     const body=JSON.parse(fs.readFileSync(path.join(siteRoot,'data/editions',e.path)));if(version(body)!==e.version)throw Error('Publication digest mismatch');
@@ -84,7 +84,7 @@ async function refresh({fetchJSON,fetchNBAJSON,fetchInjuriesJSON,now=new Date(),
   // Parlay legs are published selections too, including exact lines absent from the Daily board.
   // Save results in a new immutable parlay edition; original prices and ticket membership stay fixed.
   const parlayIndexPath=path.join(siteRoot,'data/plus-money/manifest.json');let parlayEditions=0;
-  if(fs.existsSync(parlayIndexPath)){
+  if(fs.existsSync(parlayIndexPath)&&!historyOnly){
     const pm=require('../assets/plus-money.js'),parlayIndex=JSON.parse(fs.readFileSync(parlayIndexPath));
     if(parlayIndex.schemaVersion!=='public-plus-money-manifest-1')throw Error('Unsupported parlay index');
     const dates=new Map();for(const e of parlayIndex.editions){pm.safePath(e);dates.set(e.date,e);}
@@ -110,8 +110,39 @@ async function refresh({fetchJSON,fetchNBAJSON,fetchInjuriesJSON,now=new Date(),
     }
     if(parlayEditions)write(parlayIndexPath,parlayIndex);
   }
+  // Grade the durable published census independently of the current board. Never
+  // append an old ticket set as the newest board just to save its missing results.
+  const published=require('./published-picks.cjs'),history=require('../assets/published-picks.js');
+  const inWindow=day=>{const age=now.getTime()-Date.parse(day+'T12:00:00Z');return age>=0&&(allHistory||age<=7*86400000);};
+  const historyDays=new Set(index.editions.filter(e=>inWindow(e.date)).map(e=>e.date));
+  for(const folder of ['plus-money','sgp-research']){
+    const file=path.join(siteRoot,'data',folder,'manifest.json');
+    if(fs.existsSync(file))for(const e of JSON.parse(fs.readFileSync(file)).editions)if(inWindow(e.date))historyDays.add(e.date);
+  }
+  const observations=new Map(),saved=published.savedResults(siteRoot),population=new Map();let publishedPickResults=0;
+  const add=(original,result)=>{const id=history.key(original);if(!id)return;const next=history.mergeResult(history.mergeResult(result,observations.get(id)),saved.results[id]);
+    const prior=population.get(id);population.set(id,{...original,result:history.mergeResult(prior?.result,next)});};
+  for(const census of published.collectFromSite(siteRoot,{days:historyDays,observations}))for(const record of census.records){
+    if(historyOnly||record.status==='withdrawn')add(record.original,record.result);
+  }
+  for(const census of published.collectParlaysFromSite(siteRoot,{days:historyDays}))for(const record of census.records)for(const leg of record.legs)add(leg.original,leg.result);
+  for(const [id,row] of population){
+    if(allHistory&&row.result?.eventStatus==='final'&&['win','loss','push','out','dnp','canceled'].includes(row.result.statisticalOutcome))continue;
+    const source=row.resultSource||identities.get(board.identity(row));if(!source||included&&!included.has(source.eventId))continue;
+    const baseline={...row.result};
+    const announced=await announcedResult(row,source);if(announced)row.result=board.mergeResult(row.result,announced);
+    if(!(Date.parse(row.startTime)>now.getTime())){
+      try{
+        if(!cache.has(source.eventId))cache.set(source.eventId,Promise.resolve().then(()=>fetchJSON(source.eventId)));
+        row.result=board.mergeResult(row.result,publicResult(board.parseSummary(await cache.get(source.eventId),source,row,now.toISOString())));
+      }catch{failures++;}
+      await supplementInactive(row);
+    }
+    if(!equivalent(saved.results[id]||baseline,row.result)){saved.results[id]=publicResult(row.result);publishedPickResults++;}
+  }
+  if(publishedPickResults){saved.updatedAt=now.toISOString();write(path.join(siteRoot,'data/published-selection-results.json'),saved);}
   if(statusChanged)write(statusPath,statusFacts);
-  return {editions,sourceFailures:failures,...(fs.existsSync(parlayIndexPath)?{parlayEditions}:{})};
+  return {editions,sourceFailures:failures,...(publishedPickResults?{publishedPickResults}:{}),...(fs.existsSync(parlayIndexPath)?{parlayEditions}:{})};
 }
 module.exports={refresh,version,savedVersion,equivalent};
-if(require.main===module)refresh().then(r=>{console.log(JSON.stringify(r));if(r.sourceFailures)console.warn('Some box scores were unavailable; verified updates were saved and other records retained.');}).catch(()=>{console.error('Public result refresh failed; existing records retained.');process.exitCode=1;});
+if(require.main===module)refresh({historyOnly:process.argv.includes('--published-history-only'),allHistory:process.argv.includes('--all-history')}).then(r=>{console.log(JSON.stringify(r));if(r.sourceFailures)console.warn('Some box scores were unavailable; verified updates were saved and other records retained.');}).catch(()=>{console.error('Public result refresh failed; existing records retained.');process.exitCode=1;});

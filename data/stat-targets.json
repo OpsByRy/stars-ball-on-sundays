@@ -14680,6 +14680,22 @@
       "espnEventId": "401909996",
       "espnAthleteId": "4684806",
       "expectedTeam": "MEM"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600245",
+      "playerId": "nba:1630568",
+      "espnEventId": "401909994",
+      "espnAthleteId": "4277951",
+      "expectedTeam": "BOS"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600246",
+      "playerId": "nba:1630172",
+      "espnEventId": "401909995",
+      "espnAthleteId": "4431687",
+      "expectedTeam": "CHI"
     }
   ]
 }

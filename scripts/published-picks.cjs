@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path');
 const history=require('../assets/published-picks.js'),parlays=require('../assets/published-parlays.js'),crypto=require('node:crypto');
 const {savedVersion}=require('./refresh-results.cjs');
-function collectFromSite(root,{days=null,observations=new Map(),sourceHashes=null}={}){
+function collectFromSite(root,{days=null,observations=new Map(),sourceHashes=null,lifecycle=null}={}){
   const manifest=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json'))),groups=new Map();
   if(manifest.schemaVersion!=='public-1'||!Array.isArray(manifest.editions))throw Error('Invalid publication manifest');
   const known=new Map();
@@ -13,6 +13,7 @@ function collectFromSite(root,{days=null,observations=new Map(),sourceHashes=nul
     const valid=sourceHashes?sourceHashes['data/editions/'+entry.path]===crypto.createHash('sha256').update(raw).digest('hex'):savedVersion(raw)===entry.version;
     if(body.version!==entry.version||body.date!==entry.date||body.channel!==entry.channel||!valid)throw Error('History source digest mismatch');
     const key=entry.channel+':'+entry.date;if(!groups.has(key)){groups.set(key,[]);known.set(key,new Set());}
+    if(lifecycle)require('./board-revisions.cjs').add(lifecycle,entry,body);
     const census=known.get(key);
     // Retain only selected lines and their later observations, never the full
     // research pool across hundreds of large immutable versions in memory.
@@ -60,22 +61,47 @@ function collectParlaysFromSite(root,{days=null}={}){
       const all=groups.get(day);all.sourceVersions[folder]=body.sourceVersion;all.records.push(...body.records);
     }
   }
+  const reasonPath=path.join(root,'data/parlay-withdrawal-reasons.json');
+  const log=fs.existsSync(reasonPath)?JSON.parse(fs.readFileSync(reasonPath)):{schemaVersion:'public-parlay-withdrawal-reasons-1',reasons:[]};
+  validateRemovalReasons(log);
+  for(const body of groups.values())applyRemovalReasons(body,log.reasons);
   return [...groups.values()];
 }
+function validateRemovalReasons(log){
+ if(log.schemaVersion!=='public-parlay-withdrawal-reasons-1'||!Array.isArray(log.reasons)||Object.keys(log).some(k=>!['schemaVersion','reasons'].includes(k)))throw Error('Invalid parlay withdrawal reasons');
+ const seen=new Set();
+ for(const r of log.reasons){
+  if(Object.keys(r).some(k=>!['date','key','sourceVersion','recordedAt','reasonCode','notice'].includes(k))||!/^\d{4}-\d{2}-\d{2}$/.test(r.date)||!/^[a-f0-9]{16}$/.test(r.sourceVersion)||!Number.isFinite(Date.parse(r.recordedAt))||typeof r.reasonCode!=='string'||!r.reasonCode.trim()||typeof r.notice!=='string'||!r.notice.trim()||r.notice.length>1800)throw Error('Invalid parlay removal explanation');
+  const key=JSON.parse(r.key);if(!Array.isArray(key)||key.length!==2||!['cross_game_reference','same_game_research','model_target'].includes(key[0])||!Array.isArray(key[1])||key[1].length<2)throw Error('Invalid removal membership');
+  const id=JSON.stringify([r.date,r.key,r.sourceVersion]);if(seen.has(id))throw Error('Duplicate parlay removal explanation');seen.add(id);
+ }
+ return log;
+}
+function applyRemovalReasons(body,reasons){
+ for(const r of reasons.filter(x=>x.date===body.date)){
+  const record=body.records.find(x=>x.key===r.key);if(!record)throw Error('Removal explanation has no published ticket');
+  const event=record.history.find(x=>x.status==='withdrawn'&&x.sourceVersion===r.sourceVersion);if(!event)throw Error('Removal explanation has no matching withdrawal');
+  if(Date.parse(r.recordedAt)<Date.parse(event.observedAt))throw Error('Removal explanation predates its saved withdrawal');
+  event.reason=r.notice;event.reasonCode=r.reasonCode;event.explanationRecordedAt=r.recordedAt;
+ }
+ return body;
+}
 function views(root,{sourceHashes=null}={}){
-  const results=savedResults(root),out={},observations=new Map();
-  const singles=collectFromSite(root,{sourceHashes,observations});
+  const results=savedResults(root),out={},observations=new Map(),lifecycle=new Map();
+  const singles=collectFromSite(root,{sourceHashes,observations,lifecycle});
   for(const body of singles){
     for(const record of body.records)record.result=history.mergeResult(record.result,results.results[record.key]);
     out[`data/published-picks/${body.channel}/${body.date}.json`]=body;
   }
   const parlayIndex={schemaVersion:'public-published-parlays-index-1',editions:[]};
-  for(const body of collectParlaysFromSite(root)){
+  const parlayBodies=collectParlaysFromSite(root);
+  for(const body of parlayBodies){
     for(const record of body.records)for(const leg of record.legs){const id=history.key(leg.original);leg.result=history.mergeResult(history.mergeResult(leg.result,observations.get(id)),results.results[id]);}
     out[`data/published-parlays/${body.date}.json`]=body;parlayIndex.editions.push({date:body.date,sourceVersions:body.sourceVersions});
   }
   out['data/published-parlays/manifest.json']=parlayIndex;
+  Object.assign(out,require('./board-revisions.cjs').finish(lifecycle,parlayBodies));
   return out;
 }
-module.exports={collectFromSite,collectParlaysFromSite,savedResults,views};
+module.exports={collectFromSite,collectParlaysFromSite,savedResults,views,validateRemovalReasons,applyRemovalReasons};
 if(require.main===module){const sourceHashes=process.argv.includes('--verified-source-hashes')?JSON.parse(fs.readFileSync(0,'utf8')):null;process.stdout.write(JSON.stringify(views(path.resolve(process.argv[2]),{sourceHashes})));}

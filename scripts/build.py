@@ -87,10 +87,10 @@ def published_pick_views(root, source_hashes=None):
     """Reuse only immutable derived bytes after the normal archive validation."""
     node=shutil.which('node')
     if not node:raise ValueError('Node is required for published-pick history')
-    inputs=['scripts/published-picks.cjs','scripts/refresh-results.cjs','assets/published-picks.js','assets/published-parlays.js',
+    inputs=['scripts/board-revisions.cjs','scripts/published-picks.cjs','scripts/refresh-results.cjs','assets/published-picks.js','assets/published-parlays.js',
             'data/editions/manifest.json','data/plus-money/manifest.json','data/sgp-research/manifest.json','assets/parlay-withdrawals.json']
-    optional='data/published-selection-results.json'
-    if (root/optional).exists() or (root/optional).is_symlink():inputs.append(optional)
+    for optional in ('data/published-selection-results.json','data/parlay-withdrawal-reasons.json'):
+        if (root/optional).exists() or (root/optional).is_symlink():inputs.append(optional)
     pin=hashlib.sha256(canonical(source_hashes)).hexdigest() if source_hashes is not None else None
     key=(pin,tuple((name,hashlib.sha256(safe_file(root,name).read_bytes()).hexdigest()) for name in inputs if (root/name).exists() or (root/name).is_symlink()))
     if pin is not None and key in _published_views_cache:

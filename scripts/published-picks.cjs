@@ -60,7 +60,30 @@ function collectParlaysFromSite(root,{days=null}={}){
       const all=groups.get(day);all.sourceVersions[folder]=body.sourceVersion;all.records.push(...body.records);
     }
   }
+  const reasonPath=path.join(root,'data/parlay-withdrawal-reasons.json');
+  const log=fs.existsSync(reasonPath)?JSON.parse(fs.readFileSync(reasonPath)):{schemaVersion:'public-parlay-withdrawal-reasons-1',reasons:[]};
+  validateRemovalReasons(log);
+  for(const body of groups.values())applyRemovalReasons(body,log.reasons);
   return [...groups.values()];
+}
+function validateRemovalReasons(log){
+ if(log.schemaVersion!=='public-parlay-withdrawal-reasons-1'||!Array.isArray(log.reasons)||Object.keys(log).some(k=>!['schemaVersion','reasons'].includes(k)))throw Error('Invalid parlay withdrawal reasons');
+ const seen=new Set();
+ for(const r of log.reasons){
+  if(Object.keys(r).some(k=>!['date','key','sourceVersion','recordedAt','reasonCode','notice'].includes(k))||!/^\d{4}-\d{2}-\d{2}$/.test(r.date)||!/^[a-f0-9]{16}$/.test(r.sourceVersion)||!Number.isFinite(Date.parse(r.recordedAt))||typeof r.reasonCode!=='string'||!r.reasonCode.trim()||typeof r.notice!=='string'||!r.notice.trim()||r.notice.length>1800)throw Error('Invalid parlay removal explanation');
+  const key=JSON.parse(r.key);if(!Array.isArray(key)||key.length!==2||!['cross_game_reference','same_game_research','model_target'].includes(key[0])||!Array.isArray(key[1])||key[1].length<2)throw Error('Invalid removal membership');
+  const id=JSON.stringify([r.date,r.key,r.sourceVersion]);if(seen.has(id))throw Error('Duplicate parlay removal explanation');seen.add(id);
+ }
+ return log;
+}
+function applyRemovalReasons(body,reasons){
+ for(const r of reasons.filter(x=>x.date===body.date)){
+  const record=body.records.find(x=>x.key===r.key);if(!record)throw Error('Removal explanation has no published ticket');
+  const event=record.history.find(x=>x.status==='withdrawn'&&x.sourceVersion===r.sourceVersion);if(!event)throw Error('Removal explanation has no matching withdrawal');
+  if(Date.parse(r.recordedAt)<Date.parse(event.observedAt))throw Error('Removal explanation predates its saved withdrawal');
+  event.reason=r.notice;event.reasonCode=r.reasonCode;event.explanationRecordedAt=r.recordedAt;
+ }
+ return body;
 }
 function views(root,{sourceHashes=null}={}){
   const results=savedResults(root),out={},observations=new Map();
@@ -77,5 +100,5 @@ function views(root,{sourceHashes=null}={}){
   out['data/published-parlays/manifest.json']=parlayIndex;
   return out;
 }
-module.exports={collectFromSite,collectParlaysFromSite,savedResults,views};
+module.exports={collectFromSite,collectParlaysFromSite,savedResults,views,validateRemovalReasons,applyRemovalReasons};
 if(require.main===module){const sourceHashes=process.argv.includes('--verified-source-hashes')?JSON.parse(fs.readFileSync(0,'utf8')):null;process.stdout.write(JSON.stringify(views(path.resolve(process.argv[2]),{sourceHashes})));}

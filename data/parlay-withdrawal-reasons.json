@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "public-parlay-withdrawal-reasons-1",
+  "reasons": [
+    {
+      "date": "2026-11-16",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-16\\\",\\\"nba:0022600245\\\",\\\"nba:1630591\\\",\\\"REB\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-16\\\",\\\"nba:0022600247\\\",\\\"nba:1642273\\\",\\\"AST\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "5b8a1e6e7c47b9c6",
+      "recordedAt": "2026-11-16T21:21:41.191Z",
+      "reasonCode": "probability_and_role_validation_missing",
+      "notice": "Withdrawn after review: the win estimates have not passed accuracy validation, and current playing roles and availability were unconfirmed. Affected legs: Kyshawn George 3+ assists; Jalen Suggs over 2.5 rebounds. The original result remains tracked."
+    },
+    {
+      "date": "2026-11-16",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-16\\\",\\\"nba:0022600245\\\",\\\"nba:1630591\\\",\\\"REB\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-16\\\",\\\"nba:0022600250\\\",\\\"nba:203497\\\",\\\"PTS\\\",\\\"<=\\\",9,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-16\\\",\\\"nba:0022600252\\\",\\\"nba:203932\\\",\\\"PTS\\\",\\\"<=\\\",14,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "5b8a1e6e7c47b9c6",
+      "recordedAt": "2026-11-16T21:21:41.191Z",
+      "reasonCode": "probability_and_role_validation_missing",
+      "notice": "Withdrawn after review: the win estimates have not passed accuracy validation, and current playing roles and availability were unconfirmed. Affected legs: Jalen Suggs over 2.5 rebounds; Aaron Gordon under 14.5 points; Rudy Gobert under 9.5 points. The original result remains tracked."
+    },
+    {
+      "date": "2026-11-16",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-16\\\",\\\"nba:0022600245\\\",\\\"nba:1641710\\\",\\\"AST\\\",\\\">=\\\",4,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-16\\\",\\\"nba:0022600247\\\",\\\"nba:1642273\\\",\\\"AST\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "06265eb1bd3937b2",
+      "recordedAt": "2026-11-16T21:21:41.191Z",
+      "reasonCode": "estimated_price_below_minimum",
+      "notice": "Withdrawn after the saved leg prices moved: the estimated combined price fell below our −110 minimum (to about −111). The original picks and result remain tracked."
+    },
+    {
+      "date": "2026-11-16",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-16\\\",\\\"nba:0022600245\\\",\\\"nba:1630532\\\",\\\"AST\\\",\\\">=\\\",7,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-16\\\",\\\"nba:0022600250\\\",\\\"nba:1630183\\\",\\\"AST\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-16\\\",\\\"nba:0022600252\\\",\\\"nba:203932\\\",\\\"PTS\\\",\\\"<=\\\",14,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "5b8a1e6e7c47b9c6",
+      "recordedAt": "2026-11-16T21:21:41.191Z",
+      "reasonCode": "probability_and_role_validation_missing",
+      "notice": "Withdrawn after review: the win estimates have not passed accuracy validation, and current playing roles and availability were unconfirmed. Affected legs: Jaden McDaniels 3+ assists; Aaron Gordon under 14.5 points; Franz Wagner over 6.5 assists. The original result remains tracked."
+    },
+    {
+      "date": "2026-11-16",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-16\\\",\\\"nba:0022600245\\\",\\\"nba:1630532\\\",\\\"AST\\\",\\\">=\\\",7,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-16\\\",\\\"nba:0022600249\\\",\\\"nba:1630558\\\",\\\"AST\\\",\\\">=\\\",8,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-16\\\",\\\"nba:0022600250\\\",\\\"nba:203497\\\",\\\"PTS\\\",\\\"<=\\\",9,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "5b8a1e6e7c47b9c6",
+      "recordedAt": "2026-11-16T21:21:41.191Z",
+      "reasonCode": "probability_and_role_validation_missing",
+      "notice": "Withdrawn after review: the win estimates have not passed accuracy validation, and current playing roles and availability were unconfirmed. Affected legs: Rudy Gobert under 9.5 points; Franz Wagner over 6.5 assists; Davion Mitchell 8+ assists. The original result remains tracked."
+    }
+  ]
+}

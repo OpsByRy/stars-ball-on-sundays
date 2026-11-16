@@ -35,6 +35,14 @@ test('one final losing leg settles a statistical miss; missing legs never create
  const r=history.collect([snap([ticket('a')])]).records[0];r.legs[0].result={eventStatus:'final',statisticalOutcome:'loss',actual:1};assert.equal(history.outcome(r),'loss');
  r.legs[0].result={eventStatus:'final',statisticalOutcome:'win',actual:5};assert.equal(history.outcome(r),'pending');r.legs[1].result={eventStatus:'final',statisticalOutcome:'unavailable'};assert.equal(history.outcome(r),'unknown');
 });
+test('a later withdrawal register applies without requiring another board refresh',()=>{
+ const a=ticket('a');for(const l of a.legs)l.result={eventStatus:'final',statisticalOutcome:'win',actual:5};
+ const w={date:day,ticketIds:['a'],legs:[],recordedAt:'2026-11-14T17:00:00Z',notice:'Withdrawn after review.'};
+ const body=history.collect([snap([a])],{withdrawals:[w]});
+ assert.equal(body.records.length,1);assert.equal(body.records[0].status,'withdrawn');assert.equal(history.outcome(body.records[0]),'win');
+ assert.deepEqual(body.records[0].history.map(e=>e.observedAt),[at,w.recordedAt]);
+ assert.equal(body.records[0].history.at(-1).effectiveAt,w.recordedAt);
+});
 test('a later reappearance records reinstatement rather than a new ticket',()=>{
  const body=history.collect([snap([ticket('a')]),snap([],'2026-11-14T17:00:00Z'),snap([ticket('a')],'2026-11-14T18:00:00Z')]);assert.equal(body.records.length,1);assert.deepEqual(body.records[0].history.map(e=>e.status),['active','withdrawn','active']);
 });

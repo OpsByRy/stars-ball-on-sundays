@@ -31,7 +31,13 @@
     r.status=status;
    }
   }
-  for(const r of records.values())r.legs=legs(r.original).map(original=>({original,result:facts.get(picks.key(original))||original.result||{eventStatus:'unknown',statisticalOutcome:'unavailable'}}));
+  // A withdrawal register can advance without another immutable board snapshot.
+  // Apply that recorded event after replaying snapshots, using its own clock.
+  for(const r of records.values()){
+   const explicit=withdrawals.filter(w=>w.date===latest.body.date&&Date.parse(w.recordedAt)>Date.parse(latest.entry.updatedAt)&&(w.ticketIds.includes(r.original.id)||JSON.stringify(w.legs.map(l=>JSON.stringify(l)).sort())===JSON.stringify(legs(r.original).map(l=>JSON.stringify([l.date,l.canonicalEventId||l.eventId,l.playerId,l.market,l.operator,l.line,l.period||'full_game'])).sort()))).sort((a,b)=>Date.parse(a.recordedAt)-Date.parse(b.recordedAt)).at(-1);
+   if(explicit){r.status='withdrawn';r.history.push({status:'withdrawn',observedAt:explicit.recordedAt,effectiveAt:explicit.recordedAt,reason:explicit.notice,sourceVersion:latest.entry.version});}
+   r.legs=legs(r.original).map(original=>({original,result:facts.get(picks.key(original))||original.result||{eventStatus:'unknown',statisticalOutcome:'unavailable'}}));
+  }
   return {schemaVersion:'public-published-parlays-1',date:latest.body.date,sourceVersion:latest.entry.version,records:[...records.values()]};
  }
  function outcome(record){

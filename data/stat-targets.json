@@ -14656,6 +14656,30 @@
       "espnEventId": "401909999",
       "espnAthleteId": "4683678",
       "expectedTeam": "POR"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600245",
+      "playerId": "nba:1629011",
+      "espnEventId": "401909994",
+      "espnAthleteId": "4351852",
+      "expectedTeam": "BOS"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600247",
+      "playerId": "nba:1642848",
+      "espnEventId": "401909996",
+      "espnAthleteId": "5238230",
+      "expectedTeam": "WAS"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600247",
+      "playerId": "nba:1641707",
+      "espnEventId": "401909996",
+      "espnAthleteId": "4684806",
+      "expectedTeam": "MEM"
     }
   ]
 }

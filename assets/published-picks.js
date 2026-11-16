@@ -44,12 +44,13 @@
       const active=new Set(posted.map(key));
       for(const [id,record] of records){
         const row=rows.get(id),update=row?.confidenceUpdate;
-        const withdrawn=!active.has(id)||update?.qualification==='does_not_qualify'||update?.status==='unavailable';
+        const disqualified=update?.qualification==='does_not_qualify'||update?.status==='unavailable';
+        const withdrawn=!active.has(id)||disqualified;
         const status=withdrawn?'withdrawn':'active';
         const previous=record.history.at(-1);
-        const reason=withdrawn?(update?.summary||(previous?.status==='withdrawn'?previous.reason:null)||'Removed by a later board refresh; reason not recorded.'):'Included in the published board.';
+        const reason=withdrawn?((disqualified?update?.summary:null)||(previous?.status==='withdrawn'?previous.reason:null)||'Removed by a later board refresh; reason not recorded.'):'Included in the published board.';
         if(!previous||previous.status!==status||status==='withdrawn'&&previous.reason!==reason){
-          record.history.push({status,observedAt:entry.updatedAt,effectiveAt:withdrawn&&update?.checkedAt||null,reason,sourceVersion:entry.version});
+          record.history.push({status,observedAt:entry.updatedAt,effectiveAt:withdrawn&&disqualified&&update?.checkedAt||null,reason,sourceVersion:entry.version});
         }
         record.status=status;
       }

@@ -45,6 +45,14 @@ test('a later omission cannot erase an already recorded withdrawal reason',()=>{
  const body=history.collect([snapshot([row()]),snapshot([drop],'2026-11-14T17:00:00Z'),snapshot([],'2026-11-14T18:00:00Z')]);
  assert.equal(body.records[0].history.length,2);assert.equal(body.records[0].history.at(-1).reason,drop.confidenceUpdate.summary);
 });
+test('a supported availability note cannot become the reason or clock for a later removal',()=>{
+ const update={status:'supported',qualification:'qualifies',checkedAt:'2026-11-14T17:00:00Z',summary:'Starter changed; the pick stays.'};
+ const later=row('a',{selected:false,category:'not_a_pick',confidenceUpdate:update});
+ const body=history.collect([snapshot([row()]),snapshot([later],'2026-11-14T18:00:00Z')]);
+ const event=body.records[0].history.at(-1);
+ assert.equal(body.records[0].status,'withdrawn');assert.match(event.reason,/reason not recorded/);assert.equal(event.effectiveAt,null);
+ assert.doesNotMatch(history.html(body),/the pick stays/);
+});
 test('later non-selected observations resolve removed picks without adding passed research',()=>{
  const result={eventStatus:'final',statisticalOutcome:'loss',actual:8,checkedAt:'2026-11-15T00:00:00Z'};
  const body=history.collect([snapshot([row()]),snapshot([row('passed',{selected:false,postedAt:null,category:'not_a_pick',result}),row('never-picked',{selected:false,postedAt:null,playerId:'nba:99'})],'2026-11-15T00:00:00Z')]);

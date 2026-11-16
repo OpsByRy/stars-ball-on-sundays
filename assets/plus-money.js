@@ -22,7 +22,7 @@
   const section=t=>isModelTarget(t)?'same_game':policy.isCurrent(t)?policy.parlayTier(t)||'unclassified':t.section||'plus_money';
   const ticketOrdinal=(tickets,ticket)=>tickets.filter(t=>section(t)===section(ticket)).findIndex(t=>t.id===ticket.id)+1;
   const asAmerican=decimal=>finite(decimal)&&decimal>1?Math.round(decimal>=2?(decimal-1)*100:-100/(decimal-1)):null;
-  const effectiveOdds=t=>isModelTarget(t)?null:results.parlayLegs(t).voided.length?asAmerican(results.parlayDecimal(t)):t.indicativeAmericanOdds;
+  const effectiveOdds=t=>t.boardFinalization?(results.parlayLegs(t).voided.length?null:t.americanOdds??t.indicativeAmericanOdds):isModelTarget(t)?null:results.parlayLegs(t).voided.length?asAmerican(results.parlayDecimal(t)):t.indicativeAmericanOdds;
   const isFavorite=t=>t.ryFavorite===true;
   const eventId=r=>r.canonicalEventId||r.eventId;
   const gameIdentity=row=>typeof row.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(row.date)&&typeof eventId(row)==='string'&&eventId(row).trim()?JSON.stringify([row.date,eventId(row)]):null;
@@ -91,6 +91,7 @@
   function stateQuery(state,date){const p=new URLSearchParams();if(date)p.set('date',date);for(const [key,value] of Object.entries(defaults))if(state[key]!==value)p.set(key,['favorite','sameGame'].includes(key)?'1':String(state[key]));return p.toString();}
   function tabCounts(tickets,date){const unique=categoryTickets(tickets),day=date||policy.dateOf(unique[0]);return {...Object.fromEntries(Object.keys(titlesForDate(day)).map(type=>[type,categoryTickets(unique,type).length])),same_game:categoryTickets(unique,'same_game').length,favorites:unique.filter(isFavorite).length};}
   function pricedTicket(ticket,preferred=prices.getPreferredBook()){
+    if(ticket.boardFinalization)return {...ticket,sourceCoverage:prices.coverage(ticket)};
     ticket=policy.freezeParlay(ticket);
     const legs=ticket.legs.map(r=>prices.pricedPick(r,preferred));
     if(isModelTarget(ticket))return {...ticket,legs,indicativeAmericanOdds:null,sourceCoverage:prices.coverage(ticket)};

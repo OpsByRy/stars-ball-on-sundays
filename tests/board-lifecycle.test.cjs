@@ -34,3 +34,7 @@ test('Early/late ticket snapshot retains all legs and an indicative price withou
 test('The browser loader registers without requiring a body before DOMContentLoaded',()=>{
  const callbacks=[];const context={globalThis:null,module:{exports:{}},require:()=>core,Map,Date,URL,AbortSignal,console,document:{readyState:'loading',addEventListener:(name,fn)=>callbacks.push(name)}};context.globalThis=context;vm.runInNewContext(fs.readFileSync(require.resolve('../assets/board-lifecycle.js'),'utf8'),context);assert.ok(callbacks.includes('DOMContentLoaded'));assert.ok(context.module.exports.decorate);
 });
+test('Finalized ticket display keeps the saved full price and exact book when preferences change',()=>{
+ const api=require('../assets/plus-money.js'),late={...r,id:'late',playerId:'nba:2',canonicalEventId:'nba:002',startTime:'2026-11-18T03:00:00Z'},ticket={date:day,legs:[r,late],indicativeAmericanOdds:175,priceKind:'indicative',boardFinalization:{exactKey:'saved'}};
+ const shown=api.pricedTicket(ticket,r.book==='draftkings'?'fanduel':'draftkings');assert.equal(shown.indicativeAmericanOdds,175);assert.equal(shown.legs[0].book,r.book);assert.equal(shown.legs[0].americanOdds,r.americanOdds);assert.equal(api.effectiveOdds(shown),175);
+});

@@ -27,7 +27,8 @@
   }else if(kind==='parlay'){
    const frozen=[...new Map(l.locks.flatMap(g=>g.tickets).map(t=>[t.exactKey,t])).values()];
    out.tickets=(body.tickets||[]).filter(t=>!core.legs(t).some(r=>locked.has(core.eventId(r))));
-   for(const item of frozen)out.tickets.push({...item.original,legs:item.original.legs.map((raw,i)=>raw.pick?{...raw,pick:{...item.legs[i].row}}:{...item.legs[i].row})});
+   const facts=resultMap(out.publishedPickHistory);for(const r of out._parlayHistory?.records||[])for(const leg of r.legs)facts.set(id(leg.original),leg.result);
+   for(const item of frozen){const savedRow=(leg)=>({...leg.row,...(facts.has(id(leg.row))?{result:facts.get(id(leg.row))}:{})});out.tickets.push({...item.original,boardFinalization:{exactKey:item.exactKey,firstPostedAt:item.firstPostedAt},legs:item.original.legs.map((raw,i)=>raw.pick?{...raw,pick:savedRow(item.legs[i])}:savedRow(item.legs[i]))});}
   }
   return out;
  }

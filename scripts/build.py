@@ -89,7 +89,7 @@ def published_pick_views(root, source_hashes=None):
     if not node:raise ValueError('Node is required for published-pick history')
     inputs=['scripts/board-revisions.cjs','scripts/published-picks.cjs','scripts/refresh-results.cjs','assets/published-picks.js','assets/published-parlays.js',
             'data/editions/manifest.json','data/plus-money/manifest.json','data/sgp-research/manifest.json','assets/parlay-withdrawals.json']
-    for optional in ('data/published-selection-results.json','data/parlay-withdrawal-reasons.json'):
+    for optional in ('data/published-selection-results.json','data/parlay-withdrawal-reasons.json','data/pick-withdrawal-reasons.json'):
         if (root/optional).exists() or (root/optional).is_symlink():inputs.append(optional)
     pin=hashlib.sha256(canonical(source_hashes)).hexdigest() if source_hashes is not None else None
     key=(pin,tuple((name,hashlib.sha256(safe_file(root,name).read_bytes()).hexdigest()) for name in inputs if (root/name).exists() or (root/name).is_symlink()))

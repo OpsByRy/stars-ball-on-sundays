@@ -20,7 +20,8 @@
     if(Date.parse(previous.checkedAt)>Date.parse(next.checkedAt))return previous;
     return copy(next);
   }
-  function collect(snapshots){
+  function collect(snapshots,{bench=false}={}){
+    const member=bench?(row=>row.group==='research'&&row.category==='honorable_mention'):selected;
     if(!snapshots.length)throw Error('Publication history is empty');
     snapshots=[...snapshots].sort((a,b)=>Date.parse(a.entry.updatedAt)-Date.parse(b.entry.updatedAt));
     const latest=snapshots.at(-1),records=new Map(),latestResults=new Map();
@@ -29,12 +30,12 @@
       const rows=new Map();
       for(const row of body.props){const id=key(row);if(!id)continue;rows.set(id,row);if(row.result)latestResults.set(id,mergeResult(latestResults.get(id),row.result));}
       // Built-but-unposted candidates must not become published picks or withdrawal events.
-      if(!body.firstPublishedAt&&!body.props.some(row=>selected(row)&&row.postedAt))continue;
-      const current=body.props.filter(selected);
-      const posted=current.filter(row=>row.postedAt&&Number.isFinite(Date.parse(row.postedAt))||row.selected===undefined);
+      if(!body.firstPublishedAt&&!body.props.some(row=>member(row)&&row.postedAt))continue;
+      const current=body.props.filter(member);
+      const posted=current.filter(row=>bench||row.postedAt&&Number.isFinite(Date.parse(row.postedAt))||row.selected===undefined);
       for(const row of posted){
         const id=key(row);if(!id)throw Error('Published pick lacks a canonical identity');
-        if(!records.has(id))records.set(id,{key:id,original:copy(row),source:{version:entry.version,path:entry.path,pickId:row.id},firstPostedAt:row.postedAt||null,revisions:[],history:[],status:'active'});
+        if(!records.has(id))records.set(id,{key:id,original:copy(row),source:{version:entry.version,path:entry.path,pickId:row.id},firstPostedAt:row.postedAt||null,firstSnapshotAt:entry.updatedAt,revisions:[],history:[],status:'active'});
         const record=records.get(id),quote={pickId:row.id,version:entry.version,book:row.book??null,americanOdds:row.americanOdds??null,capturedAt:row.capturedAt??null};
         const previous=record.revisions.at(-1);
         if(!previous||['pickId','book','americanOdds','capturedAt'].some(k=>previous[k]!==quote[k]))record.revisions.push(quote);

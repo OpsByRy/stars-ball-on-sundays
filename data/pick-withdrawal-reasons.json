@@ -1,0 +1,628 @@
+{
+  "schemaVersion": "public-pick-withdrawal-reasons-1",
+  "reasons": [
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1628976\",\"PTS\",\">=\",8,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -255 → -267. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:202331\",\"REB\",\">=\",4,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. FanDuel saved price: -200 → -220. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1642259\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a6848e90d242b899",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -225 → -265. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1642845\",\"AST\",\">=\",3,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -239 → -270. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:1642263\",\"REB\",\"<=\",2,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "historical_quote_omission",
+      "notice": "The old refresh process omitted this pick when its original DraftKings under 2.5 rebounds quote was not returned. Missing data did not confirm that the contract was unavailable. The saved quote and result remain recorded; the pick was later restored."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600250\",\"nba:1630166\",\"AST\",\">=\",5,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -249 → -293. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600250\",\"nba:203497\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Rudy Gobert < 8.5 PTS replaced the previously returned line of 9.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600251\",\"nba:1629001\",\"AST\",\"<=\",3,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: De'Anthony Melton < 2.5 AST replaced the previously returned line of 3.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600252\",\"nba:1626164\",\"REB\",\"<=\",3,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. FanDuel saved price: -173 → -194. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600252\",\"nba:203932\",\"PTS\",\"<=\",14,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Aaron Gordon < 13.5 PTS replaced the previously returned line of 14.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630532\",\"PTS\",\">=\",18,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -222 → -243. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600251\",\"nba:1629001\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: De'Anthony Melton < 13.5 PTS replaced the previously returned line of 12.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600246\",\"nba:1642878\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a6848e90d242b899",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "price_outside_policy",
+      "notice": "Withdrawn after review: the saved price moved outside our allowed range (−500 or better). FanDuel saved price: -500 → -520. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600246\",\"nba:1642878\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "price_outside_policy",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum; the saved price moved outside our allowed range (−500 or better). FanDuel saved price: -500 → -620. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1628976\",\"REB\",\">=\",7,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "feee2490c7f9e7c8",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. DraftKings saved price: -219 → -243. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1629674\",\"AST\",\">=\",1,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a6848e90d242b899",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Neemias Queta Out. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1627759\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "50b4e9bfdb075235",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Jaylen Brown < 3.5 AST replaced the previously returned line of 4.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1642874\",\"PTS\",\">=\",6,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "50b4e9bfdb075235",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -376 → -381. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600250\",\"nba:1630163\",\"3PM\",\">=\",3,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "feee2490c7f9e7c8",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -208 → -227. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1641707\",\"3PM\",\"<=\",1,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Taylor Hendricks < 0.5 3PM replaced the previously returned line of 1.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630568\",\"PTS\",\"<=\",8,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Luka Garza < 9.5 PTS replaced the previously returned line of 8.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "pick",
+      "key": "[\"2026-11-16\",\"nba:0022600252\",\"nba:1631221\",\"REB\",\"<=\",3,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "690143b0527e3ff4",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. FanDuel saved price: -162 → -166. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600246\",\"nba:1641824\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "feee2490c7f9e7c8",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Matas Buzelis < 14.5 PTS replaced the previously returned line of 15.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630532\",\"PTS\",\">=\",20,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Franz Wagner >= 18 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630532\",\"PTS\",\">=\",18,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630217\",\"AST\",\"<=\",3,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Desmond Bane < 2.5 AST replaced the previously returned line of 3.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630202\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Payton Pritchard < 3.5 AST replaced the previously returned line of 4.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1628369\",\"AST\",\">=\",6,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -200 → -210. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1642285\",\"AST\",\"<=\",7,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Cam Spencer < 8.5 AST moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1642285\",\"AST\",\"<=\",8,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1642874\",\"AST\",\"<=\",2,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -153 → -161. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1642874\",\"PTS\",\">=\",9,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Danny Wolf >= 8 PTS at -185 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1642874\",\"PTS\",\">=\",8,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1641730\",\"PTS\",\"<=\",7,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Noah Clowney < 6.5 PTS replaced the previously returned line of 7.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:202691\",\"PTS\",\">=\",12,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -160 → -184. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:1630558\",\"3PM\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -162 → -167. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:1630558\",\"3PM\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a04488180bc23668",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -162 → -182. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:202691\",\"3PM\",\">=\",3,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -191 → -236. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:1642263\",\"3PM\",\"<=\",2,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -157 → -166. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600250\",\"nba:1630228\",\"PTS\",\"<=\",14,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Jonathan Kuminga < 13.5 PTS at -125 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600250\",\"nba:1630228\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600250\",\"nba:1631321\",\"PTS\",\"<=\",7,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "feee2490c7f9e7c8",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Sidy Cissoko < 6.5 PTS replaced the previously returned line of 7.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600251\",\"nba:1642847\",\"AST\",\">=\",6,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -137 → -157. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600251\",\"nba:1629001\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "6313116faaaf0516",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because De'Anthony Melton < 12.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600251\",\"nba:1629001\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600251\",\"nba:1629673\",\"PTS\",\"<=\",10,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Jordan Poole < 11.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600251\",\"nba:1629673\",\"PTS\",\"<=\",11,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600251\",\"nba:1642954\",\"PTS\",\"<=\",7,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Will Richard < 6.5 PTS replaced the previously returned line of 7.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600252\",\"nba:1628415\",\"AST\",\"<=\",2,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a04488180bc23668",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Dillon Brooks < 1.5 AST replaced the previously returned line of 2.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600252\",\"nba:1628415\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Dillon Brooks < 14.5 PTS replaced the previously returned line of 15.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1628976\",\"REB\",\">=\",8,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Wendell Carter Jr. >= 7 REB moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1628976\",\"REB\",\">=\",7,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1642874\",\"PTS\",\">=\",8,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "53c292b203406e7a",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Danny Wolf >= 6 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1642874\",\"PTS\",\">=\",6,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:203952\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a04488180bc23668",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Andrew Wiggins < 10.5 PTS at -131 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600249\",\"nba:203952\",\"PTS\",\"<=\",10,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600250\",\"nba:1630228\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Jonathan Kuminga < 12.5 PTS at -106 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600250\",\"nba:1630228\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600246\",\"nba:1642878\",\"PTS\",\">=\",10,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a6848e90d242b899",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -158 → -184. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1642907\",\"PTS\",\"<=\",16,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a6848e90d242b899",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Cedric Coward < 15.5 PTS replaced the previously returned line of 16.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1642907\",\"PTS\",\"<=\",16,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Cedric Coward < 15.5 PTS replaced the previously returned line of 16.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1642377\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Jaylen Wells < 11.5 PTS replaced the previously returned line of 12.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1630178\",\"PTS\",\"<=\",26,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a6848e90d242b899",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "probability_below_floor",
+      "notice": "Withdrawn after review: the saved win estimate fell below the Bench minimum; the more cautious win estimate fell below our minimum. DraftKings saved price: -124 → -122. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:201142\",\"PTS\",\"<=\",22,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a6848e90d242b899",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "probability_below_floor",
+      "notice": "Withdrawn after review: the saved win estimate fell below the Bench minimum; the more cautious win estimate fell below our minimum. FanDuel saved price: -128 → -132. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:1631106\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a04488180bc23668",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Tari Eason < 13.5 PTS at -125 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600249\",\"nba:1631106\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600252\",\"nba:1630692\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "feee2490c7f9e7c8",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Jordan Goodwin < 8.5 PTS replaced the previously returned line of 9.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600246\",\"nba:1642878\",\"3PM\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "feee2490c7f9e7c8",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Tyrese Proctor >= 1 3PM moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600246\",\"nba:1642878\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630591\",\"PTS\",\">=\",7,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -180 → -205. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1641707\",\"PTS\",\"<=\",8,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "46378f584da5ef38",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Taylor Hendricks < 7.5 PTS at -113 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-16\",\"nba:0022600247\",\"nba:1641707\",\"PTS\",\"<=\",7,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600248\",\"nba:1630549\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "feee2490c7f9e7c8",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Day'Ron Sharpe < 8.5 PTS replaced the previously returned line of 9.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-16",
+      "channel": "daily",
+      "recordKind": "bench",
+      "key": "[\"2026-11-16\",\"nba:0022600249\",\"nba:1627832\",\"AST\",\"<=\",5,\"full_game\",\"sportsbook\",null]",
+      "sourceVersion": "a04488180bc23668",
+      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Fred VanVleet < 5.5 AST moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record."
+    }
+  ]
+}

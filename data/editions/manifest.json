@@ -3572,6 +3572,15 @@
       "count": 0,
       "researchCount": 5727,
       "updatedAt": "2026-11-17T22:27:24.716709+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-17",
+      "version": "6cf16d5c9c9f1b62",
+      "path": "daily/2026-11-17/6cf16d5c9c9f1b62.json",
+      "count": 0,
+      "researchCount": 5727,
+      "updatedAt": "2026-11-17T22:57:47.147018+00:00"
     }
   ],
   "schemaVersion": "public-1"

@@ -87,9 +87,9 @@
       "recordKind": "pick",
       "key": "[\"2026-11-16\",\"nba:0022600252\",\"nba:1626164\",\"REB\",\"<=\",3,\"full_game\",\"sportsbook\",null]",
       "sourceVersion": "53c292b203406e7a",
-      "recordedAt": "2026-11-17T15:38:13.601193+00:00",
-      "reasonCode": "stressed_value_below_minimum",
-      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. FanDuel saved price: -173 → -194. The original selection, price and result remain in the record."
+      "recordedAt": "2026-11-17T16:26:30.907757+00:00",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Devin Booker < 2.5 REB replaced the previously returned line of 3.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
     },
     {
       "date": "2026-11-16",

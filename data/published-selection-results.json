@@ -209,18 +209,18 @@
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401909882"
     },
     "[\"2026-11-16\",\"nba:0022600250\",\"nba:203497\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]": {
-      "actual": 4,
-      "minutesPlayed": 6,
-      "checkedAt": "2026-11-17T01:26:22.831Z",
+      "actual": 6,
+      "minutesPlayed": 13,
+      "checkedAt": "2026-11-17T01:56:45.119Z",
       "eventStatus": "live",
       "statisticalOutcome": "pending",
       "sportsbookSettlement": "unverified",
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401909999"
     },
     "[\"2026-11-16\",\"nba:0022600251\",\"nba:1629001\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]": {
-      "actual": 3,
-      "minutesPlayed": 6,
-      "checkedAt": "2026-11-17T01:41:52.035Z",
+      "actual": 5,
+      "minutesPlayed": 8,
+      "checkedAt": "2026-11-17T01:56:45.119Z",
       "eventStatus": "live",
       "statisticalOutcome": "pending",
       "sportsbookSettlement": "unverified",
@@ -236,8 +236,8 @@
     },
     "[\"2026-11-16\",\"nba:0022600248\",\"nba:1627759\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]": {
       "actual": 3,
-      "minutesPlayed": 14,
-      "checkedAt": "2026-11-17T01:41:52.035Z",
+      "minutesPlayed": 17,
+      "checkedAt": "2026-11-17T01:56:45.119Z",
       "eventStatus": "live",
       "statisticalOutcome": "pending",
       "sportsbookSettlement": "unverified",
@@ -254,13 +254,13 @@
     },
     "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630568\",\"PTS\",\"<=\",8,\"full_game\",\"sportsbook\",null]": {
       "actual": 0,
-      "minutesPlayed": 11,
-      "checkedAt": "2026-11-17T01:26:22.831Z",
+      "minutesPlayed": 12,
+      "checkedAt": "2026-11-17T01:56:45.119Z",
       "eventStatus": "live",
       "statisticalOutcome": "pending",
       "sportsbookSettlement": "unverified",
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401909994"
     }
   },
-  "updatedAt": "2026-11-17T01:41:52.035Z"
+  "updatedAt": "2026-11-17T01:56:45.119Z"
 }

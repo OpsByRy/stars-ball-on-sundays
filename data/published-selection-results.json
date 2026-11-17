@@ -209,11 +209,11 @@
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401909882"
     },
     "[\"2026-11-16\",\"nba:0022600250\",\"nba:203497\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]": {
-      "actual": 7,
-      "minutesPlayed": 20,
-      "checkedAt": "2026-11-17T02:26:46.632Z",
+      "actual": 11,
+      "minutesPlayed": 24,
+      "checkedAt": "2026-11-17T02:41:54.362Z",
       "eventStatus": "live",
-      "statisticalOutcome": "pending",
+      "statisticalOutcome": "not_reached",
       "sportsbookSettlement": "unverified",
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401909999"
     },
@@ -228,16 +228,16 @@
     },
     "[\"2026-11-16\",\"nba:0022600245\",\"nba:1629674\",\"AST\",\">=\",1,\"full_game\",\"sportsbook\",null]": {
       "actual": null,
-      "checkedAt": "2026-11-17T01:16:36.951Z",
-      "eventStatus": "live",
+      "checkedAt": "2026-11-17T02:41:54.362Z",
+      "eventStatus": "final",
       "statisticalOutcome": "unavailable",
       "sportsbookSettlement": "unverified",
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401909994"
     },
     "[\"2026-11-16\",\"nba:0022600248\",\"nba:1627759\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]": {
-      "actual": 3,
-      "minutesPlayed": 24,
-      "checkedAt": "2026-11-17T02:26:46.632Z",
+      "actual": 4,
+      "minutesPlayed": 29,
+      "checkedAt": "2026-11-17T02:41:54.362Z",
       "eventStatus": "live",
       "statisticalOutcome": "pending",
       "sportsbookSettlement": "unverified",
@@ -255,9 +255,9 @@
     "[\"2026-11-16\",\"nba:0022600245\",\"nba:1630568\",\"PTS\",\"<=\",8,\"full_game\",\"sportsbook\",null]": {
       "actual": 3,
       "minutesPlayed": 18,
-      "checkedAt": "2026-11-17T02:26:46.632Z",
-      "eventStatus": "live",
-      "statisticalOutcome": "pending",
+      "checkedAt": "2026-11-17T02:41:54.362Z",
+      "eventStatus": "final",
+      "statisticalOutcome": "win",
       "sportsbookSettlement": "unverified",
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401909994"
     },
@@ -271,5 +271,5 @@
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401910001"
     }
   },
-  "updatedAt": "2026-11-17T02:26:46.632Z"
+  "updatedAt": "2026-11-17T02:41:54.362Z"
 }

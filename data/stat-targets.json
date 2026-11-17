@@ -14712,6 +14712,22 @@
       "espnEventId": "401909995",
       "espnAthleteId": "2995706",
       "expectedTeam": "CLE"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600248",
+      "playerId": "nba:1642849",
+      "espnEventId": "401909997",
+      "espnAthleteId": "5279130",
+      "expectedTeam": "BKN"
+    },
+    {
+      "date": "2026-11-16",
+      "eventId": "nba:0022600249",
+      "playerId": "nba:1642066",
+      "espnEventId": "401909998",
+      "espnAthleteId": "4431772",
+      "expectedTeam": "MIA"
     }
   ]
 }

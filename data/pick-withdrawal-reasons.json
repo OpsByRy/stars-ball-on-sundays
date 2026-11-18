@@ -623,6 +623,88 @@
       "recordedAt": "2026-11-17T15:38:13.601193+00:00",
       "reasonCode": "promoted_from_bench",
       "notice": "Removed from Bench because Fred VanVleet < 5.5 AST moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "1be046231f121257",
+      "recordedAt": "2026-11-17T23:59:35.380416+00:00",
+      "key": "[\"2026-11-17\",\"nba:0022600253\",\"nba:1629628\",\"REB\",\">=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. DraftKings saved price: -206 → -237. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "1be046231f121257",
+      "recordedAt": "2026-11-17T23:59:35.380416+00:00",
+      "key": "[\"2026-11-17\",\"nba:0022600253\",\"nba:1630567\",\"AST\",\">=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: availability support was not verified; a stable role was not verified; the current forecast lacked usable observations. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "1be046231f121257",
+      "recordedAt": "2026-11-17T23:59:35.380416+00:00",
+      "key": "[\"2026-11-17\",\"nba:0022600254\",\"nba:203497\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "1be046231f121257",
+      "recordedAt": "2026-11-17T23:59:35.380416+00:00",
+      "key": "[\"2026-11-17\",\"nba:0022600254\",\"nba:1630245\",\"REB\",\">=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "1be046231f121257",
+      "recordedAt": "2026-11-17T23:59:35.380416+00:00",
+      "key": "[\"2026-11-17\",\"nba:0022600253\",\"nba:1628969\",\"PTS\",\"<=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Mikal Bridges < 8.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "1be046231f121257",
+      "recordedAt": "2026-11-17T23:59:35.380416+00:00",
+      "key": "[\"2026-11-17\",\"nba:0022600253\",\"nba:1627751\",\"PTS\",\">=\",7,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Jakob Poeltl >= 5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-17\",\"nba:0022600253\",\"nba:1627751\",\"PTS\",\">=\",5,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "1be046231f121257",
+      "recordedAt": "2026-11-17T23:59:35.380416+00:00",
+      "key": "[\"2026-11-17\",\"nba:0022600254\",\"nba:1630163\",\"PTS\",\"<=\",21,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: LaMelo Ball < 19.5 PTS replaced the previously returned line of 21.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "1be046231f121257",
+      "recordedAt": "2026-11-17T23:59:35.380416+00:00",
+      "key": "[\"2026-11-17\",\"nba:0022600256\",\"nba:1630533\",\"PTS\",\">=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Ziaire Williams >= 7 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-17\",\"nba:0022600256\",\"nba:1630533\",\"PTS\",\">=\",7,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

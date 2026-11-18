@@ -808,6 +808,16 @@
       "key": "[\"2026-11-18\",\"nba:0022600263\",\"nba:1630567\",\"AST\",\">=\",4,\"full_game\",\"sportsbook\",null]",
       "reasonCode": "availability_out",
       "notice": "Withdrawn after the official availability review listed Scottie Barnes Out. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-18",
+      "channel": "daily",
+      "sourceVersion": "18befc86a6ba2306",
+      "recordedAt": "2026-11-18T18:28:00.408513+00:00",
+      "recordKind": "bench",
+      "key": "[\"2026-11-18\",\"nba:0022600260\",\"nba:1631157\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Ryan Rollins Out. The original selection, price and result remain in the record."
     }
   ]
 }

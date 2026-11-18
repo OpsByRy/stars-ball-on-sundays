@@ -798,6 +798,16 @@
       "recordKind": "bench",
       "reasonCode": "modeled_value_below_minimum",
       "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -153 → -160. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-18",
+      "channel": "daily",
+      "sourceVersion": "6af1f1f1b5873b2d",
+      "recordedAt": "2026-11-18T17:57:45.865405+00:00",
+      "recordKind": "pick",
+      "key": "[\"2026-11-18\",\"nba:0022600263\",\"nba:1630567\",\"AST\",\">=\",4,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Scottie Barnes Out. The original selection, price and result remain in the record."
     }
   ]
 }

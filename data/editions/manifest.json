@@ -3698,6 +3698,24 @@
       "count": 0,
       "researchCount": 8519,
       "updatedAt": "2026-11-18T02:32:14.943Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-17",
+      "version": "6342ecfca37e22d3",
+      "path": "daily/2026-11-17/6342ecfca37e22d3.json",
+      "count": 0,
+      "researchCount": 8406,
+      "updatedAt": "2026-11-18T02:34:58.856968+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-17",
+      "version": "76b484d386421e8c",
+      "path": "daily/2026-11-17/76b484d386421e8c.json",
+      "count": 0,
+      "researchCount": 8406,
+      "updatedAt": "2026-11-18T02:41:42.475433+00:00"
     }
   ],
   "schemaVersion": "public-1"

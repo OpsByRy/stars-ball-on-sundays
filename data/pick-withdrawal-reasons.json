@@ -705,6 +705,16 @@
       "reasonCode": "promoted_from_bench",
       "notice": "Removed from Bench because Ziaire Williams >= 7 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-17\",\"nba:0022600256\",\"nba:1630533\",\"PTS\",\">=\",7,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-17",
+      "channel": "daily",
+      "sourceVersion": "76b484d386421e8c",
+      "recordedAt": "2026-11-18T02:41:42.475433+00:00",
+      "recordKind": "bench",
+      "key": "[\"2026-11-17\",\"nba:0022600256\",\"nba:1628960\",\"AST\",\"<=\",3,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Grayson Allen Out. The original selection, price and result remain in the record."
     }
   ]
 }

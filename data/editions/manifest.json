@@ -3833,6 +3833,15 @@
       "count": 0,
       "researchCount": 8406,
       "updatedAt": "2026-11-18T06:02:09.255Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-17",
+      "version": "37fb7e44e2621f0d",
+      "path": "daily/2026-11-17/37fb7e44e2621f0d.json",
+      "count": 0,
+      "researchCount": 8406,
+      "updatedAt": "2026-11-18T06:17:15.812Z"
     }
   ],
   "schemaVersion": "public-1"

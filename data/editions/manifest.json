@@ -3761,6 +3761,15 @@
       "count": 0,
       "researchCount": 8406,
       "updatedAt": "2026-11-18T04:02:10.048Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-17",
+      "version": "fdb1089ee1749023",
+      "path": "daily/2026-11-17/fdb1089ee1749023.json",
+      "count": 0,
+      "researchCount": 8406,
+      "updatedAt": "2026-11-18T04:17:02.684Z"
     }
   ],
   "schemaVersion": "public-1"

@@ -16392,6 +16392,38 @@
       "espnEventId": "401910017",
       "espnAthleteId": "4433136",
       "expectedTeam": "LAL"
+    },
+    {
+      "date": "2026-11-18",
+      "eventId": "nba:0022600258",
+      "playerId": "nba:1626209",
+      "espnEventId": "401910007",
+      "espnAthleteId": "2995706",
+      "expectedTeam": "CLE"
+    },
+    {
+      "date": "2026-11-18",
+      "eventId": "nba:0022600258",
+      "playerId": "nba:1643509",
+      "espnEventId": "401910007",
+      "espnAthleteId": "5041951",
+      "expectedTeam": "CLE"
+    },
+    {
+      "date": "2026-11-18",
+      "eventId": "nba:0022600263",
+      "playerId": "nba:1642347",
+      "espnEventId": "401910012",
+      "espnAthleteId": "4432241",
+      "expectedTeam": "TOR"
+    },
+    {
+      "date": "2026-11-18",
+      "eventId": "nba:0022600265",
+      "playerId": "nba:1630557",
+      "espnEventId": "401910014",
+      "espnAthleteId": "4280151",
+      "expectedTeam": "ATL"
     }
   ]
 }

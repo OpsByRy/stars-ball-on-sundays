@@ -3635,6 +3635,15 @@
       "count": 0,
       "researchCount": 8519,
       "updatedAt": "2026-11-18T00:52:25.099370+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-17",
+      "version": "c4df4f3dba6a9cbb",
+      "path": "daily/2026-11-17/c4df4f3dba6a9cbb.json",
+      "count": 0,
+      "researchCount": 8519,
+      "updatedAt": "2026-11-18T01:02:05.829Z"
     }
   ],
   "schemaVersion": "public-1"

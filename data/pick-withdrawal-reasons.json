@@ -1498,6 +1498,36 @@
       "recordKind": "pick",
       "reasonCode": "modeled_value_below_minimum",
       "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -304 → -370. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "16c208560d14bf79",
+      "recordedAt": "2026-11-19T19:14:10.705119+00:00",
+      "recordKind": "pick",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1626167\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Myles Turner Out. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "16c208560d14bf79",
+      "recordedAt": "2026-11-19T19:14:10.705119+00:00",
+      "recordKind": "pick",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1626167\",\"AST\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Myles Turner Out. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "16c208560d14bf79",
+      "recordedAt": "2026-11-19T19:14:10.705119+00:00",
+      "recordKind": "bench",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1626167\",\"3PM\",\"<=\",1,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Myles Turner Out. The original selection, price and result remain in the record."
     }
   ]
 }

@@ -1418,7 +1418,7 @@
     {
       "date": "2026-11-18",
       "channel": "daily",
-      "sourceVersion": "906928e6f4c6cbf0",
+      "sourceVersion": "b2db615349cc778b",
       "recordedAt": "2026-11-19T01:06:47.070362+00:00",
       "key": "[\"2026-11-18\",\"nba:0022600267\",\"nba:1628997\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]",
       "recordKind": "bench",
@@ -1428,7 +1428,7 @@
     {
       "date": "2026-11-18",
       "channel": "daily",
-      "sourceVersion": "906928e6f4c6cbf0",
+      "sourceVersion": "b2db615349cc778b",
       "recordedAt": "2026-11-19T01:06:47.070362+00:00",
       "key": "[\"2026-11-18\",\"nba:0022600265\",\"nba:1628392\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
       "recordKind": "bench",
@@ -1438,7 +1438,7 @@
     {
       "date": "2026-11-18",
       "channel": "daily",
-      "sourceVersion": "906928e6f4c6cbf0",
+      "sourceVersion": "b2db615349cc778b",
       "recordedAt": "2026-11-19T01:06:47.070362+00:00",
       "key": "[\"2026-11-18\",\"nba:0022600268\",\"nba:1629656\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]",
       "recordKind": "bench",

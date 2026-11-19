@@ -1374,6 +1374,16 @@
       "reasonCode": "promoted_from_bench",
       "notice": "Removed from Bench because Precious Achiuwa >= 5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-18\",\"nba:0022600269\",\"nba:1630173\",\"PTS\",\">=\",5,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-18",
+      "channel": "daily",
+      "sourceVersion": "4e36b90922dfaf02",
+      "recordedAt": "2026-11-19T00:04:05.827972+00:00",
+      "recordKind": "pick",
+      "key": "[\"2026-11-18\",\"nba:0022600261\",\"nba:1630178\",\"AST\",\">=\",4,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Tyrese Maxey Out. The original selection, price and result remain in the record."
     }
   ]
 }

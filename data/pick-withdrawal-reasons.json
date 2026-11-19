@@ -1459,7 +1459,7 @@
     {
       "date": "2026-11-18",
       "channel": "daily",
-      "sourceVersion": "1871c22bcac052e9",
+      "sourceVersion": "c98c4447307ee86e",
       "recordedAt": "2026-11-19T02:13:58.173575+00:00",
       "key": "[\"2026-11-18\",\"nba:0022600268\",\"nba:1629656\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]",
       "recordKind": "pick",

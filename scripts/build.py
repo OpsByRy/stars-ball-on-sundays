@@ -98,7 +98,10 @@ def published_pick_views(root, source_hashes=None):
         return json.loads(_published_views_cache[key])
     command=[node,str(root/'scripts/published-picks.cjs'),str(root)]
     if source_hashes is not None:command.append('--verified-source-hashes')
-    output=subprocess.run(command,input=json.dumps(source_hashes) if source_hashes is not None else None,check=True,capture_output=True,text=True)
+    try:
+        output=subprocess.run(command,input=json.dumps(source_hashes) if source_hashes is not None else None,check=True,capture_output=True,text=True)
+    except subprocess.CalledProcessError as error:
+        raise ValueError('Published history validation failed:\n'+(error.stderr.strip()[-12000:] or str(error))) from error
     if pin is not None:
         _published_views_cache[key]=output.stdout
         while len(_published_views_cache)>2:_published_views_cache.popitem(last=False)

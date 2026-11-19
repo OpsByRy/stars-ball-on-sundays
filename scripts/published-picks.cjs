@@ -99,8 +99,8 @@ function validatePickRemovalReasons(log){
 }
 function applyPickRemovalReasons(body,reasons){
  for(const r of reasons.filter(x=>x.date===body.date&&x.channel===body.channel)){
-  const record=(r.recordKind==='bench'?body.benchRecords:body.records).find(x=>x.key===r.key);if(!record)throw Error('Removal explanation has no published pick');
-  const event=record.history.find(x=>x.status==='withdrawn'&&x.sourceVersion===r.sourceVersion);if(!event)throw Error('Removal explanation has no matching pick withdrawal');
+  const record=(r.recordKind==='bench'?body.benchRecords:body.records).find(x=>x.key===r.key);if(!record)throw Error('Removal explanation has no published pick: '+r.recordKind+' '+r.key);
+  const event=record.history.find(x=>x.status==='withdrawn'&&x.sourceVersion===r.sourceVersion);if(!event)throw Error('Removal explanation has no matching pick withdrawal: '+r.recordKind+' '+r.key+' @ '+r.sourceVersion);
   if(Date.parse(r.recordedAt)<Date.parse(event.observedAt))throw Error('Pick explanation predates its saved withdrawal');
   event.reason=r.notice;event.reasonCode=r.reasonCode;event.explanationRecordedAt=r.recordedAt;if(r.replacementKey)event.replacementKey=r.replacementKey;
  }

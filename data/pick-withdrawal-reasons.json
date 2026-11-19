@@ -1528,6 +1528,37 @@
       "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1626167\",\"3PM\",\"<=\",1,\"full_game\",\"sportsbook\",null]",
       "reasonCode": "availability_out",
       "notice": "Withdrawn after the official availability review listed Myles Turner Out. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "28d29016ac181203",
+      "recordedAt": "2026-11-19T20:19:48.035327+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600272\",\"nba:1626157\",\"AST\",\">=\",3,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -315 → -336. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "28d29016ac181203",
+      "recordedAt": "2026-11-19T20:19:48.035327+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1642270\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Donovan Clingan < 12.5 PTS replaced the previously returned line of 13.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "28d29016ac181203",
+      "recordedAt": "2026-11-19T20:19:48.035327+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1629639\",\"PTS\",\"<=\",19,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Tyler Herro < 20.5 PTS at -102 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1629639\",\"PTS\",\"<=\",20,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

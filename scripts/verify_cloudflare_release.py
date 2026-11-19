@@ -10,6 +10,7 @@ import re
 import subprocess
 import time
 import urllib.request
+import json_transport
 
 ORIGIN='https://starsballonsundays.com'
 # Since the Nov 12 2026 cutover the apex is served by the redesign Worker, which
@@ -59,11 +60,16 @@ def verify(receipt,expected,fetch):
     # Check every page/index and the exact transport bytes of any large JSON
     # compacted by the build. Original immutable source hashes stay separate.
     paths=list(dict.fromkeys([p for p in receipt['files'] if p.endswith('.html')]
-        +['/data/editions/manifest.json']+list(receipt.get('compactedJSON',{}))))
+        +['/data/editions/manifest.json']+list(receipt.get('compactedJSON',{}))+list(receipt.get('encodedJSON',{}))))
     for path in paths:
         body=fetch(path)
         if path.endswith('.html'):body=normalize_public_html(body)
-        if hashlib.sha256(body).hexdigest()!=receipt['files'][path]:raise ValueError('Cloudflare content differs: '+path)
+        encoded=receipt.get('encodedJSON',{}).get(path)
+        if encoded:
+            if hashlib.sha256(body).hexdigest()!=receipt['files'][path]:raise ValueError('Cloudflare encoded content differs: '+path)
+            source=json_transport.decode(body)
+            if len(source)!=encoded['sourceBytes'] or hashlib.sha256(source).hexdigest()!=encoded['sourceSHA256']:raise ValueError('Cloudflare JSON reconstruction differs: '+path)
+        elif hashlib.sha256(body).hexdigest()!=receipt['files'][path]:raise ValueError('Cloudflare content differs: '+path)
     if hashlib.sha256(fetch('/data/editions/manifest.json')).hexdigest()!=receipt['editionManifestSHA256']:raise ValueError('Cloudflare edition history differs')
     return len(paths)
 

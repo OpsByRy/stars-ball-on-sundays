@@ -110,6 +110,12 @@ def history_script(html):
     return re.sub(r'(<script\b[^>]*\bsrc=["\'])([^"\']*assets/)(?:publication|plus-money)\.js(?:\?[^"\']*)?(["\'][^>]*></script>)',
         lambda m: '<link rel="stylesheet" href="'+m[2]+'published-history.css"><script defer src="'+m[2]+'published-picks.js"></script><script defer src="'+m[2]+'published-parlays.js"></script>'+m[0],html,count=1)
 
+
+def transport_script(html):
+    if re.search(r'\bsrc=["\'][^"\']*assets/json-transport\.js',html):return html
+    return re.sub(r'(<script\b[^>]*\bsrc=["\'])([^"\']*assets/)publication\.js(?:\?[^"\']*)?(["\'][^>]*></script>)',
+        lambda m:'<script defer src="'+m[2]+'json-transport.js"></script>'+m[0],html,count=1)
+
 def profile_views(root):
     # Reuse only exact, already-reviewed proposition records; no research execution.
     if not (root/'data/player-profiles/index.json').exists():return {}
@@ -358,7 +364,7 @@ def build(root, publish=False, now=None):
             url=urlsplit(match['path']);asset=(page.parent/unquote(url.path)).resolve()
             if url.scheme or url.netloc or destination not in asset.parents or not asset.is_file(): return match[0]
             return match['prefix']+match['path']+'?v='+hashlib.sha256(asset.read_bytes()).hexdigest()[:12]+match['end']
-        html=re.sub(r'''(?P<prefix>\b(?:src|href)=["'])(?P<path>[^"'?]+\.(?:js|css))(?:\?[^"']*)?(?P<end>["'])''',version_asset,history_script(page.read_text()));page.write_text(html)
+        html=re.sub(r'''(?P<prefix>\b(?:src|href)=["'])(?P<path>[^"'?]+\.(?:js|css))(?:\?[^"']*)?(?P<end>["'])''',version_asset,transport_script(history_script(page.read_text())));page.write_text(html)
         parser=Links();parser.feed(html)
         for value in parser.links:
             url=urlsplit(value)

@@ -4,10 +4,12 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from html.parser import HTMLParser
 import json
+import os
 from pathlib import Path
 import re
 import shutil
 import subprocess
+import tempfile
 from collections import OrderedDict
 from urllib.parse import unquote, urlsplit
 from public_schema import validate_edition, validate_manifest, validate_targets, validate_game_log_index, validate_game_log, validate_game_log_catalog
@@ -333,7 +335,7 @@ def assert_personal_estimates(body):
         if not {'winProbability','pushProbability','lossProbability','projection','asOf','status'}<=set(estimate):
             raise ValueError('Personal picks require reviewed probabilities and projections before publication: '+row['player'])
 
-def build(root, publish=False, now=None):
+def build(root, publish=False, now=None, validate_only=False):
     root=Path(root).resolve();destination=root/'dist'
     if destination.is_symlink(): raise ValueError('Destination cannot be a symlink')
     manifest=json.loads(safe_file(root,'site-manifest.json').read_text())
@@ -355,10 +357,25 @@ def build(root, publish=False, now=None):
     # Validate everything before replacing the previous build.
     paths=[safe_file(root,name) for name in files]
     views={**board_views(root),**profile_views(root),**portrait_view(root),**identity_view(root),**personal_price_view(root),**published_pick_views(root,source_hashes)}
+    if validate_only:
+        # Results jobs need every validation, not a second full archive copy.
+        # Keep the disposable tree on the source filesystem so validated edition
+        # bytes can be linked. Only copied pages and new derived views are written.
+        with tempfile.TemporaryDirectory(prefix='.sbos-validate-',dir=root) as temporary:
+            _write_tree(root,Path(temporary)/'dist',paths,views,link_archives=set(source_hashes))
+    else:
+        _write_tree(root,destination,paths,views)
+    return len(files)+len(views)+1
+
+def _write_tree(root,destination,paths,views,link_archives=frozenset()):
+    if set(views)&link_archives:
+        raise ValueError('Derived views cannot overwrite linked immutable editions')
     if destination.exists(): shutil.rmtree(destination)
     destination.mkdir()
     for source in paths:
-        target=destination/source.relative_to(root);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
+        name=source.relative_to(root);target=destination/name;target.parent.mkdir(parents=True,exist_ok=True)
+        if name.as_posix() in link_archives:os.link(source,target)
+        else:shutil.copyfile(source,target)
     for name,view in views.items():
         target=destination/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(canonical(view))
     (destination/'.nojekyll').touch();errors=[]
@@ -380,10 +397,11 @@ def build(root, publish=False, now=None):
                 continue
             elif not target.exists(): errors.append(f'{page.relative_to(destination)}: missing link {value}')
     if errors: raise ValueError('\n'.join(errors))
-    return len(files)+len(views)+1
 
 if __name__=='__main__':
     import argparse
     parser=argparse.ArgumentParser();parser.add_argument('--publish',action='store_true',help='Enforce the 10 AM Eastern daily release window')
+    parser.add_argument('--validate-only',action='store_true',help='Run all build checks in a disposable tree without copying immutable editions or replacing dist')
     args=parser.parse_args()
-    print(f'Built {build(Path(__file__).resolve().parents[1],publish=args.publish)} reviewed public files.')
+    count=build(Path(__file__).resolve().parents[1],publish=args.publish,validate_only=args.validate_only)
+    print(f'Validated {count} reviewed public files; no build artifact created.' if args.validate_only else f'Built {count} reviewed public files.')

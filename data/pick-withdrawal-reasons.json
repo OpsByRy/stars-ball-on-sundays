@@ -1445,6 +1445,16 @@
       "reasonCode": "promoted_from_bench",
       "notice": "Removed from Bench because Quentin Grimes < 16.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-18\",\"nba:0022600268\",\"nba:1629656\",\"PTS\",\"<=\",16,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-18",
+      "channel": "daily",
+      "sourceVersion": "6cb6d8ef36329a31",
+      "recordedAt": "2026-11-19T01:43:23.933479+00:00",
+      "key": "[\"2026-11-18\",\"nba:0022600266\",\"nba:1629661\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Cameron Johnson < 11.5 PTS replaced the previously returned line of 12.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
     }
   ]
 }

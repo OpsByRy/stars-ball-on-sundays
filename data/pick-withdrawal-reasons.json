@@ -1477,6 +1477,27 @@
       "reasonCode": "promoted_from_bench",
       "notice": "Removed from Bench because Collin Sexton < 12.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-18\",\"nba:0022600268\",\"nba:1629012\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "7a65534f9dda89a0",
+      "recordedAt": "2026-11-19T17:13:06.954051+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1626167\",\"PTS\",\"<=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Myles Turner < 9.5 PTS at -125 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1626167\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "7a65534f9dda89a0",
+      "recordedAt": "2026-11-19T17:13:06.954051+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1629639\",\"AST\",\">=\",3,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -304 → -370. The original selection, price and result remain in the record."
     }
   ]
 }

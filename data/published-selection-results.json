@@ -272,21 +272,29 @@
     },
     "[\"2026-11-18\",\"nba:0022600263\",\"nba:1630567\",\"AST\",\">=\",4,\"full_game\",\"sportsbook\",null]": {
       "actual": null,
-      "checkedAt": "2026-11-19T00:56:34.567Z",
-      "eventStatus": "live",
+      "checkedAt": "2026-11-19T03:18:37.430Z",
+      "eventStatus": "final",
       "statisticalOutcome": "unavailable",
       "sportsbookSettlement": "unverified",
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401910012"
     },
     "[\"2026-11-18\",\"nba:0022600263\",\"nba:1630193\",\"PTS\",\"<=\",20,\"full_game\",\"sportsbook\",null]": {
-      "actual": 4,
-      "minutesPlayed": 7,
-      "checkedAt": "2026-11-19T00:56:34.567Z",
-      "eventStatus": "live",
-      "statisticalOutcome": "pending",
+      "actual": 24,
+      "minutesPlayed": 34,
+      "checkedAt": "2026-11-19T03:18:37.430Z",
+      "eventStatus": "final",
+      "statisticalOutcome": "loss",
       "sportsbookSettlement": "unverified",
       "source": "https://www.espn.com/nba/boxscore/_/gameId/401910012"
+    },
+    "[\"2026-11-18\",\"nba:0022600264\",\"nba:1630595\",\"AST\",\">=\",6,\"full_game\",\"sportsbook\",null]": {
+      "actual": null,
+      "checkedAt": "2026-11-19T03:18:37.430Z",
+      "eventStatus": "live",
+      "statisticalOutcome": "unavailable",
+      "sportsbookSettlement": "unverified",
+      "source": "https://www.espn.com/nba/boxscore/_/gameId/401910013"
     }
   },
-  "updatedAt": "2026-11-19T00:56:34.567Z"
+  "updatedAt": "2026-11-19T03:18:37.430Z"
 }

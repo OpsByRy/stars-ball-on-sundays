@@ -15,12 +15,14 @@ from datetime import datetime,timezone,timedelta
 import build
 from pending_additions import verify_pending_additions
 from pending_parlays import verify_pending_parlays
+import json_transport
 
 OLD = 'https://opsbyry.github.io/stars-ball-on-sundays/'
 ORIGIN = 'https://starsballonsundays.com'
 PREFIX = '/stars-ball-on-sundays'
 PRIVATE_PATH = re.compile(r'(^|/)(?:\.git|\.env(?:\..*)?|\.local-data|pipeline|server|private-lab|functions)(?:/|$)|(?:\.map|\.csv|\.py|\.cjs|\.sqlite3?|\.db)$|(^|/)_worker\.js$', re.I)
 PAGES_MAX_BYTES = 25*1024*1024
+IMMUTABLE_EDITION = re.compile(r'data/editions/(?:daily|sunday)/\d{4}-\d{2}-\d{2}/[0-9a-f]{16}\.json')
 
 
 def json_tokens(raw):
@@ -131,14 +133,28 @@ def assemble(baseline,cf,github,policy,source_sha):
     if not re.fullmatch('[0-9a-f]{40}',source_sha):raise ValueError('Invalid source SHA')
     files=sorted(p for p in baseline.rglob('*') if p.is_file())
     if not files or not (baseline/'index.html').is_file():raise ValueError('Missing validated baseline')
-    compacted={};compaction_receipts={}
+    compacted={};compaction_receipts={};encoded_receipts={}
     for file in files:
         name=file.relative_to(baseline).as_posix()
         if file.is_symlink() or PRIVATE_PATH.search(name):raise ValueError('Private/unsafe artifact path: '+name)
         if file.stat().st_size>PAGES_MAX_BYTES:
-            raw=file.read_bytes();compact=pages_asset(name,raw)
+            raw=file.read_bytes()
+            try:compact=pages_asset(name,raw)
+            except ValueError:
+                if not IMMUTABLE_EDITION.fullmatch(name):raise
+                if not (baseline/'assets/json-transport.js').is_file():raise ValueError('JSON transport reader is missing')
+                for page in (p for p in files if p.suffix=='.html'):
+                    text=page.read_text()
+                    publication=re.search(r'<script\b[^>]*\bsrc=["\'][^"\']*assets/publication\.js',text)
+                    transport=re.search(r'<script\b[^>]*\bsrc=["\'][^"\']*assets/json-transport\.js',text)
+                    if publication and (not transport or transport.start()>publication.start()):raise ValueError('JSON transport reader must precede publication: '+str(page))
+                compact=json_transport.encode(raw)
+                if len(compact)>PAGES_MAX_BYTES:raise ValueError('Pages file exceeds 25 MiB: '+name)
+                encoded_receipts['/'+name]={'sourceSHA256':hashlib.sha256(raw).hexdigest(),
+                    'sourceBytes':len(raw),'deployedSHA256':hashlib.sha256(compact).hexdigest(),
+                    'deployedBytes':len(compact),'transformation':'Lossless gzip-base64 JSON transport; original bytes reconstructed exactly'}
             compacted[name]=compact
-            compaction_receipts['/'+name]={'sourceSHA256':hashlib.sha256(raw).hexdigest(),
+            if '/'+name not in encoded_receipts:compaction_receipts['/'+name]={'sourceSHA256':hashlib.sha256(raw).hexdigest(),
                 'deployedSHA256':hashlib.sha256(compact).hexdigest(),'sourceBytes':len(raw),
                 'deployedBytes':len(compact),'transformation':'JSON formatting whitespace only; literal tokens unchanged'}
     for directory in [cf,github]:
@@ -168,17 +184,21 @@ def assemble(baseline,cf,github,policy,source_sha):
         if file.suffix!='.html':
             original=hashlib.sha256(compacted[name]).hexdigest() if name in compacted else sha256(file)
             if sha256(cf/name)!=original or sha256(github/name)!=original:raise ValueError('Public data/assets changed: '+name)
+            if '/'+name in encoded_receipts:
+                for host in [cf,github]:
+                    if json_transport.decode((host/name).read_bytes())!=file.read_bytes():raise ValueError('JSON source reconstruction differs: '+name)
         checks['/'+name]=sha256(cf/name)
     receipt={'schemaVersion':'sbos-public-release-1','sourceSHA':source_sha,'canonicalOrigin':ORIGIN,
              'githubMode':policy['githubMode'],'editionManifestSHA256':sha256(baseline/'data/editions/manifest.json'),
              'files':checks}
     if compaction_receipts:receipt['compactedJSON']=compaction_receipts
+    if encoded_receipts:receipt['encodedJSON']=encoded_receipts
     (cf/'_sbos-release.json').write_text(json.dumps(receipt,sort_keys=True,separators=(',',':'))+'\n')
     if sum(p.is_file() for p in cf.rglob('*'))>20000:raise ValueError('Pages file limit exceeded')
     return {'sourceSHA':source_sha,'githubMode':policy['githubMode'],'pages':pages,'oldRoutes':routes,
             'baselineFileCount':len(files),'cloudflareFileCount':sum(p.is_file() for p in cf.rglob('*')),
             'unchangedNonHTMLFileCount':sum(p.suffix!='.html' and p.relative_to(baseline).as_posix() not in compacted for p in files),
-            'compactedJSON':compaction_receipts}
+            'compactedJSON':compaction_receipts,'encodedJSON':encoded_receipts}
 
 
 def main():

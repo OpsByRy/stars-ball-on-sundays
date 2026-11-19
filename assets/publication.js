@@ -324,7 +324,7 @@
     }}):null;
     function personalSundayContent(body){const rows=editionGroups(body).ry;return `<div class="edition-panel"><div class="edition-heading"><h2>${dateLabel(body.date)}</h2><a class="back-to-board" href="${escape(weeklyURL(body.date))}">← Sunday Edition board</a></div><p class="board-intro">Ry’s personal selections, separately attributed and preserved as posted. Favorite flags do not change algorithm selection or tracking.</p>${body.priceNote?`<p class="publication-note personal-source-note">${escape(body.priceNote)}</p>`:''}${favoritesView(body,'ry-sunday')}</div>`;}
     let entries=[],allVersions=[],request=0,researchState={rows:[],...readPublicResearchState()};
-    async function loadJSON(url,immutable=false){const r=await fetch(url,{cache:immutable?'force-cache':'no-store',credentials:'omit'});if(!r.ok)throw Error('Publication unavailable');return r.json();}
+    async function loadJSON(url,immutable=false){const r=await fetch(url,{cache:immutable?'force-cache':'no-store',credentials:'omit'});if(!r.ok)throw Error('Publication unavailable');return window.SBOS_JSON?window.SBOS_JSON.readJSON(r):r.json();}
     async function loadEdition(entry,compact=false){
       let body;
       if(compact){const view=await loadJSON(safeEditionURL(entry,new URL('data/boards/',base)),true);if(view.schemaVersion!=='public-board-1'||view.sourceVersion!==entry.version||!view.edition||!Array.isArray(view.edition.props)||view.edition.props.some(p=>p.category==='not_a_pick'))throw Error('Board mismatch');body={...view.edition,version:view.sourceVersion};}

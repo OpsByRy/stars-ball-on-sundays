@@ -1765,6 +1765,68 @@
       "recordKind": "bench",
       "reasonCode": "line_changed",
       "notice": "Line changed in the saved DraftKings refresh: Fred VanVleet < 4.5 AST replaced the previously returned line of 5.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "1c0fc7058af4726e",
+      "recordedAt": "2026-11-20T20:15:53.317251+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1630700\",\"AST\",\">=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "1c0fc7058af4726e",
+      "recordedAt": "2026-11-20T20:15:53.317251+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1629652\",\"PTS\",\">=\",6,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "1c0fc7058af4726e",
+      "recordedAt": "2026-11-20T20:15:53.317251+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600049\",\"nba:1631221\",\"REB\",\"<=\",3,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. DraftKings saved price: -163 → -171. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "1c0fc7058af4726e",
+      "recordedAt": "2026-11-20T20:15:53.317251+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600051\",\"nba:1630533\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -202 → -251. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "1c0fc7058af4726e",
+      "recordedAt": "2026-11-20T20:15:53.317251+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1630552\",\"AST\",\">=\",7,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Jalen Johnson >= 6 AST moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1630552\",\"AST\",\">=\",6,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "1c0fc7058af4726e",
+      "recordedAt": "2026-11-20T20:15:53.317251+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600044\",\"nba:1641783\",\"PTS\",\">=\",11,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Tristan da Silva >= 10 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-20\",\"nba:0022600044\",\"nba:1641783\",\"PTS\",\">=\",10,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

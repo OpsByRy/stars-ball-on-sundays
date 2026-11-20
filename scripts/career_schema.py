@@ -34,7 +34,7 @@ def validate_career_index(b):
         seen.add((p['playerId'],p['opponent']))
 
 def validate_defender_index(b):
-    fields={'schemaVersion','asOfDate','matchups'};keys(b,fields,fields)
+    fields={'schemaVersion','asOfDate','matchups'};keys(b,fields|{'assignments'},fields)
     if b['schemaVersion']!='public-career-defender-games-index-1' or not isinstance(b['matchups'],list) or len(b['matchups'])>4000:raise ValueError('Invalid defender-game directory')
     day(b['asOfDate']);seen=set()
     for p in b['matchups']:
@@ -42,6 +42,14 @@ def validate_defender_index(b):
         pair=(p['playerId'],p['defenderId'])
         if pair[0]==pair[1] or pair in seen or p['path']!=pair[0].split(':')[1]+'/'+pair[1].split(':')[1]+'/'+p['version']+'.json':raise ValueError('Invalid defender-game path')
         seen.add(pair)
+
+    assignments=b.get('assignments',[])
+    if not isinstance(assignments,list)or len(assignments)>2000:raise ValueError('Invalid assignment directory')
+    targets=set()
+    for a in assignments:
+        validate_assignment(a,b['asOfDate'])
+        if a['playerId']in targets or(a['playerId'],a['defender']['playerId'])not in seen:raise ValueError('Missing/ambiguous assignment history')
+        targets.add(a['playerId'])
 
 def validate_defender_games(b):
     fields={'schemaVersion','playerId','player','defenderId','defender','requestedFromSeason','through','seasonsCovered','missingSeasons','capturedAt','source','games','version'};keys(b,fields,fields)
@@ -62,3 +70,30 @@ def validate_defender_games(b):
         if not number(g['defenderMinutes']) or not 0<=g['defenderMinutes']<=90 or not number(g['stats'].get('MIN')) or not 0<=g['stats']['MIN']<=90:raise ValueError('Invalid appearance minutes')
         seen.add(g['eventId']);seasons.setdefault(g['season'],[]).append({k:v for k,v in g.items() if k not in {'season','defenderTeam','defenderMinutes'}})
     for season,games in seasons.items():validate_game_log({'schemaVersion':'public-game-log-1','season':season,'playerId':b['playerId'],'player':b['player'],'version':b['version'],'games':games})
+
+def validate_assignment(a, as_of_date):
+    fields={'playerId','player','date','eventId','team','opponent','startTime','asOf','rosterAsOf','availabilityAsOf','availabilitySource','trackingCapturedAt','defender'}
+    keys(a,fields,fields);identity(a['playerId']);text(a['player'],120);day(a['date'])
+    if a['date']!=as_of_date or not re.fullmatch(r'nba:002\d{7}',a['eventId']) or a['team']not in NBA_TEAMS or a['opponent']not in NBA_TEAMS or a['team']==a['opponent']:raise ValueError('Invalid assignment matchup')
+    from datetime import datetime
+    parse=lambda s:datetime.fromisoformat(s.replace('Z','+00:00'))
+    for k in ('startTime','asOf','rosterAsOf','availabilityAsOf','trackingCapturedAt'):stamp(a[k])
+    if parse(a['asOf'])>=parse(a['startTime']) or any(parse(a[k])>parse(a['asOf'])for k in ('rosterAsOf','availabilityAsOf','trackingCapturedAt')):raise ValueError('Invalid assignment source clocks')
+    if any((parse(a['asOf'])-parse(a[k])).total_seconds()>86400 for k in ('rosterAsOf','availabilityAsOf')):raise ValueError('Current roster and availability evidence required')
+    if not re.fullmatch(r'https://ak-static\.cms\.nba\.com/referee/injury/Injury-Report_'+a['date']+r'_\d{2}_\d{2}[AP]M\.pdf',a['availabilitySource']):raise ValueError('Invalid assignment availability source')
+    d=a['defender'];fields={'playerId','player','through','source','history','coverage'};keys(d,fields,fields);identity(d['playerId']);text(d['player'],120);day(d['through'])
+    if d['playerId']==a['playerId'] or d['through']>=a['date'] or d['source']!='https://www.nba.com/stats/player/'+a['playerId'].split(':')[1]+'/head-to-head':raise ValueError('Invalid defender identity/cutoff')
+    c=d['coverage'];fields={'requestedFromSeason','seasonsCovered','missingSeasons'};keys(c,fields,fields);season_name(c['requestedFromSeason'])
+    for k in ('seasonsCovered','missingSeasons'):
+        if not isinstance(c[k],list)or len(c[k])>70 or c[k]!=sorted(set(c[k])):raise ValueError('Invalid tracking coverage')
+        for s in c[k]:season_name(s)
+    if set(c['seasonsCovered'])&set(c['missingSeasons']):raise ValueError('Overlapping tracking coverage')
+    if not isinstance(d['history'],list)or len(d['history'])>70:raise ValueError('Invalid tracked history')
+    seen=set()
+    for h in d['history']:
+        fields={'season','through','games','possessions','minutes','stats'};keys(h,fields,fields);season_name(h['season']);day(h['through']);text(h['minutes'],30)
+        if h['season']in seen or h['season']not in c['seasonsCovered']or h['through']>=a['date']:raise ValueError('Invalid tracking season/cutoff')
+        seen.add(h['season'])
+        if type(h['games'])is not int or not 0<=h['games']<=1000 or not number(h['possessions'])or not 0<=h['possessions']<=10000:raise ValueError('Invalid tracking exposure')
+        keys(h['stats'],{'PTS','AST','3PM'},{'PTS','AST','3PM'})
+        if any(v is not None and(not number(v)or not 0<=v<=10000)for v in h['stats'].values()):raise ValueError('Invalid guarding stats')

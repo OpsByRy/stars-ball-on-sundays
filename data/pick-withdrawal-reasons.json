@@ -1827,6 +1827,146 @@
       "reasonCode": "promoted_from_bench",
       "notice": "Removed from Bench because Tristan da Silva >= 10 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-20\",\"nba:0022600044\",\"nba:1641783\",\"PTS\",\">=\",10,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1630552\",\"AST\",\">=\",6,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1630168\",\"PTS\",\">=\",12,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1630700\",\"REB\",\">=\",7,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1629652\",\"PTS\",\">=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600043\",\"nba:1629638\",\"PTS\",\">=\",19,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600045\",\"nba:201935\",\"REB\",\"<=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: James Harden < 4.5 REB replaced the previously returned line of 5.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600046\",\"nba:1642347\",\"PTS\",\">=\",6,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600046\",\"nba:1642347\",\"AST\",\">=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600046\",\"nba:1642347\",\"AST\",\">=\",6,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "7cb6199d09a5b37e",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600046\",\"nba:1630567\",\"AST\",\">=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "597bf9c484857b65",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600046\",\"nba:1642266\",\"AST\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "597bf9c484857b65",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1630200\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Tre Jones < 3.5 AST replaced the previously returned line of 4.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "597bf9c484857b65",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600049\",\"nba:1641718\",\"PTS\",\"<=\",24,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Keyonte George < 23.5 PTS replaced the previously returned line of 24.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "597bf9c484857b65",
+      "recordedAt": "2026-11-20T22:00:57.592575+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600049\",\"nba:1631221\",\"PTS\",\"<=\",10,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Collin Gillespie < 9.5 PTS replaced the previously returned line of 10.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
     }
   ]
 }

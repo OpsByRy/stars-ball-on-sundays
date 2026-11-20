@@ -17064,6 +17064,86 @@
       "espnEventId": "401910022",
       "espnAthleteId": "3064560",
       "expectedTeam": "SAS"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600270",
+      "playerId": "nba:1641707",
+      "espnEventId": "401910019",
+      "espnAthleteId": "4684806",
+      "expectedTeam": "MEM"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600270",
+      "playerId": "nba:1629001",
+      "espnEventId": "401910019",
+      "espnAthleteId": "4066436",
+      "expectedTeam": "GSW"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600270",
+      "playerId": "nba:1642954",
+      "espnEventId": "401910019",
+      "espnAthleteId": "4897262",
+      "expectedTeam": "GSW"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600271",
+      "playerId": "nba:1642857",
+      "espnEventId": "401910020",
+      "espnAthleteId": "5214640",
+      "expectedTeam": "MIL"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600271",
+      "playerId": "nba:1631157",
+      "espnEventId": "401910020",
+      "espnAthleteId": "4591725",
+      "expectedTeam": "MIL"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600271",
+      "playerId": "nba:1630579",
+      "espnEventId": "401910020",
+      "espnAthleteId": "4277922",
+      "expectedTeam": "MIL"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600271",
+      "playerId": "nba:1642276",
+      "espnEventId": "401910020",
+      "espnAthleteId": "5105623",
+      "expectedTeam": "MIL"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600272",
+      "playerId": "nba:1642866",
+      "espnEventId": "401910021",
+      "espnAthleteId": "5279133",
+      "expectedTeam": "MIN"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600272",
+      "playerId": "nba:1630538",
+      "espnEventId": "401910021",
+      "espnAthleteId": "4592492",
+      "expectedTeam": "MIN"
+    },
+    {
+      "date": "2026-11-19",
+      "eventId": "nba:0022600272",
+      "playerId": "nba:1630540",
+      "espnEventId": "401910021",
+      "espnAthleteId": "4431823",
+      "expectedTeam": "NYK"
     }
   ]
 }

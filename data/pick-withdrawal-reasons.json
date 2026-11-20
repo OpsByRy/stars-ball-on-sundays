@@ -1559,6 +1559,108 @@
       "reasonCode": "selection_replaced",
       "notice": "Replaced after the refreshed comparison selected Tyler Herro < 20.5 PTS at -102 instead. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1629639\",\"PTS\",\"<=\",20,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1631170\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600272\",\"nba:1628969\",\"PTS\",\"<=\",10,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Mikal Bridges < 9.5 PTS at -113 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-19\",\"nba:0022600272\",\"nba:1628969\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1629639\",\"3PM\",\"<=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1629639\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600271\",\"nba:1629639\",\"PTS\",\"<=\",20,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600270\",\"nba:1641764\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600270\",\"nba:1630611\",\"PTS\",\"<=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Gui Santos < 7.5 PTS replaced the previously returned line of 8.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600270\",\"nba:1641764\",\"3PM\",\"<=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600272\",\"nba:1628404\",\"3PM\",\"<=\",1,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -180 → -204. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-19",
+      "channel": "daily",
+      "sourceVersion": "73243169a973a924",
+      "recordedAt": "2026-11-20T00:24:54.754008+00:00",
+      "key": "[\"2026-11-19\",\"nba:0022600272\",\"nba:1630245\",\"PTS\",\">=\",17,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Ayo Dosunmu >= 16 PTS at -180 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-19\",\"nba:0022600272\",\"nba:1630245\",\"PTS\",\">=\",16,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

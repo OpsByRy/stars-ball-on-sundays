@@ -416,6 +416,14 @@
       "sha256": "22860364e024a082d39f77bc44bc6dd44c512af2107c010c36cee3bdb1fa76d2",
       "count": 0,
       "updatedAt": "2026-11-20T15:52:43.506337+00:00"
+    },
+    {
+      "date": "2026-11-20",
+      "version": "a9d8d3f850980ad8",
+      "path": "2026-11-20/a9d8d3f850980ad8.json",
+      "sha256": "cf0048d8420b910a9cdb688ac39e145b5beb27c9eeb4bf7759aab58d09de1097",
+      "count": 0,
+      "updatedAt": "2026-11-20T18:14:39.676443+00:00"
     }
   ]
 }

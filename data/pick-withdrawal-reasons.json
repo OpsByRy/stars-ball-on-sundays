@@ -1661,6 +1661,110 @@
       "reasonCode": "selection_replaced",
       "notice": "Replaced after the refreshed comparison selected Ayo Dosunmu >= 16 PTS at -180 instead. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-19\",\"nba:0022600272\",\"nba:1630245\",\"PTS\",\">=\",16,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600044\",\"nba:1641783\",\"PTS\",\">=\",10,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -218 → -241. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600044\",\"nba:1630532\",\"AST\",\">=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Franz Wagner >= 7 AST at -191 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-20\",\"nba:0022600044\",\"nba:1630532\",\"AST\",\">=\",7,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1630188\",\"REB\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Jalen Smith < 8.5 REB replaced the previously returned line of 9.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1629027\",\"AST\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Trae Young < 10.5 AST at -139 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1629027\",\"AST\",\"<=\",10,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1642273\",\"PTS\",\">=\",12,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Kyshawn George >= 14 PTS at -230 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1642273\",\"PTS\",\">=\",14,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600049\",\"nba:1641729\",\"REB\",\">=\",3,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. DraftKings saved price: -174 → -190. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600051\",\"nba:1629656\",\"PTS\",\"<=\",16,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "moved_to_bench",
+      "notice": "Moved to Bench research after review: the saved win estimate fell below the main-board minimum. FanDuel saved price: +100 → -102. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1630188\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Jalen Smith < 14.5 PTS replaced the previously returned line of 15.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1630581\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Josh Giddey < 14.5 PTS at -132 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-20\",\"nba:0022600047\",\"nba:1630581\",\"PTS\",\"<=\",14,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "5c67b78153c4b665",
+      "recordedAt": "2026-11-20T18:17:23.166493+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600050\",\"nba:1627832\",\"AST\",\"<=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Fred VanVleet < 4.5 AST replaced the previously returned line of 5.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
     }
   ]
 }

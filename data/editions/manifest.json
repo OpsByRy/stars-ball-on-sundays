@@ -4580,6 +4580,15 @@
       "count": 0,
       "researchCount": 10183,
       "updatedAt": "2026-11-20T17:43:42.064148+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-20",
+      "version": "63e1b3d512ff391f",
+      "path": "daily/2026-11-20/63e1b3d512ff391f.json",
+      "count": 0,
+      "researchCount": 10183,
+      "updatedAt": "2026-11-20T17:58:18.040307+00:00"
     }
   ],
   "schemaVersion": "public-1"

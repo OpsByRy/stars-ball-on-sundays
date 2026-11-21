@@ -4940,6 +4940,24 @@
       "count": 0,
       "researchCount": 6213,
       "updatedAt": "2026-11-21T17:00:07.423935+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-21",
+      "version": "0e4e875743886c5f",
+      "path": "daily/2026-11-21/0e4e875743886c5f.json",
+      "count": 0,
+      "researchCount": 11543,
+      "updatedAt": "2026-11-21T17:15:27.021447+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-21",
+      "version": "ed569442849777a3",
+      "path": "daily/2026-11-21/ed569442849777a3.json",
+      "count": 0,
+      "researchCount": 11543,
+      "updatedAt": "2026-11-21T17:19:54.210496+00:00"
     }
   ],
   "schemaVersion": "public-1"

@@ -2125,6 +2125,78 @@
       "reasonCode": "promoted_from_bench",
       "notice": "Removed from Bench because Tari Eason >= 7 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-20\",\"nba:0022600050\",\"nba:1631106\",\"PTS\",\">=\",7,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "ed569442849777a3",
+      "recordedAt": "2026-11-21T17:19:54.210496+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1628973\",\"AST\",\">=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -251 → -448. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "ed569442849777a3",
+      "recordedAt": "2026-11-21T17:19:54.210496+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1642285\",\"PTS\",\">=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "ed569442849777a3",
+      "recordedAt": "2026-11-21T17:19:54.210496+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1630228\",\"AST\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -280 → -310. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "ed569442849777a3",
+      "recordedAt": "2026-11-21T17:19:54.210496+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600274\",\"nba:1629639\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -144 → -151. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "ed569442849777a3",
+      "recordedAt": "2026-11-21T17:19:54.210496+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1628404\",\"PTS\",\"<=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Josh Hart < 9.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1628404\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "ed569442849777a3",
+      "recordedAt": "2026-11-21T17:19:54.210496+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1642270\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -196 → -205. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "ed569442849777a3",
+      "recordedAt": "2026-11-21T17:19:54.210496+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1630228\",\"PTS\",\"<=\",14,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Jonathan Kuminga < 15.5 PTS at -121 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1630228\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

@@ -2229,6 +2229,87 @@
       "key": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1626157\",\"AST\",\">=\",3,\"full_game\",\"sportsbook\",null]",
       "reasonCode": "availability_out",
       "notice": "Withdrawn after the official availability review listed Karl-Anthony Towns Out. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "3b748dce0ecbf12f",
+      "recordedAt": "2026-11-21T22:48:16.798173+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1628404\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Josh Hart < 10.5 PTS replaced the previously returned line of 9.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "3b748dce0ecbf12f",
+      "recordedAt": "2026-11-21T22:48:16.798173+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1628969\",\"PTS\",\"<=\",10,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Mikal Bridges < 11.5 PTS at -120 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1628969\",\"PTS\",\"<=\",11,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "3b748dce0ecbf12f",
+      "recordedAt": "2026-11-21T22:48:16.798173+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1642285\",\"AST\",\">=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "3b748dce0ecbf12f",
+      "recordedAt": "2026-11-21T22:48:16.798173+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1642285\",\"PTS\",\">=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "3b748dce0ecbf12f",
+      "recordedAt": "2026-11-21T22:48:16.798173+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1630191\",\"PTS\",\">=\",7,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "source_review_failed",
+      "notice": "Withdrawn after the refreshed forecast held this line: a stable role was not verified; a teammate's absence may change this player's role, and the current model does not support that adjustment. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "3b748dce0ecbf12f",
+      "recordedAt": "2026-11-21T22:48:16.798173+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600277\",\"nba:203497\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Rudy Gobert < 8.5 PTS replaced the previously returned line of 9.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "3b748dce0ecbf12f",
+      "recordedAt": "2026-11-21T22:48:16.798173+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600279\",\"nba:202331\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Paul George < 5.5 AST replaced the previously returned line of 4.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "3b748dce0ecbf12f",
+      "recordedAt": "2026-11-21T22:48:16.798173+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600279\",\"nba:202331\",\"PTS\",\"<=\",22,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Paul George < 25.5 PTS replaced the previously returned line of 22.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
     }
   ]
 }

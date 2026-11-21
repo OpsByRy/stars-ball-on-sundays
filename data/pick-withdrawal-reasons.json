@@ -2093,6 +2093,16 @@
       "recordKind": "pick",
       "reasonCode": "modeled_value_below_minimum",
       "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -370 → -390. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "6484116bd19158de",
+      "recordedAt": "2026-11-21T02:13:41.754793+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600050\",\"nba:1627832\",\"AST\",\"<=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Fred VanVleet < 4.5 AST replaced the previously returned line of 5.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
     }
   ]
 }

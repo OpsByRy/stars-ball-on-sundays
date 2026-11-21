@@ -18144,6 +18144,22 @@
       "espnEventId": "401909313",
       "espnAthleteId": "4433174",
       "expectedTeam": "SAC"
+    },
+    {
+      "date": "2026-11-20",
+      "eventId": "nba:0022600050",
+      "playerId": "nba:203500",
+      "espnEventId": "401909312",
+      "espnAthleteId": "2991235",
+      "expectedTeam": "HOU"
+    },
+    {
+      "date": "2026-11-20",
+      "eventId": "nba:0022600050",
+      "playerId": "nba:1642263",
+      "espnEventId": "401909312",
+      "espnAthleteId": "4711272",
+      "expectedTeam": "HOU"
     }
   ]
 }

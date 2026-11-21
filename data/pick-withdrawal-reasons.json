@@ -2219,6 +2219,16 @@
       "reasonCode": "selection_replaced",
       "notice": "Replaced after the refreshed comparison selected Naji Marshall < 13.5 PTS at -130 instead. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-21\",\"nba:0022600276\",\"nba:1630230\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "193098d1c541e19c",
+      "recordedAt": "2026-11-21T22:32:14.306314+00:00",
+      "recordKind": "pick",
+      "key": "[\"2026-11-21\",\"nba:0022600275\",\"nba:1626157\",\"AST\",\">=\",3,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Karl-Anthony Towns Out. The original selection, price and result remain in the record."
     }
   ]
 }

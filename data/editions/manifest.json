@@ -4823,6 +4823,15 @@
       "count": 0,
       "researchCount": 28462,
       "updatedAt": "2026-11-21T02:57:47.681Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-20",
+      "version": "3f63dff58a14360a",
+      "path": "daily/2026-11-20/3f63dff58a14360a.json",
+      "count": 0,
+      "researchCount": 28462,
+      "updatedAt": "2026-11-21T03:19:13.693Z"
     }
   ],
   "schemaVersion": "public-1"

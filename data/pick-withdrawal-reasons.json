@@ -2197,6 +2197,28 @@
       "reasonCode": "selection_replaced",
       "notice": "Replaced after the refreshed comparison selected Jonathan Kuminga < 15.5 PTS at -121 instead. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1630228\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "bc3d99e4b60880ff",
+      "recordedAt": "2026-11-21T20:33:38.117422+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1630228\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Jonathan Kuminga < 14.5 PTS at -112 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-21\",\"nba:0022600277\",\"nba:1630228\",\"PTS\",\"<=\",14,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "bc3d99e4b60880ff",
+      "recordedAt": "2026-11-21T20:33:38.117422+00:00",
+      "key": "[\"2026-11-21\",\"nba:0022600276\",\"nba:1630230\",\"PTS\",\"<=\",12,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Naji Marshall < 13.5 PTS at -130 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-21\",\"nba:0022600276\",\"nba:1630230\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

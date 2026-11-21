@@ -18104,6 +18104,38 @@
       "espnEventId": "401909311",
       "espnAthleteId": "4278402",
       "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-20",
+      "eventId": "nba:0022600047",
+      "playerId": "nba:1627741",
+      "espnEventId": "401909309",
+      "espnAthleteId": "2990984",
+      "expectedTeam": "CHI"
+    },
+    {
+      "date": "2026-11-20",
+      "eventId": "nba:0022600048",
+      "playerId": "nba:1642892",
+      "espnEventId": "401909310",
+      "espnAthleteId": "5241364",
+      "expectedTeam": "OKC"
+    },
+    {
+      "date": "2026-11-20",
+      "eventId": "nba:0022600048",
+      "playerId": "nba:1629673",
+      "espnEventId": "401909310",
+      "espnAthleteId": "4277956",
+      "expectedTeam": "NOP"
+    },
+    {
+      "date": "2026-11-20",
+      "eventId": "nba:0022600048",
+      "playerId": "nba:1642852",
+      "espnEventId": "401909310",
+      "espnAthleteId": "4869780",
+      "expectedTeam": "NOP"
     }
   ]
 }

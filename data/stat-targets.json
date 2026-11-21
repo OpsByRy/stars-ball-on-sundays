@@ -18136,6 +18136,14 @@
       "espnEventId": "401909310",
       "espnAthleteId": "4869780",
       "expectedTeam": "NOP"
+    },
+    {
+      "date": "2026-11-20",
+      "eventId": "nba:0022600051",
+      "playerId": "nba:1642928",
+      "espnEventId": "401909313",
+      "espnAthleteId": "4433174",
+      "expectedTeam": "SAC"
     }
   ]
 }

@@ -2083,6 +2083,16 @@
       "reasonCode": "selection_replaced",
       "notice": "Replaced after the refreshed comparison selected Ziaire Williams >= 7 PTS at -188 instead. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-20\",\"nba:0022600051\",\"nba:1630533\",\"PTS\",\">=\",7,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-20",
+      "channel": "daily",
+      "sourceVersion": "eeabac9f5bd140fd",
+      "recordedAt": "2026-11-21T01:43:24.834721+00:00",
+      "key": "[\"2026-11-20\",\"nba:0022600049\",\"nba:1628970\",\"AST\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -370 → -390. The original selection, price and result remain in the record."
     }
   ]
 }

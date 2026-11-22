@@ -5273,6 +5273,24 @@
       "count": 0,
       "researchCount": 16380,
       "updatedAt": "2026-11-22T01:34:10.726Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-22",
+      "version": "40d97492abd00060",
+      "path": "daily/2026-11-22/40d97492abd00060.json",
+      "count": 0,
+      "researchCount": 8442,
+      "updatedAt": "2026-11-22T21:43:07.731359+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-22",
+      "version": "e4d9318faa597244",
+      "path": "daily/2026-11-22/e4d9318faa597244.json",
+      "count": 0,
+      "researchCount": 8442,
+      "updatedAt": "2026-11-22T21:48:09.947196+00:00"
     }
   ],
   "schemaVersion": "public-1"

@@ -2310,6 +2310,16 @@
       "recordKind": "bench",
       "reasonCode": "line_changed",
       "notice": "Line changed in the saved FanDuel refresh: Paul George < 25.5 PTS replaced the previously returned line of 22.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-21",
+      "channel": "daily",
+      "sourceVersion": "fa32367786201886",
+      "recordedAt": "2026-11-22T00:44:32.104800+00:00",
+      "recordKind": "pick",
+      "key": "[\"2026-11-21\",\"nba:0022600278\",\"nba:1629627\",\"AST\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "reasonCode": "availability_out",
+      "notice": "Withdrawn after the official availability review listed Zion Williamson Out. The original selection, price and result remain in the record."
     }
   ]
 }

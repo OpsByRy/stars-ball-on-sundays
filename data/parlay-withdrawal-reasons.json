@@ -40,6 +40,14 @@
       "recordedAt": "2026-11-16T21:21:41.191Z",
       "reasonCode": "probability_and_role_validation_missing",
       "notice": "Withdrawn after review: the win estimates have not passed accuracy validation, and current playing roles and availability were unconfirmed. Affected legs: Rudy Gobert under 9.5 points; Franz Wagner over 6.5 assists; Davion Mitchell 8+ assists. The original result remains tracked."
+    },
+    {
+      "date": "2026-11-22",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-22\\\",\\\"nba:0022600281\\\",\\\"nba:1630558\\\",\\\"AST\\\",\\\">=\\\",8,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-22\\\",\\\"nba:0022600282\\\",\\\"nba:1630532\\\",\\\"AST\\\",\\\">=\\\",7,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-22\\\",\\\"nba:0022600285\\\",\\\"nba:1629614\\\",\\\"AST\\\",\\\">=\\\",7,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-22\\\",\\\"nba:0022600286\\\",\\\"nba:1641764\\\",\\\"AST\\\",\\\"<=\\\",4,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "46390ecc4b21e937",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "reasonCode": "leg_no_longer_selected",
+      "notice": "Withdrawn because the refreshed Daily Board no longer selected the original line for Davion Mitchell. The original picks and result remain tracked."
     }
   ]
 }

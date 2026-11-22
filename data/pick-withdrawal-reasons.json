@@ -2320,6 +2320,122 @@
       "key": "[\"2026-11-21\",\"nba:0022600278\",\"nba:1629627\",\"AST\",\">=\",2,\"full_game\",\"sportsbook\",null]",
       "reasonCode": "availability_out",
       "notice": "Withdrawn after the official availability review listed Zion Williamson Out. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "ea625f0245857f65",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1630558\",\"PTS\",\">=\",12,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -236 → -313. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "ea625f0245857f65",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1630558\",\"AST\",\">=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -166 → -295. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "ea625f0245857f65",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600282\",\"nba:1641783\",\"PTS\",\">=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -220 → -230. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "cbc5dccfdb7e486d",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1641796\",\"AST\",\">=\",3,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -207 → -215. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "cbc5dccfdb7e486d",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1642349\",\"AST\",\"<=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Ajay Mitchell < 5.5 AST moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1642349\",\"AST\",\"<=\",5,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "cbc5dccfdb7e486d",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1642349\",\"PTS\",\"<=\",20,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Ajay Mitchell < 23.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1642349\",\"PTS\",\"<=\",23,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "cbc5dccfdb7e486d",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1642272\",\"PTS\",\"<=\",18,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Jared McCain < 19.5 PTS at -115 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1642272\",\"PTS\",\"<=\",19,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "cbc5dccfdb7e486d",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600281\",\"nba:1628392\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Isaiah Hartenstein < 9.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "cbc5dccfdb7e486d",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600281\",\"nba:203952\",\"PTS\",\"<=\",9,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Andrew Wiggins < 11.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-22\",\"nba:0022600281\",\"nba:203952\",\"PTS\",\"<=\",11,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "cbc5dccfdb7e486d",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600284\",\"nba:1642843\",\"AST\",\">=\",6,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Cooper Flagg >= 5 AST moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-22\",\"nba:0022600284\",\"nba:1642843\",\"AST\",\">=\",5,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "cbc5dccfdb7e486d",
+      "recordedAt": "2026-11-22T22:43:15.510106+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600286\",\"nba:1630202\",\"PTS\",\"<=\",16,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Payton Pritchard < 15.5 PTS at -106 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-22\",\"nba:0022600286\",\"nba:1630202\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

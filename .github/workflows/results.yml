@@ -1,57 +1,80 @@
 name: Refresh public results
+run-name: Results ${{ inputs.slot || 'manual' }}
 on:
   workflow_dispatch:
-# The Cloudflare sbos-pollers Worker dispatches private results.yml every half hour.
-# That workflow grades this repo and pushes with SITE_PUSH_TOKEN, triggering pages.yml.
-# Manual public refreshes retain their exact-source artifact handoff below.
+    inputs:
+      slot:
+        description: Cloudflare checkpoint (live, final cleanup, or morning correction)
+        required: false
+        default: manual
+# The Cloudflare sbos-pollers Worker dispatches this workflow at each results checkpoint
+# (live games, final cleanup, morning correction; RESULTS_REPO in its wrangler.jsonc) and
+# matches its run by the "Results <slot>" title. Only this repository's public code runs here,
+# on free public-repo runners. It used to run from the private repo (moved Nov 22, 2026).
 permissions:
   contents: write
+  actions: write  # start Publish SBOS after a new results commit (see the last step)
 concurrency:
   group: public-result-records
   cancel-in-progress: false
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Regrade from current main when the board advances. Bound both the total
+    # attempts and expensive full validations within the existing time limit.
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '22'
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
-      - run: node scripts/refresh-results.cjs
-      - run: python scripts/build.py
-      - name: Save statistical updates
+      - name: Refresh and publish results from the latest public records
+        id: refresh
+        shell: bash
         run: |
-          if [ -n "$(git status --porcelain -- data/editions data/plus-money data/player-availability.json data/published-selection-results.json)" ]; then
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          validations=0
+          for attempt in 1 2 3 4 5 6; do
+            # Recompute against current saved records; never merge generated manifests.
+            git fetch origin main
+            git reset --hard origin/main
+            base=$(git rev-parse HEAD)
+            node scripts/refresh-results.cjs
+            # Stage generated paths so a retry's reset also removes new stale files.
             git add data/editions data/plus-money data/player-availability.json
             if [ -f data/published-selection-results.json ]; then git add data/published-selection-results.json; fi
+            remote_ref=$(git ls-remote --exit-code origin refs/heads/main)
+            remote_base=${remote_ref%%$'\t'*}
+            if [ "$remote_base" != "$base" ]; then
+              echo "Results attempt $attempt already stale before validation; recomputing from latest public main"
+              continue
+            fi
+            validations=$((validations + 1))
+            # Run every build/history/link check on every publishable candidate
+            # without retaining another full immutable archive on this runner.
+            python scripts/build.py --validate-only
+            git add data/editions data/plus-money data/player-availability.json
+            if [ -f data/published-selection-results.json ]; then git add data/published-selection-results.json; fi
+            if git diff --cached --quiet; then exit 0; fi
             git commit -m 'Update published statistical results'
-            git push
-          fi
-      - name: Record the exact final source, including a new result commit
+            if git push origin HEAD:main; then
+              echo "pushed=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            if [ "$validations" -ge 3 ]; then break; fi
+          done
+          echo 'Results push could not catch up with public main within the attempt budget'
+          exit 1
+      - name: Deploy the new results
+        # A push made with GITHUB_TOKEN doesn't trigger pages.yml's `push`; workflow_dispatch does.
+        if: steps.refresh.outputs.pushed != ''
         env:
-          SBOS_RESULT_BASE_SHA: ${{ github.sha }}
-        run: |
-          mkdir -p .release/result
-          python - <<'PY'
-          import json, os, subprocess
-          from pathlib import Path
-          receipt = {
-              'schemaVersion': 'sbos-result-release-1',
-              'repository': 'OpsByRy/stars-ball-on-sundays',
-              'branch': 'main',
-              'baseSHA': os.environ['SBOS_RESULT_BASE_SHA'],
-              'sourceSHA': subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          }
-          Path('.release/result/source.json').write_text(json.dumps(receipt)+'\n')
-          PY
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: sbos-result-release
-          path: .release/result/source.json
-          retention-days: 7
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main

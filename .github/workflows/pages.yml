@@ -22,8 +22,9 @@ jobs:
       source_sha: ${{ steps.seal.outputs.source_sha }}
       manifest_sha: ${{ steps.seal.outputs.manifest_sha }}
     runs-on: ubuntu-latest
-    # Allow full archive validation, both host builds and sealing to finish.
-    timeout-minutes: 40
+    # Allow full archive validation, both host builds and sealing to finish. 40 minutes stopped
+    # being enough as the archive grew (Nov 22: tests 19 + host builds 17 + seal; Nov 21: 37).
+    timeout-minutes: 75
     permissions:
       contents: read
       pages: read

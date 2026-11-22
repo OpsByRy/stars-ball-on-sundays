@@ -2436,6 +2436,66 @@
       "reasonCode": "selection_replaced",
       "notice": "Replaced after the refreshed comparison selected Payton Pritchard < 15.5 PTS at -106 instead. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-22\",\"nba:0022600286\",\"nba:1630202\",\"PTS\",\"<=\",15,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "aaf45f2fe783e251",
+      "recordedAt": "2026-11-22T23:26:59.407428+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600282\",\"nba:1641783\",\"PTS\",\">=\",8,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -292 → -375. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "aaf45f2fe783e251",
+      "recordedAt": "2026-11-22T23:26:59.407428+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600284\",\"nba:1642843\",\"AST\",\">=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -260 → -270. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "02d3c90ca89853b6",
+      "recordedAt": "2026-11-22T23:26:59.407428+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600282\",\"nba:1629027\",\"3PM\",\"<=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -176 → -195. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "02d3c90ca89853b6",
+      "recordedAt": "2026-11-22T23:26:59.407428+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600286\",\"nba:1642954\",\"3PM\",\"<=\",1,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -203 → -214. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "02d3c90ca89853b6",
+      "recordedAt": "2026-11-22T23:26:59.407428+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600286\",\"nba:1641775\",\"PTS\",\"<=\",5,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved DraftKings refresh: Jordan Walsh < 4.5 PTS replaced the previously returned line of 5.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-22",
+      "channel": "daily",
+      "sourceVersion": "02d3c90ca89853b6",
+      "recordedAt": "2026-11-22T23:26:59.407428+00:00",
+      "key": "[\"2026-11-22\",\"nba:0022600286\",\"nba:1641775\",\"REB\",\"<=\",3,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. DraftKings saved price: -124 → -166. The original selection, price and result remain in the record."
     }
   ]
 }

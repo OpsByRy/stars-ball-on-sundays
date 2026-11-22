@@ -19424,6 +19424,22 @@
       "espnEventId": "401910035",
       "espnAthleteId": "4683689",
       "expectedTeam": "BOS"
+    },
+    {
+      "date": "2026-11-22",
+      "eventId": "nba:0022600283",
+      "playerId": "nba:1642350",
+      "espnEventId": "401910032",
+      "espnAthleteId": "4698719",
+      "expectedTeam": "DEN"
+    },
+    {
+      "date": "2026-11-22",
+      "eventId": "nba:0022600284",
+      "playerId": "nba:1643516",
+      "espnEventId": "401910033",
+      "espnAthleteId": "4873153",
+      "expectedTeam": "DAL"
     }
   ]
 }

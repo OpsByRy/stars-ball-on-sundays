@@ -22,8 +22,9 @@ jobs:
       source_sha: ${{ steps.seal.outputs.source_sha }}
       manifest_sha: ${{ steps.seal.outputs.manifest_sha }}
     runs-on: ubuntu-latest
-    # Allow full archive validation, both host builds and sealing to finish.
-    timeout-minutes: 40
+    # Allow full archive validation, both host builds and sealing to finish. Nov 22: the
+    # build reached 40 min during sealing and the board deploy was cancelled; 60 gives margin.
+    timeout-minutes: 60
     permissions:
       contents: read
       pages: read

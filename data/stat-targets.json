@@ -20440,6 +20440,30 @@
       "espnEventId": "401910045",
       "espnAthleteId": "5104157",
       "expectedTeam": "SAS"
+    },
+    {
+      "date": "2026-11-23",
+      "eventId": "nba:0022600292",
+      "playerId": "nba:1629651",
+      "espnEventId": "401910041",
+      "espnAthleteId": "4278067",
+      "expectedTeam": "CHI"
+    },
+    {
+      "date": "2026-11-23",
+      "eventId": "nba:0022600293",
+      "playerId": "nba:1628379",
+      "espnEventId": "401910042",
+      "espnAthleteId": "3913174",
+      "expectedTeam": "PHX"
+    },
+    {
+      "date": "2026-11-23",
+      "eventId": "nba:0022600295",
+      "playerId": "nba:1629004",
+      "espnEventId": "401910044",
+      "espnAthleteId": "3133602",
+      "expectedTeam": "UTA"
     }
   ]
 }

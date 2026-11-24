@@ -2496,6 +2496,47 @@
       "recordKind": "bench",
       "reasonCode": "stressed_value_below_minimum",
       "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. DraftKings saved price: -124 → -166. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-23",
+      "channel": "daily",
+      "sourceVersion": "c2112255a240d418",
+      "recordedAt": "2026-11-24T00:45:20.842322+00:00",
+      "key": "[\"2026-11-23\",\"nba:0022600293\",\"nba:1630692\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. DraftKings saved price: -423 → -464. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-23",
+      "channel": "daily",
+      "sourceVersion": "c2112255a240d418",
+      "recordedAt": "2026-11-24T00:45:20.842322+00:00",
+      "key": "[\"2026-11-23\",\"nba:0022600293\",\"nba:1630180\",\"AST\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "modeled_value_below_minimum",
+      "notice": "Withdrawn after review: the estimated value at the saved sportsbook price fell below our minimum; the value under our more cautious estimate fell below our minimum. FanDuel saved price: -280 → -295. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-23",
+      "channel": "daily",
+      "sourceVersion": "d0cebd70b4efe55e",
+      "recordedAt": "2026-11-24T00:45:20.842322+00:00",
+      "key": "[\"2026-11-23\",\"nba:0022600295\",\"nba:1641718\",\"3PM\",\"<=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "line_changed",
+      "notice": "Line changed in the saved FanDuel refresh: Keyonte George < 1.5 3PM replaced the previously returned line of 2.5. The refresh omitted the original selection; this does not establish that the original contract was unavailable. The original selection, price and result remain in the record."
+    },
+    {
+      "date": "2026-11-23",
+      "channel": "daily",
+      "sourceVersion": "d0cebd70b4efe55e",
+      "recordedAt": "2026-11-24T00:45:20.842322+00:00",
+      "key": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1642264\",\"PTS\",\"<=\",18,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "selection_replaced",
+      "notice": "Replaced after the refreshed comparison selected Stephon Castle < 19.5 PTS at -130 instead. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1642264\",\"PTS\",\"<=\",19,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

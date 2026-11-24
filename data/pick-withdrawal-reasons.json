@@ -2537,6 +2537,50 @@
       "reasonCode": "selection_replaced",
       "notice": "Replaced after the refreshed comparison selected Stephon Castle < 19.5 PTS at -130 instead. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1642264\",\"PTS\",\"<=\",19,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-23",
+      "channel": "daily",
+      "sourceVersion": "e599965b3557e11c",
+      "recordedAt": "2026-11-24T02:10:20.563116+00:00",
+      "key": "[\"2026-11-23\",\"nba:0022600295\",\"nba:1641729\",\"3PM\",\">=\",2,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Brice Sensabaugh >= 1 3PM moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-23\",\"nba:0022600295\",\"nba:1641729\",\"3PM\",\">=\",1,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-23",
+      "channel": "daily",
+      "sourceVersion": "e599965b3557e11c",
+      "recordedAt": "2026-11-24T02:10:20.563116+00:00",
+      "key": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1642264\",\"PTS\",\"<=\",19,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Stephon Castle < 22.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1642264\",\"PTS\",\"<=\",22,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-23",
+      "channel": "daily",
+      "sourceVersion": "e599965b3557e11c",
+      "recordedAt": "2026-11-24T02:10:20.563116+00:00",
+      "key": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1630170\",\"PTS\",\"<=\",13,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Devin Vassell < 16.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1630170\",\"PTS\",\"<=\",16,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-23",
+      "channel": "daily",
+      "sourceVersion": "e599965b3557e11c",
+      "recordedAt": "2026-11-24T02:10:20.563116+00:00",
+      "key": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1630577\",\"PTS\",\"<=\",11,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "bench",
+      "reasonCode": "promoted_from_bench",
+      "notice": "Removed from Bench because Julian Champagnie < 14.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
+      "replacementKey": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1630577\",\"PTS\",\"<=\",14,\"full_game\",\"sportsbook\",null]"
     }
   ]
 }

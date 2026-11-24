@@ -3,6 +3,7 @@
 The manifest digest must come from the trusted build job, not the download.
 """
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 from pathlib import Path
@@ -13,6 +14,7 @@ import stat
 ROOTS = ('dist-cloudflare', 'dist-github')
 MANIFEST = 'artifact-manifest.json'
 SCHEMA = 'sbos-build-artifact-1'
+HASH_THREADS = 4
 
 
 def digest(path):
@@ -26,15 +28,19 @@ def digest(path):
 def inventory(root):
     if root.is_symlink() or not root.is_dir():
         raise ValueError('Artifact root must be a real directory')
-    result = {}
+    files = []
     for path in sorted(root.rglob('*')):
         mode = path.lstat().st_mode
         if stat.S_ISLNK(mode) or not (stat.S_ISREG(mode) or stat.S_ISDIR(mode)):
             raise ValueError('Unsafe artifact entry: ' + str(path))
         if stat.S_ISREG(mode):
-            name = path.relative_to(root).as_posix()
-            result[name] = {'sha256': digest(path), 'bytes': path.stat().st_size}
-    return result
+            files.append(path)
+    # hashlib releases the GIL while hashing, so threads hash several files at once
+    # (16 GB per pass). Every file is still read and hashed in full.
+    with ThreadPoolExecutor(max_workers=HASH_THREADS) as pool:
+        digests = list(pool.map(digest, files))
+    return {path.relative_to(root).as_posix(): {'sha256': sha, 'bytes': path.stat().st_size}
+            for path, sha in zip(files, digests)}
 
 
 def payload(root):
@@ -45,6 +51,16 @@ def payload(root):
             raise ValueError('Missing host index: ' + name)
         result.update({name + '/' + key: value for key, value in files.items()})
     return result
+
+
+def _only_host_roots(files):
+    # What payload(root) == inventory(root) established, without hashing every file again:
+    # nothing outside the two host roots, and each root has its index page. Symlinks and
+    # special files anywhere under the artifact were already refused by inventory().
+    names = set(files)
+    if not all(name.split('/', 1)[0] in ROOTS and '/' in name for name in names):
+        return False
+    return all(root + '/index.html' in names for root in ROOTS)
 
 
 def check_sha(value):
@@ -82,7 +98,7 @@ def verify(root, source_sha, manifest_sha):
     if set(body) != {'schemaVersion', 'sourceSHA', 'files'} or body['schemaVersion'] != SCHEMA or body['sourceSHA'] != source_sha:
         raise ValueError('Artifact provenance mismatch')
     del actual[MANIFEST]
-    if actual != body['files'] or payload(root) != actual:
+    if actual != body['files'] or not _only_host_roots(actual):
         raise ValueError('Artifact file inventory or digest mismatch')
     marker = json.loads((root / 'dist-cloudflare/_sbos-release.json').read_text())
     if marker.get('sourceSHA') != source_sha:

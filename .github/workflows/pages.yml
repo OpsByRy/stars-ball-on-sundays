@@ -17,6 +17,53 @@ concurrency:
   group: sbos-pages
   cancel-in-progress: false
 jobs:
+  # The full Python and Node suites still gate every deployment (cloudflare and handoff need
+  # them), but they run next to the build instead of before it. Nov 22 timings on one runner:
+  # Python tests 15.5 min + Node tests 2.7 min + host build 15.3 min + seal 4 min, in series.
+  python-tests:
+    name: python tests (${{ matrix.shard }}/4)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: true
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+      # Every module `unittest discover -s tests` finds is in exactly one shard.
+      - run: python scripts/shard_tests.py --check --of 4
+      - run: python scripts/shard_tests.py --shard ${{ matrix.shard }} --of 4
+      - run: git diff --exit-code
+  node-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      # Some Node tests call python3 (hosting redirects, edition digests).
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+      - run: node --test tests/*.test.cjs
+      - run: git diff --exit-code
   build:
     outputs:
       source_sha: ${{ steps.seal.outputs.source_sha }}
@@ -24,6 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     # Allow full archive validation, both host builds and sealing to finish. 40 minutes stopped
     # being enough as the archive grew (Nov 22: tests 19 + host builds 17 + seal; Nov 21: 37).
+    # The test suites now run in their own jobs; the margin stays for archive growth.
     timeout-minutes: 75
     permissions:
       contents: read
@@ -41,8 +89,6 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '22'
-      - run: python -m unittest discover -s tests
-      - run: node --test tests/*.test.cjs
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - run: git diff --exit-code
       - run: python scripts/build_hosts.py --publish
@@ -68,15 +114,19 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   cloudflare:
-    needs: build
+    needs: [build, python-tests, node-tests]
     if: vars.SBOS_ARTIFACT_DEPLOY == 'enabled' || inputs.preview_artifact == true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      # Only scripts and root files (hosting-policy.json) are used here; the deployed bytes come
+      # from the sealed artifact. Skipping the 10 GB archive checkout saves ~2.5 min per job.
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ needs.build.outputs.source_sha }}
           persist-credentials: false
+          filter: blob:none
+          sparse-checkout: scripts
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
@@ -142,18 +192,22 @@ jobs:
           PREVIEW_URL: ${{ steps.upload.outputs.deployment-url }}
         run: python scripts/verify_cloudflare_release.py --origin "$PREVIEW_URL" --artifact .release/sealed/dist-cloudflare --attempts 6
   handoff:
-    needs: [build, cloudflare]
-    if: always() && needs.build.result == 'success' && inputs.preview_artifact != true && (needs.cloudflare.result == 'success' || (vars.SBOS_ARTIFACT_DEPLOY != 'enabled' && needs.cloudflare.result == 'skipped'))
+    needs: [build, python-tests, node-tests, cloudflare]
+    if: always() && needs.build.result == 'success' && needs.python-tests.result == 'success' && needs.node-tests.result == 'success' && inputs.preview_artifact != true && (needs.cloudflare.result == 'success' || (vars.SBOS_ARTIFACT_DEPLOY != 'enabled' && needs.cloudflare.result == 'skipped'))
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
       pages: read
     steps:
+      # Only scripts and root files (hosting-policy.json) are used here; the deployed bytes come
+      # from the sealed artifact. Skipping the 10 GB archive checkout saves ~2.5 min per job.
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ needs.build.outputs.source_sha }}
           persist-credentials: false
+          filter: blob:none
+          sparse-checkout: scripts
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'

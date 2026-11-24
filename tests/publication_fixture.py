@@ -1,4 +1,5 @@
 """One source-only test fixture, restored between mutation cases."""
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
 import hashlib
@@ -13,10 +14,19 @@ ROOT_OUTPUTS = {'.git', '.release', '.local-data', 'dist', 'dist-cloudflare',
                 'dist-github', 'hosting-build-receipt.json', '.env'}
 
 
+def _digest(p):
+    digest = hashlib.sha256()
+    with p.open('rb') as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def _tree(root):
     result = {}
-    for directory, dirs, files in os.walk(root, followlinks=False):
-        for name in dirs + files:
+    files = []
+    for directory, dirs, names in os.walk(root, followlinks=False):
+        for name in dirs + names:
             p = Path(directory) / name
             rel = p.relative_to(root)
             mode = stat.S_IMODE(p.lstat().st_mode)
@@ -25,11 +35,12 @@ def _tree(root):
             elif p.is_dir():
                 result[rel] = ('directory', mode)
             else:
-                digest = hashlib.sha256()
-                with p.open('rb') as stream:
-                    for block in iter(lambda: stream.read(1024 * 1024), b''):
-                        digest.update(block)
-                result[rel] = ('file', digest.hexdigest(), mode)
+                result[rel] = None
+                files.append((rel, p, mode))
+    # The fixture is the full ~10 GB archive; hash its files on several threads.
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        for (rel, _, mode), sha in zip(files, pool.map(_digest, [p for _, p, _ in files])):
+            result[rel] = ('file', sha, mode)
     return result
 
 

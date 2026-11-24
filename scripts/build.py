@@ -20,7 +20,7 @@ from profile_schema import validate_profile,validate_profile_index
 from career_schema import validate_career_history,validate_career_index,validate_defender_games,validate_defender_index
 from matchup_schema import validate_matchups
 from availability_schema import validate_availability
-from edition_validation import read_edition
+from edition_validation import prevalidate, read_edition
 ROOT_ICONS={'favicon.ico','apple-touch-icon.png'}
 
 class Links(HTMLParser):
@@ -53,6 +53,9 @@ def preserve_personal_slips(body,state):
 def publication_files(root, source_hashes=None):
     index=json.loads(safe_file(root,'data/editions/manifest.json').read_text());validate_manifest(index)
     files=['data/editions/manifest.json','data/stat-targets.json'];published=set();personal_state={}
+    # Same full checks, spread over the runner's cores; the serial loop below re-reads and
+    # re-hashes every file and reuses a result only for byte-identical content.
+    prevalidate(root,['data/editions/'+entry['path'] for entry in index['editions']],safe_file=safe_file,validate=validate_edition,canonical=canonical)
     for entry in index['editions']:
         name='data/editions/'+entry['path']
         checked=read_edition(root,name,safe_file=safe_file,validate=validate_edition,canonical=canonical)
@@ -211,6 +214,8 @@ def availability_files(root):
 def personal_price_view(root):
     """First saved quote for each exact posted personal slip, independent of later odds views."""
     manifest=json.loads((root/'data/editions/manifest.json').read_text());saved={}
+    # Warm cache after publication_files (the build): workers only re-hash. Cold (a caller on its own): full parallel checks.
+    prevalidate(root,['data/editions/'+entry['path'] for entry in manifest['editions']],safe_file=safe_file,validate=validate_edition,canonical=canonical)
     for entry in sorted(manifest['editions'],key=lambda e:e['updatedAt']):
         checked=read_edition(root,'data/editions/'+entry['path'],safe_file=safe_file,validate=validate_edition,canonical=canonical)
         body=checked.personal_body()

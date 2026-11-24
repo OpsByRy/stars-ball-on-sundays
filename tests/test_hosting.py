@@ -151,4 +151,43 @@ class PublicHosting(unittest.TestCase):
         with self.assertRaises(ValueError):verify_cloudflare_release.verify(receipt,'e'*40,bodies.__getitem__)
 
 
+class FormattingCompaction(unittest.TestCase):
+    """The fast compaction must equal the original byte scanner on every input."""
+
+    def test_matches_the_original_scanner_on_tricky_and_random_bytes(self):
+        import random
+        cases=[b'',b'"',b'"\\',b'"a\\"  b',b'" \t\r\n "  \n',b'{"a\\\\": [1, 2 ,\t3]}',
+               b'"unterminated  string\\',b'\xef\xbb\xbf{ "x" : "\xe2\x80\x9c q \xe2\x80\x9d" }',
+               b'[ "\\\\" , "\\"" ]',b'  {"k":"v"}  \r\n']
+        rng=random.Random(20261123);alphabet=b' \t\r\n"\\ax{}[]:,0\xe2\x80\x9c'
+        cases+=[bytes(rng.choice(alphabet) for _ in range(rng.randint(0,48))) for _ in range(20000)]
+        for raw in cases:
+            self.assertEqual(build_hosts._strip_formatting(raw),build_hosts._strip_formatting_reference(raw),raw)
+
+    def test_still_rejects_invalid_json_before_compacting(self):
+        for raw in (b'{"a": 1',b'{"a": "x\ny"}',b'not json'):
+            with self.assertRaises(ValueError):build_hosts.json_tokens(raw)
+
+
+    def test_parallel_compaction_equals_the_serial_call(self):
+        limit=build_hosts.PAGES_MAX_BYTES
+        with tempfile.TemporaryDirectory() as d:
+            base=Path(d);(base/'data').mkdir()
+            rows=b',\n  '.join(b'{ "id" : %d, "note" : "keep  these  spaces" }'%i for i in range(limit//40))
+            bodies={'data/a.json':b'[\n  '+rows+b'\n]','data/b.json':b'[\n    '+rows+b'\n]',
+                    'data/c.json':b'{"x":"'+b'y'*(limit+1)+b'"}',  # still too large after compaction
+                    'data/d.json':b'[ '+rows+b' '}  # invalid JSON
+            for name,body in bodies.items():(base/name).write_bytes(body)
+            files=[base/name for name in sorted(bodies)]
+            results=build_hosts._precompact(base,files)
+            self.assertEqual(sorted(results),sorted(bodies))
+            for name,body in bodies.items():
+                digest,compact,error=results[name]
+                self.assertEqual(digest,hashlib.sha256(body).digest())
+                try:expected,expected_error=build_hosts.pages_asset(name,body),None
+                except ValueError as e:expected,expected_error=None,str(e)
+                self.assertEqual((compact,error),(expected,expected_error),name)
+            self.assertEqual(build_hosts._precompact(base,files[:3]),{})  # too few to start processes
+
+
 if __name__=='__main__':unittest.main()

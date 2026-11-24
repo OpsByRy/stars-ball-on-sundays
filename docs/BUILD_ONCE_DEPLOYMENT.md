@@ -1,7 +1,9 @@
 # Build once, deploy the validated artifact
 
-`Publish SBOS` runs the Python and Node suites, then runs
-`python scripts/build_hosts.py --publish` once. It seals both host outputs with
+`Publish SBOS` runs the Python suite (four parallel shards, `scripts/shard_tests.py`)
+and the Node suite as separate jobs alongside one
+`python scripts/build_hosts.py --publish` build. Neither deployment job starts unless
+every test job and the build pass. The build seals both host outputs with
 an exact path/size/SHA256 inventory. This includes hidden files, `_headers`,
 `_sbos-release.json`, all immutable history, and the GitHub handoff pages.
 The build job exports the manifest digest and exact resolved source SHA through
@@ -82,6 +84,12 @@ manifest digest; do not derive trust from a replacement artifact's own manifest.
 python scripts/release_artifact.py seal --source . --output /tmp/release-artifact --source-sha FULL_COMMIT_SHA
 python scripts/release_artifact.py verify --artifact /tmp/release-artifact --source-sha FULL_COMMIT_SHA --manifest-sha RECORDED_MANIFEST_SHA256
 ```
+
+Archive validation, oversized-JSON compaction and artifact hashing use the
+runner's cores (worker processes and threads within the same job). They run
+the same checks on every file; results are reused only for byte-identical
+content (SHA-256), and nothing is cached across runs. Set
+`SBOS_VALIDATION_WORKERS=1` to validate editions in one process.
 
 Sealing refuses an existing destination. Verification rejects extra, missing,
 changed, symlinked, and special files. Hashes provide integrity and source

@@ -4,13 +4,17 @@ GitHub stays a full site until policy explicitly activates the browser handoff.
 No engine checkout, network data source, credential or deployment API is used.
 """
 import argparse
+from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
+from concurrent.futures.process import BrokenProcessPool
 import hashlib
 import html
 import json
+import multiprocessing
 from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 from datetime import datetime,timezone,timedelta
 import build
 from pending_additions import verify_pending_additions
@@ -25,9 +29,18 @@ PAGES_MAX_BYTES = 25*1024*1024
 IMMUTABLE_EDITION = re.compile(r'data/editions/(?:daily|sunday)/\d{4}-\d{2}-\d{2}/[0-9a-f]{16}\.json')
 
 
-def json_tokens(raw):
-    """Remove formatting only, preserving every string and number token byte."""
-    json.loads(raw)  # Reject invalid JSON before scanning its lexical form.
+# From an opening quote to its unescaped closing quote (any byte may follow a backslash),
+# or to the end of the input; otherwise a run of formatting whitespace. Strings are always
+# consumed whole from where they start, so whitespace inside them is never touched.
+_JSON_STRING_OR_SPACE=re.compile(rb'("[^"\\]*(?:\\.[^"\\]*)*(?:"|\\?\Z))|[ \t\r\n]+',re.DOTALL)
+
+
+def _strip_formatting(raw):
+    return _JSON_STRING_OR_SPACE.sub(rb'\1',raw)  # an unmatched group (whitespace) becomes b''
+
+
+def _strip_formatting_reference(raw):
+    """The original byte-by-byte scanner; tests require _strip_formatting to match it exactly."""
     out=bytearray();quoted=False;escaped=False
     for char in raw:
         if quoted:
@@ -40,12 +53,25 @@ def json_tokens(raw):
     return bytes(out)
 
 
+def json_tokens(raw):
+    """Remove formatting only, preserving every string and number token byte.
+
+    The regex engine does what the original Python loop did over every byte; ~110
+    oversized editions are ~3 billion bytes, which was most of the host build's time.
+    """
+    json.loads(raw)  # Reject invalid JSON before scanning its lexical form.
+    return _strip_formatting(raw)
+
+
 def pages_asset(name,raw,limit=PAGES_MAX_BYTES):
     if len(raw)<=limit:return raw
     if name.startswith('data/') and name.endswith('.json'):
         compact=json_tokens(raw)
         if len(compact)<=limit:return compact
     raise ValueError('Pages file exceeds 25 MiB: '+name)
+
+
+_PAGES_ASSET,_PAGES_MAX_BYTES=pages_asset,PAGES_MAX_BYTES
 
 
 def publication_window(root,now=None):
@@ -128,18 +154,48 @@ return Object.freeze({destination,routes});});
 '''.replace('ROUTES',json.dumps(routes,sort_keys=True))
 
 
+def _compact_task(task):
+    baseline,name=task
+    raw=(baseline/name).read_bytes()
+    try:return hashlib.sha256(raw).digest(),pages_asset(name,raw),None
+    except ValueError as error:return hashlib.sha256(raw).digest(),None,str(error)
+
+
+def _precompact(baseline,files):
+    """Run pages_asset for the oversized files in parallel processes (each is independent).
+
+    assemble still reads every file itself and uses a result only when the worker saw the
+    same bytes (SHA-256); a worker's ValueError is re-raised there exactly where the serial
+    call would have raised it. Skipped for a handful of files, or when tests replace
+    pages_asset/PAGES_MAX_BYTES (worker processes would not see the replacement).
+    """
+    if len(files)<4 or pages_asset is not _PAGES_ASSET or PAGES_MAX_BYTES!=_PAGES_MAX_BYTES:return {}
+    names=[f.relative_to(baseline).as_posix() for f in files]
+    try:
+        with ProcessPoolExecutor(max_workers=4,mp_context=multiprocessing.get_context('spawn')) as pool:
+            return dict(zip(names,pool.map(_compact_task,[(baseline,name) for name in names])))
+    except (BrokenProcessPool,OSError) as error:
+        print(f'Parallel compaction unavailable ({error}); continuing serially.',file=sys.stderr);return {}
+
+
 def assemble(baseline,cf,github,policy,source_sha):
     validate_policy(policy)
     if not re.fullmatch('[0-9a-f]{40}',source_sha):raise ValueError('Invalid source SHA')
     files=sorted(p for p in baseline.rglob('*') if p.is_file())
     if not files or not (baseline/'index.html').is_file():raise ValueError('Missing validated baseline')
     compacted={};compaction_receipts={};encoded_receipts={}
+    precompacted=_precompact(baseline,[f for f in files if not f.is_symlink() and f.stat().st_size>PAGES_MAX_BYTES
+                                       and not PRIVATE_PATH.search(f.relative_to(baseline).as_posix())])
     for file in files:
         name=file.relative_to(baseline).as_posix()
         if file.is_symlink() or PRIVATE_PATH.search(name):raise ValueError('Private/unsafe artifact path: '+name)
         if file.stat().st_size>PAGES_MAX_BYTES:
             raw=file.read_bytes()
-            try:compact=pages_asset(name,raw)
+            try:
+                done=precompacted.get(name)
+                if done is None or done[0]!=hashlib.sha256(raw).digest():compact=pages_asset(name,raw)
+                elif done[2] is not None:raise ValueError(done[2])
+                else:compact=done[1]
             except ValueError:
                 if not IMMUTABLE_EDITION.fullmatch(name):raise
                 if not (baseline/'assets/json-transport.js').is_file():raise ValueError('JSON transport reader is missing')
@@ -178,16 +234,18 @@ def assemble(baseline,cf,github,policy,source_sha):
     if policy['githubMode']=='redirect':
         (github/'migration-redirect.js').write_text(redirect_script(routes))
         (github/'404.html').write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found · SBOS</title><meta name="robots" content="noindex"><script defer src="/stars-ball-on-sundays/migration-redirect.js"></script></head><body><main><h1>Page not found</h1><p>SBOS has moved to <a id="new-site" href="https://starsballonsundays.com/">starsballonsundays.com</a>.</p></main></body></html>\n')
-    checks={}
-    for file in files:
-        name=file.relative_to(baseline).as_posix()
+    def check(file):
+        name=file.relative_to(baseline).as_posix();deployed=sha256(cf/name)
         if file.suffix!='.html':
             original=hashlib.sha256(compacted[name]).hexdigest() if name in compacted else sha256(file)
-            if sha256(cf/name)!=original or sha256(github/name)!=original:raise ValueError('Public data/assets changed: '+name)
+            if deployed!=original or sha256(github/name)!=original:raise ValueError('Public data/assets changed: '+name)
             if '/'+name in encoded_receipts:
                 for host in [cf,github]:
                     if json_transport.decode((host/name).read_bytes())!=file.read_bytes():raise ValueError('JSON source reconstruction differs: '+name)
-        checks['/'+name]=sha256(cf/name)
+        return '/'+name,deployed
+    # Same checks for every file; threads overlap the hashing (hashlib and zlib release the GIL).
+    # map() returns in file order and raises the first failing file's error, as the loop did.
+    with ThreadPoolExecutor(max_workers=4) as pool:checks=dict(pool.map(check,files))
     receipt={'schemaVersion':'sbos-public-release-1','sourceSHA':source_sha,'canonicalOrigin':ORIGIN,
              'githubMode':policy['githubMode'],'editionManifestSHA256':sha256(baseline/'data/editions/manifest.json'),
              'files':checks}

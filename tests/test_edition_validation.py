@@ -200,3 +200,83 @@ class CachedPublicationRelationships(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ParallelPrevalidation(unittest.TestCase):
+    """Worker processes run the same full check; the serial read still decides."""
+
+    def setUp(self):
+        cache.clear_cache()
+        self.addCleanup(cache.clear_cache)
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.names = []
+        for line in (10, 11, 12):
+            body = {'schemaVersion': 'public-1', 'channel': 'daily', 'date': '2026-11-22',
+                    'timezone': 'America/New_York', 'props': [
+                        {'id': f'research-{line}', 'date': '2026-11-22', 'player': 'Example Player',
+                         'playerId': 'nba:1', 'eventId': 'nba:1', 'market': 'PTS',
+                         'operator': '>=', 'line': line, 'group': 'research'}]}
+            body['version'] = hashlib.sha256(build.canonical(body)).hexdigest()[:16]
+            name = f'edition-{line}.json'
+            (self.root / name).write_bytes(build.canonical(body))
+            self.names.append(name)
+
+    def prevalidate(self, **kwargs):
+        return cache.prevalidate(self.root, self.names, safe_file=build.safe_file,
+                                 validate=public_schema.validate_edition, canonical=build.canonical,
+                                 workers=kwargs.get('workers', 2))
+
+    def read(self, name):
+        return cache.read_edition(self.root, name, safe_file=build.safe_file,
+                                  validate=public_schema.validate_edition, canonical=build.canonical)
+
+    def test_parallel_results_equal_serial_results_and_are_reused(self):
+        self.assertEqual(self.prevalidate(), 3)
+        self.assertEqual(len(cache._checked), 3)
+        with patch.object(cache.json, 'loads', side_effect=AssertionError('reparsed')):
+            parallel = [self.read(name) for name in self.names]
+        cache.clear_cache()
+        self.assertEqual(parallel, [self.read(name) for name in self.names])
+
+    def test_worker_failures_are_not_cached_and_the_serial_read_raises(self):
+        p = self.root / self.names[1]
+        p.write_bytes(p.read_bytes().replace(b'"line":11', b'"line":13'))
+        self.assertEqual(self.prevalidate(), 2)
+        with self.assertRaisesRegex(ValueError, 'digest'):
+            self.read(self.names[1])
+
+    def test_bytes_changed_after_prevalidation_are_checked_again(self):
+        self.prevalidate()
+        p = self.root / self.names[0]; stat = p.stat()
+        p.write_bytes(p.read_bytes().replace(b'"line":10', b'"line":19'))
+        os.utime(p, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        with self.assertRaisesRegex(ValueError, 'digest'):
+            self.read(self.names[0])
+
+    def test_unpicklable_checks_and_small_archives_stay_serial(self):
+        self.assertEqual(cache.prevalidate(self.root, self.names, safe_file=build.safe_file,
+                                           validate=Mock(wraps=public_schema.validate_edition),
+                                           canonical=build.canonical, workers=2), 0)
+        self.assertEqual(self.prevalidate(workers=None), 0)  # below MIN_PARALLEL
+        self.assertEqual(self.prevalidate(workers=1), 0)
+        self.assertEqual(len(cache._checked), 0)
+
+    def test_worker_setting_must_be_a_positive_integer(self):
+        for value in ('0', '-1', 'four', ''):
+            with self.subTest(value=value), patch.dict(os.environ, {'SBOS_VALIDATION_WORKERS': value}):
+                with self.assertRaises(ValueError):
+                    cache.worker_count()
+        with patch.dict(os.environ, {'SBOS_VALIDATION_WORKERS': '3'}):
+            self.assertEqual(cache.worker_count(), 3)
+
+    def test_already_validated_bytes_are_only_hashed_by_workers(self):
+        self.read(self.names[0])
+        self.assertEqual(self.prevalidate(), 2)
+        p = self.root / self.names[0]
+        p.write_bytes(p.read_bytes().replace(b'"line":10', b'"line":18'))
+        # The other two are now known (only hashed); the changed bytes are not, fail, and are not cached.
+        self.assertEqual(self.prevalidate(), 0)
+        with self.assertRaisesRegex(ValueError, 'digest'):
+            self.read(self.names[0])

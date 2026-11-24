@@ -63,6 +63,27 @@ class ArtifactTests(unittest.TestCase):
         with self.assertRaises(ValueError): self.seal()
         with self.assertRaises(ValueError): artifact.seal(self.source, self.root/'other', 'b'*40)
 
+    def test_files_outside_the_two_host_roots_are_rejected(self):
+        good = {'dist-cloudflare/index.html': 1, 'dist-github/index.html': 1, 'dist-github/a/b.json': 1}
+        self.assertTrue(artifact._only_host_roots(good))
+        for extra in ({'extra.txt': 1}, {'dist-cloudflare': 1}, {'dist-other/index.html': 1}):
+            with self.subTest(extra=extra):
+                self.assertFalse(artifact._only_host_roots({**good, **extra}))
+        self.assertFalse(artifact._only_host_roots({'dist-cloudflare/index.html': 1, 'dist-github/other.html': 1}))
+        digest = self.seal()
+        (self.output / 'stray.txt').write_text('outside the hosts')
+        with self.assertRaises(ValueError): artifact.verify(self.output, self.sha, digest)
+
+    def test_threaded_inventory_matches_a_serial_inventory(self):
+        for i in range(40):
+            (self.source / f'dist-github/file-{i}.json').write_bytes(bytes([i]) * (i * 997))
+        serial = {}
+        for path in sorted((self.source / 'dist-github').rglob('*')):
+            if path.is_file():
+                serial[path.relative_to(self.source / 'dist-github').as_posix()] = {
+                    'sha256': artifact.digest(path), 'bytes': path.stat().st_size}
+        self.assertEqual(artifact.inventory(self.source / 'dist-github'), serial)
+
     def test_comparison_rejects_changed_outputs(self):
         self.seal()
         (self.output / 'dist-github/index.html').write_text('changed')

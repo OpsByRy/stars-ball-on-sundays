@@ -5813,6 +5813,24 @@
       "count": 0,
       "researchCount": 3404,
       "updatedAt": "2026-11-25T05:39:17.061Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "86984f201ff1d7cf",
+      "path": "daily/2026-11-25/86984f201ff1d7cf.json",
+      "count": 0,
+      "researchCount": 9750,
+      "updatedAt": "2026-11-25T17:07:39.368694+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "2de4b36a9b64cadd",
+      "path": "daily/2026-11-25/2de4b36a9b64cadd.json",
+      "count": 0,
+      "researchCount": 9750,
+      "updatedAt": "2026-11-25T17:12:59.057461+00:00"
     }
   ],
   "schemaVersion": "public-1"

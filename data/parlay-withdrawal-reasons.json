@@ -48,6 +48,38 @@
       "recordedAt": "2026-11-22T22:43:15.510106+00:00",
       "reasonCode": "leg_no_longer_selected",
       "notice": "Withdrawn because the refreshed Daily Board no longer selected the original line for Davion Mitchell. The original picks and result remain tracked."
+    },
+    {
+      "date": "2026-11-25",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-25\\\",\\\"nba:0022600057\\\",\\\"nba:1642878\\\",\\\"PTS\\\",\\\">=\\\",7,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-25\\\",\\\"nba:0022600058\\\",\\\"nba:1630183\\\",\\\"AST\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-25\\\",\\\"nba:0022600062\\\",\\\"nba:203110\\\",\\\"PTS\\\",\\\"<=\\\",6,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "d16d2ddfbd32a397",
+      "recordedAt": "2026-11-25T20:14:11.654057+00:00",
+      "reasonCode": "leg_no_longer_selected",
+      "notice": "Withdrawn because the refreshed Daily Board no longer selected the original line for Draymond Green. The original picks and result remain tracked."
+    },
+    {
+      "date": "2026-11-25",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-25\\\",\\\"nba:0022600057\\\",\\\"nba:1628969\\\",\\\"PTS\\\",\\\"<=\\\",11,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-25\\\",\\\"nba:0022600060\\\",\\\"nba:1626167\\\",\\\"AST\\\",\\\">=\\\",2,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-25\\\",\\\"nba:0022600062\\\",\\\"nba:203110\\\",\\\"PTS\\\",\\\"<=\\\",6,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "d16d2ddfbd32a397",
+      "recordedAt": "2026-11-25T20:14:11.654057+00:00",
+      "reasonCode": "leg_no_longer_selected",
+      "notice": "Withdrawn because the refreshed Daily Board no longer selected the original line for Draymond Green, Mikal Bridges. The original picks and result remain tracked."
+    },
+    {
+      "date": "2026-11-25",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-25\\\",\\\"nba:0022600055\\\",\\\"nba:1642845\\\",\\\"AST\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-25\\\",\\\"nba:0022600058\\\",\\\"nba:1630183\\\",\\\"AST\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "d16d2ddfbd32a397",
+      "recordedAt": "2026-11-25T20:14:11.654057+00:00",
+      "reasonCode": "estimated_price_below_minimum",
+      "notice": "Withdrawn after saved leg prices moved: the estimated combined price fell below our −110 minimum. The original picks and result remain tracked."
+    },
+    {
+      "date": "2026-11-25",
+      "key": "[\"cross_game_reference\",[\"[\\\"2026-11-25\\\",\\\"nba:0022600055\\\",\\\"nba:202691\\\",\\\"PTS\\\",\\\">=\\\",12,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-25\\\",\\\"nba:0022600057\\\",\\\"nba:1628969\\\",\\\"PTS\\\",\\\"<=\\\",11,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-25\\\",\\\"nba:0022600060\\\",\\\"nba:1630549\\\",\\\"AST\\\",\\\">=\\\",3,\\\"full_game\\\",\\\"sportsbook\\\",null]\",\"[\\\"2026-11-25\\\",\\\"nba:0022600061\\\",\\\"nba:1628970\\\",\\\"AST\\\",\\\">=\\\",2,\\\"full_game\\\",\\\"sportsbook\\\",null]\"]]",
+      "sourceVersion": "d16d2ddfbd32a397",
+      "recordedAt": "2026-11-25T20:14:11.654057+00:00",
+      "reasonCode": "leg_no_longer_selected",
+      "notice": "Withdrawn because the refreshed Daily Board no longer selected the original line for Mikal Bridges. The original picks and result remain tracked."
     }
   ]
 }

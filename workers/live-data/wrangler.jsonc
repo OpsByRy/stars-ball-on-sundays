@@ -1,6 +1,7 @@
 // Deploy: npx wrangler@4 deploy -c workers/live-data/wrangler.jsonc
 // No public route: only the site server (sbos-private-redesign) reaches it, through its
-// PUBLISHED_DATA service binding. LIVE_LAYER "off" makes it a plain pass-through to Pages.
+// PUBLISHED_DATA service binding. LIVE_LAYER "on" (live since Nov 24, 2026) serves the R2 layer;
+// "off" makes it a plain pass-through to Pages (the kill switch, docs/LIVE_DATA_LANE.md).
 {
   "name": "sbos-live-data",
   "main": "worker.mjs",
@@ -9,6 +10,6 @@
   "preview_urls": false,
   "account_id": "fbdf495767bb144edfcbb7f1609e2629",
   "r2_buckets": [{ "binding": "LIVE_DATA", "bucket_name": "sbos-public-data" }],
-  "vars": { "LIVE_LAYER": "off" },
+  "vars": { "LIVE_LAYER": "on" },
   "observability": { "enabled": true }
 }

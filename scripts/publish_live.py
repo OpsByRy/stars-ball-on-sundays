@@ -17,6 +17,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import time
@@ -74,19 +75,44 @@ def ancestor(repo, older, newer):
     return subprocess.run(['git', '-C', str(repo), 'merge-base', '--is-ancestor', older, newer]).returncode == 0
 
 
-def fetch_hash(path):
+LOCKDOWN_IMAGE_URL = re.compile(r'^https?://(?:[a-z0-9-]+\.)*(?:espncdn\.com|cdn\.nba\.com)/', re.I)
+
+
+def lockdown_scrub(value):
+    """The site's image lockdown (sites/sbos-redesign/brand/apply-image-lockdown.mjs, lockdownScrub):
+    drops every ESPN / NBA CDN image URL string from objects before /data/player-portraits.json leaves."""
+    if isinstance(value, list):
+        return [lockdown_scrub(v) for v in value]
+    if isinstance(value, dict):
+        return {k: lockdown_scrub(v) for k, v in value.items() if not (isinstance(v, str) and LOCKDOWN_IMAGE_URL.match(v))}
+    return value
+
+
+# Files the site deliberately rewrites after reading them from this lane: compare parsed content
+# with the same rewrite applied, not bytes. Every other file must be byte-identical.
+SITE_TRANSFORMS = {'/data/player-portraits.json': lockdown_scrub}
+
+
+def fetch(path):
     request = urllib.request.Request(SITE + path, headers=HEADERS)
     with urllib.request.urlopen(request, timeout=60) as response:
-        return hashlib.sha256(response.read()).hexdigest()
+        return response.read()
 
 
-def verify(descriptor, attempts=12, wait=10):
+def served_as_built(path, entry, served, folder):
+    if path in SITE_TRANSFORMS:
+        built = (Path(folder) / 'blobs' / entry['sha256']).read_bytes()
+        return json.loads(served) == SITE_TRANSFORMS[path](json.loads(built))
+    return hashlib.sha256(served).hexdigest() == entry.get('servedSHA256', entry['sha256'])
+
+
+def verify(descriptor, folder, attempts=12, wait=10, fetch=fetch):
     """Every layer file through the real site; the Worker refreshes its pointer within seconds."""
     pending = dict(descriptor['files'])
     for _ in range(attempts):
         for path, entry in list(pending.items()):
             try:
-                if fetch_hash(path) == entry.get('servedSHA256', entry['sha256']):
+                if served_as_built(path, entry, fetch(path), folder):
                     del pending[path]
             except Exception:
                 pass
@@ -126,7 +152,7 @@ def main(argv=None):
              'layerId': descriptor['layerId'] if descriptor['files'] else None, 'sourceSHA': descriptor['sourceSHA'],
              'baseSourceSHA': descriptor['baseSourceSHA'], 'activatedAt': datetime.now(timezone.utc).isoformat()}
     swap_pointer(s3, args.bucket, value, etag)
-    failed = verify(descriptor) if descriptor['files'] else []
+    failed = verify(descriptor, folder) if descriptor['files'] else []
     if failed:
         _, newer = read_pointer(s3, args.bucket)
         restore = {**(current or {'schemaVersion': 'sbos-live-pointer-1', 'layerId': None, 'sourceSHA': descriptor['baseSourceSHA'],

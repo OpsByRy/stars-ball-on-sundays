@@ -316,7 +316,12 @@ def build_layer(root, receipt, *, origin=BASE_ORIGIN, now=None, base_files=None)
         views.update(build.portrait_view(root))
 
     # 4. Everything that differs from the base deploy.
-    candidates = {n: safe_file(root, n).read_bytes() for n in sorted(changed - MARKERS)}
+    # A changed existing file the base deploy doesn't serve is a build input only (e.g.
+    # data/pick-withdrawal-reasons.json feeds the published views); the full build never deploys it.
+    inputs_only = sorted(n for n in changed - MARKERS if n in modified and '/' + n not in receipt['files'])
+    if inputs_only:
+        checks.append('build inputs not deployed by the full build, left out: ' + ', '.join(inputs_only))
+    candidates = {n: safe_file(root, n).read_bytes() for n in sorted(changed - MARKERS - set(inputs_only))}
     for name, view in views.items():
         if name in candidates:
             raise ValueError('A derived view would overwrite a source file: ' + name)

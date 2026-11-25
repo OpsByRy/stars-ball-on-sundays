@@ -7,6 +7,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 import build_live  # noqa: E402
+import publish_live  # noqa: E402
 
 
 def git(root, *args):
@@ -110,6 +111,30 @@ class Prove(unittest.TestCase):
         layer = {'files': {'/a': {'sha256': '9'}}}
         proof = build_live.prove(layer, {}, base, head)
         self.assertEqual((proof['missingFromLayer'], proof['differentFromFullBuild'], proof['identical']), (['/c'], ['/a'], False))
+
+
+class SiteTransforms(unittest.TestCase):
+    def test_portraits_are_compared_after_the_sites_image_lockdown(self):
+        built = {'schemaVersion': 'public-player-portraits-1', 'players': [
+            {'id': 'nba:1', 'headshot': 'https://a.espncdn.com/i/headshots/nba/players/full/1.png', 'name': 'A'},
+            {'id': 'nba:2', 'logo': 'https://cdn.nba.com/logos/nba/1/primary/L/logo.svg', 'keep': 'https://example.com/x.png'}]}
+        served = {'schemaVersion': 'public-player-portraits-1', 'players': [{'id': 'nba:1', 'name': 'A'},
+                                                                            {'id': 'nba:2', 'keep': 'https://example.com/x.png'}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            raw = json.dumps(built).encode()
+            entry = {'sha256': build_live.hashlib.sha256(raw).hexdigest()}
+            (Path(tmp) / 'blobs').mkdir()
+            (Path(tmp) / 'blobs' / entry['sha256']).write_bytes(raw)
+            path = '/data/player-portraits.json'
+            self.assertTrue(publish_live.served_as_built(path, entry, json.dumps(served).encode(), tmp))
+            self.assertFalse(publish_live.served_as_built(path, entry, raw, tmp))
+            served['players'][0]['name'] = 'B'
+            self.assertFalse(publish_live.served_as_built(path, entry, json.dumps(served).encode(), tmp))
+
+    def test_other_files_must_be_byte_identical(self):
+        entry = {'sha256': build_live.hashlib.sha256(b'{"a":1}').hexdigest()}
+        self.assertTrue(publish_live.served_as_built('/data/x.json', entry, b'{"a":1}', '/nonexistent'))
+        self.assertFalse(publish_live.served_as_built('/data/x.json', entry, b'{"a": 1}', '/nonexistent'))
 
 
 if __name__ == '__main__':

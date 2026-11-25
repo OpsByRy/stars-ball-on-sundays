@@ -80,3 +80,9 @@ jobs:
           test -n "$R2_ACCESS_KEY_ID" && test -n "$R2_SECRET_ACCESS_KEY"
           python -m pip install --quiet 'boto3==1.38.46'
           if [ "$MODE" = on ]; then python scripts/publish_live.py .live; else python scripts/publish_live.py .live --shadow; fi
+      # A layer that didn't serve as built was rolled back by publish_live.py; publish it the old way.
+      - name: Not served as built — start the full build
+        if: failure() && steps.build.outputs.code == '0' && vars.SBOS_LIVE_LANE == 'on'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main

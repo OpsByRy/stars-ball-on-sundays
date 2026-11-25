@@ -137,5 +137,29 @@ class SiteTransforms(unittest.TestCase):
         self.assertFalse(publish_live.served_as_built('/data/x.json', entry, b'{"a": 1}', '/nonexistent'))
 
 
+class FavoriteOverlay(unittest.TestCase):
+    def check(self, path, built, served, envelope=False):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw = json.dumps(built, indent=2).encode()
+            data = publish_live.json_transport.encode(raw) if envelope else raw
+            entry = {'sha256': build_live.hashlib.sha256(data).hexdigest()}
+            if envelope:
+                entry['servedSHA256'] = build_live.hashlib.sha256(raw).hexdigest()
+            (Path(tmp) / 'blobs').mkdir()
+            (Path(tmp) / 'blobs' / entry['sha256']).write_bytes(data)
+            return publish_live.served_as_built(path, entry, json.dumps(served, separators=(',', ':')).encode(), tmp)
+
+    def test_editions_and_boards_with_ry_favorites_marked_by_the_site(self):
+        edition = {'date': '2026-11-25', 'props': [{'id': 'a', 'line': 3}, {'id': 'b', 'line': 4}]}
+        marked = {'date': '2026-11-25', 'props': [{'id': 'a', 'line': 3, 'ryFavorite': True}, {'id': 'b', 'line': 4}]}
+        for envelope in (False, True):
+            self.assertTrue(self.check('/data/editions/daily/2026-11-25/' + 'a' * 16 + '.json', edition, marked, envelope))
+            self.assertTrue(self.check('/data/boards/daily/2026-11-25/' + 'a' * 16 + '.json', {'edition': edition}, {'edition': marked}, envelope))
+        changed = {'date': '2026-11-25', 'props': [{'id': 'a', 'line': 9, 'ryFavorite': True}, {'id': 'b', 'line': 4}]}
+        self.assertFalse(self.check('/data/editions/daily/2026-11-25/' + 'a' * 16 + '.json', edition, changed))
+        # Only those paths: anything else must still be byte-identical.
+        self.assertFalse(self.check('/data/published-picks/daily/2026-11-25.json', edition, marked))
+
+
 if __name__ == '__main__':
     unittest.main()

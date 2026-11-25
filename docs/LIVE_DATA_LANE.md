@@ -40,7 +40,7 @@ After each full deploy, `pages.yml` starts `live.yml` again to rebuild the layer
 |---|---|
 | repo variable `SBOS_LIVE_LANE` unset/`off` | lane does nothing; every push does a full build (as before) |
 | `SBOS_LIVE_LANE=shadow` | lane builds and uploads but never moves the pointer; full builds continue on every push |
-| `SBOS_LIVE_LANE=on` | lane publishes; data-only pushes skip the full build (nightly 5 AM ET + code changes still build) |
+| `SBOS_LIVE_LANE=on` | lane publishes; data-only pushes skip the full build (nightly 5:17 AM ET + code changes still build) |
 | Worker var `LIVE_LAYER=off` | site reads only Pages, whatever the pointer says (instant kill switch) |
 
 Both are `on` in production. `workers/live-data/wrangler.jsonc` records `LIVE_LAYER: "on"`, so a

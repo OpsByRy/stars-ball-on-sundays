@@ -2,11 +2,12 @@ name: Publish SBOS
 on:
   push:
     branches: [main]
-  # Nightly full rebuild (5 AM ET in winter): re-validates the whole archive and redeploys every
+  # Nightly full rebuild (5:17 AM ET in winter; off the hour, where GitHub delays or drops scheduled
+  # runs): re-validates the whole archive and redeploys every
   # file; with the live data lane on (vars.SBOS_LIVE_LANE), boards and results go live between
   # these through live.yml instead.
   schedule:
-    - cron: '0 10 * * *'
+    - cron: '17 10 * * *'
   workflow_dispatch:
     inputs:
       preview_artifact:

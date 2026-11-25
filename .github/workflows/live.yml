@@ -1,0 +1,82 @@
+name: Publish live data
+# The fast lane (docs/LIVE_DATA_LANE.md). A board, update or results commit changes only
+# published data; instead of rebuilding and re-uploading the whole site, scripts/build_live.py
+# checks just the new files against the deploy Pages is serving and scripts/publish_live.py puts
+# the changed files in R2, where the site's sbos-live-data Worker serves them.
+#
+# vars.SBOS_LIVE_LANE: unset/"off" = does nothing; "shadow" = builds and uploads but never moves
+# the pointer (the full build still publishes everything); "on" = moves the pointer and verifies
+# through starsballonsundays.com. A commit this lane can't prove (code, pages, profiles, rewrites)
+# is declined and starts the full build instead.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'assets/parlay-withdrawals.json'
+      - 'publication-window.json'
+      - 'pending-additions.json'
+      - 'pending-parlays.json'
+  # results.yml (its pushes use GITHUB_TOKEN, which never triggers `push`) and pages.yml (after
+  # each full deploy, to rebuild the layer on the new base) start it this way.
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: Why it was started
+        required: false
+        default: manual
+permissions:
+  contents: read
+  actions: write  # start the full build when a commit is declined
+concurrency:
+  # One at a time, oldest first; a newer run builds a cumulative layer, so a skipped one loses nothing.
+  group: sbos-live
+  cancel-in-progress: false
+jobs:
+  live:
+    if: vars.SBOS_LIVE_LANE == 'shadow' || vars.SBOS_LIVE_LANE == 'on'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # History without file bodies (to diff against the live deploy), and every file except the
+      # 10 GB edition archive; build_live.py fetches only the editions it reads.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/data/editions/daily/
+            !/data/editions/sunday/
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+      - name: Build the live layer against the deploy Pages is serving
+        id: build
+        run: |
+          set +e
+          python scripts/build_live.py --out .live | tee .live-summary.json
+          code=${PIPESTATUS[0]}
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          test "$code" = 0 || test "$code" = 3
+      - name: Declined — start the full build
+        if: steps.build.outputs.code == '3' && vars.SBOS_LIVE_LANE == 'on'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main
+      - name: Upload and switch (shadow uploads only)
+        if: steps.build.outputs.code == '0'
+        env:
+          R2_ACCOUNT_ID: fbdf495767bb144edfcbb7f1609e2629
+          R2_ACCESS_KEY_ID: ${{ secrets.SBOS_LIVE_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.SBOS_LIVE_R2_SECRET_ACCESS_KEY }}
+          MODE: ${{ vars.SBOS_LIVE_LANE }}
+        run: |
+          test -n "$R2_ACCESS_KEY_ID" && test -n "$R2_SECRET_ACCESS_KEY"
+          python -m pip install --quiet 'boto3==1.38.46'
+          if [ "$MODE" = on ]; then python scripts/publish_live.py .live; else python scripts/publish_live.py .live --shadow; fi

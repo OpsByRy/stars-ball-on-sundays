@@ -5907,6 +5907,24 @@
     {
       "channel": "daily",
       "date": "2026-11-25",
+      "version": "cf51f0debe723e63",
+      "path": "daily/2026-11-25/cf51f0debe723e63.json",
+      "count": 0,
+      "researchCount": 22791,
+      "updatedAt": "2026-11-25T22:55:53.728696+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "a1e925a0a1fefb4c",
+      "path": "daily/2026-11-25/a1e925a0a1fefb4c.json",
+      "count": 0,
+      "researchCount": 22791,
+      "updatedAt": "2026-11-25T23:00:56.861248+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
       "version": "271366b84dc3e7d1",
       "path": "daily/2026-11-25/271366b84dc3e7d1.json",
       "count": 0,

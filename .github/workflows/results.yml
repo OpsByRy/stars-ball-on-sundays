@@ -77,4 +77,9 @@ jobs:
         if: steps.refresh.outputs.pushed != ''
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main
+          LANE: ${{ vars.SBOS_LIVE_LANE }}
+        run: |
+          # The live data lane (live.yml) publishes results in about a minute; until it is on, the
+          # full build does, and in shadow both run.
+          if [ "$LANE" = on ] || [ "$LANE" = shadow ]; then gh workflow run live.yml --repo "$GITHUB_REPOSITORY" --ref main -f reason=results; fi
+          if [ "$LANE" != on ]; then gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main; fi

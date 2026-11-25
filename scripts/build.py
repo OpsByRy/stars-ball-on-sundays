@@ -68,7 +68,7 @@ def publication_files(root, source_hashes=None):
     if any((t['date'],t['eventId'],t['playerId']) not in published for t in targets['targets']): raise ValueError('Unpublished candidate identity in public targets')
     return files
 
-def board_views(root):
+def board_views(root, only=None):
     """Small, derived views; the complete hash-verified editions stay unchanged.
 
     Keep personal rows as attribution evidence for equivalent favorite contracts.
@@ -80,6 +80,7 @@ def board_views(root):
     views={}
     for entry in latest.values():
         if entry['channel']!='daily': continue
+        if only is not None and (entry['channel'],entry['date']) not in only: continue
         body=json.loads((root/'data/editions'/entry['path']).read_text())
         edition={key:value for key,value in body.items() if key!='version'}
         edition['props']=[p for p in body['props'] if p['group']=='ry' or p.get('category')!='not_a_pick']
@@ -218,19 +219,22 @@ def personal_price_view(root):
     prevalidate(root,['data/editions/'+entry['path'] for entry in manifest['editions']],safe_file=safe_file,validate=validate_edition,canonical=canonical)
     for entry in sorted(manifest['editions'],key=lambda e:e['updatedAt']):
         checked=read_edition(root,'data/editions/'+entry['path'],safe_file=safe_file,validate=validate_edition,canonical=canonical)
-        body=checked.personal_body()
-        if 'personalSlips' in body:
-            for slip in body['personalSlips']:
-                if slip.get('recordKind')=='selection_snapshot':continue
-                leg_ids=sorted(p['pickId'] for p in slip['legs']);key=(slip['id'],tuple(leg_ids))
-                saved.setdefault(key,{'ticketId':slip['id'],'legIds':leg_ids,'americanOdds':slip['americanOdds'],'sourceVersion':entry['version'],'firstSavedAt':entry['updatedAt']})
-            continue
-        legs=[p for p in body['props'] if p['group']=='ry'];price=body.get('sharedBetslipOdds')
-        if not legs or type(price) not in (int,float) or abs(price)<100:continue
-        ticket_id='ry:'+body['date']+':'+(body.get('sharedBetslipUrl') or body.get('favoritesPostedAt') or 'posted-slip')
-        leg_ids=sorted(p['id'] for p in legs);key=(ticket_id,tuple(leg_ids))
-        saved.setdefault(key,{'ticketId':ticket_id,'legIds':leg_ids,'americanOdds':price,'sourceVersion':entry['version'],'firstSavedAt':entry['updatedAt']})
+        add_personal_prices(saved,entry,checked.personal_body())
     return {'data/personal-tracking-prices.json':{'schemaVersion':'public-personal-tracking-prices-1','tickets':list(saved.values())}}
+
+def add_personal_prices(saved,entry,body):
+    """First saved quote per exact slip, in updatedAt order (the live fast lane appends new editions with this too)."""
+    if 'personalSlips' in body:
+        for slip in body['personalSlips']:
+            if slip.get('recordKind')=='selection_snapshot':continue
+            leg_ids=sorted(p['pickId'] for p in slip['legs']);key=(slip['id'],tuple(leg_ids))
+            saved.setdefault(key,{'ticketId':slip['id'],'legIds':leg_ids,'americanOdds':slip['americanOdds'],'sourceVersion':entry['version'],'firstSavedAt':entry['updatedAt']})
+        return
+    legs=[p for p in body['props'] if p['group']=='ry'];price=body.get('sharedBetslipOdds')
+    if not legs or type(price) not in (int,float) or abs(price)<100:return
+    ticket_id='ry:'+body['date']+':'+(body.get('sharedBetslipUrl') or body.get('favoritesPostedAt') or 'posted-slip')
+    leg_ids=sorted(p['id'] for p in legs);key=(ticket_id,tuple(leg_ids))
+    saved.setdefault(key,{'ticketId':ticket_id,'legIds':leg_ids,'americanOdds':price,'sourceVersion':entry['version'],'firstSavedAt':entry['updatedAt']})
 
 def game_log_files(root):
     if not (root/'data/player-logs/catalog.json').exists():return []

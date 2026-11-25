@@ -150,7 +150,8 @@ def validate(body, *, source=None, calculator_sha=None, now=None):
                 type(b['americanOdds']) is int and abs(b['americanOdds']) <= 2**53-1 and b['americanOdds'] == american, 'Straight-odds benchmark does not reproduce')
     return body
 
-def publication_files(root, safe_file):
+def publication_files(root, safe_file, only=None):
+    """`only` (a set of manifest paths): the live fast lane body-checks just its new research files."""
     name = 'data/sgp-research/manifest.json'
     if not (root/name).exists():
         return []
@@ -161,7 +162,10 @@ def publication_files(root, safe_file):
     for e in index['editions']:
         keys(e, {'date','version','path','sha256','count','updatedAt'})
         require(type(e['date']) is str and re.fullmatch(r'\d{4}-\d\d-\d\d',e['date']) and type(e['version']) is str and re.fullmatch('[0-9a-f]{16}',e['version']) and e['path'] == e['date']+'/'+e['version']+'.json' and e['path'] not in seen, 'Unsafe or duplicate research path')
-        seen.add(e['path']); path = 'data/sgp-research/'+e['path']; raw = safe_file(root,path).read_bytes()
+        seen.add(e['path']); path = 'data/sgp-research/'+e['path']
+        if only is not None and e['path'] not in only:
+            continue
+        raw = safe_file(root,path).read_bytes()
         require(type(e['sha256']) is str and hashlib.sha256(raw).hexdigest() == e['sha256'], 'Research transport hash mismatch')
         b = read(safe_file(root,path)); validate(b, calculator_sha=calculator_sha)
         source = read(safe_file(root,'data/editions/'+b['sourceDaily']['path']))

@@ -106,9 +106,11 @@ function applyPickRemovalReasons(body,reasons){
  }
  return body;
 }
-function views(root,{sourceHashes=null}={}){
+// `days` (a Set of YYYY-MM-DD) limits the output to those dates for the live fast lane; every
+// per-date view only reads its own date's editions and results, so it is the same bytes.
+function views(root,{sourceHashes=null,days=null}={}){
   const results=savedResults(root),out={},observations=new Map(),lifecycle=new Map();
-  const singles=collectFromSite(root,{sourceHashes,observations,lifecycle});
+  const singles=collectFromSite(root,{sourceHashes,observations,lifecycle,days});
   const reasonPath=path.join(root,'data/pick-withdrawal-reasons.json');
   const reasonLog=fs.existsSync(reasonPath)?JSON.parse(fs.readFileSync(reasonPath)):{schemaVersion:'public-pick-withdrawal-reasons-1',reasons:[]};
   validatePickRemovalReasons(reasonLog);
@@ -121,11 +123,11 @@ function views(root,{sourceHashes=null}={}){
   const parlayBodies=collectParlaysFromSite(root);
   for(const body of parlayBodies){
     for(const record of body.records)for(const leg of record.legs){const id=history.key(leg.original);leg.result=history.mergeResult(history.mergeResult(leg.result,observations.get(id)),results.results[id]);}
-    out[`data/published-parlays/${body.date}.json`]=body;parlayIndex.editions.push({date:body.date,sourceVersions:body.sourceVersions});
+    if(!days||days.has(body.date))out[`data/published-parlays/${body.date}.json`]=body;parlayIndex.editions.push({date:body.date,sourceVersions:body.sourceVersions});
   }
   out['data/published-parlays/manifest.json']=parlayIndex;
   Object.assign(out,require('./board-revisions.cjs').finish(lifecycle,parlayBodies));
   return out;
 }
 module.exports={collectFromSite,collectParlaysFromSite,savedResults,views,validateRemovalReasons,applyRemovalReasons,validatePickRemovalReasons,applyPickRemovalReasons};
-if(require.main===module){const sourceHashes=process.argv.includes('--verified-source-hashes')?JSON.parse(fs.readFileSync(0,'utf8')):null;process.stdout.write(JSON.stringify(views(path.resolve(process.argv[2]),{sourceHashes})));}
+if(require.main===module){const sourceHashes=process.argv.includes('--verified-source-hashes')?JSON.parse(fs.readFileSync(0,'utf8')):null;const at=process.argv.indexOf('--days'),days=at>0?new Set(process.argv[at+1].split(',').filter(Boolean)):null;process.stdout.write(JSON.stringify(views(path.resolve(process.argv[2]),{sourceHashes,days})));}

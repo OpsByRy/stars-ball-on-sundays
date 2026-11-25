@@ -2581,6 +2581,16 @@
       "reasonCode": "promoted_from_bench",
       "notice": "Removed from Bench because Julian Champagnie < 14.5 PTS moved onto the Daily Board. Bench remains research only. The original selection, price and result remain in the record.",
       "replacementKey": "[\"2026-11-23\",\"nba:0022600296\",\"nba:1630577\",\"PTS\",\"<=\",14,\"full_game\",\"sportsbook\",null]"
+    },
+    {
+      "date": "2026-11-25",
+      "channel": "daily",
+      "sourceVersion": "9af8f6b93c66ef4e",
+      "recordedAt": "2026-11-25T17:38:15.720208+00:00",
+      "key": "[\"2026-11-25\",\"nba:0022600057\",\"nba:1631212\",\"REB\",\">=\",4,\"full_game\",\"sportsbook\",null]",
+      "recordKind": "pick",
+      "reasonCode": "stressed_value_below_minimum",
+      "notice": "Withdrawn after review: the value under our more cautious estimate fell below our minimum. DraftKings saved price: -185 → -188. The original selection, price and result remain in the record."
     }
   ]
 }

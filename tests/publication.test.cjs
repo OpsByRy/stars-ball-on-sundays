@@ -1,5 +1,5 @@
 'use strict';
-const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const publication=require('../assets/publication.js'),board=require('../assets/pick-board.js'),contracts=require('../assets/result-utils.js'),refresher=require('../scripts/refresh-results.cjs');
 const root=path.resolve(__dirname,'..');
 const row={date:'2026-10-25',eventId:'game',playerId:'player',player:'Example',market:'AST',operator:'>=',line:8,side:'over',period:'full_game',product:'sportsbook',americanOdds:-150};
@@ -26,7 +26,15 @@ test('version paths cannot escape the publication directory',()=>{
 });
 test('public result versions match the Python publisher hashes',()=>{
   const index=JSON.parse(fs.readFileSync(path.join(root,'data/editions/manifest.json')));
-  for(const e of index.editions)assert.equal(refresher.version(JSON.parse(fs.readFileSync(path.join(root,'data/editions',e.path)))),e.version);
+  // savedVersion keeps each file's own number text: Python writes 9.999999999998899e-05 where
+  // JSON.stringify writes 0.00009999999999998899 (Nov 25 board), so re-serializing would differ.
+  for(const e of index.editions)assert.equal(refresher.savedVersion(fs.readFileSync(path.join(root,'data/editions',e.path),'utf8')),e.version);
+});
+test('saved versions keep Python number text that JavaScript would print differently',()=>{
+  const raw='{"date":"2026-11-25","props":[{"winProbability":9.999999999998899e-05,"line":14}],"version":"x"}';
+  const python=crypto.createHash('sha256').update('{"date":"2026-11-25","props":[{"line":14,"winProbability":9.999999999998899e-05}]}').digest('hex').slice(0,16);
+  assert.equal(refresher.savedVersion(raw),python);
+  assert.notEqual(refresher.version(JSON.parse(raw)),python);
 });
 test('result source identity mismatches fail and final records survive source regressions',()=>{
   assert.throws(()=>board.parseSummary({header:{id:'999'}},{eventId:'123',athleteId:'456'},row,new Date().toISOString()));

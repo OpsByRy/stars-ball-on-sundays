@@ -23,6 +23,9 @@ import sys
 import time
 import urllib.request
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import json_transport  # noqa: E402
+
 POINTER = 'current.json'
 SITE = 'https://starsballonsundays.com'
 HEADERS = {'User-Agent': 'sbos-live-lane/1', 'Cache-Control': 'no-cache'}
@@ -88,9 +91,21 @@ def lockdown_scrub(value):
     return value
 
 
+def without_favorite_marks(value):
+    """The site's favoriteOverlay (sites/sbos-redesign, favoriteOverlay) sets props[].ryFavorite = true
+    on a day's /data/editions|boards/daily/<date>/<version>.json when Ry has favorites that day, and
+    re-serializes the JSON. Compare those files with the mark removed on both sides."""
+    edition = value.get('edition') if isinstance(value, dict) and isinstance(value.get('edition'), dict) else value
+    for prop in (edition.get('props') or []) if isinstance(edition, dict) else []:
+        if isinstance(prop, dict):
+            prop.pop('ryFavorite', None)
+    return value
+
+
 # Files the site deliberately rewrites after reading them from this lane: compare parsed content
 # with the same rewrite applied, not bytes. Every other file must be byte-identical.
 SITE_TRANSFORMS = {'/data/player-portraits.json': lockdown_scrub}
+FAVORITE_OVERLAY = re.compile(r'^/data/(?:editions|boards)/daily/\d{4}-\d{2}-\d{2}/[0-9a-f]{16}\.json$')
 
 
 def fetch(path):
@@ -99,11 +114,20 @@ def fetch(path):
         return response.read()
 
 
+def visible(folder, entry):
+    """What a visitor receives for a layer file: its bytes, decoded when they are a JSON transport envelope."""
+    built = (Path(folder) / 'blobs' / entry['sha256']).read_bytes()
+    return json_transport.decode(built) if 'servedSHA256' in entry else built
+
+
 def served_as_built(path, entry, served, folder):
     if path in SITE_TRANSFORMS:
-        built = (Path(folder) / 'blobs' / entry['sha256']).read_bytes()
-        return json.loads(served) == SITE_TRANSFORMS[path](json.loads(built))
-    return hashlib.sha256(served).hexdigest() == entry.get('servedSHA256', entry['sha256'])
+        return json.loads(served) == SITE_TRANSFORMS[path](json.loads(visible(folder, entry)))
+    if hashlib.sha256(served).hexdigest() == entry.get('servedSHA256', entry['sha256']):
+        return True
+    if FAVORITE_OVERLAY.match(path):
+        return without_favorite_marks(json.loads(served)) == without_favorite_marks(json.loads(visible(folder, entry)))
+    return False
 
 
 def verify(descriptor, folder, attempts=12, wait=10, fetch=fetch):

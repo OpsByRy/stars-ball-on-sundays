@@ -6137,6 +6137,15 @@
       "count": 0,
       "researchCount": 24206,
       "updatedAt": "2026-11-26T03:23:56.224Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "ffcacc1865408e64",
+      "path": "daily/2026-11-25/ffcacc1865408e64.json",
+      "count": 0,
+      "researchCount": 24206,
+      "updatedAt": "2026-11-26T03:39:07.142Z"
     }
   ],
   "schemaVersion": "public-1"

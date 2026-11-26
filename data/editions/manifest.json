@@ -6128,6 +6128,15 @@
       "count": 0,
       "researchCount": 24206,
       "updatedAt": "2026-11-26T03:07:14.282Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "9fa808f6835ff92f",
+      "path": "daily/2026-11-25/9fa808f6835ff92f.json",
+      "count": 0,
+      "researchCount": 24206,
+      "updatedAt": "2026-11-26T03:23:56.224Z"
     }
   ],
   "schemaVersion": "public-1"

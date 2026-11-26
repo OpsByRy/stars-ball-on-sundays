@@ -6173,6 +6173,15 @@
       "count": 0,
       "researchCount": 24206,
       "updatedAt": "2026-11-26T04:24:14.502Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "c15bc12907cead32",
+      "path": "daily/2026-11-25/c15bc12907cead32.json",
+      "count": 0,
+      "researchCount": 24206,
+      "updatedAt": "2026-11-26T04:39:12.144Z"
     }
   ],
   "schemaVersion": "public-1"

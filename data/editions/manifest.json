@@ -6083,6 +6083,15 @@
       "count": 0,
       "researchCount": 24206,
       "updatedAt": "2026-11-26T01:58:40.699Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "4a4004fd3927d3b7",
+      "path": "daily/2026-11-25/4a4004fd3927d3b7.json",
+      "count": 0,
+      "researchCount": 24206,
+      "updatedAt": "2026-11-26T02:14:27.772Z"
     }
   ],
   "schemaVersion": "public-1"

@@ -146,13 +146,13 @@ def portrait_view(root):
     aliases={'WSH':'WAS','GS':'GSW','SA':'SAS','NO':'NOP','NY':'NYK','UTAH':'UTA'}
     for entry in index['players']:
         body=json.loads((root/'data/player-profiles'/entry['path']).read_text());bio=body.get('bio',{})
+        # Names and ids only: the site shows its own player and team artwork, so no outside image links are published here.
         player={'id':body['playerId'],'name':body['player']}
         if bio.get('espnId'):player['espnId']=bio['espnId']
-        if bio.get('headshot'):player['headshot']=bio['headshot']
         players.append(player)
-        if bio.get('teamLogo') and bio.get('teamAbbreviation') and bio.get('team'):
+        if bio.get('teamAbbreviation') and bio.get('team'):
             abbreviation=aliases.get(bio['teamAbbreviation'],bio['teamAbbreviation'])
-            teams[abbreviation]={'abbreviation':abbreviation,'name':bio['team'],'logo':bio['teamLogo']}
+            teams[abbreviation]={'abbreviation':abbreviation,'name':bio['team']}
     games=json.loads((root/'data/matchups.json').read_text())['games'] if (root/'data/matchups.json').exists() else []
     return {'data/player-portraits.json':{'schemaVersion':'public-player-portraits-1','players':players,'teams':list(teams.values()),'games':games}}
 

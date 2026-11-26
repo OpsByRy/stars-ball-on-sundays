@@ -6101,6 +6101,15 @@
       "count": 0,
       "researchCount": 24206,
       "updatedAt": "2026-11-26T02:28:48.113Z"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "ef2efdb2024ad1be",
+      "path": "daily/2026-11-25/ef2efdb2024ad1be.json",
+      "count": 0,
+      "researchCount": 24206,
+      "updatedAt": "2026-11-26T02:44:39.858Z"
     }
   ],
   "schemaVersion": "public-1"

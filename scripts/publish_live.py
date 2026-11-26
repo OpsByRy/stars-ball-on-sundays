@@ -17,18 +17,16 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import re
 import subprocess
 import sys
 import time
 import urllib.request
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import json_transport  # noqa: E402
 
 POINTER = 'current.json'
 SITE = 'https://starsballonsundays.com'
-HEADERS = {'User-Agent': 'sbos-live-lane/1', 'Cache-Control': 'no-cache'}
+# X-SBOS-Plain-Data: the site serves the published bytes without per-visitor touches (Ry's favorite marks).
+HEADERS = {'User-Agent': 'sbos-live-lane/1', 'Cache-Control': 'no-cache', 'X-SBOS-Plain-Data': '1'}
 
 
 def client():
@@ -78,56 +76,15 @@ def ancestor(repo, older, newer):
     return subprocess.run(['git', '-C', str(repo), 'merge-base', '--is-ancestor', older, newer]).returncode == 0
 
 
-LOCKDOWN_IMAGE_URL = re.compile(r'^https?://(?:[a-z0-9-]+\.)*(?:espncdn\.com|cdn\.nba\.com)/', re.I)
-
-
-def lockdown_scrub(value):
-    """The site's image lockdown (sites/sbos-redesign/brand/apply-image-lockdown.mjs, lockdownScrub):
-    drops every ESPN / NBA CDN image URL string from objects before /data/player-portraits.json leaves."""
-    if isinstance(value, list):
-        return [lockdown_scrub(v) for v in value]
-    if isinstance(value, dict):
-        return {k: lockdown_scrub(v) for k, v in value.items() if not (isinstance(v, str) and LOCKDOWN_IMAGE_URL.match(v))}
-    return value
-
-
-def without_favorite_marks(value):
-    """The site's favoriteOverlay (sites/sbos-redesign, favoriteOverlay) sets props[].ryFavorite = true
-    on a day's /data/editions|boards/daily/<date>/<version>.json when Ry has favorites that day, and
-    re-serializes the JSON. Compare those files with the mark removed on both sides."""
-    edition = value.get('edition') if isinstance(value, dict) and isinstance(value.get('edition'), dict) else value
-    for prop in (edition.get('props') or []) if isinstance(edition, dict) else []:
-        if isinstance(prop, dict):
-            prop.pop('ryFavorite', None)
-    return value
-
-
-# Files the site deliberately rewrites after reading them from this lane: compare parsed content
-# with the same rewrite applied, not bytes. Every other file must be byte-identical.
-SITE_TRANSFORMS = {'/data/player-portraits.json': lockdown_scrub}
-FAVORITE_OVERLAY = re.compile(r'^/data/(?:editions|boards)/daily/\d{4}-\d{2}-\d{2}/[0-9a-f]{16}\.json$')
-
-
 def fetch(path):
     request = urllib.request.Request(SITE + path, headers=HEADERS)
     with urllib.request.urlopen(request, timeout=60) as response:
         return response.read()
 
 
-def visible(folder, entry):
-    """What a visitor receives for a layer file: its bytes, decoded when they are a JSON transport envelope."""
-    built = (Path(folder) / 'blobs' / entry['sha256']).read_bytes()
-    return json_transport.decode(built) if 'servedSHA256' in entry else built
-
-
-def served_as_built(path, entry, served, folder):
-    if path in SITE_TRANSFORMS:
-        return json.loads(served) == SITE_TRANSFORMS[path](json.loads(visible(folder, entry)))
-    if hashlib.sha256(served).hexdigest() == entry.get('servedSHA256', entry['sha256']):
-        return True
-    if FAVORITE_OVERLAY.match(path):
-        return without_favorite_marks(json.loads(served)) == without_favorite_marks(json.loads(visible(folder, entry)))
-    return False
+def served_as_built(path, entry, served, folder=None):
+    """Byte-identical to what was built (decoded from the JSON transport envelope when one was used)."""
+    return hashlib.sha256(served).hexdigest() == entry.get('servedSHA256', entry['sha256'])
 
 
 def verify(descriptor, folder, attempts=12, wait=10, fetch=fetch):

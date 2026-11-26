@@ -113,52 +113,17 @@ class Prove(unittest.TestCase):
         self.assertEqual((proof['missingFromLayer'], proof['differentFromFullBuild'], proof['identical']), (['/c'], ['/a'], False))
 
 
-class SiteTransforms(unittest.TestCase):
-    def test_portraits_are_compared_after_the_sites_image_lockdown(self):
-        built = {'schemaVersion': 'public-player-portraits-1', 'players': [
-            {'id': 'nba:1', 'headshot': 'https://a.espncdn.com/i/headshots/nba/players/full/1.png', 'name': 'A'},
-            {'id': 'nba:2', 'logo': 'https://cdn.nba.com/logos/nba/1/primary/L/logo.svg', 'keep': 'https://example.com/x.png'}]}
-        served = {'schemaVersion': 'public-player-portraits-1', 'players': [{'id': 'nba:1', 'name': 'A'},
-                                                                            {'id': 'nba:2', 'keep': 'https://example.com/x.png'}]}
-        with tempfile.TemporaryDirectory() as tmp:
-            raw = json.dumps(built).encode()
-            entry = {'sha256': build_live.hashlib.sha256(raw).hexdigest()}
-            (Path(tmp) / 'blobs').mkdir()
-            (Path(tmp) / 'blobs' / entry['sha256']).write_bytes(raw)
-            path = '/data/player-portraits.json'
-            self.assertTrue(publish_live.served_as_built(path, entry, json.dumps(served).encode(), tmp))
-            self.assertFalse(publish_live.served_as_built(path, entry, raw, tmp))
-            served['players'][0]['name'] = 'B'
-            self.assertFalse(publish_live.served_as_built(path, entry, json.dumps(served).encode(), tmp))
+class SiteCheck(unittest.TestCase):
+    def test_the_site_is_asked_for_the_plain_published_copy(self):
+        self.assertEqual(publish_live.HEADERS['X-SBOS-Plain-Data'], '1')
 
-    def test_other_files_must_be_byte_identical(self):
-        entry = {'sha256': build_live.hashlib.sha256(b'{"a":1}').hexdigest()}
-        self.assertTrue(publish_live.served_as_built('/data/x.json', entry, b'{"a":1}', '/nonexistent'))
-        self.assertFalse(publish_live.served_as_built('/data/x.json', entry, b'{"a": 1}', '/nonexistent'))
-
-
-class FavoriteOverlay(unittest.TestCase):
-    def check(self, path, built, served, envelope=False):
-        with tempfile.TemporaryDirectory() as tmp:
-            raw = json.dumps(built, indent=2).encode()
-            data = publish_live.json_transport.encode(raw) if envelope else raw
-            entry = {'sha256': build_live.hashlib.sha256(data).hexdigest()}
-            if envelope:
-                entry['servedSHA256'] = build_live.hashlib.sha256(raw).hexdigest()
-            (Path(tmp) / 'blobs').mkdir()
-            (Path(tmp) / 'blobs' / entry['sha256']).write_bytes(data)
-            return publish_live.served_as_built(path, entry, json.dumps(served, separators=(',', ':')).encode(), tmp)
-
-    def test_editions_and_boards_with_ry_favorites_marked_by_the_site(self):
-        edition = {'date': '2026-11-25', 'props': [{'id': 'a', 'line': 3}, {'id': 'b', 'line': 4}]}
-        marked = {'date': '2026-11-25', 'props': [{'id': 'a', 'line': 3, 'ryFavorite': True}, {'id': 'b', 'line': 4}]}
-        for envelope in (False, True):
-            self.assertTrue(self.check('/data/editions/daily/2026-11-25/' + 'a' * 16 + '.json', edition, marked, envelope))
-            self.assertTrue(self.check('/data/boards/daily/2026-11-25/' + 'a' * 16 + '.json', {'edition': edition}, {'edition': marked}, envelope))
-        changed = {'date': '2026-11-25', 'props': [{'id': 'a', 'line': 9, 'ryFavorite': True}, {'id': 'b', 'line': 4}]}
-        self.assertFalse(self.check('/data/editions/daily/2026-11-25/' + 'a' * 16 + '.json', edition, changed))
-        # Only those paths: anything else must still be byte-identical.
-        self.assertFalse(self.check('/data/published-picks/daily/2026-11-25.json', edition, marked))
+    def test_files_must_be_byte_identical_to_what_was_built(self):
+        raw = b'{"a":1}'
+        entry = {'sha256': build_live.hashlib.sha256(raw).hexdigest()}
+        self.assertTrue(publish_live.served_as_built('/data/x.json', entry, raw))
+        self.assertFalse(publish_live.served_as_built('/data/x.json', entry, b'{"a": 1}'))
+        enveloped = {'sha256': 'f' * 64, 'servedSHA256': entry['sha256']}
+        self.assertTrue(publish_live.served_as_built('/data/editions/daily/2026-11-25/' + 'a' * 16 + '.json', enveloped, raw))
 
 
 if __name__ == '__main__':

@@ -6119,6 +6119,15 @@
       "count": 0,
       "researchCount": 24206,
       "updatedAt": "2026-11-26T02:53:52.508790+00:00"
+    },
+    {
+      "channel": "daily",
+      "date": "2026-11-25",
+      "version": "63b1d4a8123505d1",
+      "path": "daily/2026-11-25/63b1d4a8123505d1.json",
+      "count": 0,
+      "researchCount": 24206,
+      "updatedAt": "2026-11-26T03:07:14.282Z"
     }
   ],
   "schemaVersion": "public-1"

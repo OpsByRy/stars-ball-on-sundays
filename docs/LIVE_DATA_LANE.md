@@ -30,7 +30,7 @@ Anything else falls back to Pages, the same as before the lane existed.
    - every file whose deployed bytes differ from the base deploy.
    Code, pages, profiles, deletions and rewrites are declined (exit 3), and the full build runs instead.
 3. `scripts/publish_live.py` uploads the blobs (create-only, with checksums) and the layer, then switches `current.json` by compare-and-swap. Every pointer value is kept in `history/`.
-4. It fetches every layer file from starsballonsundays.com and checks its hash (`/data/player-portraits.json` is compared after the site's image lockdown, and a day's editions/boards ignore the `ryFavorite` marks the site's favorites overlay adds). If any check fails, it restores the previous pointer and starts the full build.
+4. It fetches every layer file from starsballonsundays.com (asking for the plain published copy with `X-SBOS-Plain-Data: 1`, so per-visitor touches like Ry's favorite marks don't count) and checks its hash. If any check fails, it restores the previous pointer and starts the full build.
 
 After each full deploy, `pages.yml` starts `live.yml` again to rebuild the layer on the new base. The layer is empty if nothing landed meanwhile.
 

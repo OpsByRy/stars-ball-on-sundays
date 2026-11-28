@@ -1609,6 +1609,20 @@
       "path": "2026-11-25/6af29ccf4da34e22.json",
       "updatedAt": "2026-11-26T05:29:10.558Z",
       "count": 3
+    },
+    {
+      "date": "2026-11-28",
+      "version": "66dcaa18d3e3a048",
+      "path": "2026-11-28/66dcaa18d3e3a048.json",
+      "updatedAt": "2026-11-28T15:51:46.820108+00:00",
+      "count": 1
+    },
+    {
+      "date": "2026-11-28",
+      "version": "be842bc93e3966c8",
+      "path": "2026-11-28/be842bc93e3966c8.json",
+      "updatedAt": "2026-11-28T15:54:30.597264+00:00",
+      "count": 1
     }
   ],
   "schemaVersion": "public-plus-money-manifest-1"
